@@ -65,7 +65,17 @@ def discover_records(
         )
     inventory = pd.DataFrame(rows).sort_values(
         ["participant_id", "task", "relative_file"]
-    ).drop_duplicates(["participant_id", "task"], keep=False)
+    )
+    duplicates = inventory.duplicated(["participant_id", "task"], keep=False)
+    if duplicates.any():
+        examples = inventory.loc[
+            duplicates, ["participant_id", "task", "relative_file"]
+        ].to_dict("records")[:5]
+        raise ValueError(
+            "Ambiguous multiple source files for the same participant/task "
+            f"in the selected round/session: {examples}. Resolve the source "
+            "selection rather than discarding records silently."
+        )
     counts = inventory.groupby("participant_id")["task"].nunique()
     selected = sorted(counts[counts == len(tasks)].index)[:max_participants]
     if not selected:
@@ -129,6 +139,8 @@ def read_stage(path: str | Path, required: tuple[str, ...]) -> pd.DataFrame:
     path = Path(path)
     if not path.is_file():
         raise FileNotFoundError(f"Expected upstream stage output: {path}")
-    frame = pd.read_csv(path, low_memory=False)
+    frame = pd.read_csv(
+        path, low_memory=False, dtype={"participant_id": str, "record_id": str},
+    )
     require_columns(frame, required)
     return frame
