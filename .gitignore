@@ -1,0 +1,27 @@
+# Python and Jupyter
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+.env
+.env.*
+!.env.example
+
+# Operating-system and editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local original data and reusable reconstruction artefacts
+/data/raw/
+/data/processed/
+
+# Current generated study outputs are local by default.
+# Publish selected, eligible results deliberately rather than tracking them all.
+/eye_tracking_foundations/output/*
+!/eye_tracking_foundations/output/.gitkeep
