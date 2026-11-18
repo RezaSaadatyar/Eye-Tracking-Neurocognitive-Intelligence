@@ -2,7 +2,7 @@
 
 A comprehensive, reproducible research and learning framework for eye-tracking, gaze analysis, machine learning, deep learning, and multimodal EEG–eye-tracking.
 
-**Current status:** Programme architecture established; the first study scaffold is available. No dataset has been imported, no research notebooks have been implemented or executed, and no scientific results have been reproduced in this repository.
+**Current status:** S1 has seven authored development notebooks and source modules, with syntax and synthetic data-flow checks completed. **No original GazeBase analysis results or independent scientific reproductions are claimed.** The other study families remain planned or optional.
 
 ## Research programme
 
@@ -10,44 +10,41 @@ The programme begins with time-stamped eye-movement data, proceeds to task-defin
 
 | Study | Research focus | Current status |
 | --- | --- | --- |
-| [S1: Eye-Tracking Foundations & Signal Analysis](eye_tracking_foundations/README.md) | Data provenance, gaze quality, eye-movement events, interpretable features and statistics | Scaffold available; implementation not started |
+| [S1: Eye-Tracking Foundations & Signal Analysis](eye_tracking_foundations/README.md) | Data provenance, gaze quality, eye-movement events, features, statistics and sensitivity | Seven notebooks authored; awaiting genuine source execution |
 | S2: Eye-Movement Modelling & Advanced AI | Statistical and machine-learning baselines, temporal deep learning and Transformers | Planned; no study directory yet |
 | S3: Vision-Based Gaze Estimation | Camera-image-based gaze direction/point estimation | Optional future study; no study directory yet |
 | S4: EEG–Eye-Tracking Multimodal Research | Source-audited EEG/gaze alignment, fixation-related analyses and fusion | Planned second major research pillar; no study directory yet |
 | S5: Applied Neurocognitive Studies | Separately defined reading, attention and other cognitive research questions | Future applications, subject to dataset and protocol selection |
 
-These are related research directions, not a single completed experimental pipeline. Study names, datasets and experimental designs are refined when each study becomes active.
+These are related research directions, not a single completed experimental pipeline.
 
 ## Where to start
 
 1. Read the [S1 overview](eye_tracking_foundations/README.md) and its [methods and evidence document](eye_tracking_foundations/RESEARCH_METHODS_AND_EVIDENCE.md).
-2. Consult the [data access and provenance guidance](data/README.md) before downloading or processing a public dataset.
-3. For now, the `eye_tracking_foundations/code/notebooks/` and `code/src/` locations are reserved for authorised development. There are no runnable notebooks or installed project-specific modules yet.
+2. Consult the [data access and provenance guidance](data/README.md) before supplying a public GazeBase subset.
+3. Read the [S1 execution instructions](GETTING_STARTED.md), prepare the unchanged Colab/shared helpers from the pinned Human Movement source, and execute the [numbered S1 notebooks](eye_tracking_foundations/code/notebooks/) in order.
 
-The proposed first data source is a bounded subset of GazeBase. The exact release, files, licence and data contract require inspection before analysis; EMTeC is a possible complementary example rather than an assumed second input.
+The initial GazeBase files, licence and sample quality must be checked against the actually selected source. EMTeC remains a potential complementary example, not an assumed second input.
 
 ## Repository organisation
 
 | Path | Responsibility |
 | --- | --- |
-| `eye_tracking_foundations/` | First study, with separate overview, detailed scientific document, code, figures and outputs |
-| `eye_tracking_foundations/code/notebooks/` | Planned numbered Jupyter notebooks, added as developed |
-| `eye_tracking_foundations/code/src/` | Study-specific reusable Python functions, added when needed |
-| `eye_tracking_foundations/images/` | Curated scientific illustrations, when produced |
-| `eye_tracking_foundations/output/` | Current generated research tables and figures, when produced |
-| `data/` | Dataset acquisition guidance; original and processed research data remain local by default |
+| `eye_tracking_foundations/` | First study: seven numbered notebooks, source modules, workflow figures, current outputs and two scientific documents |
+| `python_modules/core/` | Shared notebook infrastructure (pinned Human Movement helpers and separate stage ZIP restoration) |
+| `data/` | Dataset acquisition and provenance guidance; raw/processed data remain local by default |
+| `tests/` | Focused synthetic-only behaviour checks; not original-dataset results |
 
-Additional study folders and genuinely shared utilities will be introduced when their scientific or software responsibilities are established. The scaffold uses `.gitkeep` only for otherwise empty, explicitly approved directories.
+Additional study folders and genuinely shared scientific utilities will be introduced when justified.
 
 ## Scientific and reproducibility principles
 
-- Distinguish gaze measurements, derived eye-movement events and behavioural or cognitive outcomes.
-- Preserve participant, session, trial, stimulus, timestamp, coordinate-frame and unit information as applicable.
-- Assess sampling, data quality, event definitions and dependence between observations before model comparisons.
-- Begin with interpretable analyses and appropriate baselines; advanced neural methods are not presumed superior.
-- Keep planned methods, implemented code, executed analyses and verified findings clearly separate.
-- Preserve current named outputs for downstream stages, without historical approval or hash-gate mechanisms.
+- Distinguish measured gaze, derived events, vendor reference labels and cognitive or behavioural outcomes.
+- Preserve source, participant, session, trial and sample identity, timestamps, coordinate frames and units.
+- Assess missingness, timing, event definitions and within-participant dependence before model comparisons.
+- Use explicit named current outputs; downstream stages read saved files or the matching stage ZIP, without hidden reruns.
+- Distinguish implementation, synthetic verification, original-data execution and independently supported findings.
 
 ## Licensing and data use
 
-Repository code and original documentation are covered by the existing [MIT licence](LICENSE). External datasets, stimuli, third-party code and figures retain their own terms; this repository does not grant redistribution rights for them. Raw recordings, participant-level data, large derivatives and trained artefacts should not be committed merely because they are available locally.
+Repository code and original documentation remain under the existing [MIT licence](LICENSE). External datasets, third-party code and figures retain their own attribution and licence requirements; this repository does not authorise unrelated redistribution. Original participant-level data and model artefacts are not automatically published.

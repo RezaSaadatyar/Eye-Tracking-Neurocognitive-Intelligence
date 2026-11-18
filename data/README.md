@@ -1,23 +1,35 @@
 # Dataset Access and Provenance
 
-The programme uses externally published research datasets. No dataset files have been downloaded into this repository or validated against the proposed study protocols at scaffold creation.
+S1 uses real, original GazeBase CSV recordings when they are supplied by the operator. No raw research dataset is redistributed with this delivery. This repository does not automatically download the large Figshare archive.
 
-## Initial source candidates
+## GazeBase source
 
-| Source | Proposed role | Source reference | Status |
-| --- | --- | --- | --- |
-| GazeBase | Primary candidate for S1 gaze-sample quality, timebase and eye-event examples | [Dataset](https://doi.org/10.6084/m9.figshare.12912257) and [publication](https://doi.org/10.1038/s41597-021-00959-y) | Candidate only; exact files and permissions not inspected in this repository |
-| EMTeC | Optional S1 complementary raw-to-derived reading and correction example | [Publication](https://doi.org/10.3758/s13428-025-02677-4) | Candidate only; inclusion not approved |
-| OneStop | Potential later reading-behaviour application source | See the Research Blueprint | Not selected for S1 |
-| ZuCo | Potential later paired EEG–eye-tracking source | See the Research Blueprint | Not selected or downloaded |
-| MPIIGaze / Gaze360 | Potential separate image-based gaze study | See the Research Blueprint | Not selected or downloaded |
+- Original dataset: https://doi.org/10.6084/m9.figshare.12912257
+- Publication and variable dictionary: https://doi.org/10.1038/s41597-021-00959-y
+- Published source file: `GazeBase_v2_0.zip`; GazeBase data are reported as CC BY 4.0 in the source publication. Check the current source package and terms before use.
+- Initially selected tasks: `FXS`, `HSS`, `RAN`, and `TEX` from Round 1, Session 1, when available for the same participant.
+- Dataset-specific source fields: `n` in ms, `x`/`y` in degrees of visual angle, `val` indicating missing samples, and optional `xT`/`yT`, `dP` (uncalibrated pupil area) and `lab` (EyeLink parser reference labels).
+- Source parser labels (when present): `1` fixation, `2` saccade, `-1` blink; unavailable for some tasks. Vendor labels are not independent ground truth.
 
-The source links identify published materials; they do not confirm that a particular archive, licence, event annotation or processed representation is available for immediate use.
+## Prepare bounded CSV files
 
-## Local organisation and access checks
+Obtain the original GazeBase source from the official Figshare record. Extract a small number of task CSVs *without renaming them*, retaining, for example, source names of the form `S_1001_S1_FXS.csv`. Place them under:
 
-Use `data/raw/` for legitimately obtained original datasets and `data/processed/` for necessary local reconstruction artefacts if these locations are selected during implementation. These directories are Git-ignored by default; they are not distributed with a fresh clone. Do not place private credentials, identifiable participant recordings or copyrighted stimulus materials in version control.
+```text
+data/raw/gazebase/
+    S_1001_S1_FXS.csv
+    S_1001_S1_HSS.csv
+    S_1001_S1_RAN.csv
+    S_1001_S1_TEX.csv
+    ...
+```
 
-Before choosing a concrete release, record its source URL, version, licence and permitted uses. Inspect representative source files to verify timestamp units, coordinate system, validity fields, eye identity, participant/session/trial keys and any annotations. Preserve provenance between raw records, vendor-labelled events and newly derived events. Do not infer cohort counts or evaluation labels from publication summaries alone.
+The filenames above illustrate the documented naming convention; they do not assert that those particular files have been retrieved or checked. The loader searches nested directories as well. The Notebook 01 selection requires all four selected task files for a participant; any missing subset produces an actionable error instead of an invented cohort.
 
-S1 may begin with a bounded GazeBase subset only after this source-level inspection. The exact filenames and download instructions will be documented once verified; no unsupported download command or fixed local path is prescribed here.
+Do not extract the entire original archive merely to satisfy a formatting convention. The original compressed archive is large; use a suitable bounded subset, where permitted, and verify its contents. If a full archive must be fetched, plan storage and network requirements first.
+
+## Saved notebook outputs and new Colab runtimes
+
+After each notebook run, the unchanged Human Movement `download_outputs_from_colab()` helper packages that notebook's stage-prefixed current outputs. Download the ZIP from the Colab Contents pane in VS Code. To continue in a fresh runtime, upload the exact upstream ZIP or ZIPs to `/content/` before running the next notebook. A separate reusable helper restores only the named required current-stage files; it does not search historical outputs or rerun previous notebooks.
+
+Each notebook writes its current results into `eye_tracking_foundations/output/`, normally excluded from Git. Original and reconstructed datasets under `data/raw/` and `data/processed/` must remain local unless separately reviewed and authorised for public redistribution.

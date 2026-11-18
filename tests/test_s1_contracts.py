@@ -1,0 +1,94 @@
+"""Synthetic-only contract tests; not evidence of GazeBase execution."""
+from pathlib import Path
+import sys
+from zipfile import ZipFile
+
+import numpy as np
+import pandas as pd
+import pytest
+
+PROJECT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(PROJECT / "eye_tracking_foundations" / "code" / "src"))
+sys.path.insert(0, str(PROJECT / "python_modules"))
+
+from gaze_source import discover_records, read_record, read_stage
+from gaze_preprocessing import preprocess_record
+from eye_events import ivt_labels, idt_labels, extract_events, label_agreement
+from gaze_statistics import participant_summary, summarise_participant_metrics
+from core.stage_outputs import ensure_stage_inputs
+
+
+def _example_record(n=500):
+    raw = pd.DataFrame({
+        "record_id":"S_1001_S1_FXS", "participant_id":"001", "task":"FXS",
+        "sample_index":np.arange(n), "n":np.arange(n, dtype=float),
+        "x": np.r_[np.zeros(n//2), np.full(n-n//2,2.)],
+        "y":np.zeros(n), "val":np.zeros(n,int),
+        "lab":np.ones(n,int),
+    })
+    raw.loc[100:105,"val"]=1
+    raw.loc[100:105,["x","y"]]=np.nan
+    return raw
+
+
+def test_invalid_gaze_breaks_continuity():
+    prepared = preprocess_record(_example_record())
+    assert prepared.loc[102, "valid_for_motion"] == False
+    assert pd.isna(prepared.loc[106, "velocity_dva_s"])
+    assert prepared.loc[99, "segment_id"] != prepared.loc[107, "segment_id"]
+    assert prepared.loc[99, "x"] == 0.0
+
+
+def test_ivt_idt_keep_unclassified_samples():
+    frame = preprocess_record(_example_record())
+    ivt = ivt_labels(frame)
+    idt = idt_labels(frame)
+    assert len(ivt) == len(frame)
+    assert len(idt) == len(frame)
+    assert ivt[102] == "unknown" and idt[102] == "unknown"
+    assert "saccade" not in set(idt)
+    events = extract_events(frame, ivt, "IVT")
+    assert (events.duration_ms >= 0).all()
+    agreement = label_agreement(frame, ivt)
+    assert agreement["eligible_samples"] <= len(frame)
+
+
+def test_participant_bootstrap_requires_independent_support():
+    features = pd.DataFrame({
+        "participant_id":["001", "001", "002"],
+        "task":["FXS", "FXS", "FXS"],
+        "mean_fixation_ms":[100.0, 120.0, 200.0],
+    })
+    grouped = participant_summary(features,("mean_fixation_ms",))
+    assert len(grouped) == 2
+    stats = summarise_participant_metrics(grouped,("mean_fixation_ms",),draws=150)
+    assert stats.iloc[0].n_independent_participants == 2
+    assert np.isfinite(stats.iloc[0].bootstrap_ci_lower)
+
+
+def test_explicit_zip_restore_and_no_overwrite(tmp_path):
+    output_dir = tmp_path / "eye_tracking_foundations" / "output"
+    output_dir.mkdir(parents=True)
+    upload = tmp_path / "uploads"
+    upload.mkdir()
+    expected_zip = upload / "eye_tracking_foundations_Notebook_01_Outputs.zip"
+    with ZipFile(expected_zip,"w") as z:
+        z.writestr("01_gaze_samples.csv", "record_id,sample_index\nexample,0\n")
+    saved = ensure_stage_inputs(output_dir,1,("01_gaze_samples.csv",),upload_dir=upload)
+    assert saved[0].read_text().startswith("record_id")
+    assert len(ensure_stage_inputs(output_dir,1,("01_gaze_samples.csv",),upload_dir=upload))==1
+    with pytest.raises(RuntimeError,match="Incomplete"):
+        ensure_stage_inputs(output_dir,1,("01_gaze_samples.csv", "01_missing.csv"),upload_dir=upload)
+
+
+def test_zip_path_traversal_rejected(tmp_path):
+    folder = tmp_path / "eye_tracking_foundations" / "output"
+    folder.mkdir(parents=True)
+    upload = tmp_path / "upload"
+    upload.mkdir()
+    with ZipFile(upload/"eye_tracking_foundations_Notebook_02_Outputs.zip","w") as z:
+        z.writestr("02_ok.csv", "x\n1\n")
+        z.writestr("02_../wrong.csv", "unexpected\n")
+    # The filename does not match flat path syntax in the helper.
+    with pytest.raises(ValueError,match="Unsafe"):
+        ensure_stage_inputs(folder,2,("02_ok.csv",),upload_dir=upload)

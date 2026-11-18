@@ -1,79 +1,52 @@
 # Eye-Tracking Foundations & Signal Analysis: Research Methods and Evidence
 
-This document records the initial scientific design and the evidence that remains to be established for S1. The [study README](README.md) provides the concise overview and starting point. **Status:** Planning and scaffold only; no original data have been analysed and no experiments have been executed in this repository.
+This document describes the authored seven-stage S1 pipeline and the scientific evidence that has **not** yet been established by executing it on original GazeBase recordings. The companion [README](README.md) provides the entry point and notebook order.
 
 ## 1. Research Objective and Scope
 
-**Research question:** How can continuous eye-position and optional pupil recordings be transformed into reliable, interpretable and appropriately qualified eye-movement events and features?
-
-The initial purpose is educational and methodological: evaluate input quality, explain event definitions and build reusable representations before predictive modelling. Relevant analytical units include gaze samples nested within trials, sessions and participants. S1 does not define a comprehension, disease or neurocognitive prediction target.
-
-The planned comparisons concern transparent event-detection methods, agreement with appropriately documented reference annotations where available, and sensitivity to signal quality and algorithm choices. These are proposed analyses, not findings.
+Study how recorded gaze coordinates can be inspected, quality-assured and transformed into transparently derived event intervals, features, descriptive analyses and visualisations. This is a bounded methodological and educational study, not a model estimating cognition, reading comprehension or clinical outcomes.
 
 ## 2. Data Sources, Cohort and Target Definitions
 
-### Candidate sources and provenance
+The intended primary source is [GazeBase](https://doi.org/10.6084/m9.figshare.12912257), described in [Griffith et al., Scientific Data (2021)](https://doi.org/10.1038/s41597-021-00959-y). Its original CSV structure, source units and available EyeLink parser annotations are source-documented, not rechecked here on extracted genuine files. The initial script selects up to three participants with complete `FXS`, `HSS`, `RAN` and `TEX` records in Round 1, Session 1. This is deterministic bounded source inspection, not a representative sample. Exact source files and actual selected counts are pending real execution.
 
-A bounded [GazeBase](https://doi.org/10.6084/m9.figshare.12912257) subset is the primary candidate; see its [source publication](https://doi.org/10.1038/s41597-021-00959-y). A small [EMTeC](https://doi.org/10.3758/s13428-025-02677-4) raw-and-processed example is a possible complementary source for reading-related corrections. Exact release packages, licences, source files and parser-label availability remain unverified locally.
-
-The Blueprint describes GazeBase as a longitudinal eye-tracking corpus, but source publication counts are not the analysed cohort. No S1 inclusion, exclusion or sampling counts have yet been observed.
-
-### Analytical units and measurements
-
-The future contract will identify participant/session/trial/task and stimulus keys, timestamp units, sample intervals, gaze coordinate frames and units, validity indicators and eye identity where present. Optional pupil, calibration, target-position and reference-event information must be inspected before use.
-
-The intended derived outputs are documented intervals such as fixation, saccade and unknown/invalid segments, followed by event- and trial-level features. Vendor-derived event assignments can support agreement analysis but are not presumed independent ground truth. There is no supervised cognitive outcome in S1.
+Time is `n` in milliseconds; `x/y` are degrees of visual angle; `val` marks invalid/missing samples; `dP` is an uncalibrated area measure. Where available, vendor sample labels `1`, `2` and `-1` represent parser fixation, saccade and blink categories. Absent vendor annotations, especially in some viewing tasks, are not converted to false negatives. The event detectors produce derived *algorithm labels*, not clinical or behavioural targets.
 
 ## 3. Data Preparation and Representations
 
-The proposed source audit will inspect actual timestamps and sample gaps rather than assuming the nominal sampling rate establishes every interval. It will check missingness, invalid gaze, coordinate conventions, plausible ranges, duplicate identifiers and available calibration or pupil fields. Raw, cleaned and event-derived representations must remain distinguishable.
-
-Preprocessing options include carefully justified smoothing and bounded treatment of blinks or signal loss. Smoothing can alter saccade velocities and boundaries, and missing samples must not be interpolated into fabricated valid movements. No concrete filtering threshold, interpolation window or coordinate conversion is approved before data inspection.
-
-Source-to-derived records will retain keys and provenance needed to trace transformations and prevent accidental mixing of trials or incompatible measurement frames.
+Notebook 01 preserves original record/sample identity, timestamps and source validity, while reporting observed quality. Notebook 02 applies a centred 5-sample rolling median only *within contiguous valid segments*, with a 5-ms maximum adjacency gap; these are starting parameters for education, not optimised or validated. Original `x/y` values remain available, and missing gaze is neither bridged nor assigned invented eye movements. Velocity is computed from consecutive smoothed valid coordinates and timestamps in degrees of visual angle per second. First samples of each segment have undefined adjacent velocity.
 
 ## 4. Experimental Design and Evaluation
 
-This is initially a signal-processing and method-comparison study, not a prediction benchmark. Planned checks include valid sample coverage, event-duration and boundary distributions, sensitivity to detector thresholds, and event agreement with supported reference labels.
+Notebook 03 computes I-VT and fixation-only I-DT assignments on exactly the prepared sample set. I-VT uses an initial threshold of 30 dva/s, minimum fixation duration 80 ms and minimum saccade duration 6 ms. I-DT uses a 1-dva sum-of-axis-range dispersion threshold and 80-ms fixation minimum. Non-fixation I-DT samples remain unknown rather than being presented as saccades or blinks. Vendor comparison uses only records/samples with compatible available reference labels, reporting denominator and coverage. It is conditional agreement, not an independently adjudicated event-level accuracy estimate.
 
-Comparisons will state sample-level versus event-level denominators, temporal tolerance, event taxonomy, units and source/task coverage. Participant and session dependence matters for any uncertainty estimate or inferential comparison; repeated samples and events must not be treated as independent people. A participant-disjoint protocol would be needed before claiming unseen-participant generalisation, but it is not imposed on purely within-record descriptive analysis.
-
-Specific tasks, records, reference annotations, event-matching rules and statistical tests await the data contract. There is no Train/Validation/Test division for S1 unless a separately justified fitted detector or supervised comparison requires one.
+Notebook 06 evaluates a fixed, exploratory 20/30/40-dva/s I-VT threshold grid on Notebook 02's stored motion representation. The change in label fractions and reference agreement is sensitivity analysis, not outcome-driven parameter selection. There is no fitted model, training split, held-out Test set or generalisation claim in the first S1 programme.
 
 ## 5. Methods, Models and Configurations
 
-The intended educational methods include velocity-threshold event detection (I-VT) and dispersion-threshold detection (I-DT), with explicit units, time windows, missing-data treatment and deterministic parameter reporting. Adaptive or established detectors such as REMoDNaV or appropriate `pymovements` implementations are candidates for external reference comparison, subject to compatible event definitions.
+The maintained modules are `gaze_source.py`, `gaze_quality.py`, `gaze_preprocessing.py`, `eye_events.py`, `gaze_features.py` and `gaze_statistics.py` under `code/src/`, with `stage_outputs.py` for explicit reuse of current outputs. Notebook 04 computes per-record fixation counts/duration, saccade velocity, an approximate fixation-centroid scanpath length and pupil summaries where valid measurements exist. It does not map gaze to word regions without verified stimulus geometry. Notebook 05 first aggregates repeated records at participant-by-task level, then calculates exploratory participant-resampled percentile intervals for available features using 500 draws and seed 17; this cannot compensate for a small independent cohort.
 
-Planned representations include fixation duration/count, saccade amplitude and velocity, gaze/scanpath geometry, and supported pupil or area-of-interest measures. Reading regressions and AOI transitions require credible stimulus geometry and cannot be inferred from horizontal gaze displacement alone.
-
-No detector has been implemented; no thresholds, model parameters, random seeds, package versions or hardware configurations have been measured or selected. The study does not require deep learning or an artificial classification target to justify its scope.
+All notebooks use numbered Markdown/code sections, non-destructive Colab checkout and source-code imports; external Human Movement infrastructure, when copied, must retain byte-exact code with provenance rather than being silently rewritten. Their scientific event-analysis modules are independent of Human Movement's EMG/IMU methods.
 
 ## 6. Results and Comparative Analysis
 
-**Not yet executed.** The repository contains no S1-derived cohorts, event tables, quality metrics, statistical results or generated scientific plots. The planned output filenames in the README are expected artefacts, not available results. No effectiveness, agreement or method-superiority claim is supported at this stage.
+**No real GazeBase run has occurred in this delivery.** No source-derived cohort counts, estimated detector agreements, features, uncertainty bounds or numerical findings are represented as observed. Tests with artificial, explicitly synthetic CSV records establish only bounded control-flow correctness and file hand-offs.
 
 ## 7. Robustness, Uncertainty and Additional Analyses
 
-Relevant planned checks are detector-threshold sensitivity, sample-gap and invalid-data handling, differences between available task types, and per-participant/session variation. Where reference events exist, the study should distinguish annotation disagreement from detector error and evaluate event-boundary tolerance.
-
-No robustness study, resampling interval or inferential test has been performed. Statistical choices will be determined after observing the real records and relevant independent units.
+Planned real-data checks include task-wise missingness, timing gaps, optional pupil coverage, conditional EyeLink agreement, velocity-threshold sensitivity and participant-level variability. Pupil area is uncalibrated; device labels are reference annotations; viewing conditions and stimulus differences can confound task comparisons. Bootstrap uncertainty from a very small participant subset remains exploratory, not population-level certainty. Any substantive threshold or methodology changes after real-data inspection must be recorded and evaluated independently of favourable scores.
 
 ## 8. Current Outputs and Reproducibility
 
-The created repository scaffold consists of this document, the [study README](README.md), reserved [notebook](code/notebooks/), [source-code](code/src/), [curated-images](images/) and [output](output/) directories, plus the [repository-level data guide](../data/README.md). There are no numerical outputs, trained models, runnable research notebooks or scientific verification records yet.
+The seven notebooks write stage-prefixed current CSV files and plots to `output/`. Each downstream notebook directly consumes named producer files; to continue in a new Colab runtime, an explicit stage ZIP created by the unchanged `download_outputs_from_colab` helper can restore those current files. No historical output search, approval token, hidden retraining, or automatic source re-download occurs. Notebook 07 reads and reconciles summaries but does not execute earlier stages.
 
-The planned stage sequence is (1) source audit and gaze quality, (2) preprocessing and event detection, and (3) features, statistics and scanpaths. Once implemented, each notebook will own stable named outputs and downstream stages will consume the appropriate current files. Source versions, software dependencies, actual compute resources and regeneration instructions will be documented when verified; no installation or execution command is claimed to have been tested.
-
-Original datasets and derived reconstruction caches remain local by default, under source-appropriate paths described in the data guide. The Git repository does not contain participant-level recordings.
+Static syntax/notebook validity checks and a complete synthetic pipeline exercise are part of the development verification, not independent replication. Reproduction on original GazeBase files, Colab-runtime tests and any publication of empirical result files remain pending. The exact release, environment versions, accessible files and any necessary licence restrictions should be recorded at first genuine execution.
 
 ## 9. Discussion, Limitations and Future Work
 
-S1 currently establishes a bounded scientific plan, not a validated method or empirical finding. Its immediate dependencies are confirming an accessible licensed GazeBase subset, inspecting representative records and their timing/coordinate conventions, and establishing whether comparison annotations exist for the chosen tasks.
-
-Future authorised implementation will produce source-aware quality summaries, transparent detector comparisons, derived feature tables and scientifically labelled visualisations. Limitations will depend on device characteristics, annotation provenance, pupil availability, source coverage and the definition of a valid event. Neither fixation categories nor pupil changes establish cognitive interpretation on their own; downstream ML and EEG–eye-tracking research will require separate targets and evaluation designs.
+This implementation is preparation for S1 analysis, not a scientifically completed study. Main limitations are the uninspected real source subset, provisional smoothing and detector thresholds, possible event taxonomy mismatch, limited sample representativeness and lack of expert adjudication. The next validation task is to run Notebook 01 on genuine source CSVs, inspect the actual timebase and columns, and then execute all seven stages sequentially while reviewing empirical plots and rows for scientific consistency. Deep learning, EEG fusion and cognitive inference remain independent later-study responsibilities.
 
 ### References
 
-- GazeBase dataset: https://doi.org/10.6084/m9.figshare.12912257
-- GazeBase source publication: https://doi.org/10.1038/s41597-021-00959-y
-- EMTeC source publication: https://doi.org/10.3758/s13428-025-02677-4
+- Griffith et al. (2021). GazeBase, a large-scale, multi-stimulus, longitudinal eye movement dataset. Scientific Data. https://doi.org/10.1038/s41597-021-00959-y
+- GazeBase Figshare data repository: https://doi.org/10.6084/m9.figshare.12912257
