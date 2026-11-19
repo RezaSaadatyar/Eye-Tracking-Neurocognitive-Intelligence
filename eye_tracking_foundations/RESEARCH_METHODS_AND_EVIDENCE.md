@@ -1,6 +1,6 @@
 # Eye-Tracking Foundations & Signal Analysis: Research Methods and Evidence
 
-This document describes the authored seven-stage S1 pipeline and the scientific evidence that has **not** yet been established by executing it on original GazeBase recordings. The companion [README](README.md) provides the entry point and notebook order.
+This document separates the recorded execution of Notebook 01 on original GazeBase recordings from the still-unexecuted scientific stages 02–07. The companion [README](README.md) provides the entry point and notebook order.
 
 ## 1. Research Objective and Scope
 
@@ -8,13 +8,13 @@ Study how recorded gaze coordinates can be inspected, quality-assured and transf
 
 ## 2. Data Sources, Cohort and Target Definitions
 
-The intended primary source is [GazeBase](https://doi.org/10.6084/m9.figshare.12912257), described in [Griffith et al., Scientific Data (2021)](https://doi.org/10.1038/s41597-021-00959-y). Its original CSV structure, source units and available EyeLink parser annotations are source-documented, not rechecked here on extracted genuine files. The initial script selects up to ten complete participants with complete `FXS`, `HSS`, `RAN` and `TEX` records in Round 1, Session 1. This is deterministic bounded source inspection, not a representative sample. The source reader selects up to ten complete participants in sorted ID order and reports how many are actually present. File-level findings and study results remain pending original-data execution.
+The intended primary source is [GazeBase](https://doi.org/10.6084/m9.figshare.12912257), described in [Griffith et al., Scientific Data (2021)](https://doi.org/10.1038/s41597-021-00959-y). Source columns and record identity are visible in the committed Notebook 01 execution. The original-data run is not independently reproduced in this review. The initial script selects up to ten complete participants with complete `FXS`, `HSS`, `RAN` and `TEX` records in Round 1, Session 1. This is deterministic bounded source inspection, not a representative sample. The source reader selects up to ten complete participants in sorted ID order and reports how many are actually present. The committed notebook records 10 participants, 40 task files and 2,778,008 source rows. The exact CSV contents and complete stage-owned outputs are not committed, so those figures have not been independently recomputed.
 
 Time is `n` in milliseconds; `x/y` are degrees of visual angle; `val` marks invalid/missing samples; `dP` is an uncalibrated area measure. Where available, vendor sample labels `1`, `2` and `-1` represent parser fixation, saccade and blink categories. Absent vendor annotations, especially in some viewing tasks, are not converted to false negatives. The event detectors produce derived *algorithm labels*, not clinical or behavioural targets.
 
 ## 3. Data Preparation and Representations
 
-Notebook 01 preserves original record/sample identity, timestamps and source validity, while reporting observed quality. Notebook 02 applies a centred 5-sample rolling median only *within contiguous valid segments*, with a 5-ms maximum adjacency gap; these are starting parameters for education, not optimised or validated. Original `x/y` values remain available, and missing gaze is neither bridged nor assigned invented eye movements. Velocity is computed from consecutive smoothed valid coordinates and timestamps in degrees of visual angle per second. First samples of each segment have undefined adjacent velocity.
+Notebook 01 preserves original record/sample identity, timestamps and source validity, while reporting observed quality. Notebook 02 streams the current large stage-01 CSV by contiguous full record and applies a centred 5-sample rolling median only *within contiguous valid segments*, with a 5-ms maximum adjacency gap; these are starting parameters for education, not optimised or validated. Original `x/y` values remain available, and missing gaze is neither bridged nor assigned invented eye movements. Velocity is computed from consecutive smoothed valid coordinates and timestamps in degrees of visual angle per second. First samples of each segment have undefined adjacent velocity. The median uses centred neighbouring samples and therefore represents offline rather than causal real-time processing. The streaming implementation uses the unchanged record-level calculation and writes a complete replacement file only when all records pass identity checks.
 
 ## 4. Experimental Design and Evaluation
 
@@ -30,7 +30,7 @@ All notebooks use numbered Markdown/code sections, non-destructive Colab checkou
 
 ## 6. Results and Comparative Analysis
 
-**No real GazeBase run has occurred in this delivery.** No source-derived cohort counts, estimated detector agreements, features, uncertainty bounds or numerical findings are represented as observed. Tests with artificial, explicitly synthetic CSV records establish only bounded control-flow correctness and file hand-offs.
+**Notebook 01 executed:** The committed notebook output reports 10 participants and 40 recordings with a total of 2,778,008 sample rows. Per-record valid gaze fractions range from approximately 67.35% to 100% (the minimum and maximum printed in the notebook). These observed source-audit values are descriptive and not reproduced independently here. No actual derived event labels, velocity summaries, uncertainty intervals or detector-reference comparisons are available from executed Notebooks 02–07; the synthetic tests assess software contracts only.
 
 ## 7. Robustness, Uncertainty and Additional Analyses
 
@@ -40,11 +40,11 @@ Planned real-data checks include task-wise missingness, timing gaps, optional pu
 
 The seven notebooks write stage-prefixed current CSV files and plots to `output/`. Each downstream notebook directly consumes named producer files; to continue in a new Colab runtime, an explicit stage ZIP created by the unchanged `download_outputs_from_colab` helper can restore those current files. No historical output search, approval token, hidden retraining, or automatic source re-download occurs. Notebook 07 reads and reconciles summaries but does not execute earlier stages.
 
-Static syntax/notebook validity checks and a complete synthetic pipeline exercise are part of the development verification, not independent replication. Reproduction on original GazeBase files, Colab-runtime tests and any publication of empirical result files remain pending. The exact release, environment versions, accessible files and any necessary licence restrictions should be recorded at first genuine execution.
+Static syntax/notebook validity checks and a complete synthetic pipeline exercise are part of the development verification, not independent replication. Notebook 01's Colab execution and saved output cells are visible in its committed notebook, but the generated CSV tables are not published, and no independent reproduction has occurred here. Stage 02 remains to be executed in Colab on the full 10-participant source, and subsequent stages are pending. The unchanged Notebook 01 CSV is reused for stage 02; a chunked reader limits peak RAM but does not reduce the source dataset or change preprocessing settings. The exact release, environment versions, accessible files and any necessary licence restrictions should be recorded at first genuine execution.
 
 ## 9. Discussion, Limitations and Future Work
 
-This implementation is preparation for S1 analysis, not a scientifically completed study. Main limitations are the uninspected real source subset, provisional smoothing and detector thresholds, possible event taxonomy mismatch, limited sample representativeness and lack of expert adjudication. The next validation task is to run Notebook 01 on genuine source CSVs, inspect the actual timebase and columns, and then execute all seven stages sequentially while reviewing empirical plots and rows for scientific consistency. Deep learning, EEG fusion and cognitive inference remain independent later-study responsibilities.
+This implementation has completed source inspection for Notebook 01 but is not a scientifically completed S1 study. Main limitations are the uninspected real source subset, provisional smoothing and detector thresholds, possible event taxonomy mismatch, limited sample representativeness and lack of expert adjudication. The next validation task is to review Notebook 01's full quality outputs, then execute Notebook 02 on its current saved sample CSV and inspect timebase boundaries and velocity before proceeding to Notebook 03. All subsequent stages should use the named current files for consistent scientific provenance. Deep learning, EEG fusion and cognitive inference remain independent later-study responsibilities.
 
 ### References
 

@@ -13,6 +13,7 @@ sys.path.insert(0, str(PROJECT / "python_modules"))
 
 from gaze_source import discover_records, read_record, read_stage
 from gaze_preprocessing import preprocess_record
+from gaze_streaming import preprocess_stage_file
 from eye_events import ivt_labels, idt_labels, extract_events, label_agreement
 from gaze_statistics import participant_summary, summarise_participant_metrics
 from core.stage_outputs import ensure_stage_inputs
@@ -118,3 +119,48 @@ def test_ten_complete_participants_in_nested_round_layout(tmp_path):
     assert set(records.task) == set(tasks)
     assert all("/S1_" in path.replace("\\", "/") for path in records.path)
     assert "011" not in set(records.participant_id)
+
+
+def test_streaming_stage_matches_record_preprocessing(tmp_path):
+    """Chunk boundaries do not alter sample-level scientific calculations."""
+    a = _example_record(117)
+    b = _example_record(117).copy()
+    b["record_id"] = "S_1002_S1_FXS"
+    b["participant_id"] = "002"
+    b["n"] += 17
+    rows = pd.concat([a, b], ignore_index=True)
+    input_csv = tmp_path / "01_gaze_samples.csv"
+    output_csv = tmp_path / "02_preprocessed_samples.csv"
+    rows.to_csv(input_csv, index=False)
+    summary, example = preprocess_stage_file(
+        input_csv, output_csv, chunksize=13,
+        expected_records={"S_1001_S1_FXS", "S_1002_S1_FXS"},
+    )
+    actual = pd.read_csv(output_csv, dtype={"participant_id": str})
+    expected = pd.concat(
+        [preprocess_record(a), preprocess_record(b)],
+        ignore_index=True,
+    )
+    assert len(summary) == 2
+    assert len(example) == 117
+    assert len(actual) == len(rows)
+    for col in ("x_smooth", "y_smooth", "velocity_dva_s", "segment_id"):
+        np.testing.assert_allclose(
+            actual[col].to_numpy(dtype=float),
+            expected[col].to_numpy(dtype=float),
+            equal_nan=True,
+        )
+    assert set(actual["record_id"]) == {"S_1001_S1_FXS", "S_1002_S1_FXS"}
+
+
+def test_streaming_rejects_disordered_repeated_record(tmp_path):
+    a = _example_record(20)
+    b = a.copy()
+    b["record_id"] = "S_1002_S1_FXS"
+    source = tmp_path / "01_gaze_samples.csv"
+    destination = tmp_path / "02_preprocessed_samples.csv"
+    pd.concat([a, b, a], ignore_index=True).to_csv(source, index=False)
+    with pytest.raises(ValueError, match="non-contiguous"):
+        preprocess_stage_file(source, destination, chunksize=7)
+    assert not destination.exists()
+    assert not destination.with_name(destination.name + ".partial").exists()

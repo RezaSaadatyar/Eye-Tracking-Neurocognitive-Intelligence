@@ -2,19 +2,19 @@
 
 A seven-notebook research and learning workflow for inspecting GazeBase raw eye-movement recordings, assessing gaze quality, deriving and analysing fixation and saccade events, building source-aware features and reporting bounded evidence.
 
-**Status:** Seven source notebooks, study-specific Python modules and conceptual SVG workflows have been authored. Static checks and synthetic-data pipeline tests were performed in the development environment. **The original GazeBase dataset has not been run or independently reproduced in this delivery.** Scientific output values remain pending execution on the actual selected dataset.
+**Status:** Notebook 01 has a committed run on the selected original GazeBase Round 1 / Session 1 subset (10 participants, 40 task records, 2,778,008 samples). Its outputs show a per-record valid-sample range of 67.35–100%; the corresponding generated CSVs are not committed. Notebooks 02–07 remain unexecuted on this cohort. The initial software testing used synthetic inputs and does not establish detector validity or independent replication.
 
 **Scientific methods and evidence:** [RESEARCH_METHODS_AND_EVIDENCE.md](RESEARCH_METHODS_AND_EVIDENCE.md).
 
 ## 1. Dataset and Experimental Protocol
 
-The initial candidate is GazeBase v2.0, [source repository](https://doi.org/10.6084/m9.figshare.12912257) and [original dataset paper](https://doi.org/10.1038/s41597-021-00959-y). Its CSV records document gaze position in degrees of visual angle and timestamps in milliseconds. The initial educational subset requires Round 1, Session 1 with FXS, HSS, RAN and TEX records for each selected participant; a maximum of three eligible participants is used for an initial bounded inspection. This is not intended as a random or representative cohort.
+The initial candidate is GazeBase v2.0, [source repository](https://doi.org/10.6084/m9.figshare.12912257) and [original dataset paper](https://doi.org/10.1038/s41597-021-00959-y). Its CSV records document gaze position in degrees of visual angle and timestamps in milliseconds. The initial educational subset requires Round 1, Session 1 with FXS, HSS, RAN and TEX records for each selected participant; the current run included ten complete participants (subject source IDs 1001–1010). This is not intended as a random or representative cohort.
 
 Inputs are source-identified gaze recordings, not directly observed cognitive states. Sample validity, EyeLink labels and pupil area are interpreted separately; vendor labels support an agreement comparison only when available. No Train/Validation/Test scheme is imposed on descriptive S1 analyses.
 
 ## 2. Experimental Programme
 
-The source audit is configured for up to **ten complete participants** from Round 1, Session 1, with all four tasks (FXS, HSS, RAN and TEX). This is a requested upper bound, not an observed cohort size. Notebook 01 reports the number actually discovered; when fewer than ten complete participants exist, subsequent outputs are preliminary and must be regenerated once the intended source subset is available. Session 2 is not analysed in the current pipeline.
+The source audit is configured for up to **ten complete participants** from Round 1, Session 1, with all four tasks (FXS, HSS, RAN and TEX). This selection was observed in the committed Notebook 01 output, not independently reproduced here. The first stage printed 2,778,008 input samples across 40 records. If the source subset changes, rerun Notebook 01 and regenerate dependent stage outputs. Session 2 is not analysed in the current pipeline.
 
 
 | Notebook | Main responsibility | Named current outputs for later stages |
@@ -31,11 +31,11 @@ This is an approved seven-notebook expansion of the earlier three-stage S1 outli
 
 ## 3. Main Results
 
-**No GazeBase numerical study results are reported at present.** The software passed targeted static validation and a complete *synthetic* seven-notebook data-flow exercise. Synthetic examples are infrastructure checks, not source observations, detector accuracy or cohort estimates.
+**Recorded Notebook 01 evidence:** 10 distinct participants, 40 source recordings and 2,778,008 sample rows. The saved notebook reports valid-sample proportions ranging from 0.6735 to 1.0000 across the 40 records. These are descriptive source-audit findings, not event-detection results or evidence of generalisation. The stage-owned CSVs are not published; inspect the committed notebook execution cells for the recorded counts and quality table. Notebooks 02–07 have not produced real-cohort numerical results; synthetic pipeline checks remain infrastructure evidence only.
 
 ## 4. Running and Reviewing the Study
 
-Run the notebooks in ascending order in VS Code with a Colab Python kernel. They begin with a Colab checkout followed by the original Human Movement-style `setup_colab()` interface and grouped imports. Prior-stage files are loaded from explicit paths and not recomputed. A new runtime can use the previous stage's downloadable ZIP in `/content/`; see the [dataset/ZIP guide](../data/README.md).
+Run the notebooks in ascending order in VS Code with a Colab Python kernel. They begin with a Colab checkout followed by the original Human Movement-style `setup_colab()` interface and grouped imports. Prior-stage files are loaded from explicit paths and not recomputed. Notebook 02 streams complete records from the existing large `01_gaze_samples.csv` to limit peak memory rather than loading two full-cohort tables together. A new runtime can use the previous stage's downloadable ZIP in `/content/`; see the [dataset/ZIP guide](../data/README.md).
 
 Notebook 01 expects extracted CSVs under `data/raw/gazebase/`. The dataset is not automatically downloaded. Notebook 03 uses pedagogical starting thresholds (I-VT 30 dva/s; I-DT dispersion 1 dva with 80-ms minimum duration) which are **not validated scientific selections**. Notebook 06 explores 20/30/40 dva/s as sensitivity settings. Results cannot support clinical, cognitive or person-generalisation claims.
 
@@ -54,4 +54,4 @@ Each stage owns its numbered current outputs and replaces them on rerun. Files i
 
 Gaze positions are measured estimates; fixation and saccade events are algorithmically derived; vendor event annotations are instrument references rather than ground truth. Report actual timestamp behaviour, missingness, method sensitivity and the number of independent participants, rather than assuming the nominal sample rate or treating many gaze samples as many independent people.
 
-The source sample, resulting empirical values, detector validity and uncertainty interpretation must be reviewed after real-data execution. No prospective, clinical or deployed neurocognitive inference is part of S1.
+Notebook 01 source counts and validity coverage have been recorded, but the quality table, detector validity and uncertainty interpretation must be reviewed using full compatible stage outputs. Remaining S1 stages require real-data execution. No prospective, clinical or deployed neurocognitive inference is part of S1.
