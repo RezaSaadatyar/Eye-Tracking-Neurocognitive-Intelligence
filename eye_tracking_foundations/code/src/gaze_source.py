@@ -23,7 +23,7 @@ TASKS = ("FXS", "HSS", "RAN", "TEX")
 
 def discover_records(
     root: str | Path, *, round_id: int = 1, session_id: int = 1,
-    tasks: tuple[str, ...] = TASKS, max_participants: int = 3,
+    tasks: tuple[str, ...] = TASKS, max_participants: int = 10,
 ) -> pd.DataFrame:
     """Select complete participant/task bundles without order dependence.
 

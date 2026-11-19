@@ -14,6 +14,9 @@ Inputs are source-identified gaze recordings, not directly observed cognitive st
 
 ## 2. Experimental Programme
 
+The source audit is configured for up to **ten complete participants** from Round 1, Session 1, with all four tasks (FXS, HSS, RAN and TEX). This is a requested upper bound, not an observed cohort size. Notebook 01 reports the number actually discovered; when fewer than ten complete participants exist, subsequent outputs are preliminary and must be regenerated once the intended source subset is available. Session 2 is not analysed in the current pipeline.
+
+
 | Notebook | Main responsibility | Named current outputs for later stages |
 | --- | --- | --- |
 | [01 Source Audit and Gaze Quality](code/notebooks/01_source_audit_and_gaze_quality.ipynb) | Source records, schema, sample quality and temporal inspection | `01_gaze_samples.csv`, `01_quality_by_record.csv`, `01_source_manifest.csv`, plot |

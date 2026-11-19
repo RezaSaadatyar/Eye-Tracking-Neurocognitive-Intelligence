@@ -34,6 +34,12 @@ After each notebook run, the unchanged Human Movement `download_outputs_from_col
 
 Each notebook writes its current results into `eye_tracking_foundations/output/`, normally excluded from Git. Original and reconstructed datasets under `data/raw/` and `data/processed/` must remain local unless separately reviewed and authorised for public redistribution.
 
+## Notebook 01: ten-participant cohort selection
+
+Notebook 01 now requests up to **ten complete participants** in Round 1, Session 1, each with FXS, HSS, RAN and TEX. Intended source IDs are Subject_1001–Subject_1010. The exact observed count is reported when the notebook runs. If fewer complete participants are currently available, its results describe a preliminary source subset; rerun the producer and dependent stages after completing the intended cohort. Session 2 remains outside the current seven-notebook analysis.
+
+Note that the repository is public: CSVs previously force-added to Git are publicly accessible despite the existing `.gitignore`. Confirm redistribution rights before adding more original CSVs and avoid adding unrelated source materials.
+
 ## Prepared GazeBase folders (Round 1)
 
 The repository contains *empty tracked directory placeholders* for `Subject_1001` through `Subject_1020`, with four task folders for Session 1 and four reserved task folders for Session 2. Their common root is:

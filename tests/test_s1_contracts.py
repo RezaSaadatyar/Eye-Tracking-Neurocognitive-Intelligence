@@ -92,3 +92,29 @@ def test_zip_path_traversal_rejected(tmp_path):
     # The filename does not match flat path syntax in the helper.
     with pytest.raises(ValueError,match="Unsafe"):
         ensure_stage_inputs(folder,2,("02_ok.csv",),upload_dir=upload)
+
+
+def test_ten_complete_participants_in_nested_round_layout(tmp_path):
+    folder = tmp_path / "data" / "raw" / "gazebase"
+    tasks = {
+        "FXS": "Fixations",
+        "HSS": "Horizontal_Saccades",
+        "RAN": "Random_Saccades",
+        "TEX": "Reading",
+    }
+    for subject in range(1001, 1012):
+        # Last participant is incomplete and must not displace a complete one.
+        for code, label in tasks.items():
+            if subject == 1011 and code == "TEX":
+                continue
+            path = (folder / "GazeBase_v2_0" / "Round_1"
+                    / f"Subject_{subject}" / f"S1_{label}"
+                    / f"S_{subject}_S1_{code}.csv")
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text("n,x,y,val\n0,0,0,0\n1,0,0,0\n", encoding="utf-8")
+    records = discover_records(folder)
+    assert len(records) == 40
+    assert records.participant_id.nunique() == 10
+    assert set(records.task) == set(tasks)
+    assert all("/S1_" in path.replace("\\", "/") for path in records.path)
+    assert "011" not in set(records.participant_id)
