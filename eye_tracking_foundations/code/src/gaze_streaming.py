@@ -6,7 +6,6 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-import numpy as np
 import pandas as pd
 
 from gaze_preprocessing import preprocess_record
@@ -80,7 +79,9 @@ def preprocess_stage_file(
             "task": str(prepared["task"].iloc[0]),
             "n_samples": int(len(prepared)),
             "n_valid": int(prepared["valid_for_motion"].sum()),
-            "n_segments": int(prepared["segment_id"].nunique()),
+            "n_segments": int(prepared.loc[
+                prepared["valid_for_motion"], "segment_id"
+            ].nunique()),
             "median_velocity_dva_s": float(prepared["velocity_dva_s"].median()),
             "max_velocity_dva_s": float(prepared["velocity_dva_s"].max()),
         })

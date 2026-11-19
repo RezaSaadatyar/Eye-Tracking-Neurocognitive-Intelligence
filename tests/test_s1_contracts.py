@@ -142,6 +142,7 @@ def test_streaming_stage_matches_record_preprocessing(tmp_path):
         ignore_index=True,
     )
     assert len(summary) == 2
+    assert (summary["n_segments"] == 2).all()  # Invalid spans are not valid runs.
     assert len(example) == 117
     assert len(actual) == len(rows)
     for col in ("x_smooth", "y_smooth", "velocity_dva_s", "segment_id"):

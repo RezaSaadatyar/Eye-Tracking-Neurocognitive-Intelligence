@@ -15,7 +15,7 @@ def preprocess_record(
     """Never smooth across invalid samples, time reversals or large gaps.
 
     Raw gaze remains unchanged; the smoothed representation is optional.
-    A causal velocity is based on adjacent eligible samples and is undefined
+    Adjacent-sample velocity is based on the smoothed gaze trace and is undefined
     at each segment start. No interpolation or inferred blink repair occurs.
     """
     require_columns(record, ("record_id", "sample_index", "n", "x", "y", "val"))
