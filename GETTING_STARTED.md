@@ -1,14 +1,14 @@
-# S1: Seven-Notebook Development Delivery
+# S1: Getting Started and Source-File Reuse
 
-This directory is a **source-only companion copy** of the files for the existing GitHub repository:
+This guide describes the current seven-stage S1 workflow in the GitHub repository:
 
 `https://github.com/RezaSaadatyar/Eye-Tracking-Neurocognitive-Intelligence`
 
-It contains seven S1 notebooks, six independent scientific modules, one ZIP restoration helper, seven conceptual editable SVG workflow figures, a focused test set and updated S1/data documentation. No original GazeBase recordings or numerical study outputs are distributed.
+The repository contains seven S1 notebooks, study-specific scientific modules (including a record-wise streaming reader), a ZIP restoration helper, seven editable five-band SVG figures, tests and study documentation. Notebook 01 has been executed on ten GazeBase participants; the repository currently also includes 40 original Session 1 task CSVs committed by the operator. The large stage-owned output tables are not committed. Notebooks 02–07 have not yet been executed on this cohort.
 
 ## Bring the unchanged Human Movement infrastructure into this repository
 
-The exact reference for the shared helpers is Human Movement Intelligence, Project 3 (`multimodal_movement_learning`), commit `67bc0803d2ea3fe0fcfcc618ea5e316d28d8cc29` on 18 November 2026. If preparing this source-only archive independently of the GitHub checkout, run the included one-time importer in a network-enabled terminal to obtain the same unchanged helpers. If cloning the updated GitHub repository, the shared helpers are already present and this command is not required:
+The exact reference for the shared helpers is Human Movement Intelligence, Project 3 (`multimodal_movement_learning`), commit `67bc0803d2ea3fe0fcfcc618ea5e316d28d8cc29` on 18 November 2026. If preparing a standalone source overlay without the shared helpers, the included one-time importer can obtain the same unchanged helpers. For a current clone of this GitHub repository, they are already present and this command is not required:
 
 ```bash
 python IMPORT_EXACT_HUMAN_MOVEMENT_HELPERS.py
@@ -20,20 +20,20 @@ The imported output-download helper packages named current outputs into a stage 
 
 ## Placement and publication
 
-Merge the files in this overlay into the existing checkout with the same relative paths, preserving the existing MIT `LICENSE` and all unrelated files. Do not delete existing files merely because they are not listed in this delivery. The Colab checkout reads the selected remote repository revision, so locally edited notebook and module files must also be available in that checkout before execution. The archive itself does not change the remote revision when copied to a different machine.
+The Colab checkout reads the selected GitHub repository revision. Use a fresh checkout or the existing notebook's safe repository update before using new code; do not mix old loaded modules with updated source files. Keep the original MIT `LICENSE`, project outputs and unrelated files unchanged.
 
 Inspect the changes, dependencies and staged file sizes before any authorised publication; do not publish `data/raw/`, private records, or generated research outputs indiscriminately.
 
 ## Data and execution
 
-1. Obtain an authorised GazeBase subset from the [official Figshare release](https://doi.org/10.6084/m9.figshare.12912257). The archive is large; do not treat it as a small automatic Colab download.
-2. Preserve the original CSV filenames and place selected files under `data/raw/gazebase/` in the Colab checkout. Four tasks (FXS/HSS/RAN/TEX) from Round 1 and Session 1 for the same participant are expected by the initial Notebook 01 selection. The loader accepts nested source folders.
-3. Open `01_source_audit_and_gaze_quality.ipynb` in VS Code connected to Colab, then run top-to-bottom. Repeat for Notebook 02 through 07, in order. Do not manually insert invented missing-value or parser-label fields.
+1. The current public source checkout already contains 40 original GazeBase Session 1 CSVs (FXS/HSS/RAN/TEX for subjects 1001–1010). If using a private checkout, retain the same folder structure and original filenames. The official release is [Figshare GazeBase](https://doi.org/10.6084/m9.figshare.12912257); no large archive download occurs automatically.
+2. Notebook 01 has a committed real-data execution with 10 participants, 40 recordings and 2,778,008 sample rows. Do not rerun it to prepare Notebook 02 if its compatible current sample CSV is already available.
+3. Open Notebook 02 in VS Code connected to Colab, run it top-to-bottom, and inspect the stage-02 summary and velocity figure before proceeding to Notebook 03. The stage-02 reader consumes `01_gaze_samples.csv` and `01_source_manifest.csv` and writes `02_preprocessed_samples.csv` one complete record at a time to limit memory use.
 4. At the end of each notebook, the unchanged `download_outputs_from_colab` helper creates `eye_tracking_foundations_Notebook_NN_Outputs.zip` in `/content/` for download using Colab Contents in VS Code.
 5. If continuing in a new Colab runtime, upload the relevant *current* Notebook ZIP(s) to `/content/` before running the next notebook. The stage input helper loads existing named current outputs or restores the exact matching ZIP only when the required files are absent. It never silently reruns the earlier scientific stage.
 
-Notebook 01 does not contain a one-click download of the full GazeBase archive. No code has been executed against actual GazeBase files in the development environment: the executed pipeline verification used synthetic CSV records, and the five contract tests use synthetic fixtures. These checks are not scientific results.
+Notebook 01 has been executed on original GazeBase recordings in Colab (as shown by the committed output cells). This is not independent reproduction. The current stage-02 implementation has been checked with synthetic sample records, not executed on the actual ten-participant source; review its real output and RAM usage when running it. No deep-learning or cognitive target is fitted in S1.
 
-## After real-data execution
+## After Notebook 02 execution
 
-Inspect source-file counts, sample interval anomalies, validity, vendor-reference coverage, event classes, parameter sensitivity, participant support, stage output consistency, and chart captions. Update the S1 README and methods/evidence document from the actual saved results rather than from this plan.
+Inspect the 40-record preprocessing summary, the total sample count, valid-run counts, undefined boundary velocities, example raw-versus-smoothed gaze and saved output size. Stage-02 outputs are local by default; retain the ZIP for later notebooks. Only after that review should Notebook 03 event detection be run. Later stages will assess vendor-reference coverage, event classes and parameter sensitivity without inventing unsupported findings.
