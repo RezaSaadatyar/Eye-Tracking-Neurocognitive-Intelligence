@@ -43,7 +43,7 @@ Notebook 01 expects extracted CSVs under `data/raw/gazebase/`. The dataset is no
 
 - `code/notebooks/`: seven numbered source notebooks.
 - `code/src/`: source-adapter, quality, preprocessing, event, feature and descriptive-statistics modules.
-- `images/`: seven editable five-band conceptual SVG workflow figures.
+- `images/`: seven editable five-band SVG figures. Figures 01 and 02 contain a short **measured raw gaze excerpt** from `S_1001_S1_FXS.csv`; Figure 01 also reports the committed source-audit counts and per-record validity range, whereas Figure 02's processing diagrams are explicitly conceptual and its derived outputs are still pending execution.
 - `output/`: stage-owned machine-readable tables and experimental plots, produced only on execution.
 - `../python_modules/core/`: shared notebook infrastructure; see the helper provenance instructions in the development delivery.
 - `../data/README.md`: data access, source fields and current-stage ZIP transfers.
