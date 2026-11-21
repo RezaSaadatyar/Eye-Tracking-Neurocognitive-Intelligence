@@ -7,7 +7,6 @@ This module does not assign training partitions, fit models, or inspect Test sco
 from __future__ import annotations
 
 import hashlib
-import os
 import re
 import shutil
 import tempfile
@@ -316,7 +315,7 @@ def extract_selected_csvs(
     return extracted
 
 
-# ================= 04. Source Quality and Persistent Cache ====================
+# ================== 04. Source Quality and Colab-Local Files =================
 def _inspect_csv(path: Path) -> dict:
     """Inspect all rows without loading the entire original recording in RAM."""
     n_rows = n_valid = bad_time_steps = 0
@@ -347,45 +346,23 @@ def _inspect_csv(path: Path) -> dict:
     }
 
 
-def _copy_without_overwriting(source: Path, target: Path) -> None:
-    """Cache or restore a source file without replacing a different file."""
-    target.parent.mkdir(parents=True, exist_ok=True)
-    if target.exists():
-        if target.stat().st_size != source.stat().st_size:
-            raise ValueError(f"Existing source/cache size conflict: {target}")
-        return
-    temporary = target.with_suffix(".csv.partial")
-    try:
-        shutil.copyfile(source, temporary)
-        temporary.replace(target)
-    finally:
-        temporary.unlink(missing_ok=True)
-
-
 def ensure_gazebase_preflight(
-    *, raw_root: Path, cache_root: Path, download_root: Path,
-    output_csv: Path, requested_ids: tuple[int, ...],
+    *, raw_root: Path, download_root: Path, output_csv: Path,
+    requested_ids: tuple[int, ...],
 ) -> pd.DataFrame:
-    """Prepare and inspect a bounded Colab/Drive cohort without model fitting.
+    """Prepare and inspect a bounded cohort entirely in the Colab runtime.
 
-    Requires an already-mounted Google Drive directory for persistence.
-    The original GazeBase ZIP is removed after validated extraction/cache.
-    Outputs are a per-source CSV table, not Train/Validation/Test assignments.
+    Reuse existing original CSVs in the local repository checkout, downloading
+    and extracting only missing requested files. No Drive, Test evaluation,
+    model training or Git publication is performed.
     """
-    raw_root, cache_root = Path(raw_root), Path(cache_root)
-    download_root, output_csv = Path(download_root), Path(output_csv)
-    if not cache_root.is_dir():
-        raise FileNotFoundError(
-            "Drive cache directory is unavailable. Mount Google Drive first."
-        )
-    if len(requested_ids) != len(set(requested_ids)):
-        raise ValueError("Duplicate source IDs requested")
-    for sid in requested_ids:
-        for task in TASKS:
-            local = source_csv_path(raw_root, sid, task)
-            cached = source_csv_path(cache_root, sid, task)
-            if not local.exists() and cached.is_file():
-                _copy_without_overwriting(cached, local)
+    raw_root = Path(raw_root)
+    download_root = Path(download_root)
+    output_csv = Path(output_csv)
+    if not requested_ids or len(requested_ids) != len(set(requested_ids)):
+        raise ValueError("Provide distinct, nonempty source participant IDs")
+    # Preserve source files already present under the local checkout; they
+    # remain available to the existing notebooks in this Colab runtime.
 
     missing = [
         (sid, task) for sid in requested_ids for task in TASKS
@@ -417,9 +394,6 @@ def ensure_gazebase_preflight(
                 "n_bytes": local.stat().st_size,
                 **quality,
             })
-            _copy_without_overwriting(
-                local, source_csv_path(cache_root, sid, task),
-            )
     frame = pd.DataFrame(rows)
     if frame.source_id.nunique() != len(requested_ids):
         raise ValueError("Not all requested independent people are present")

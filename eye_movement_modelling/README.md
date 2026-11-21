@@ -54,21 +54,35 @@ The recorded Notebook 01 and 02 outputs establish the pilot data contract and cl
 
 ## 4. Running and Reviewing the Study
 
-**Colab source-acquisition preflight (implemented, not yet executed):**
-Notebook 01 contains a separate **Section 01A** that can validate an initial
-**20-person source-only trial** (source IDs 1001–1020, four Round 1 / Session 1
-tasks each). It uses the maintained official Figshare ZIP (file 27039812),
-checks the published checksum, retries alternative official Figshare endpoints\nand uses a source-equivalent Hugging Face mirror only if necessary (the same\npublished MD5 is always required). It extracts only missing CSVs into the
-Git-ignored local `data/raw/gazebase/` directory, and caches the bounded
-subset in the user's mounted Google Drive. The preflight writes
-`01_source_acquisition_preflight.csv` under this project's `output/`. Its
-source audit does **not** retrain classifiers, alter the existing ten-person
-Train/Validation/Test groups, examine Test scores or constitute the planned
-100-person experiment. The full official compressed archive is approximately
-6.7 GB; Colab network, disk and Drive capacity must be checked during actual
-execution. An HTTP 200 response with zero bytes is treated as a failed download, not\na completed source file. If Colab access is blocked, the official ZIP can\nbe supplied at `/content/gazebase_source_download/GazeBase_v2_0.zip`; the\nchecksum is still verified before extraction. New original data are not\npushed into GitHub. Existing tracked
-ten-person source files and Foundations analysis remain unchanged.
+**Colab-local source-acquisition preflight (implemented, not yet executed):**
+Notebook 01, Section 01A requests source IDs 1001–1020 (four Round 1 /
+Session 1 tasks per participant) for an **80-CSV source-only trial**. Existing
+original CSVs in the local Colab checkout are reused. Missing source files are
+retrieved from GazeBase v2.0 via official Figshare endpoints and a
+checksum-verified fallback if needed, then extracted selectively under the
+Git-ignored `data/raw/gazebase/` directory. The full source ZIP (approximately
+6.7 GB) is temporarily downloaded to `/content/gazebase_source_download/`
+and deleted after successful extraction; a failed partial download may be
+retained for resuming in the same Runtime.
 
+**No Google Drive mount or persistent cache is required.** The preflight saves
+`01_source_acquisition_preflight.csv` and
+`01_source_acquisition_task_summary.csv` to this project's `output/`.
+It separately packages **only those reports** into
+`/content/eye_movement_modelling_Source_Preflight_20_Outputs.zip` for manual
+download via the Colab file browser. The raw gaze CSVs are **not** included
+in this compact ZIP or automatically pushed to GitHub. Colab local files
+can disappear when the Runtime ends; downloading the report ZIP preserves
+the source audit but not the original gaze data.
+
+The preflight does **not** train classifiers, modify the existing ten-person
+Train/Validation/Test split, inspect Test scores or constitute the planned
+100-person experiment. To run the preflight, execute Notebook 01 setup and
+imports followed by Section 01A; keep the remaining pilot computations
+unchanged unless a larger experimental design is separately approved.
+An HTTP 200 response with zero bytes is treated as an error; if the Colab
+network blocks every endpoint, provide the official ZIP at
+`/content/gazebase_source_download/GazeBase_v2_0.zip` and rerun Section 01A.
 
 
 1. Open the [first notebook](code/notebooks/01_data_and_experimental_protocol.ipynb) in Colab or VS Code connected to Colab. Use the standard repository checkout cell and the maintained `setup_colab("eye_movement_modelling")` helper.

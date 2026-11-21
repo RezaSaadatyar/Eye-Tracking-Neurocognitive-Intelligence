@@ -32,31 +32,35 @@ A larger experiment reassigns and reconstructs the entire model cohort and may a
 
 ## 3. Data Preparation and Representations
 
-### Colab-only source acquisition trial (implementation awaiting execution)
+### Colab-local source acquisition trial (implementation awaiting execution)
 
-Notebook 01, Section 01A uses the public GazeBase v2.0 Figshare file
-`27039812` as its authorised original-data source. The acquisition helper
-reuses original source CSVs already available in the local checkout or the
-user's mounted Google Drive, and downloads the full approximately 6.7-GB
-official archive **only when files are missing**. To address zero-byte
-responses observed on Colab, it now attempts alternative official Figshare
-endpoints and then an identified exact-file mirror as a last resort. All
-transports must pass the same published archive size and MD5 checks. Empty,
-HTML and truncated responses are rejected, with resumable partial data
-retained where compatible. It selectively extracts four task CSVs for source IDs
-1001–1020, using original filenames. It supports directly contained CSVs and
-nested ZIP members, rejects missing required task records, and checks
-required numeric gaze/timestamp fields and a per-record validity summary.
+Notebook 01, Section 01A requests original GazeBase v2.0 Round 1 /
+Session 1 recordings for source IDs 1001–1020 (four task files each).
+Existing original source CSVs in the Colab checkout are reused; missing
+files are acquired from the published Figshare archive (file `27039812`).
+Alternate official Figshare endpoints and an identified exact-file mirror
+are available when the default download returns no data. Every transport
+must pass the published source file size and MD5 checks before extraction.
+Only required original CSVs are extracted. Basic timestamp, numeric-field
+and valid-gaze coverage checks produce
+`01_source_acquisition_preflight.csv`; an aggregate per-task audit is
+saved as `01_source_acquisition_task_summary.csv`.
 
-The preflight writes `01_source_acquisition_preflight.csv` as a current
-source-availability table. These 20 participants are a **download and
-data-integrity test**, not a new evaluation cohort, Cross-Validation fold,
-model comparison or Test partition. Existing recorded 10-person results remain
-the applicable experimental evidence until a larger design has been frozen
-and its stages are executed. The code does not download on module import and
-does not automatically add raw data to Git. The Colab download and Drive
-persistence paths have **not** been verified against a live session.
+The raw subset is available locally under `data/raw/gazebase/` for later
+Colab cells. No Google Drive mount or dataset publication to GitHub is
+performed. A small `eye_movement_modelling_Source_Preflight_20_Outputs.zip`
+outside the repository contains the two audit CSVs for manual download,
+but **not the original CSVs or source archive**. Source files and run outputs
+in Colab are ephemeral; the raw data may need to be downloaded again in a
+new Runtime unless separately retained by the operator.
 
+This is a **20-person acquisition preflight only**; it does not assign new
+Train/Validation/Test partitions, fit or select a model, or inspect a Test
+set. The previously recorded ten-person pilot evidence remains unchanged.
+A subsequent 100-person experimental design requires a separate approved
+source selection and leakage-controlled evaluation plan. The revised
+Colab-local preflight has not yet been executed on the official archive
+in a live Colab session.
 
 
 ### 3.1 Record feature construction

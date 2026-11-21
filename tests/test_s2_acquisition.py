@@ -63,18 +63,15 @@ def test_bounded_source_extraction_and_no_replacement(tmp_path, nested):
     assert extract_selected_csvs(archive, root, (1001, 1002)) == 0
 
 
-def test_drive_restore_and_preflight_writes_only_csv(tmp_path):
+def test_colab_local_reuse_and_preflight_writes_only_csv(tmp_path):
     raw = tmp_path / "raw"
-    cache = tmp_path / "drive"
-    cache.mkdir()
     for task in TASKS:
-        path = source_csv_path(cache, 1001, task)
+        path = source_csv_path(raw, 1001, task)
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(csv_bytes())
     output = tmp_path / "output" / "01_source_acquisition_preflight.csv"
     result = ensure_gazebase_preflight(
-        raw_root=raw, cache_root=cache,
-        download_root=tmp_path / "unused",
+        raw_root=raw, download_root=tmp_path / "unused",
         output_csv=output, requested_ids=(1001,),
     )
     assert len(result) == 4
@@ -83,6 +80,36 @@ def test_drive_restore_and_preflight_writes_only_csv(tmp_path):
     assert output.exists()
     assert len(pd.read_csv(output)) == 4
     assert not (tmp_path / "unused").exists()
+    assert len(list(raw.rglob("*.csv"))) == 4
+
+
+def test_colab_local_preflight_extracts_only_missing_sources(tmp_path, monkeypatch):
+    import s2_acquisition as acq
+
+    fixture = tmp_path / "fixture.zip"
+    build_archive(fixture, (1001, 1002, 1003), nested=True)
+    raw = tmp_path / "raw"
+    retained = source_csv_path(raw, 1001, "FXS")
+    retained.parent.mkdir(parents=True)
+    retained.write_bytes(csv_bytes())
+
+    def use_offline_fixture(dest):
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_bytes(fixture.read_bytes())
+
+    monkeypatch.setattr(acq, "_ensure_archive", use_offline_fixture)
+    output = tmp_path / "output" / "01_source_acquisition_preflight.csv"
+    result = ensure_gazebase_preflight(
+        raw_root=raw, download_root=tmp_path / "temp_download",
+        output_csv=output, requested_ids=(1001, 1002),
+    )
+    assert len(result) == 8
+    assert set(result.source_id) == {1001, 1002}
+    assert len(list(raw.rglob("*.csv"))) == 8
+    assert retained.read_bytes() == csv_bytes()
+    assert not list(raw.rglob("*1003*"))
+    assert not (tmp_path / "temp_download" / "GazeBase_v2_0.zip").exists()
+    assert len(pd.read_csv(output)) == 8
 
 
 def test_incomplete_or_invalid_source_is_rejected(tmp_path):
