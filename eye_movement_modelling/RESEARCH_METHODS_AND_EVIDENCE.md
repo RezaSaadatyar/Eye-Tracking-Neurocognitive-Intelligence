@@ -1,6 +1,6 @@
 # Eye-Movement Modelling & Advanced AI | Research Methods and Evidence
 
-**Project:** Eye-Movement Modelling & Advanced AI within Eye-Tracking & Neurocognitive Intelligence. **Target:** four-class GazeBase recording-protocol identity. **Evidence:** Notebook 01 has recorded source preparation and Notebook 02 has recorded classical-model Validation evaluation in a ten-person pilot; neural training and final Test evaluation remain pending. See [README](README.md) and the [editable workflow](images/study_overview.svg).
+**Project:** Eye-Movement Modelling & Advanced AI within Eye-Tracking & Neurocognitive Intelligence. **Target:** four-class GazeBase recording-protocol identity. **Evidence:** Notebooks 01–03 record source preparation, classical Validation and CNN/TCN Validation in a ten-person pilot; GRU/Transformer training and final Test evaluation remain pending. See [README](README.md) and the [editable workflow](images/study_overview.svg).
 
 ## 1. Research Objective and Scope
 
@@ -130,7 +130,7 @@ At n=10, two Test people cannot provide a reliable population accuracy estimate 
 | 03–04 | Neural training and epoch selection | AdamW lr 0.001, weight decay 0.01, batch 64, up to eight epochs, early stopping patience 3, seed 17 |
 | 05 | Final comparison and descriptive robustness | Frozen models; Validation-based choice; one Test evaluation; feature-channel intervention on Validation |
 
-Models are intentionally small; that does **not** guarantee an observed Colab runtime, numerical stability or fair compute cost across architectures. Each neural model independently saves its state dictionary, learning curve, record-level Validation predictions and confusion plot. Parameter counts and selected epochs will be recorded upon execution.
+Models are intentionally small; that does **not** guarantee an observed Colab runtime, numerical stability or fair compute cost across architectures. Each neural model independently saves its state dictionary, learning curve, record-level Validation predictions and confusion plot. CNN/TCN parameter counts and selected epochs have been recorded; GRU/Transformer results remain pending.
 
 ## 6. Results and Comparative Analysis
 
@@ -139,6 +139,8 @@ Models are intentionally small; that does **not** guarantee an observed Colab ru
 **Recorded Notebook 02 Validation:** Four fixed classical candidates fitted to 24 Train records (6 people) and evaluated on **the same eight Validation records (2 independent people)**. The class-prior baseline scored Accuracy **0.25**, fixed-label Macro F1 **0.10**, Balanced Accuracy **0.25**. Logistic Regression, Random Forest and Gradient Boosting each scored **1.00** on all three metrics, correctly classifying 2/2 recordings in each of FXS/HSS/RAN/TEX. These are observed *notebook output values*, not independently recomputed from downloadable raw predictions in this review.
 
 **Interpretation and limits:** The class-prior model predicted FXS for all 8 Validation records (2 correct). The three feature-based models have tied perfect pilot Validation scores, but there are only **two independent Validation people**. Acquisition protocol and stimulus differences may dominate discrimination. These scores do not establish unbiased selected-model performance, generalisation, causal gaze mechanisms or cognitive inference. Notebook 05 has not yet made the predefined selection or opened the pilot Test.
+
+**Recorded Notebook 03 Validation:** CNN and TCN both achieved **Accuracy = Macro F1 = Balanced Accuracy = 1.00**, on **eight Validation recordings from two independent people**. CNN had **11,492 trainable parameters** and selected epoch **8**; TCN had **12,772** and selected epoch **5**. Although the TCN Validation window loss decreased after epoch 5, its record-level Macro F1 declined, so checkpoint choice follows the declared selection metric. Both models' checkpoints, histories, Validation predictions and figures were recorded; the last cell reported **10 stage-owned files**. These are original notebook output values, not independently reproduced training or evidence of generalisation.
 
 ## 7. Robustness, Uncertainty and Additional Analyses
 
@@ -150,11 +152,11 @@ Potential future additions—different source rounds/sessions, stimulus-disjoint
 
 ## 8. Current Outputs and Reproducibility
 
-Notebook outputs are written under `eye_movement_modelling/output/` using unique two-digit prefixes. Notebook 01 has produced its source inventory, split table, feature CSV, `01_protocol.csv` and train-normalised temporal NPZ. Notebook 02 has recorded four fitted Pipeline outputs, Validation probability tables, confusion matrices and aggregate `02_validation_metrics.csv` plus its comparison plot. Notebooks 03 and 04 produce model-specific PyTorch state dictionaries, learning histories, record-level predictions, confusion figures and aggregate Validation tables. Notebook 05 produces pre-Test selection metadata, frozen Test predictions, record and person-level metrics, a Validation-only perturbation table and summary figures.
+Notebook outputs are written under `eye_movement_modelling/output/` using unique two-digit prefixes. Notebook 01 has produced its source inventory, split table, feature CSV, `01_protocol.csv` and train-normalised temporal NPZ. Notebook 02 has recorded four fitted Pipeline outputs, Validation probability tables, confusion matrices and aggregate `02_validation_metrics.csv` plus its comparison plot. Notebook 03 has recorded two PyTorch state dictionaries, histories, record-level Validation predictions, assessment figures and aggregate metrics; Notebook 04 is implemented but has no recorded model execution. Notebook 05 produces pre-Test selection metadata, frozen Test predictions, record and person-level metrics, a Validation-only perturbation table and summary figures.
 
-All generated outputs and ZIP transfer packages are **ignored by Git by default**; the repository's separate policy blocks unapproved blobs above 50,000,000 bytes. The original GazeBase CSVs already tracked in the public repository retain their original CC BY 4.0 attribution. Stages can reuse files in one Colab runtime or restore the exact numbered, current ZIP via `ensure_stage_inputs`.
+Study outputs can now be staged after review. `.gitignore` cannot apply size rules; the separate Git policy blocks unapproved blobs larger than **50,000,000 bytes**. Raw source folders remain ignored. ZIPs generated in `/content/` are not automatically copied into Git. The original GazeBase CSVs already tracked in the public repository retain their original CC BY 4.0 attribution. Stages can reuse files in one Colab runtime or restore the exact numbered, current ZIP via `ensure_stage_inputs`.
 
-The notebook implementations are published. Notebooks 01 and 02 retain original-data execution outputs, including the new CSV protocol contract and the classical model Validation tables/figures. Numeric output ZIPs and model files are Git-ignored; this review relied on the recorded notebook outputs, not a fresh source-data execution. The latest committed Notebook 02 shows execution counts 1–9 and reports a successful 14-file ZIP package. Temporal models and Test evaluation are not yet verified.
+The notebook implementations are published. Notebooks 01 and 02 retain original-data execution outputs, including the new CSV protocol contract and the classical model Validation tables/figures. The actual generated stage files and ZIPs were not visible in the GitHub tree for this review, which instead relied on the recorded notebook outputs rather than a fresh source-data execution. The latest committed Notebook 02 shows execution counts 1–9 and reports a successful 14-file ZIP package. CNN and TCN execution is recorded; GRU, Transformer and final Test evaluation remain unverified.
 
 ## 9. Discussion, Limitations and Future Work
 
@@ -162,6 +164,6 @@ The implemented workflow is designed to compare simple feature-based models and 
 
 The ten-person modelling run is a functional feasibility exercise; the source acquisition stage has also audited 20 participants. The proposed 100-person main study needs additional original CSVs, a fixed cohort and independent-participant evaluation design, and complete source-to-model reruns. The initial ten-person pilot is not an independent external validation. Final-model selection must remain Validation-based, with the main Test held out until the design is frozen.
 
-Current saved Notebook 01 and 02 evidence supports continuing to Notebook 03 on the same ten-person pilot. The actual stage files and downloaded ZIPs remain Git-ignored, so their bytes have not been independently audited from GitHub. Use the current compatible stage-01 inputs for a fresh Colab Runtime. Keep the Validation/Test boundary, inspect potential extreme step-speed influence in a subsequent robustness analysis, and do not infer future Test results from the pilot Validation scores.
+Current Notebook 01–03 evidence supports continuing to Notebook 04 on the same ten-person pilot. The actual generated stage files and downloaded ZIPs were not visible in the GitHub tree, so their bytes have not been independently audited. Use the current compatible stage-01 inputs for a fresh Colab Runtime. Keep the Validation/Test boundary, inspect potential extreme step-speed influence in a subsequent robustness analysis, and do not infer future Test results from the pilot Validation scores.
 
 **Source attribution:** [GazeBase dataset](https://doi.org/10.6084/m9.figshare.12912257) and [Griffith, Lohr, Abdulin and Komogortsev (2021)](https://doi.org/10.1038/s41597-021-00959-y), [Creative Commons Attribution 4.0](https://creativecommons.org/licenses/by/4.0/).

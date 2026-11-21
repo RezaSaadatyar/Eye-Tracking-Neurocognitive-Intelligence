@@ -21,12 +21,9 @@ Thumbs.db
 /data/raw/
 /data/processed/
 
-# Current generated study outputs are local by default, regardless of size.
-# The separate Git blob guard blocks files >50 MB even when force-added.
-# To publish a smaller selected output, review it first and use git add -f.
-/eye_tracking_foundations/output/*
-!/eye_tracking_foundations/output/.gitkeep
-
-# Study 2 machine-learning artefacts and results are local by default.
-/eye_movement_modelling/output/*
-!/eye_movement_modelling/output/.gitkeep
+# Reviewed study outputs may be tracked by Git.
+# .gitignore cannot filter by file size. The independent Git size policy
+# rejects staged/unapproved blobs greater than 50,000,000 bytes.
+# Before committing output files, run:
+#   python scripts/check_git_file_sizes.py --staged
+# Original/raw and intermediate source datasets remain ignored above.

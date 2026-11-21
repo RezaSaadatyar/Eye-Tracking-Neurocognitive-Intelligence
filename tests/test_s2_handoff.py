@@ -129,8 +129,8 @@ def test_temporal_model_complexity_is_saved_with_validation_metrics():
         assert f'model_name = "{name}"' in source
         assert 'result["parameters"] = int(info["parameters"])' in source
         assert 'result["best_epoch"] = int(info["best_epoch"])' in source
-        assert cell["execution_count"] is None
-        assert not cell["outputs"]
+        assert isinstance(cell["execution_count"], int)
+        assert cell["outputs"]
     comparison = next(c for c in cells if c.get("id") == "s2c13")
     assert '"03_neural_validation_metrics.csv"' in "".join(comparison["source"])
 
@@ -144,3 +144,37 @@ def test_study_overview_reflects_latest_source_audit():
     assert "20 people source-audited" in labels
     assert "100-person study proposed" in labels
     assert "20/30 requires more source CSVs" not in labels
+
+
+def test_stage03_svg_workflow_matches_stage02_reference():
+    """The measured source graphic and workflow card style are preserved."""
+    import xml.etree.ElementTree as ET
+    folder = ROOT / "eye_movement_modelling" / "images"
+    def element(filename, identifier):
+        root = ET.parse(folder / filename).getroot()
+        return next(x for x in root.iter() if x.get("id") == identifier)
+    source2 = element("02_statistical_and_classical_ml.svg", "source-record")
+    source3 = element("03_cnn_and_tcn_models.svg", "source-record")
+    assert ET.tostring(source2) == ET.tostring(source3)
+    for i in range(1, 6):
+        node = element("03_cnn_and_tcn_models.svg", f"node-{i}")
+        rect = next(x for x in node if x.tag.endswith("rect"))
+        assert rect.get("fill") == "#F7FAFD"
+        assert rect.get("stroke") == "#B8CFDE"
+        assert len([x for x in node if x.get("class") == "nodedesc"]) == 3
+    fig = ET.parse(folder / "03_cnn_and_tcn_models.svg")
+    text = " ".join((x.text or "") for x in fig.iter())
+    assert "Best checkpoint: epoch 8" in text
+    assert "Best checkpoint: epoch 5" in text
+    assert "implemented and unexecuted" not in text
+
+
+def test_output_folders_are_no_longer_ignored_but_size_guard_remains():
+    ignore = (ROOT / ".gitignore").read_text(encoding="utf-8")
+    assert "/eye_movement_modelling/output/*" not in ignore
+    assert "/eye_tracking_foundations/output/*" not in ignore
+    assert "/data/raw/" in ignore and "/data/processed/" in ignore
+    policy = (ROOT / "scripts/check_git_file_sizes.py").read_text(
+        encoding="utf-8"
+    )
+    assert "MAX_BYTES = 50_000_000" in policy
