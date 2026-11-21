@@ -18,6 +18,10 @@ from gaze_diagnostics import inspect_velocity_peaks
 from eye_events import ivt_labels, idt_labels, extract_events, label_agreement
 from gaze_features import record_features, feature_dictionary
 from gaze_evidence import threshold_reference_support, reconcile_ivt_baseline
+from gaze_integration import (
+    reconcile_saved_record_evidence, validate_participant_statistics,
+    validate_threshold_summaries,
+)
 from gaze_statistics import (
     participant_summary, summarise_participant_metrics,
     validate_record_quality_alignment,
@@ -380,3 +384,57 @@ def test_notebook_03_06_baseline_consistency():
     vendor.loc[vendor.record_id.eq("S_1001_S1_FXS"), "eligible_samples"] = 5
     with pytest.raises(ValueError, match="baseline mismatch: eligible_samples"):
         reconcile_ivt_baseline(source, vendor)
+
+
+def test_integrated_compact_evidence_consistency():
+    records = ["S_1001_S1_FXS", "S_1002_S1_FXS"]
+    quality = pd.DataFrame({
+        "record_id": records, "participant_id": ["001", "002"],
+        "task": ["FXS", "FXS"], "n_samples": [10, 12],
+        "valid_fraction": [0.9, 1.0],
+    })
+    prepared = quality[["record_id", "participant_id", "task", "n_samples"]].copy()
+    features = quality[[
+        "record_id", "participant_id", "task", "valid_fraction"
+    ]].copy()
+    details = _synthetic_sensitivity_records()
+    details.loc[details.record_id.eq(records[1]), "record_id"] = records[1]
+    vendor = details.loc[details.threshold_dva_s.eq(30), [
+        "record_id", "eligible_samples", "vendor_coverage_fraction",
+        "predicted_evaluable_fraction", "sample_agreement",
+    ]].copy()
+    aligned = reconcile_saved_record_evidence(
+        quality, prepared, vendor, features, details
+    )
+    assert len(aligned) == 2
+    wrong = prepared.copy()
+    wrong.loc[0, "n_samples"] = 13
+    with pytest.raises(ValueError, match="n_samples values differ"):
+        reconcile_saved_record_evidence(
+            quality, wrong, vendor, features, details
+        )
+    people = quality[["task", "participant_id", "valid_fraction"]].copy()
+    stats = pd.DataFrame({
+        "task": ["FXS"], "feature": ["valid_fraction"],
+        "n_independent_participants": [2], "participant_mean": [0.95],
+    })
+    assert validate_participant_statistics(features, people, stats) == 2
+    bad = stats.copy()
+    bad.loc[0, "n_independent_participants"] = 3
+    with pytest.raises(ValueError, match="participant support"):
+        validate_participant_statistics(features, people, bad)
+
+
+def test_integrated_threshold_support_cannot_silently_diverge():
+    details = _synthetic_sensitivity_records()
+    rebuilt = threshold_reference_support(details)
+    compact = rebuilt[[
+        "threshold_dva_s", "n_records",
+        "mean_predicted_fixation_fraction", "mean_unknown_fraction",
+        "mean_conditional_vendor_agreement",
+    ]].copy()
+    assert len(validate_threshold_summaries(details, compact, rebuilt)) == 3
+    bad = rebuilt.copy()
+    bad.loc[0, "total_vendor_evaluable_samples"] = 999
+    with pytest.raises(ValueError, match="reference support differs"):
+        validate_threshold_summaries(details, compact, bad)
