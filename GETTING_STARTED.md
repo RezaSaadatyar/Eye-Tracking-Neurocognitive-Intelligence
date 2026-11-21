@@ -60,7 +60,7 @@ for that specific ignored file. Do not force-add the whole `output/` directory.
 ## Eye-Movement Modelling & Advanced AI
 
 The [Eye-Movement Modelling README](eye_movement_modelling/README.md) describes five implemented notebooks for GazeBase four-task classification;
-Notebook 01 has recorded ten-person pilot execution, while 02–05 remain unexecuted. Start with
+Notebooks 01 and 02 have recorded ten-person pilot execution; 03–05 remain unexecuted. Start with
 [Notebook 01](eye_movement_modelling/code/notebooks/01_data_and_experimental_protocol.ipynb).
 The standard checkout and `setup_colab("eye_movement_modelling")` pattern is
 shared with the Eye-Tracking Foundations project. Eye-Movement Modelling reads the **original shared** GazeBase
@@ -76,7 +76,7 @@ Each Notebook `NN` saves current files under
 `eye_movement_modelling/output/` and packages
 `eye_movement_modelling_Notebook_NN_Outputs.zip` for optional manual transfer.
 Use the existing `ensure_stage_inputs` helper if switching Colab sessions.
-Model results remain pending; only source preparation has recorded execution.
+Classical-model Validation results have been recorded in Notebook 02; neural-model and Test results remain pending.
 
 For classical and neural modelling, install the maintained root
 [`requirements.txt`](requirements.txt), including scikit-learn, torch and

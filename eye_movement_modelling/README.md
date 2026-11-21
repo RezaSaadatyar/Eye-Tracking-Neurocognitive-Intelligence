@@ -2,9 +2,9 @@
 
 ![Eye-Movement Modelling gaze-task modelling workflow, source provenance, model families and reserved evaluation](images/study_overview.svg)
 
-*Figure 1. Scientific plan for five Eye-Movement Modelling notebooks: independently select and split original gaze records, compare feature-based classical baselines, train CNN/TCN and GRU/Transformer models separately, and evaluate frozen models on participant-disjoint source records. All model scores and comparison plots remain **unobserved until execution**. The GazeBase source excerpt was observed in Eye-Tracking Foundations, not produced by Eye-Movement Modelling.*
+*Figure 1. Scientific programme for independent source preparation and classical/temporal modelling. The ten-person GazeBase pilot has recorded source preparation (Notebook 01) and four classical model Validation comparisons (Notebook 02); CNN, TCN, GRU, Transformer and final held-out Test results remain pending. The small measured source excerpt is taken from an original GazeBase CSV, while conceptual model/workflow elements are schematic.*
 
-**Aim:** Compare record-level interpretable gaze features with four compact temporal neural architectures on a precisely defined **four-class source Task identity** target (FXS, HSS, RAN, TEX). The study is **implemented; Notebook 01 has recorded pilot execution, while model notebooks remain unexecuted**. Neither a reading-comprehension measure nor clinical or cognitive status is predicted.
+**Aim:** Compare record-level engineered gaze features and four compact temporal neural architectures for the **four-class GazeBase recording-protocol target** (FXS, HSS, RAN, TEX). **Notebooks 01 and 02 have recorded pilot execution**; neural model training and final Test evaluation are pending. Neither reading comprehension nor clinical/neurocognitive status is predicted.
 
 **Independence:** Reuse the already available **original GazeBase Round 1 / Session 1 CSV files**, but create all Eye-Movement Modelling splits, features, temporal windows, models and outputs independently in `eye_movement_modelling/output/`. No processed Eye-Tracking Foundations result is mixed into the new modelling cohort.
 
@@ -15,7 +15,7 @@ The first run is an explicit **ten-person pilot**. Increasing the cohort to **20
 | Item | Implemented definition and boundary |
 | --- | --- |
 | Dataset | [GazeBase v2.0](https://doi.org/10.6084/m9.figshare.12912257), Round **1**, Session **1**, source CSVs from [`data/raw/gazebase/`](../data/README.md) |
-| Available starting scope | The repository has 10 complete people with four task recordings each (40 original CSVs), established in the executed Eye-Tracking Foundations source audit; **Notebook 01 preparation outputs recorded; no model results yet** |
+| Recorded pilot scope | GazeBase Round 1 / Session 1: **10 participants, 40 source recordings, 40 record feature rows and 960 temporal windows**. Notebook 02 fitted four classical candidates on 24 Train records and evaluated 8 Validation records from 2 independent people; no Test model scores have been observed |
 | Planned extended scope | 20 or 30 complete people, if additional original CSVs are obtained and checked; do not silently assume they are present |
 | Prediction target | Recording protocol: **FXS**, **HSS**, **RAN**, **TEX**. Four known classes; **not cognitive diagnosis** |
 | Predictors: classical | Recording validity, x/y dispersion, step displacement, velocity quantiles, positive pupil coverage/summary where available |
@@ -32,7 +32,7 @@ The first run is an explicit **ten-person pilot**. Increasing the cohort to **20
 
 ## 2. Experimental Programme
 
-These five notebooks form one task-recognition experiment. Notebook 01 has recorded original-data pilot preparation; Notebooks 02–05 remain unexecuted.
+These five notebooks form one task-recognition experiment. **Notebooks 01 and 02 have recorded original-data outputs.** Notebooks 03–05 are implemented but lack original-data model/evaluation results.
 
 | Notebook | Main experiment and visible model-level evidence | Owned current output files |
 | --- | --- | --- |
@@ -42,15 +42,15 @@ These five notebooks form one task-recognition experiment. Notebook 01 has recor
 | [04 — GRU and Transformer](code/notebooks/04_gru_and_transformer_models.ipynb) | Separate GRU and Transformer architecture, training curves, model complexity, Validation and confusion matrices | `04_gru.pt`, `04_transformer.pt`, histories/predictions/plots, `04_neural_validation_metrics.csv` |
 | [05 — Robustness and Final Evaluation](code/notebooks/05_robustness_and_final_evaluation.ipynb) | Validation-selected model, frozen Test evaluation, individual-person errors, Validation-only input perturbation and comparisons | `05_model_selection.csv`, `05_test_predictions.csv`, `05_test_metrics.csv`, `05_groupwise_test_metrics.csv`, `05_robustness_validation.csv`, comparison plots |
 
-A separate editable figure accompanies each notebook in [`images/`](images/), matching the approved five-band project style. The [overall diagram](images/study_overview.svg) is **methodological/schematic** until real model outputs exist. The notebooks display separate scientific results for every candidate, rather than combining all neural models into one cell.
+A separate editable figure accompanies each notebook in [`images/`](images/), matching the approved five-band project style. The [overall diagram](images/study_overview.svg) distinguishes executed pilot preparation and classical Validation evidence from planned neural modelling and Test evaluation. The notebooks display separate scientific results for every candidate, rather than combining all neural models into one cell.
 
 ## 3. Main Results
 
-**Data preparation (Notebook 01) has recorded execution; model training and evaluation remain pending.** The pilot selected 10 participants and 40 source recordings, created 40 feature rows and 960 windows `(960, 256, 4)`, and assigned 6/2/2 participants to Train/Validation/Test. No classification scores, confusion matrices or model rankings have been observed.
+**Observed ten-person pilot:** Notebook 01 processed 40 original recordings into 40 feature rows and 960 temporal windows of shape `(960, 256, 4)`, with 6/2/2 Train/Validation/Test participants (24/8/8 recordings). Notebook 02 evaluated four classical candidates on the same **eight Validation recordings from two people**. The class prior scored **Accuracy 0.25, Macro F1 0.10, Balanced Accuracy 0.25**. Logistic Regression, Random Forest and Gradient Boosting each scored **1.00 on all three metrics** (8/8 correct). These are **exploratory participant-disjoint Validation results**, not independent population estimates, external validation or final Test results.
 
 The Eye-Movement Modelling Python modules and notebook structure have been authored. A synthetic test suite checks source identities, participant separation, train-only normalisation, record-level window aggregation, static notebook syntax and key output contracts; such tests do **not** demonstrate CNN/TCN/GRU/Transformer performance on GazeBase.
 
-The recorded Notebook 01 pilot establishes the preparation baseline. Review its CSV/NPZ bundle and step-speed distribution before Notebook 02; then inspect Validation evidence for each model in 02–04 and the preselected Test comparison in 05. The ten-person Test remains exploratory.
+The recorded Notebook 01 and 02 outputs establish the pilot data contract and classical Validation evidence. Notebook 02 saves four fitted models, predictions, confusion matrices and a comparative table, but **not a final model choice**. Inspect high source step speeds and the small-sample/stimulus confounding before interpreting perfect Validation scores. Neural candidates (03–04) and frozen Test evaluation (05) remain unexecuted.
 
 ## 4. Running and Reviewing the Study
 
@@ -81,7 +81,7 @@ A per-study output directory prevents overwriting Eye-Tracking Foundations's `ey
 
 ## 6. Interpretation and Scope
 
-**Partially executed pilot.** Source preparation and representation construction have recorded execution; model training and participant-disjoint evaluation remain outstanding. The revised CSV protocol output must be regenerated for downstream execution.
+**Partially executed pilot.** Source preparation and classical Validation modelling are recorded; neural-model training and the final participant-disjoint Test evaluation remain outstanding. The Test has only two people in this pilot. High task-recognition performance is not evidence of cognitive understanding or generalisation to new participants, sessions, stimuli or hardware.
 
 The following remain limitations even after a successful run: task identity is confounded with stimulus protocol; Test participant counts are very small in the pilot; the first complete source IDs are not a representative sample; gaze speeds and pupil fields may reflect measurement artefacts; and a model's Validation/held-out Test score does **not** establish neural, clinical or cognitive diagnosis.
 

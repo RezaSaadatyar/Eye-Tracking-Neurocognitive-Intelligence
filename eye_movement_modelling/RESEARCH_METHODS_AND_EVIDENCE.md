@@ -1,6 +1,6 @@
 # Eye-Movement Modelling & Advanced AI | Research Methods and Evidence
 
-**Project:** Eye-Movement Modelling & Advanced AI within Eye-Tracking & Neurocognitive Intelligence. **Target:** four-class GazeBase source-task identity. **Evidence:** Notebook 01 has recorded ten-person pilot execution, while Notebooks 02–05 have not recorded model training or evaluation. The [README](README.md) and [workflow diagram](images/study_overview.svg) describe the stages.
+**Project:** Eye-Movement Modelling & Advanced AI within Eye-Tracking & Neurocognitive Intelligence. **Target:** four-class GazeBase recording-protocol identity. **Evidence:** Notebook 01 has recorded source preparation and Notebook 02 has recorded classical-model Validation evaluation in a ten-person pilot; neural training and final Test evaluation remain pending. See [README](README.md) and the [editable workflow](images/study_overview.svg).
 
 ## 1. Research Objective and Scope
 
@@ -86,11 +86,11 @@ Models are intentionally small; that does **not** guarantee an observed Colab ru
 
 ## 6. Results and Comparative Analysis
 
-**Observed Notebook 01 preparation:** 10 complete participants, 40 task recordings, 40 record-level feature rows and 960 temporal windows of shape `(960, 256, 4)`. The seed-17 Train/Validation/Test groups contain 6/2/2 participants and 24/8/8 recordings. No model training or Test classification metrics have been recorded.
+**Recorded Notebook 01 preparation:** GazeBase Round 1 / Session 1, 10 complete participants, 40 recordings, 40 record feature rows and 960 temporal windows `(960, 256, 4)`. Seed-17 Train/Validation/Test: 6/2/2 people and 24/8/8 source records.
 
-Notebook 01 provides recorded preparation counts and the participant registry. Remaining evidence is classical Validation comparisons (02), CNN/TCN (03), GRU/Transformer (04) and frozen selected-model Test evaluation (05).
+**Recorded Notebook 02 Validation:** Four fixed classical candidates fitted to 24 Train records (6 people) and evaluated on **the same eight Validation records (2 independent people)**. The class-prior baseline scored Accuracy **0.25**, fixed-label Macro F1 **0.10**, Balanced Accuracy **0.25**. Logistic Regression, Random Forest and Gradient Boosting each scored **1.00** on all three metrics, correctly classifying 2/2 recordings in each of FXS/HSS/RAN/TEX. These are observed *notebook output values*, not independently recomputed from downloadable raw predictions in this review.
 
-Do not insert fabricated Accuracy/Macro F1, learning curves, confusion counts, model rankings or subgroup performance. Numerical evidence must be taken from executed notebook outputs and their named CSVs.
+**Interpretation and limits:** The class-prior model predicted FXS for all 8 Validation records (2 correct). The three feature-based models have tied perfect pilot Validation scores, but there are only **two independent Validation people**. Acquisition protocol and stimulus differences may dominate discrimination. These scores do not establish unbiased selected-model performance, generalisation, causal gaze mechanisms or cognitive inference. Notebook 05 has not yet made the predefined selection or opened the pilot Test.
 
 ## 7. Robustness, Uncertainty and Additional Analyses
 
@@ -102,11 +102,11 @@ Potential future additions—different source rounds/sessions, stimulus-disjoint
 
 ## 8. Current Outputs and Reproducibility
 
-Notebook outputs are written under `eye_movement_modelling/output/` using unique two-digit prefixes. Notebook 01 produces its source inventory, split table, feature CSV and train-normalised temporal NPZ. Notebook 02 produces classical Pipeline files, Validation probabilities, confusion matrices and an aggregate score table. Notebooks 03 and 04 produce model-specific PyTorch state dictionaries, learning histories, record-level predictions, confusion figures and aggregate Validation tables. Notebook 05 produces pre-Test selection metadata, frozen Test predictions, record and person-level metrics, a Validation-only perturbation table and summary figures.
+Notebook outputs are written under `eye_movement_modelling/output/` using unique two-digit prefixes. Notebook 01 has produced its source inventory, split table, feature CSV, `01_protocol.csv` and train-normalised temporal NPZ. Notebook 02 has recorded four fitted Pipeline outputs, Validation probability tables, confusion matrices and aggregate `02_validation_metrics.csv` plus its comparison plot. Notebooks 03 and 04 produce model-specific PyTorch state dictionaries, learning histories, record-level predictions, confusion figures and aggregate Validation tables. Notebook 05 produces pre-Test selection metadata, frozen Test predictions, record and person-level metrics, a Validation-only perturbation table and summary figures.
 
 All generated outputs and ZIP transfer packages are **ignored by Git by default**; the repository's separate policy blocks unapproved blobs above 50,000,000 bytes. The original GazeBase CSVs already tracked in the public repository retain their original CC BY 4.0 attribution. Stages can reuse files in one Colab runtime or restore the exact numbered, current ZIP via `ensure_stage_inputs`.
 
-The notebook implementations are published, and Notebook 01 contains saved original-data execution evidence. The CSV protocol introduced after that run has **not** been re-executed; downstream training and Test metrics remain unverified. Synthetic tests alone do not establish model performance.
+The notebook implementations are published. Notebooks 01 and 02 retain original-data execution outputs, including the new CSV protocol contract and the classical model Validation tables/figures. Numeric output ZIPs and model files are Git-ignored; this review relied on the recorded notebook outputs, not a fresh source-data execution. Several Notebook 02 code cells retain outputs while `execution_count` is null, limiting recovery of the exact execution order. Temporal models and Test evaluation are not yet verified.
 
 ## 9. Discussion, Limitations and Future Work
 
@@ -114,6 +114,6 @@ The implemented workflow is designed to compare simple feature-based models and 
 
 The first ten-person run is a functional feasibility exercise. Expanding to 20/30 people requires **authorised additional original CSVs**, a decided main cohort size, new split assignments and complete source-to-model reruns. The initial ten-person pilot is not an independent external validation. Final-model selection must remain Validation-based, with the main Test held out until the design is frozen.
 
-Review the recorded Notebook 01 source selection, 6/2/2 participant split, 40 feature rows, 960 windows, step-speed distributions and regenerated CSV protocol before fitting any model in Notebook 02. Rebuild downstream outputs if the cohort or representation changes.
+Current evidence supports continuing to Notebook 03 after confirming that the locally retained `01_*` and `02_*` outputs belong to this same ten-person run. Keep the Validation/Test boundary, inspect potential extreme step-speed influence in a subsequent robustness analysis, and do not infer future Test results from the pilot Validation scores.
 
 **Source attribution:** [GazeBase dataset](https://doi.org/10.6084/m9.figshare.12912257) and [Griffith, Lohr, Abdulin and Komogortsev (2021)](https://doi.org/10.1038/s41597-021-00959-y), [Creative Commons Attribution 4.0](https://creativecommons.org/licenses/by/4.0/).
