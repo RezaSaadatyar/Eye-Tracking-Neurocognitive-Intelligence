@@ -398,7 +398,7 @@ def test_integrated_compact_evidence_consistency():
         "record_id", "participant_id", "task", "valid_fraction"
     ]].copy()
     details = _synthetic_sensitivity_records()
-    details.loc[details.record_id.eq(records[1]), "record_id"] = records[1]
+    details.loc[details.record_id.eq("S_1002_S1_TEX"), "record_id"] = records[1]
     vendor = details.loc[details.threshold_dva_s.eq(30), [
         "record_id", "eligible_samples", "vendor_coverage_fraction",
         "predicted_evaluable_fraction", "sample_agreement",
