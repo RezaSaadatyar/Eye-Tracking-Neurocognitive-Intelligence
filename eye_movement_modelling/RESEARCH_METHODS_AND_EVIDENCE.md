@@ -38,8 +38,12 @@ Notebook 01, Section 01A uses the public GazeBase v2.0 Figshare file
 `27039812` as its authorised original-data source. The acquisition helper
 reuses original source CSVs already available in the local checkout or the
 user's mounted Google Drive, and downloads the full approximately 6.7-GB
-official archive **only when files are missing**. It checks the published
-source MD5 before selectively extracting four task CSVs for source IDs
+official archive **only when files are missing**. To address zero-byte
+responses observed on Colab, it now attempts alternative official Figshare
+endpoints and then an identified exact-file mirror as a last resort. All
+transports must pass the same published archive size and MD5 checks. Empty,
+HTML and truncated responses are rejected, with resumable partial data
+retained where compatible. It selectively extracts four task CSVs for source IDs
 1001–1020, using original filenames. It supports directly contained CSVs and
 nested ZIP members, rejects missing required task records, and checks
 required numeric gaze/timestamp fields and a per-record validity summary.

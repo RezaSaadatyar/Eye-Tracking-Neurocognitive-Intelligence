@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import io
+import hashlib
 import sys
 import zipfile
 from pathlib import Path
@@ -91,3 +92,90 @@ def test_incomplete_or_invalid_source_is_rejected(tmp_path):
         _inspect_csv(bad)
     with pytest.raises(ValueError, match="source ID"):
         source_csv_path(tmp_path, 900, "FXS")
+
+class _FakeHTTPResponse:
+    """Minimal URL response compatible with urllib's context manager."""
+    def __init__(self, data, status=200, headers=None):
+        self.buffer = io.BytesIO(data)
+        self.status = status
+        self.headers = headers or {"Content-Type": "application/zip"}
+    def read(self, amount=-1):
+        return self.buffer.read(amount)
+    def __enter__(self):
+        return self
+    def __exit__(self, *_):
+        self.buffer.close()
+
+
+def test_fallback_after_successful_zero_length_http_status(tmp_path, monkeypatch):
+    """A misleading 200/0-body response must never be treated as success."""
+    import s2_acquisition as acq
+    data = io.BytesIO()
+    with zipfile.ZipFile(data, "w") as bundle:
+        bundle.writestr("test.csv", csv_bytes())
+    payload = data.getvalue()
+    monkeypatch.setattr(acq, "ARCHIVE_BYTES", len(payload))
+    monkeypatch.setattr(acq, "ARCHIVE_MD5", hashlib.md5(payload).hexdigest())
+    monkeypatch.setattr(acq, "FIGSHARE_DOWNLOAD_URLS",
+                        ("https://example.test/empty", "https://example.test/good"))
+    monkeypatch.setattr(acq, "VERIFIED_ARCHIVE_MIRROR",
+                        "https://example.test/mirror")
+    called = []
+    def fake_urlopen(request, timeout):
+        called.append(request.full_url)
+        if request.full_url.endswith("/empty"):
+            return _FakeHTTPResponse(
+                b"", headers={"Content-Type": "application/zip",
+                              "Content-Length": "0"}
+            )
+        return _FakeHTTPResponse(payload)
+    monkeypatch.setattr(acq.urllib.request, "urlopen", fake_urlopen)
+    dest = tmp_path / "source.zip"
+    acq._ensure_archive(dest)
+    assert dest.read_bytes() == payload
+    assert len(called) == 2
+    assert not (tmp_path / "source.zip.part").exists()
+
+
+def test_all_empty_sources_report_actionable_error(tmp_path, monkeypatch):
+    import s2_acquisition as acq
+    monkeypatch.setattr(acq, "ARCHIVE_BYTES", 100)
+    monkeypatch.setattr(acq, "FIGSHARE_DOWNLOAD_URLS",
+                        ("https://example.test/official",))
+    monkeypatch.setattr(acq, "VERIFIED_ARCHIVE_MIRROR",
+                        "https://example.test/mirror")
+    def no_bytes(request, timeout):
+        return _FakeHTTPResponse(b"", headers={"Content-Type": "application/zip"})
+    monkeypatch.setattr(acq.urllib.request, "urlopen", no_bytes)
+    with pytest.raises(OSError, match="All GazeBase download endpoints failed"):
+        acq._ensure_archive(tmp_path / "source.zip")
+    assert not (tmp_path / "source.zip.part").exists()
+
+
+def test_partial_download_resumes_only_with_matching_content_range(
+        tmp_path, monkeypatch):
+    import s2_acquisition as acq
+    data = io.BytesIO()
+    with zipfile.ZipFile(data, "w") as bundle:
+        bundle.writestr("test.csv", csv_bytes())
+    payload = data.getvalue()
+    partial = tmp_path / "source.zip.part"
+    partial.write_bytes(payload[:35])
+    monkeypatch.setattr(acq, "ARCHIVE_BYTES", len(payload))
+    monkeypatch.setattr(acq, "ARCHIVE_MD5", hashlib.md5(payload).hexdigest())
+    monkeypatch.setattr(acq, "FIGSHARE_DOWNLOAD_URLS",
+                        ("https://example.test/resume",))
+    monkeypatch.setattr(acq, "VERIFIED_ARCHIVE_MIRROR",
+                        "https://example.test/mirror")
+    def fake_urlopen(request, timeout):
+        assert request.headers.get("Range") == "bytes=35-"
+        return _FakeHTTPResponse(
+            payload[35:], status=206,
+            headers={
+                "Content-Type": "application/zip",
+                "Content-Range": f"bytes 35-{len(payload)-1}/{len(payload)}",
+            },
+        )
+    monkeypatch.setattr(acq.urllib.request, "urlopen", fake_urlopen)
+    acq._ensure_archive(tmp_path / "source.zip")
+    assert (tmp_path / "source.zip").read_bytes() == payload

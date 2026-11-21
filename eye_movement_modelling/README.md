@@ -58,7 +58,7 @@ The recorded Notebook 01 and 02 outputs establish the pilot data contract and cl
 Notebook 01 contains a separate **Section 01A** that can validate an initial
 **20-person source-only trial** (source IDs 1001–1020, four Round 1 / Session 1
 tasks each). It uses the maintained official Figshare ZIP (file 27039812),
-checks the published checksum, extracts only missing original CSVs into the
+checks the published checksum, retries alternative official Figshare endpoints\nand uses a source-equivalent Hugging Face mirror only if necessary (the same\npublished MD5 is always required). It extracts only missing CSVs into the
 Git-ignored local `data/raw/gazebase/` directory, and caches the bounded
 subset in the user's mounted Google Drive. The preflight writes
 `01_source_acquisition_preflight.csv` under this project's `output/`. Its
@@ -66,7 +66,7 @@ source audit does **not** retrain classifiers, alter the existing ten-person
 Train/Validation/Test groups, examine Test scores or constitute the planned
 100-person experiment. The full official compressed archive is approximately
 6.7 GB; Colab network, disk and Drive capacity must be checked during actual
-execution. New original data are not pushed into GitHub. Existing tracked
+execution. An HTTP 200 response with zero bytes is treated as a failed download, not\na completed source file. If Colab access is blocked, the official ZIP can\nbe supplied at `/content/gazebase_source_download/GazeBase_v2_0.zip`; the\nchecksum is still verified before extraction. New original data are not\npushed into GitHub. Existing tracked
 ten-person source files and Foundations analysis remain unchanged.
 
 
