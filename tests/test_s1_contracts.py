@@ -17,7 +17,10 @@ from gaze_streaming import preprocess_stage_file, validate_notebook_01_inputs
 from gaze_diagnostics import inspect_velocity_peaks
 from eye_events import ivt_labels, idt_labels, extract_events, label_agreement
 from gaze_features import record_features, feature_dictionary
-from gaze_statistics import participant_summary, summarise_participant_metrics
+from gaze_statistics import (
+    participant_summary, summarise_participant_metrics,
+    validate_record_quality_alignment,
+)
 from core.stage_outputs import ensure_stage_inputs
 
 
@@ -308,3 +311,27 @@ def test_scanpath_features_follow_event_time_order():
     assert observed["valid_fraction"] == pytest.approx(5 / 6)
     assert observed["pupil_median_uncalibrated"] == pytest.approx(13.0)
     assert "scanpath_length_dva" in feature_dictionary().feature.tolist()
+
+
+def test_notebook_05_quality_alignment_consistent():
+    """Require all source-record keys, task codes and valid fractions to agree."""
+    features = pd.DataFrame({
+        "record_id": ["S_1001_S1_FXS", "S_1001_S1_TEX"],
+        "participant_id": ["001", "001"], "task": ["FXS", "TEX"],
+        "valid_fraction": [0.97, 0.91],
+    })
+    quality = features.iloc[::-1].copy()
+    aligned = validate_record_quality_alignment(features, quality)
+    assert len(aligned) == 2
+    assert aligned["absolute_valid_fraction_difference"].max() == 0
+    mismatched = quality.copy()
+    mismatched.loc[mismatched.task.eq("TEX"), "valid_fraction"] = 0.92
+    with pytest.raises(ValueError, match="valid fractions differ"):
+        validate_record_quality_alignment(features, mismatched)
+    mismatched = quality.copy()
+    mismatched.loc[mismatched.task.eq("TEX"), "task"] = "HSS"
+    with pytest.raises(ValueError, match="task identity"):
+        validate_record_quality_alignment(features, mismatched)
+    incomplete = quality.iloc[:1].copy()
+    with pytest.raises(ValueError, match="record sets"):
+        validate_record_quality_alignment(features, incomplete)
