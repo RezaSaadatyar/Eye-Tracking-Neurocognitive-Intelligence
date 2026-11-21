@@ -19,14 +19,17 @@ def test_notebook_01_zip_round_trip_uses_named_files(tmp_path, monkeypatch):
     out = checkout / "eye_movement_modelling" / "output"
     out.mkdir(parents=True)
     required = (
+        "01_source_inventory.csv", "01_split_assignments.csv",
+        "01_record_features.csv", "01_sequence_windows.npz",
+        "01_sequence_normalisation.csv", "01_protocol.csv",
+        "01_source_distribution.png", "01_source_acquisition_preflight.csv",
+        "01_source_acquisition_task_summary.csv",
+    )
+    needed_by_next_notebook = (
         "01_record_features.csv", "01_split_assignments.csv",
         "01_protocol.csv", "01_sequence_windows.npz",
     )
-    optional = (
-        "01_source_acquisition_preflight.csv",
-        "01_source_acquisition_task_summary.csv",
-    )
-    for name in required + optional:
+    for name in required:
         (out / name).write_bytes(("sample:" + name).encode("ascii"))
     monkeypatch.setattr(output_download, "REPO_ROOT", checkout)
     output_download.download_outputs_from_colab(
@@ -35,33 +38,50 @@ def test_notebook_01_zip_round_trip_uses_named_files(tmp_path, monkeypatch):
     archive = tmp_path / "eye_movement_modelling_Notebook_01_Outputs.zip"
     assert archive.is_file()
     with ZipFile(archive) as bundle:
-        assert set(bundle.namelist()) == set(required + optional)
-    for name in required + optional:
+        assert set(bundle.namelist()) == set(required)
+    for name in required:
         (out / name).unlink()
     restored = ensure_stage_inputs(
-        out, 1, required, upload_dir=tmp_path,
+        out, 1, needed_by_next_notebook, upload_dir=tmp_path,
     )
-    assert len(restored) == len(required)
+    assert len(restored) == len(needed_by_next_notebook)
     assert all(x.is_file() for x in restored)
-    assert all((out / name).is_file() for name in optional)
+    assert all((out / name).is_file() for name in required)
 
 
-def test_colab_preflight_has_no_separate_zip_or_drive_mount():
+def test_notebook_01_acquisition_inside_standard_section_02():
     path = (ROOT / "eye_movement_modelling" / "code" / "notebooks"
             / "01_data_and_experimental_protocol.ipynb")
     nb = json.loads(path.read_text(encoding="utf-8"))
-    preflight = next(
-        c for c in nb["cells"] if c.get("id") == "emm-01a-acquire-code"
-    )
-    code = "".join(preflight["source"])
-    assert "ensure_gazebase_preflight(" in code
-    assert "01_source_acquisition_preflight.csv" in code
-    assert "01_source_acquisition_task_summary.csv" in code
-    assert "ZipFile" not in code and "drive.mount" not in code
-    final = next(c for c in nb["cells"]
-                 if c.get("id") == "s2-c-017")
+    cells = nb["cells"]
+    ids = [c.get("id") for c in cells]
+    assert "emm-01a-acquire-code" not in ids
+    assert "emm-01a-acquire-md" not in ids
+    section = "".join(cells[ids.index("s2-m-006")]["source"])
+    assert "02. Acquire and Select Original GazeBase" in section
+    acquisition_idx = ids.index("s2-c-source-acquisition")
+    assert acquisition_idx == ids.index("s2-m-006") + 1
+    assert ids[acquisition_idx + 1] == "s2-c-007"
+    acquire = "".join(cells[acquisition_idx]["source"])
+    selection = "".join(cells[ids.index("s2-c-007")]["source"])
+    assert "SOURCE_AUDIT_IDS = tuple(range(1001, 1021))" in acquire
+    assert "ensure_gazebase_preflight(" in acquire
+    assert "MAX_PARTICIPANTS = 10" in selection
+    assert "drive.mount" not in acquire
+    assert "ZipFile" not in acquire
+    end = "".join(cells[ids.index("s2-c-017")]["source"])
+    for required in (
+        "01_source_inventory.csv", "01_split_assignments.csv",
+        "01_record_features.csv", "01_sequence_windows.npz",
+        "01_sequence_normalisation.csv", "01_protocol.csv",
+        "01_source_distribution.png", "01_source_acquisition_preflight.csv",
+        "01_source_acquisition_task_summary.csv",
+    ):
+        assert required in end
     assert ('download_outputs_from_colab('
-            '"eye_movement_modelling/output", "01")') in "".join(final["source"])
+            '"eye_movement_modelling/output", "01")') in end
+    assert "missing_outputs" in end
+
 
 
 def test_temporal_stage_artifact_prefixes_match_final_evaluation():

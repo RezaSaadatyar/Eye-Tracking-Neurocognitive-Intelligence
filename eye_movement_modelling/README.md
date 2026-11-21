@@ -36,7 +36,7 @@ These five notebooks form one task-recognition experiment. **Notebooks 01 and 02
 
 | Notebook | Main experiment and visible model-level evidence | Owned current output files |
 | --- | --- | --- |
-| [01 — Data and Experimental Protocol](code/notebooks/01_data_and_experimental_protocol.ipynb) | Optional 20-person source audit; ten-person pilot participant-disjoint splits, record features, temporal windows and Train-only normalisation | `01_source_inventory.csv`, `01_split_assignments.csv`, `01_record_features.csv`, `01_sequence_windows.npz`, `01_sequence_normalisation.csv`, `01_protocol.csv`, `01_source_distribution.png`; optional `01_source_acquisition_preflight.csv` and `01_source_acquisition_task_summary.csv` |
+| [01 — Data and Experimental Protocol](code/notebooks/01_data_and_experimental_protocol.ipynb) | Integrated Section 02 source acquisition/audit for 20 participants and current ten-person pilot preparation; nine required files bundled in one ZIP | `01_source_inventory.csv`, `01_split_assignments.csv`, `01_record_features.csv`, `01_sequence_windows.npz`, `01_sequence_normalisation.csv`, `01_protocol.csv`, `01_source_distribution.png`; optional `01_source_acquisition_preflight.csv` and `01_source_acquisition_task_summary.csv` |
 | [02 — Statistical and Classical ML](code/notebooks/02_statistical_and_classical_ml.ipynb) | Separate sections for class prior, Logistic Regression, Random Forest and Gradient Boosting; each with Validation confusion matrix | `02_validation_metrics.csv`, four fitted `02_*.joblib` files, independent predictions/plots, comparison |
 | [03 — CNN and TCN](code/notebooks/03_cnn_and_tcn_models.ipynb) | Separate CNN and TCN architecture, training, learning curves, record-level Validation metrics and confusion matrices | `03_cnn.pt`, `03_tcn.pt`, histories/predictions/plots, `03_neural_validation_metrics.csv` |
 | [04 — GRU and Transformer](code/notebooks/04_gru_and_transformer_models.ipynb) | Separate GRU and Transformer architecture, training curves, model complexity, Validation and confusion matrices | `04_gru.pt`, `04_transformer.pt`, histories/predictions/plots, `04_neural_validation_metrics.csv` |
@@ -54,53 +54,58 @@ The recorded Notebook 01 and 02 outputs establish the pilot data contract and cl
 
 ## 4. Running and Reviewing the Study
 
-**Colab-local source preparation and stage handoff:**
-Notebook 01, Section 01A, can check source IDs 1001–1020 (four GazeBase
-Round 1 / Session 1 tasks per person). Existing original CSVs in the
-Colab checkout are reused; any missing files are downloaded from the
-official dataset and extracted selectively into the Git-ignored
-`data/raw/gazebase/` directory. The official compressed archive is
-approximately 6.7 GB; downloading and extraction depend on the active
-Colab Runtime. A failed download can retain a partial ZIP for an in-session
-retry. The raw files remain local and are not added to GitHub.
+**Notebook 01: Colab-only acquisition, preparation and one ZIP.**
+The existing numbered **Section 02** now checks original GazeBase v2.0
+Round 1 / Session 1 source IDs 1001–1020 (four recording tasks per person).
+Files already present in the local checkout are reused. Missing files are
+obtained from the published dataset and selectively extracted under the
+Git-ignored `data/raw/gazebase/` directory. The source archive is
+approximately 6.7 GB and may need downloading again in a new Colab
+Runtime. No Google Drive connection or automatic raw-data upload to
+GitHub is needed.
 
-The preflight writes `01_source_acquisition_preflight.csv` and
-`01_source_acquisition_task_summary.csv` to
-`eye_movement_modelling/output/`. Notebook 01 then constructs its regular
-scientific outputs from the **currently configured ten-person pilot**
-(`MAX_PARTICIPANTS = 10`): the source inventory, participant-disjoint
-split registry, recording features, temporal windows, train-only
-normalisation table, protocol CSV and source-distribution figure.
+The source audit produces `01_source_acquisition_preflight.csv` and
+`01_source_acquisition_task_summary.csv`. Notebook 01 then applies its
+existing **ten-person development-pilot** configuration
+(`MAX_PARTICIPANTS = 10`), saving the source inventory, independent
+participant split, recording features, temporal windows, Train-only
+normalisation, protocol and source-distribution figure. Checking original
+files from 20 participants is **not** a 20-person model evaluation.
 
-**Download one ZIP after completing Notebook 01:**
+**Run Notebook 01 completely, from Section 00 through Section 07.**
+Its final cell verifies that all nine current stage-01 files exist
+before using the original `download_outputs_from_colab` helper to
+produce a single ZIP:
 `/content/eye_movement_modelling_Notebook_01_Outputs.zip`.
-The existing `download_outputs_from_colab` helper packages current
-stage-owned `01_*` outputs, including the two preflight audits if produced.
-The ZIP contains the derived inputs needed by later notebooks but not the
-original GazeBase CSVs or the large source archive. No separate preflight
-ZIP or cloud-storage mount is required.
+This ZIP contains all derived data needed by the current downstream
+notebook inputs, including both source-audit CSVs. It does not contain the
+original gaze CSVs or 6.7-GB archive.
 
-In the same Colab Runtime, Notebook 02 and the later stages can read
-these files directly. In a fresh Runtime, upload the exact current
-Notebook 01 ZIP to `/content/` before running Notebook 02, 03, 04 or 05;
-their `ensure_stage_inputs` calls restore the required named files.
-Notebook 05 similarly needs current, compatible ZIPs for stages 02, 03
-and 04 (including saved model artefacts). Do not mix different cohorts,
-split versions or model runs.
+Notebook 02 consumes `01_record_features.csv`,
+`01_split_assignments.csv` and `01_protocol.csv`. Notebooks 03 and 04
+consume `01_sequence_windows.npz` and the same matching split/protocol.
+Notebook 05 additionally needs model artefacts, Validation predictions
+and metrics saved by Notebooks 02–04.
 
-The 20-person acquisition preflight is **not** a new evaluation. The
-ten-person pilot results and all pre-existing outputs remain valid as
-their own recorded evidence. Any subsequent 100-person experiment
-requires a separately fixed evaluation protocol and regenerated outputs.
-Colab local storage is temporary: download each required stage ZIP before
-ending its Runtime.
+If the same Colab Runtime remains active, the next notebook reads the
+existing files directly. In a **new** Runtime, upload the corresponding
+downloaded ZIP to `/content/`; its `ensure_stage_inputs` helper
+restores the named data. Download the stage-02, stage-03 and stage-04
+ZIPs in turn before leaving their Runtimes. Never mix stage files
+generated from different participants, splits or model versions.
+
+The source acquisition is implemented but **has not yet been verified
+on the full original archive in a live Colab Runtime**. The previously
+saved ten-person model results remain pilot evidence. A subsequent
+100-person experiment needs its own fixed evaluation protocol and
+regenerated producer/consumer outputs.
 
 
-1. Open the [first notebook](code/notebooks/01_data_and_experimental_protocol.ipynb) in Colab or VS Code connected to Colab. Use the standard repository checkout cell and the maintained `setup_colab("eye_movement_modelling")` helper.
-2. **Initial pilot:** leave `MAX_PARTICIPANTS = 10` in Notebook 01. Its source discovery reads the common `data/raw/gazebase/` directory; it does not redownload or overwrite the original CSVs.
+1. Open [Notebook 01](code/notebooks/01_data_and_experimental_protocol.ipynb) from GitHub in a fresh Colab Runtime; execute setup/imports followed by all scientific sections, including source acquisition in Section 02, through the final ZIP export.
+2. **Current pilot:** leave `MAX_PARTICIPANTS = 10` for the recorded modelling method. Section 02 can acquire and audit 20 source participants without changing the scientific cohort. Download the single current Notebook 01 ZIP before leaving Colab.
 3. Run Notebook 01 fully and inspect the recorded IDs, split groups, feature coverage, temporal input shape, source diagram and generated output ZIP. Only then proceed to [Notebook 02](code/notebooks/02_statistical_and_classical_ml.ipynb), then [03](code/notebooks/03_cnn_and_tcn_models.ipynb), [04](code/notebooks/04_gru_and_transformer_models.ipynb) and [05](code/notebooks/05_robustness_and_final_evaluation.ipynb).
 4. Each stage reads **explicit named current outputs** and can restore a matching, manually transferred ZIP through the existing Colab `ensure_stage_inputs` helper. Training is never a hidden side effect of opening a report.
-5. **Later main run:** obtain and validate additional GazeBase source CSVs, set `MAX_PARTICIPANTS` to **20 or 30** in Notebook 01 and rerun **all five notebooks in order**; confirm that reserved Test people are not among the initial ten people. Do not use main Test feedback to change this choice.
+5. **Later main experiment:** plan the proposed 100-person cohort and participant-disjoint evaluation before changing the scientific participant count. Recreate compatible outputs in each stage; do not use Test results to revise model selection or the cohort size.
 6. Keep training and validation output tables, model weights and ZIP transfers outside Git by default. Colab must have `numpy`, `pandas`, `matplotlib`, `scikit-learn`, `torch` and `joblib` installed as listed in [`requirements.txt`](../requirements.txt).
 
 **Runtime:** Small models, a maximum of eight epochs and a bound of 24 windows per record are initial resource choices, not measured speed claims. Notebook 05 reads saved checkpoints; it does not retrain them. If new data change the source selection, old model checkpoints must not be reused.
