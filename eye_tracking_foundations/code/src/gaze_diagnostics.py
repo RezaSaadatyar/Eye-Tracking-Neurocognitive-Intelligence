@@ -97,7 +97,7 @@ def inspect_velocity_peaks(
     evidence = []
     for rid in selected:
         view = samples.loc[samples["record_id"].eq(rid)].copy()
-        view.sort_values("sample_index", inplace=True)
+        view = view.sort_values("sample_index")
         peak_sample = best[rid][1]
         current_rows = view.loc[view["sample_index"].eq(peak_sample)]
         prior_rows = view.loc[view["sample_index"].eq(peak_sample - 1)]
