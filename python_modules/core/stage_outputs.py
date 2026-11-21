@@ -7,6 +7,7 @@ training, source download, or implicit replacement of existing result files.
 from __future__ import annotations
 
 from pathlib import Path
+from shutil import copyfileobj
 from zipfile import ZipFile
 
 
@@ -56,12 +57,22 @@ def ensure_stage_inputs(
                 raise ValueError(f"Unsafe or unexpected stage ZIP member: {name}")
         if not set(required).issubset(names):
             raise ValueError(f"{archive} does not include all required stage files")
-        # All checks precede writes; do not silently overwrite current outputs.
+        # Validate destinations before writing; never replace an existing result.
         for entry in zip_file.infolist():
             dest = folder / entry.filename
             if dest.exists():
                 raise FileExistsError(f"Refusing to overwrite current output: {dest}")
-        for entry in zip_file.infolist():
-            dest = folder / entry.filename
-            dest.write_bytes(zip_file.read(entry))
+        created: list[Path] = []
+        try:
+            for entry in zip_file.infolist():
+                dest = folder / entry.filename
+                with dest.open("xb") as destination:
+                    created.append(dest)
+                    with zip_file.open(entry) as source:
+                        # Stream large Notebook CSV files rather than holding them in RAM.
+                        copyfileobj(source, destination, length=1024 * 1024)
+        except BaseException:
+            for path in created:
+                path.unlink(missing_ok=True)
+            raise
     return required_paths

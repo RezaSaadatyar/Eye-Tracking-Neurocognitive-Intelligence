@@ -13,7 +13,7 @@ sys.path.insert(0, str(PROJECT / "python_modules"))
 
 from gaze_source import discover_records, read_record, read_stage
 from gaze_preprocessing import preprocess_record
-from gaze_streaming import preprocess_stage_file
+from gaze_streaming import preprocess_stage_file, validate_notebook_01_inputs
 from eye_events import ivt_labels, idt_labels, extract_events, label_agreement
 from gaze_statistics import participant_summary, summarise_participant_metrics
 from core.stage_outputs import ensure_stage_inputs
@@ -135,6 +135,7 @@ def test_streaming_stage_matches_record_preprocessing(tmp_path):
     summary, example = preprocess_stage_file(
         input_csv, output_csv, chunksize=13,
         expected_records={"S_1001_S1_FXS", "S_1002_S1_FXS"},
+        expected_record_counts={"S_1001_S1_FXS": 117, "S_1002_S1_FXS": 117},
     )
     actual = pd.read_csv(output_csv, dtype={"participant_id": str})
     expected = pd.concat(
@@ -165,3 +166,59 @@ def test_streaming_rejects_disordered_repeated_record(tmp_path):
         preprocess_stage_file(source, destination, chunksize=7)
     assert not destination.exists()
     assert not destination.with_name(destination.name + ".partial").exists()
+
+
+def test_notebook_01_compact_input_alignment():
+    manifest = pd.DataFrame({
+        "record_id": ["S_1001_S1_FXS", "S_1002_S1_FXS"],
+        "participant_id": ["001", "002"],
+        "task": ["FXS", "FXS"],
+    })
+    quality = manifest.copy()
+    quality["n_samples"] = [117, 119]
+    assert validate_notebook_01_inputs(manifest, quality) == {
+        "S_1001_S1_FXS": 117, "S_1002_S1_FXS": 119,
+    }
+    wrong = quality.copy()
+    wrong.loc[1, "task"] = "TEX"
+    with pytest.raises(ValueError, match="task differs"):
+        validate_notebook_01_inputs(manifest, wrong)
+    wrong = quality.copy()
+    wrong.loc[1, "n_samples"] = 0
+    with pytest.raises(ValueError, match="positive integers"):
+        validate_notebook_01_inputs(manifest, wrong)
+
+
+def test_streaming_rejects_notebook_01_row_count_mismatch(tmp_path):
+    record = _example_record(117)
+    source = tmp_path / "01_gaze_samples.csv"
+    destination = tmp_path / "02_preprocessed_samples.csv"
+    record.to_csv(source, index=False)
+    with pytest.raises(ValueError, match="source row count mismatch"):
+        preprocess_stage_file(
+            source, destination, chunksize=19,
+            expected_records={"S_1001_S1_FXS"},
+            expected_record_counts={"S_1001_S1_FXS": 118},
+        )
+    assert not destination.exists()
+    assert not destination.with_name(destination.name + ".partial").exists()
+
+
+def test_notebook_zip_restore_uses_bounded_streaming(tmp_path, monkeypatch):
+    folder = tmp_path / "eye_tracking_foundations" / "output"
+    folder.mkdir(parents=True)
+    uploads = tmp_path / "uploads"
+    uploads.mkdir()
+    payload = b"a,b,c\n" + b"1,2,3\n" * 400_000
+    with ZipFile(uploads / "eye_tracking_foundations_Notebook_01_Outputs.zip", "w") as archive:
+        archive.writestr("01_gaze_samples.csv", payload)
+        archive.writestr("01_source_manifest.csv", "record_id\nS_1001_S1_FXS\n")
+    def forbid_read(self, *args, **kwargs):
+        raise AssertionError("ZIP content must not be materialised by ZipFile.read")
+    monkeypatch.setattr(ZipFile, "read", forbid_read)
+    restored = ensure_stage_inputs(
+        folder, 1, ("01_gaze_samples.csv", "01_source_manifest.csv"),
+        upload_dir=uploads,
+    )
+    assert restored[0].stat().st_size == len(payload)
+    assert restored[0].read_bytes() == payload

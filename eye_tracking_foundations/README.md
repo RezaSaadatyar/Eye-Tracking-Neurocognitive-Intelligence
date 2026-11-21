@@ -14,7 +14,7 @@ Inputs are source-identified gaze recordings, not directly observed cognitive st
 
 ## 2. Experimental Programme
 
-The source audit is configured for up to **ten complete participants** from Round 1, Session 1, with all four tasks (FXS, HSS, RAN and TEX). This selection was observed in the committed Notebook 01 output, not independently reproduced here. The first stage printed 2,778,008 input samples across 40 records. If the source subset changes, rerun Notebook 01 and regenerate dependent stage outputs. Session 2 is not analysed in the current pipeline.
+The source audit is configured for up to **ten complete participants** from Round 1, Session 1, with all four tasks (FXS, HSS, RAN and TEX). This selection was observed in the committed Notebook 01 output, not independently reproduced here. Notebook 01 recorded 2,778,008 input samples across 40 records. If the source subset changes, rerun Notebook 01 and regenerate dependent stage outputs. Session 2 is not analysed in the current pipeline.
 
 
 | Notebook | Main responsibility | Named current outputs for later stages |
@@ -31,11 +31,11 @@ This is an approved seven-notebook expansion of the earlier three-stage S1 outli
 
 ## 3. Main Results
 
-**Recorded Notebook 01 evidence:** 10 distinct participants, 40 source recordings and 2,778,008 sample rows. The saved notebook reports valid-sample proportions ranging from 0.6735 to 1.0000 across the 40 records. These are descriptive source-audit findings, not event-detection results or evidence of generalisation. The stage-owned CSVs are not published; inspect the committed notebook execution cells for the recorded counts and quality table. Notebooks 02–07 have not produced real-cohort numerical results; synthetic pipeline checks remain infrastructure evidence only.
+**Recorded Notebook 01 evidence:** 10 distinct participants, 40 source recordings and 2,778,008 sample rows. The saved notebook reports valid-sample proportions ranging from 0.6735 to 1.0000 across the 40 records. These are descriptive source-audit findings, not event-detection results or evidence of generalisation. The generated Notebook CSVs are not published; inspect the committed notebook execution cells for the recorded counts and quality table. Notebooks 02–07 have not produced real-cohort numerical results; synthetic pipeline checks remain infrastructure evidence only.
 
 ## 4. Running and Reviewing the Study
 
-Run the notebooks in ascending order in VS Code with a Colab Python kernel. They begin with a Colab checkout followed by the original Human Movement-style `setup_colab()` interface and grouped imports. Prior-stage files are loaded from explicit paths and not recomputed. Notebook 02 streams complete records from the existing large `01_gaze_samples.csv` to limit peak memory rather than loading two full-cohort tables together. A new runtime can use the previous stage's downloadable ZIP in `/content/`; see the [dataset/ZIP guide](../data/README.md).
+Run the notebooks in ascending order in VS Code with a Colab Python kernel. They begin with a Colab checkout followed by the original Human Movement-style `setup_colab()` interface and grouped imports. Earlier notebooks' named output files are loaded from explicit paths without recomputation. Notebook 02 checks the manifest, quality counts and sample CSV from Notebook 01, then streams one complete record at a time to limit peak memory. In a new runtime, the previous Notebook ZIP can be restored in `/content/` using bounded-memory extraction; see the [dataset/ZIP guide](../data/README.md).
 
 Notebook 01 expects extracted CSVs under `data/raw/gazebase/`. The dataset is not automatically downloaded. Notebook 03 uses pedagogical starting thresholds (I-VT 30 dva/s; I-DT dispersion 1 dva with 80-ms minimum duration) which are **not validated scientific selections**. Notebook 06 explores 20/30/40 dva/s as sensitivity settings. Results cannot support clinical, cognitive or person-generalisation claims.
 
@@ -48,7 +48,7 @@ Notebook 01 expects extracted CSVs under `data/raw/gazebase/`. The dataset is no
 - `../python_modules/core/`: shared notebook infrastructure; see the helper provenance instructions in the development delivery.
 - `../data/README.md`: data access, source fields and current-stage ZIP transfers.
 
-Each stage owns its numbered current outputs and replaces them on rerun. Files in `output/` are local by default. Do not infer that a ZIP from an earlier version is scientifically compatible merely because its filename matches; Notebook 07 checks record identities across relevant summaries.
+Each notebook owns its numbered current outputs and replaces them on rerun. Files in `output/` are local by default. A matching ZIP filename alone does not establish cohort compatibility: Notebook 02 checks Notebook 01 record identities and saved sample counts, and Notebook 07 later reconciles relevant summaries.
 
 ## 6. Interpretation and Scope
 
