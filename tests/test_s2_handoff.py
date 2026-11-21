@@ -117,3 +117,30 @@ def test_temporal_stage_artifact_prefixes_match_final_evaluation():
     for stage in ("03", "04"):
         assert f'ensure_stage_inputs(output_dir, {int(stage)}, (' in eval_code
         assert f'"{stage}_neural_validation_metrics.csv"' in eval_code
+
+def test_temporal_model_complexity_is_saved_with_validation_metrics():
+    """Preserve selected epochs and parameter counts for each neural model."""
+    notebook = (ROOT / "eye_movement_modelling" / "code" / "notebooks"
+                / "03_cnn_and_tcn_models.ipynb")
+    cells = json.loads(notebook.read_text(encoding="utf-8"))["cells"]
+    for name, code_id in (("cnn", "s2c9"), ("tcn", "s2c11")):
+        cell = next(c for c in cells if c.get("id") == code_id)
+        source = "".join(cell["source"])
+        assert f'model_name = "{name}"' in source
+        assert 'result["parameters"] = int(info["parameters"])' in source
+        assert 'result["best_epoch"] = int(info["best_epoch"])' in source
+        assert cell["execution_count"] is None
+        assert not cell["outputs"]
+    comparison = next(c for c in cells if c.get("id") == "s2c13")
+    assert '"03_neural_validation_metrics.csv"' in "".join(comparison["source"])
+
+
+def test_study_overview_reflects_latest_source_audit():
+    import xml.etree.ElementTree as ET
+
+    path = ROOT / "eye_movement_modelling" / "images" / "study_overview.svg"
+    root = ET.parse(path).getroot()
+    labels = " ".join((item.text or "") for item in root.iter())
+    assert "20 people source-audited" in labels
+    assert "100-person study proposed" in labels
+    assert "20/30 requires more source CSVs" not in labels

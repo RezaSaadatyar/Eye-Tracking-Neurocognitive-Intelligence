@@ -20,7 +20,7 @@ Original CSVs are read from [`data/raw/gazebase/`](../data/README.md). Reuse the
 
 ### 2.2 Cohort sizing and target mapping
 
-Notebook 01 deterministically selects up to `MAX_PARTICIPANTS` complete participants in original source-ID order; incomplete requests raise an error. For initial development use **10**. After inspecting source availability, choose **20 or 30** **before main Test** and rerun all notebooks. The four Task names are mapped to fixed class indices 0–3 using the exact order FXS/HSS/RAN/TEX.
+Notebook 01 deterministically selects up to `MAX_PARTICIPANTS` complete participants in original source-ID order; incomplete requests raise an error. For initial development use **10**. The current source audit covers **20 people and 80 original recordings**, but modelling still uses **10**. A **100-person study is proposed**; its cohort, participant-disjoint evaluation and Test protocol must be fixed **before main Test** and all stages rerun. The four Task names are mapped to fixed class indices 0–3 using the exact order FXS/HSS/RAN/TEX.
 
 Each record has one Task target. Each time window inherits that record target, so thousands of windows from one person **are not independent observations**. No person/Task/record ID, sample duration, vendor parser label, source file path or post-outcome covariate enters a model input.
 
@@ -28,7 +28,7 @@ Each record has one Task target. Each time window inherits that record target, s
 
 Use a seeded (`seed=17`) **person-disjoint** Train/Validation/Test registry. In the ten-person pilot, the split is fixed and exploratory. Once 20 or more people are available, choose the highest complete source IDs for Test; those people are distinct from the original pilot cohort. Remaining people are divided into Train/Validation. The main cohort size must be fixed **before its Test is opened**.
 
-A larger experiment reassigns and reconstructs the entire model cohort and may alter Train/Validation distribution, model weights and Test composition; it is **not merely a larger copy of the Pilot score**. If the main Test is examined at 20 people, extending to 30 for a better score invalidates a naive 'never observed' claim.
+A larger experiment reassigns and reconstructs the entire model cohort and may alter Train/Validation distribution, model weights and Test composition; it is **not merely a larger copy of the Pilot score**. Inspecting a preliminary main Test and then adapting the cohort using its results would invalidate an untouched-Test claim.
 
 ## 3. Data Preparation and Representations
 
@@ -40,7 +40,7 @@ Session 1, four task files per person. Files already in the Colab checkout
 are reused; missing CSVs are obtained from Figshare file `27039812`,
 with a checksum-verified exact-source fallback, and extracted selectively.
 The original archive is approximately 6.7 GB. Its full download and
-extraction have not yet been verified in a live Colab session.
+extraction were reported successful in the latest Colab notebook: verified published source size/MD5 and audited 20 people with 80 task records. These findings were not independently rerun in this review.
 
 Source quality and availability are recorded in
 `01_source_acquisition_preflight.csv` and
@@ -69,8 +69,10 @@ Stage-output packages must come from a compatible cohort/feature/split
 contract; success of file restoration alone does not prove scientific
 compatibility.
 
-The pilot's observed original-data outputs and classical Validation
-results predate the integration and remain labelled as pilot evidence.
+The latest Notebook 01 output reports source acquisition for 20 people,
+followed by ten-person pilot data preparation. Notebook 02 records four
+classical candidates evaluated on two Validation people. These remain
+pilot evidence, not main-study results.
 A larger 100-person experiment requires a separately established
 sampling, partition and evaluation protocol, then refreshed derived
 outputs and model fitting. Runtime-local source files may be lost after
@@ -110,7 +112,7 @@ All-class Test comparison is secondary and exploratory; a model with the best ob
 
 ### 4.3 Pilot versus main evaluation
 
-At n=10, two Test people cannot provide a reliable population accuracy estimate or robust model-ranking inference. Treat all scores as **developmental pilot diagnostics**. A main n=20/30 Test still has small subject support and stimulus Task confounding; any broader generalisation claim requires appropriate independent validation beyond this project.
+At n=10, two Test people cannot provide a reliable population accuracy estimate or robust model-ranking inference. Treat all scores as **developmental pilot diagnostics**. The proposed 100-person study needs its own frozen source cohort, participant-group evaluation and stimulus-confounding review; no main Test has been executed.
 
 ## 5. Methods, Models and Configurations
 
@@ -152,14 +154,14 @@ Notebook outputs are written under `eye_movement_modelling/output/` using unique
 
 All generated outputs and ZIP transfer packages are **ignored by Git by default**; the repository's separate policy blocks unapproved blobs above 50,000,000 bytes. The original GazeBase CSVs already tracked in the public repository retain their original CC BY 4.0 attribution. Stages can reuse files in one Colab runtime or restore the exact numbered, current ZIP via `ensure_stage_inputs`.
 
-The notebook implementations are published. Notebooks 01 and 02 retain original-data execution outputs, including the new CSV protocol contract and the classical model Validation tables/figures. Numeric output ZIPs and model files are Git-ignored; this review relied on the recorded notebook outputs, not a fresh source-data execution. Several Notebook 02 code cells retain outputs while `execution_count` is null, limiting recovery of the exact execution order. Temporal models and Test evaluation are not yet verified.
+The notebook implementations are published. Notebooks 01 and 02 retain original-data execution outputs, including the new CSV protocol contract and the classical model Validation tables/figures. Numeric output ZIPs and model files are Git-ignored; this review relied on the recorded notebook outputs, not a fresh source-data execution. The latest committed Notebook 02 shows execution counts 1–9 and reports a successful 14-file ZIP package. Temporal models and Test evaluation are not yet verified.
 
 ## 9. Discussion, Limitations and Future Work
 
 The implemented workflow is designed to compare simple feature-based models and compact temporal neural networks with participant-disjoint partitions, separate per-model outputs and explicit Test boundaries. Its scientific interpretation will remain narrow: **classification of the original recording task**. Differences in stimulus layout and recording duration, even when duration itself is excluded as a predictor, may drive Task identity. These scores would not demonstrate neurocognitive insight.
 
-The first ten-person run is a functional feasibility exercise. Expanding to 20/30 people requires **authorised additional original CSVs**, a decided main cohort size, new split assignments and complete source-to-model reruns. The initial ten-person pilot is not an independent external validation. Final-model selection must remain Validation-based, with the main Test held out until the design is frozen.
+The ten-person modelling run is a functional feasibility exercise; the source acquisition stage has also audited 20 participants. The proposed 100-person main study needs additional original CSVs, a fixed cohort and independent-participant evaluation design, and complete source-to-model reruns. The initial ten-person pilot is not an independent external validation. Final-model selection must remain Validation-based, with the main Test held out until the design is frozen.
 
-Current evidence supports continuing to Notebook 03 after confirming that the locally retained `01_*` and `02_*` outputs belong to this same ten-person run. Keep the Validation/Test boundary, inspect potential extreme step-speed influence in a subsequent robustness analysis, and do not infer future Test results from the pilot Validation scores.
+Current saved Notebook 01 and 02 evidence supports continuing to Notebook 03 on the same ten-person pilot. The actual stage files and downloaded ZIPs remain Git-ignored, so their bytes have not been independently audited from GitHub. Use the current compatible stage-01 inputs for a fresh Colab Runtime. Keep the Validation/Test boundary, inspect potential extreme step-speed influence in a subsequent robustness analysis, and do not infer future Test results from the pilot Validation scores.
 
 **Source attribution:** [GazeBase dataset](https://doi.org/10.6084/m9.figshare.12912257) and [Griffith, Lohr, Abdulin and Komogortsev (2021)](https://doi.org/10.1038/s41597-021-00959-y), [Creative Commons Attribution 4.0](https://creativecommons.org/licenses/by/4.0/).

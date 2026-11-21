@@ -8,7 +8,7 @@
 
 **Independence:** Reuse the already available **original GazeBase Round 1 / Session 1 CSV files**, but create all Eye-Movement Modelling splits, features, temporal windows, models and outputs independently in `eye_movement_modelling/output/`. No processed Eye-Tracking Foundations result is mixed into the new modelling cohort.
 
-The first run is an explicit **ten-person pilot**. Increasing the cohort to **20 or 30 complete people** requires additional original GazeBase CSVs, deciding the final participant count **before** inspecting a main Test, and re-executing all five notebooks with the same scientific definitions. Read the [full methods and evidence plan](RESEARCH_METHODS_AND_EVIDENCE.md).
+The executed modelling run remains a **ten-person pilot**, although source acquisition verified original recordings for **20 participants (80 task records)**. A **100-person study is proposed but not yet executed**; its cohort, group-aware partitions and Test protocol must be fixed before the main experiment and all dependent notebooks rerun. Read the [full methods and evidence plan](RESEARCH_METHODS_AND_EVIDENCE.md).
 
 ## 1. Dataset and Experimental Protocol
 
@@ -16,14 +16,14 @@ The first run is an explicit **ten-person pilot**. Increasing the cohort to **20
 | --- | --- |
 | Dataset | [GazeBase v2.0](https://doi.org/10.6084/m9.figshare.12912257), Round **1**, Session **1**, source CSVs from [`data/raw/gazebase/`](../data/README.md) |
 | Recorded pilot scope | GazeBase Round 1 / Session 1: **10 participants, 40 source recordings, 40 record feature rows and 960 temporal windows**. Notebook 02 fitted four classical candidates on 24 Train records and evaluated 8 Validation records from 2 independent people; no Test model scores have been observed |
-| Planned extended scope | 20 or 30 complete people, if additional original CSVs are obtained and checked; do not silently assume they are present |
+| Prospective extended scope | A 100-person study is proposed, not implemented. The original source audit covers 20 people; the currently evaluated modelling cohort contains 10 |
 | Prediction target | Recording protocol: **FXS**, **HSS**, **RAN**, **TEX**. Four known classes; **not cognitive diagnosis** |
 | Predictors: classical | Recording validity, x/y dispersion, step displacement, velocity quantiles, positive pupil coverage/summary where available |
 | Predictors: temporal | Fixed 256-sample windows; source-valid contiguous segments only; relative x/y and their first differences (four channels) |
 | Window sampling | Up to 24 evenly distributed, **non-overlapping** windows per source record; all windows inherit the parent record Task |
 | Group separation | All task records/windows for one person stay in exactly one Train, Validation or Test partition |
 | Pilot (10 people) | Seed **17**, participant-disjoint Train/Validation/Test; Test is **exploratory pilot diagnostic**, not definitive unseen-person evidence |
-| Main (≥20 people) | Highest complete source IDs not in the first ten-person pilot reserved for Test; Training/Validation use remaining people |
+| Code behaviour at ≥20 people | The current split helper reserves the highest source IDs for Test, but the main 100-person cohort and evaluation design have not been approved or executed |
 | Train-only operations | Temporal channel normalisation and classical feature imputation/scaling fitted only on Training people |
 | Selection and evaluation | Validation record-level Macro F1, then Balanced Accuracy, then fixed model priority. Frozen Test opened in Notebook 05 only |
 | Source limitation | Different task stimuli and recording protocols may dominate task recognition; high task accuracy would not imply cognition |
@@ -36,7 +36,7 @@ These five notebooks form one task-recognition experiment. **Notebooks 01 and 02
 
 | Notebook | Main experiment and visible model-level evidence | Owned current output files |
 | --- | --- | --- |
-| [01 — Data and Experimental Protocol](code/notebooks/01_data_and_experimental_protocol.ipynb) | Integrated Section 02 source acquisition/audit for 20 participants and current ten-person pilot preparation; nine required files bundled in one ZIP | `01_source_inventory.csv`, `01_split_assignments.csv`, `01_record_features.csv`, `01_sequence_windows.npz`, `01_sequence_normalisation.csv`, `01_protocol.csv`, `01_source_distribution.png`; optional `01_source_acquisition_preflight.csv` and `01_source_acquisition_task_summary.csv` |
+| [01 — Data and Experimental Protocol](code/notebooks/01_data_and_experimental_protocol.ipynb) | Integrated Section 02 source acquisition/audit for 20 participants and current ten-person pilot preparation; nine required files bundled in one ZIP | `01_source_inventory.csv`, `01_split_assignments.csv`, `01_record_features.csv`, `01_sequence_windows.npz`, `01_sequence_normalisation.csv`, `01_protocol.csv`, `01_source_distribution.png`; source-audit files `01_source_acquisition_preflight.csv` and `01_source_acquisition_task_summary.csv` |
 | [02 — Statistical and Classical ML](code/notebooks/02_statistical_and_classical_ml.ipynb) | Separate sections for class prior, Logistic Regression, Random Forest and Gradient Boosting; each with Validation confusion matrix | `02_validation_metrics.csv`, four fitted `02_*.joblib` files, independent predictions/plots, comparison |
 | [03 — CNN and TCN](code/notebooks/03_cnn_and_tcn_models.ipynb) | Separate CNN and TCN architecture, training, learning curves, record-level Validation metrics and confusion matrices | `03_cnn.pt`, `03_tcn.pt`, histories/predictions/plots, `03_neural_validation_metrics.csv` |
 | [04 — GRU and Transformer](code/notebooks/04_gru_and_transformer_models.ipynb) | Separate GRU and Transformer architecture, training curves, model complexity, Validation and confusion matrices | `04_gru.pt`, `04_transformer.pt`, histories/predictions/plots, `04_neural_validation_metrics.csv` |
@@ -94,9 +94,12 @@ restores the named data. Download the stage-02, stage-03 and stage-04
 ZIPs in turn before leaving their Runtimes. Never mix stage files
 generated from different participants, splits or model versions.
 
-The source acquisition is implemented but **has not yet been verified
-on the full original archive in a live Colab Runtime**. The previously
-saved ten-person model results remain pilot evidence. A subsequent
+The latest Notebook 01 output records a complete original-archive download
+using the official Figshare endpoint, a successful source size/MD5 check,
+and quality audits for **20 people and 80 recordings**. These are
+notebook-recorded observations, not an independent reproduction of the
+source transfer. The modelling and classical Validation results remain
+from the **ten-person pilot**. A subsequent
 100-person experiment needs its own fixed evaluation protocol and
 regenerated producer/consumer outputs.
 
