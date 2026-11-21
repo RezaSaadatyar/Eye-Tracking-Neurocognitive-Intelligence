@@ -36,7 +36,7 @@ These five notebooks form one task-recognition experiment. **Notebooks 01 and 02
 
 | Notebook | Main experiment and visible model-level evidence | Owned current output files |
 | --- | --- | --- |
-| [01 — Data and Experimental Protocol](code/notebooks/01_data_and_experimental_protocol.ipynb) | Select original CSVs, participant-disjoint groups, feature table, temporal windows and Train-only normalisation | `01_source_inventory.csv`, `01_split_assignments.csv`, `01_record_features.csv`, `01_sequence_windows.npz`, `01_sequence_normalisation.csv`, `01_protocol.csv`, source plot |
+| [01 — Data and Experimental Protocol](code/notebooks/01_data_and_experimental_protocol.ipynb) | Optional 20-person source audit; ten-person pilot participant-disjoint splits, record features, temporal windows and Train-only normalisation | `01_source_inventory.csv`, `01_split_assignments.csv`, `01_record_features.csv`, `01_sequence_windows.npz`, `01_sequence_normalisation.csv`, `01_protocol.csv`, `01_source_distribution.png`; optional `01_source_acquisition_preflight.csv` and `01_source_acquisition_task_summary.csv` |
 | [02 — Statistical and Classical ML](code/notebooks/02_statistical_and_classical_ml.ipynb) | Separate sections for class prior, Logistic Regression, Random Forest and Gradient Boosting; each with Validation confusion matrix | `02_validation_metrics.csv`, four fitted `02_*.joblib` files, independent predictions/plots, comparison |
 | [03 — CNN and TCN](code/notebooks/03_cnn_and_tcn_models.ipynb) | Separate CNN and TCN architecture, training, learning curves, record-level Validation metrics and confusion matrices | `03_cnn.pt`, `03_tcn.pt`, histories/predictions/plots, `03_neural_validation_metrics.csv` |
 | [04 — GRU and Transformer](code/notebooks/04_gru_and_transformer_models.ipynb) | Separate GRU and Transformer architecture, training curves, model complexity, Validation and confusion matrices | `04_gru.pt`, `04_transformer.pt`, histories/predictions/plots, `04_neural_validation_metrics.csv` |
@@ -54,35 +54,46 @@ The recorded Notebook 01 and 02 outputs establish the pilot data contract and cl
 
 ## 4. Running and Reviewing the Study
 
-**Colab-local source-acquisition preflight (implemented, not yet executed):**
-Notebook 01, Section 01A requests source IDs 1001–1020 (four Round 1 /
-Session 1 tasks per participant) for an **80-CSV source-only trial**. Existing
-original CSVs in the local Colab checkout are reused. Missing source files are
-retrieved from GazeBase v2.0 via official Figshare endpoints and a
-checksum-verified fallback if needed, then extracted selectively under the
-Git-ignored `data/raw/gazebase/` directory. The full source ZIP (approximately
-6.7 GB) is temporarily downloaded to `/content/gazebase_source_download/`
-and deleted after successful extraction; a failed partial download may be
-retained for resuming in the same Runtime.
+**Colab-local source preparation and stage handoff:**
+Notebook 01, Section 01A, can check source IDs 1001–1020 (four GazeBase
+Round 1 / Session 1 tasks per person). Existing original CSVs in the
+Colab checkout are reused; any missing files are downloaded from the
+official dataset and extracted selectively into the Git-ignored
+`data/raw/gazebase/` directory. The official compressed archive is
+approximately 6.7 GB; downloading and extraction depend on the active
+Colab Runtime. A failed download can retain a partial ZIP for an in-session
+retry. The raw files remain local and are not added to GitHub.
 
-**No Google Drive mount or persistent cache is required.** The preflight saves
-`01_source_acquisition_preflight.csv` and
-`01_source_acquisition_task_summary.csv` to this project's `output/`.
-It separately packages **only those reports** into
-`/content/eye_movement_modelling_Source_Preflight_20_Outputs.zip` for manual
-download via the Colab file browser. The raw gaze CSVs are **not** included
-in this compact ZIP or automatically pushed to GitHub. Colab local files
-can disappear when the Runtime ends; downloading the report ZIP preserves
-the source audit but not the original gaze data.
+The preflight writes `01_source_acquisition_preflight.csv` and
+`01_source_acquisition_task_summary.csv` to
+`eye_movement_modelling/output/`. Notebook 01 then constructs its regular
+scientific outputs from the **currently configured ten-person pilot**
+(`MAX_PARTICIPANTS = 10`): the source inventory, participant-disjoint
+split registry, recording features, temporal windows, train-only
+normalisation table, protocol CSV and source-distribution figure.
 
-The preflight does **not** train classifiers, modify the existing ten-person
-Train/Validation/Test split, inspect Test scores or constitute the planned
-100-person experiment. To run the preflight, execute Notebook 01 setup and
-imports followed by Section 01A; keep the remaining pilot computations
-unchanged unless a larger experimental design is separately approved.
-An HTTP 200 response with zero bytes is treated as an error; if the Colab
-network blocks every endpoint, provide the official ZIP at
-`/content/gazebase_source_download/GazeBase_v2_0.zip` and rerun Section 01A.
+**Download one ZIP after completing Notebook 01:**
+`/content/eye_movement_modelling_Notebook_01_Outputs.zip`.
+The existing `download_outputs_from_colab` helper packages current
+stage-owned `01_*` outputs, including the two preflight audits if produced.
+The ZIP contains the derived inputs needed by later notebooks but not the
+original GazeBase CSVs or the large source archive. No separate preflight
+ZIP or cloud-storage mount is required.
+
+In the same Colab Runtime, Notebook 02 and the later stages can read
+these files directly. In a fresh Runtime, upload the exact current
+Notebook 01 ZIP to `/content/` before running Notebook 02, 03, 04 or 05;
+their `ensure_stage_inputs` calls restore the required named files.
+Notebook 05 similarly needs current, compatible ZIPs for stages 02, 03
+and 04 (including saved model artefacts). Do not mix different cohorts,
+split versions or model runs.
+
+The 20-person acquisition preflight is **not** a new evaluation. The
+ten-person pilot results and all pre-existing outputs remain valid as
+their own recorded evidence. Any subsequent 100-person experiment
+requires a separately fixed evaluation protocol and regenerated outputs.
+Colab local storage is temporary: download each required stage ZIP before
+ending its Runtime.
 
 
 1. Open the [first notebook](code/notebooks/01_data_and_experimental_protocol.ipynb) in Colab or VS Code connected to Colab. Use the standard repository checkout cell and the maintained `setup_colab("eye_movement_modelling")` helper.
