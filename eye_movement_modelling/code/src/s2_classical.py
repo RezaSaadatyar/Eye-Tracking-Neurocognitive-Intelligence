@@ -46,7 +46,8 @@ def classical_candidates(seed: int = 17) -> dict:
         "gradient_boosting": Pipeline(
             preprocessing(False) + [
                 ("model", HistGradientBoostingClassifier(
-                    max_iter=65, max_leaf_nodes=7, learning_rate=0.05,
+                    max_iter=65, max_leaf_nodes=7, min_samples_leaf=2,
+                    learning_rate=0.05,
                     l2_regularization=1.0, random_state=seed,
                 )),
             ],
