@@ -14,6 +14,7 @@ sys.path.insert(0, str(PROJECT / "python_modules"))
 from gaze_source import discover_records, read_record, read_stage
 from gaze_preprocessing import preprocess_record
 from gaze_streaming import preprocess_stage_file, validate_notebook_01_inputs
+from gaze_diagnostics import inspect_velocity_peaks
 from eye_events import ivt_labels, idt_labels, extract_events, label_agreement
 from gaze_statistics import participant_summary, summarise_participant_metrics
 from core.stage_outputs import ensure_stage_inputs
@@ -222,3 +223,59 @@ def test_notebook_zip_restore_uses_bounded_streaming(tmp_path, monkeypatch):
     )
     assert restored[0].stat().st_size == len(payload)
     assert restored[0].read_bytes() == payload
+
+
+def _synthetic_peak_records(tmp_path):
+    frames = []
+    for subject, amplitude in ((1001, 100.), (1002, 80.), (1003, 40.), (1004, 10.)):
+        x = np.zeros(150)
+        x[62:] = amplitude
+        raw = pd.DataFrame({
+            "record_id": f"S_{subject}_S1_FXS",
+            "participant_id": f"{subject-1000:03d}",
+            "task": "FXS",
+            "sample_index": np.arange(150),
+            "n": np.arange(150),
+            "x": x,
+            "y": np.zeros(150),
+            "val": np.zeros(150, dtype=int),
+        })
+        frames.append(preprocess_record(raw))
+    prepared = pd.concat(frames, ignore_index=True)
+    path = tmp_path / "02_preprocessed_samples.csv"
+    prepared.to_csv(path, index=False)
+    summary = (
+        prepared.groupby("record_id").velocity_dva_s.max()
+        .reset_index(name="max_velocity_dva_s")
+    )
+    return path, summary
+
+
+def test_velocity_peak_windows_match_original_rows(tmp_path):
+    """Windows remain record-local and retain the raw validity/time evidence."""
+    source, summary = _synthetic_peak_records(tmp_path)
+    review, windows = inspect_velocity_peaks(
+        source, summary, top_records=3, half_window_samples=40, chunksize=17
+    )
+    assert review.record_id.tolist() == [
+        "S_1001_S1_FXS", "S_1002_S1_FXS", "S_1003_S1_FXS"
+    ]
+    assert len(windows) == 243
+    assert (review.peak_sample_index == 62).all()
+    assert (review.delta_t_ms == 1).all()
+    assert (review.peak_val == 0).all()
+    assert (review.previous_val == 0).all()
+    assert review.same_valid_run.all()
+    np.testing.assert_allclose(
+        review.peak_velocity_dva_s, review.reconstructed_velocity_dva_s
+    )
+
+
+def test_velocity_peak_review_rejects_mismatched_summary(tmp_path):
+    source, summary = _synthetic_peak_records(tmp_path)
+    altered = summary.copy()
+    altered.loc[
+        altered.record_id.eq("S_1001_S1_FXS"), "max_velocity_dva_s"
+    ] = 999999.0
+    with pytest.raises(ValueError, match="Velocity maximum differs"):
+        inspect_velocity_peaks(source, altered, top_records=3, chunksize=17)

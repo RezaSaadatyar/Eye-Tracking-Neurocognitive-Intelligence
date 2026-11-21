@@ -2,7 +2,7 @@
 
 A seven-notebook research and learning workflow for inspecting GazeBase raw eye-movement recordings, assessing gaze quality, deriving and analysing fixation and saccade events, building source-aware features and reporting bounded evidence.
 
-**Status:** Notebook 01 has a committed run on the selected original GazeBase Round 1 / Session 1 subset (10 participants, 40 task records, 2,778,008 samples). Its outputs show a per-record valid-sample range of 67.35–100%; the corresponding generated CSVs are not committed. Notebooks 02–07 remain unexecuted on this cohort. The initial software testing used synthetic inputs and does not establish detector validity or independent replication.
+**Status:** Notebooks 01 and 02 have committed executions on the original GazeBase Round 1 / Session 1 subset (10 participants, 40 recordings and 2,778,008 samples). Notebook 01 reports 67.35–100% valid samples per record. Notebook 02 preserved all source rows and saved a processed sample CSV of 623.4 MiB; its per-record maxima include speeds of 27,819.1 and 24,946.5 dva/s requiring inspection. A **new, unexecuted peak-window diagnostic** has been added to Notebook 02 without changing the preprocessing rules or excluding observations. Notebooks 03–07 remain unexecuted on this cohort; synthetic testing is not independent validation.
 
 **Scientific methods and evidence:** [RESEARCH_METHODS_AND_EVIDENCE.md](RESEARCH_METHODS_AND_EVIDENCE.md).
 
@@ -20,7 +20,7 @@ The source audit is configured for up to **ten complete participants** from Roun
 | Notebook | Main responsibility | Named current outputs for later stages |
 | --- | --- | --- |
 | [01 Source Audit and Gaze Quality](code/notebooks/01_source_audit_and_gaze_quality.ipynb) | Source records, schema, sample quality and temporal inspection | `01_gaze_samples.csv`, `01_quality_by_record.csv`, `01_source_manifest.csv`, plot |
-| [02 Gap-Aware Preprocessing](code/notebooks/02_gap_aware_gaze_preprocessing.ipynb) | Valid uninterrupted intervals, optional median smoothing and velocity | `02_preprocessed_samples.csv`, preprocessing summary, plot |
+| [02 Gap-Aware Preprocessing](code/notebooks/02_gap_aware_gaze_preprocessing.ipynb) | Valid runs, centred-median smoothing, velocity and extreme-speed diagnostics | `02_preprocessed_samples.csv`, `02_preprocessing_summary.csv`, two velocity figures and a peak-review table |
 | [03 I-VT/I-DT Detection](code/notebooks/03_ivt_idt_event_detection.ipynb) | Per-sample labels, event intervals and vendor reference coverage | `03_sample_labels.csv`, `03_events.csv`, `03_vendor_agreement.csv`, plot |
 | [04 Features and Scanpaths](code/notebooks/04_gaze_features_and_scanpaths.ipynb) | Event/record-level features and fixation-centroid paths | `04_features_by_record.csv`, `04_feature_dictionary.csv`, plot |
 | [05 Participant-Balanced Statistics](code/notebooks/05_participant_balanced_statistics.ipynb) | Descriptive summaries and exploratory participant-level bootstrap | `05_participant_features.csv`, `05_descriptive_statistics.csv`, plot |
@@ -31,11 +31,11 @@ This is an approved seven-notebook expansion of the earlier three-stage S1 outli
 
 ## 3. Main Results
 
-**Recorded Notebook 01 evidence:** 10 distinct participants, 40 source recordings and 2,778,008 sample rows. The saved notebook reports valid-sample proportions ranging from 0.6735 to 1.0000 across the 40 records. These are descriptive source-audit findings, not event-detection results or evidence of generalisation. The generated Notebook CSVs are not published; inspect the committed notebook execution cells for the recorded counts and quality table. Notebooks 02–07 have not produced real-cohort numerical results; synthetic pipeline checks remain infrastructure evidence only.
+**Recorded Notebook 01 evidence:** 10 distinct participants, 40 source recordings and 2,778,008 sample rows. The saved notebook reports valid-sample proportions ranging from 0.6735 to 1.0000 across the 40 records. These are descriptive source-audit findings, not event-detection results or evidence of generalisation. The generated Notebook CSVs are not published; inspect the committed notebook execution cells for the recorded counts and quality table. Notebook 02 has committed source-aligned numerical output: 40 processed recordings with 2,778,008 rows, and a 623.4 MiB generated sample CSV. Two observed per-record maximum speeds are 27,819.1 dva/s (`S_1007_S1_TEX`) and 24,946.5 dva/s (`S_1002_S1_TEX`); these are computed extrema, not validated physiological eye movements. Its newly authored ±60-sample peak windows and review figures have not yet executed. No real-cohort results are available for Notebooks 03–07; synthetic checks are infrastructure evidence only.
 
 ## 4. Running and Reviewing the Study
 
-Run the notebooks in ascending order in VS Code with a Colab Python kernel. They begin with a Colab checkout followed by the original Human Movement-style `setup_colab()` interface and grouped imports. Earlier notebooks' named output files are loaded from explicit paths without recomputation. Notebook 02 checks the manifest, quality counts and sample CSV from Notebook 01, then streams one complete record at a time to limit peak memory. In a new runtime, the previous Notebook ZIP can be restored in `/content/` using bounded-memory extraction; see the [dataset/ZIP guide](../data/README.md).
+Run the notebooks in ascending order in VS Code with a Colab Python kernel. They begin with a Colab checkout followed by the original Human Movement-style `setup_colab()` interface and grouped imports. Earlier notebooks' named output files are loaded from explicit paths without recomputation. Notebook 02 checks the manifest, quality counts and sample CSV from Notebook 01, streams one complete record at a time, and now includes a separate two-pass bounded-chunk review of the three highest record-level speed peaks. This review does not change the saved processed samples. In a new runtime, the previous Notebook ZIP can be restored in `/content/` using bounded-memory extraction; see the [dataset/ZIP guide](../data/README.md).
 
 Notebook 01 expects extracted CSVs under `data/raw/gazebase/`. The dataset is not automatically downloaded. Notebook 03 uses pedagogical starting thresholds (I-VT 30 dva/s; I-DT dispersion 1 dva with 80-ms minimum duration) which are **not validated scientific selections**. Notebook 06 explores 20/30/40 dva/s as sensitivity settings. Results cannot support clinical, cognitive or person-generalisation claims.
 
@@ -43,7 +43,7 @@ Notebook 01 expects extracted CSVs under `data/raw/gazebase/`. The dataset is no
 
 - `code/notebooks/`: seven numbered source notebooks.
 - `code/src/`: source-adapter, quality, preprocessing, event, feature and descriptive-statistics modules.
-- `images/`: seven editable five-band SVG figures. Figures 01 and 02 contain a short **measured raw gaze excerpt** from `S_1001_S1_FXS.csv`; Figure 01 also reports the committed source-audit counts and per-record validity range, whereas Figure 02's processing diagrams are explicitly conceptual and its derived outputs are still pending execution.
+- `images/`: seven editable five-band SVG figures. Figures 01 and 02 contain a short **measured raw gaze excerpt** from `S_1001_S1_FXS.csv`. Figure 01 reports the recorded source-audit counts and validity range. Figure 02 now also displays two recorded velocity maxima, with clear separation between observed values, method schematics and a peak-window inspection still pending execution.
 - `output/`: stage-owned machine-readable tables and experimental plots, produced only on execution.
 - `../python_modules/core/`: shared notebook infrastructure; see the helper provenance instructions in the development delivery.
 - `../data/README.md`: data access, source fields and current-stage ZIP transfers.
@@ -54,4 +54,4 @@ Each notebook owns its numbered current outputs and replaces them on rerun. File
 
 Gaze positions are measured estimates; fixation and saccade events are algorithmically derived; vendor event annotations are instrument references rather than ground truth. Report actual timestamp behaviour, missingness, method sensitivity and the number of independent participants, rather than assuming the nominal sample rate or treating many gaze samples as many independent people.
 
-Notebook 01 source counts and validity coverage have been recorded, but the quality table, detector validity and uncertainty interpretation must be reviewed using full compatible stage outputs. Remaining S1 stages require real-data execution. No prospective, clinical or deployed neurocognitive inference is part of S1.
+Notebook 01 source counts and validity coverage have been recorded, but the quality table, detector validity and uncertainty interpretation must be reviewed using full compatible stage outputs. Notebook 02's new diagnostic requires execution and review before interpretation of event classifications; Notebooks 03–07 require real-data execution. No prospective, clinical or deployed neurocognitive inference is part of S1.
