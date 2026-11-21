@@ -4,7 +4,7 @@ This guide describes the current seven-stage S1 workflow in the GitHub repositor
 
 `https://github.com/RezaSaadatyar/Eye-Tracking-Neurocognitive-Intelligence`
 
-The repository contains seven S1 notebooks, study-specific scientific modules (including a record-wise streaming reader), a ZIP restoration helper, seven editable five-band SVG figures, tests and study documentation. Notebook 01 has been executed on ten GazeBase participants; the repository currently also includes 40 original Session 1 task CSVs committed by the operator. The large stage-owned output tables are not committed. Notebook 02 has also been executed on this cohort, with 40 recordings and all 2,778,008 rows retained. Its peak diagnostic has been executed. Notebook 03 has also produced event and label outputs for this cohort; the new summary display still needs execution, and Notebooks 04–07 have not yet run.
+The repository contains seven S1 notebooks, study-specific scientific modules (including a record-wise streaming reader), a ZIP restoration helper, seven editable five-band SVG figures, tests and study documentation. Notebook 01 has been executed on ten GazeBase participants; the repository currently also includes 40 original Session 1 task CSVs committed by the operator. The large stage-owned output tables are not committed. Notebook 02 has also been executed on this cohort, with 40 recordings and all 2,778,008 rows retained. Its peak diagnostic has been executed. Notebooks 03 and 04 have now also been executed on this cohort. Notebook 03 produced and displayed its class summary; Notebook 04 produced 40 record-level feature rows, a dictionary and a scanpath figure. Notebook 05 is ready but has not yet run, and Notebooks 06–07 remain pending.
 
 ## Bring the unchanged Human Movement infrastructure into this repository
 
@@ -32,8 +32,26 @@ Inspect the changes, dependencies and staged file sizes before any authorised pu
 4. At the end of each notebook, the unchanged `download_outputs_from_colab` helper creates `eye_tracking_foundations_Notebook_NN_Outputs.zip` in `/content/` for download using Colab Contents in VS Code.
 5. If continuing in a new Colab runtime, upload the relevant *current* Notebook ZIP(s) to `/content/` before running the next notebook. The stage input helper loads existing named current outputs or restores the exact matching ZIP only when the required files are absent. It never silently reruns the earlier scientific stage.
 
-Notebook 01 has been executed on original GazeBase recordings in Colab (as shown by the committed output cells). This is not independent reproduction. Notebook 02 has been executed in Colab, as documented by its committed notebook outputs. The peak review was executed, as shown by the committed Notebook 02 outputs. Notebook 03 was also executed and generated 21,728 event intervals from the full sample representation. The added Notebook 03 summary display is not yet executed; synthetic checks do not replace source review. No deep-learning or cognitive target is fitted in S1.
+Notebook 01 has been executed on original GazeBase recordings in Colab (as shown by the committed output cells). This is not independent reproduction. Notebook 02 has been executed in Colab, as documented by its committed notebook outputs. The peak review was executed, as shown by the committed Notebook 02 outputs. Notebook 03 was also executed and generated 21,728 event intervals from the full sample representation. The Notebook 03 class summary is executed. Notebook 04 has also produced real-cohort feature outputs. The Notebook 05 participant-bootstrap code is authored but not yet executed; synthetic checks do not replace source review. No deep-learning or cognitive target is fitted in S1.
 
 ## After Notebook 02 execution
 
-Inspect the recorded 40-record preprocessing summary and the `02_velocity_extreme_review.csv` / `02_velocity_extreme_trace.png` outputs from Section 04A. Check actual `val`, adjacent `Δt`, raw/smoothed jumps and run continuity at the selected peaks. Treat extreme computed speeds as requiring review, not as automatic exclusions. Keep the Notebook 02 ZIP privately; the unchanged `02_preprocessed_samples.csv` remains Notebook 03's input. Notebook 03 has now generated event evidence, but its physiological interpretation remains conditional on the unresolved extreme coordinate steps. Execute the new Notebook 03 descriptive summary, then use the current `02_preprocessed_samples.csv` and `03_events.csv` to run Notebook 04. Later stages will assess vendor-reference coverage, event classes and parameter sensitivity without inventing unsupported findings.
+Inspect the recorded 40-record preprocessing summary and the `02_velocity_extreme_review.csv` / `02_velocity_extreme_trace.png` outputs from Section 04A. Check actual `val`, adjacent `Δt`, raw/smoothed jumps and run continuity at the selected peaks. Treat extreme computed speeds as requiring review, not as automatic exclusions. Keep the Notebook 02 ZIP privately; the unchanged `02_preprocessed_samples.csv` remains Notebook 03's input. Notebook 03 has now generated event evidence, but its physiological interpretation remains conditional on the unresolved extreme coordinate steps. The executed Notebook 03 and 04 outputs are already available. Use `01_quality_by_record.csv` and `04_features_by_record.csv` to run Notebook 05, which verifies record identity and source validity before estimating descriptive participant-level intervals. Later stages will assess vendor-reference coverage, event classes and parameter sensitivity without inventing unsupported findings.
+
+
+## Git output and file-size protection
+
+Generated Notebook CSV, PNG and ZIP files under `eye_tracking_foundations/output/`
+are ignored by default, regardless of size. The separate Git blob check blocks
+files larger than **50,000,000 bytes (50 MB)** unless the owner deliberately
+adds the exact path to `.git-large-file-allowlist`. Enable the repository's
+local pre-commit/pre-push hooks once with:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+The GitHub Actions size check also reports oversized tracked files, but an
+unprotected remote branch may still accept a push before that check runs.
+To publish a reviewed output smaller than 50 MB, explicitly use `git add -f`
+for that specific ignored file. Do not force-add the whole `output/` directory.
