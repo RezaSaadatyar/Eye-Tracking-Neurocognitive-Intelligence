@@ -1,63 +1,253 @@
-# Eye-Tracking Foundations & Signal Analysis: Research Methods and Evidence
+# Eye-Tracking Foundations & Signal Analysis | GazeBase v2.0: Research Methods and Evidence
 
-This document separates the recorded executions of Notebooks 01 and 02 on original GazeBase recordings from the subsequently executed three-record speed-peak diagnostic and the executed Notebook 03 detector analysis. The Notebook 03 descriptive class summary and Notebook 04 feature extraction have also been executed. Notebook 05's participant-balanced statistics have now executed on the ten-person GazeBase subset. Its numerical results and updated zoomed plot are recorded. Notebook 06 has executed its 120 source-record/threshold combinations and recorded the three original conditional-agreement means. Its supplementary reference-denominator checks and 30-dva/s baseline matching have executed, as has Notebook 07's integration of ten compact producer tables. All seven notebook executions are recorded; interpretation remains limited to a bounded study, with no independent reproduction. The companion [README](README.md) provides the entry point and notebook order.
+**Study:** Eye-Tracking Foundations & Signal Analysis (S1), Eye-Tracking & Neurocognitive Intelligence. **Maintained implementation:** [Notebooks 01–07](code/notebooks/). This document provides the scientific definitions, preprocessing and detector configurations, original-data observations, participant-level descriptive uncertainty, sensitivity analysis, output provenance and interpretive limits. For a concise overview and the complete seven-notebook figure, see the [study README](README.md), [study-wide workflow](images/study_overview.svg) and [execution guidance](README.md#4-running-and-reviewing-the-study).
+
+**Evidence status:** All seven notebooks have recorded executions on a selected **GazeBase v2.0 Round 1 / Session 1** subset: 10 participants, 40 task recordings and 2,778,008 source sample rows. Notebook 07's saved summary consistency checks completed without a recorded error. This is an **offline, within-source exploratory analysis**; it is not an independent reproduction, a formally validated eye-event detector or a predictive experiment.
 
 ## 1. Research Objective and Scope
 
-Study how recorded gaze coordinates can be inspected, quality-assured and transformed into transparently derived event intervals, features, descriptive analyses and visualisations. This is a bounded methodological and educational study, not a model estimating cognition, reading comprehension or clinical outcomes.
+The study investigates a bounded methodological question: **Can a documented sequence of source audit, gap-aware preprocessing, provisional eye-event detection, record-level feature construction and participant-aware descriptive analysis produce source-aligned, interpretable evidence from selected GazeBase recordings?** It also asks how fixed I-VT velocity thresholds affect assigned event classes and eligibility for comparison with EyeLink parser annotations.
+
+The seven notebooks address distinct, linked responsibilities: source identity and validity (01), motion representation and extreme-value inspection (02), I-VT/I-DT events and vendor comparisons (03), detector-derived gaze features (04), exploratory participant-level uncertainty (05), sensitivity and eligible-reference denominators (06), and cross-notebook consistency (07).
+
+**Units matter:** a gaze sample is not an independent participant; a detector-generated interval is not an independently validated eye movement; the same person contributes all four task recordings; and the sum of event counts reported by two detectors is not a count of distinct, non-overlapping physiological events across methods.
+
+There is **no supervised cognitive target, learned model, Training/Validation/Test split, held-out person-independent Test or externally validated classifier** in this first study. Reading comprehension, attention diagnosis, EEG fusion, prospective sensing and clinical applications are outside the evaluated scope.
 
 ## 2. Data Sources, Cohort and Target Definitions
 
-The intended primary source is [GazeBase](https://doi.org/10.6084/m9.figshare.12912257), described in [Griffith et al., Scientific Data (2021)](https://doi.org/10.1038/s41597-021-00959-y). Source columns and record identity are visible in the committed Notebook 01 execution. The original-data run is not independently reproduced in this review. The initial script selects up to ten complete participants with complete `FXS`, `HSS`, `RAN` and `TEX` records in Round 1, Session 1. This is deterministic bounded source inspection, not a representative sample. The source reader selects up to ten complete participants in sorted ID order and reports how many are actually present. The committed notebook records 10 participants, 40 task files and 2,778,008 source rows. The exact CSV contents and complete stage-owned outputs are not committed, so those figures have not been independently recomputed.
+### 2.1 Original source and acquisition context
 
-Time is `n` in milliseconds; `x/y` are degrees of visual angle; `val` marks invalid/missing samples; `dP` is an uncalibrated area measure. Where available, vendor sample labels `1`, `2` and `-1` represent parser fixation, saccade and blink categories. Absent vendor annotations, especially in some viewing tasks, are not converted to false negatives. The event detectors produce derived *algorithm labels*, not clinical or behavioural targets.
+The source is [GazeBase](https://doi.org/10.6084/m9.figshare.12912257), described by [Griffith, Lohr, Abdulin and Komogortsev (2021)](https://doi.org/10.1038/s41597-021-00959-y). The original publication states that GazeBase data are distributed under [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/). This repository contains a **selected 40-CSV subset** of the original archive; the original data are not re-licensed under the repository software's MIT licence. Retain source credit, the licence link and an indication of subset selection when redistributing. The implemented source reader uses the `GazeBase_v2_0` directory layout, selecting original CSV files by round, session, task and participant. This analysis uses **Round 1, Session 1 only**. The published GazeBase data collection is larger; the selection here must not be described as the full dataset or a random sample.
+
+Relevant source fields are:
+
+| Field | Meaning and treatment |
+| --- | --- |
+| `n` | Original time coordinate in **milliseconds**; actual adjacent differences are checked rather than treating the nominal recording frequency as a universal guarantee |
+| `x`, `y` | Recorded gaze positions in **degrees of visual angle (dva)** |
+| `val` | Source validity flag; in the inspected records **`val = 0` corresponds to nominally valid** gaze |
+| `dP` | Available pupil-area measurement, not a calibrated physiological pupil-diameter endpoint |
+| `lab` | EyeLink parser labels where available: recognised fixation (`1`), saccade (`2`) and blink (`-1`) codes; an instrument-derived reference, not independent expert ground truth |
+
+Source coordinates, task identity, timestamp and sample index are retained for provenance. Missing or unrecognised vendor labels are not interpreted as evidence that a true event did not occur.
+
+### 2.2 Implemented subset and independence units
+
+Notebook 01 deterministically selected up to **ten complete participants in source-ID order**, requiring one available FXS, HSS, RAN and TEX recording in the specified round/session. The executed selection contains source subjects **1001–1010** (internally identified as `001`–`010`), yielding **40 records and 2,778,008 source sample rows**.
+
+| Scope dimension | Observed value |
+| --- | ---: |
+| Source participants | 10 |
+| Task protocols per person | 4: FXS, HSS, RAN, TEX |
+| Distinct selected recordings | 40 |
+| Raw sample rows | 2,778,008 |
+| Task records contributing to Notebook 05 summaries | 10 per task |
+| Independent persons used for uncertainty | 10 |
+
+This subset is neither representative of all GazeBase rounds/sessions nor independent across tasks: the **same participants** appear in FXS, HSS, RAN and TEX. Downstream sample rows, event intervals and task records must not be treated as 2,778,008 or 21,728 independent participants.
+
+### 2.3 Analytical quantities, not cognitive labels
+
+The primary observations are source validity, sampling continuity, derived velocity, algorithm-assigned fixation/saccade intervals, event-dependent feature summaries and conditional parser-label agreement. Notebook 05 uses four prespecified per-record metrics: `valid_fraction`, `mean_fixation_ms`, `scanpath_length_dva` and `mean_saccade_peak_dva_s`.
+
+Neither reading comprehension nor subject-level neurocognitive status is observed as an evaluated target. The HSS/RAN/TEX task names indicate the source recording protocol; they do not imply that a reading-related feature has been validated as a cognitive endpoint.
 
 ## 3. Data Preparation and Representations
 
-Notebook 01 preserves original record/sample identity, timestamps and source validity, while reporting observed quality. Notebook 02 streams the current large Notebook 01 sample CSV by contiguous full record and applies a centred 5-sample rolling median only *within contiguous valid segments*, with a 5-ms maximum adjacency gap; these are starting parameters for education, not optimised or validated. Original `x/y` values remain available, and missing gaze is neither bridged nor assigned invented eye movements. Velocity is computed from consecutive smoothed valid coordinates and timestamps in degrees of visual angle per second. First samples of each segment have undefined adjacent velocity. The median uses centred neighbouring samples and therefore represents offline rather than causal real-time processing. An additional quality-review function reads the saved Notebook 02 sample CSV in bounded chunks, selects the three recordings with the largest reported velocity maxima, and inspects local raw/smoothed gaze, `val`, adjacent `Δt` and validity continuity. It recalculates each peak's speed from the neighbouring smoothed coordinates. This review changes neither eligibility nor the original processed CSV. The streaming implementation uses the unchanged record-level calculation, checks row counts and record identities against Notebook 01's manifest and quality table, and writes a complete replacement file only after those checks succeed.
+### 3.1 Source audit and validity preservation
+
+[Notebook 01](code/notebooks/01_source_audit_and_gaze_quality.ipynb) discovers complete source records, preserves source record and sample identifiers, collects the original fields, records row counts and computes validity/timing quality per record. Its saved numerical outputs are the source manifest, sample-level gaze table and per-record quality table.
+
+The recorded valid-gaze fraction ranges from **0.6735225356 to 1.000000** across the 40 records. The Notebook 07 integrated summary reports an **unweighted mean across records of 0.956931**. These are recording-quality observations, not percentages of people meeting a clinical or quality threshold.
+
+### 3.2 Gap-aware offline motion representation
+
+[Notebook 02](code/notebooks/02_gap_aware_gaze_preprocessing.ipynb) streams the previously saved source sample table in bounded chunks of **80,000 rows**, assembling complete source records for processing. The implementation applies a **centred five-sample rolling median** only within contiguous valid segments and breaks continuity when adjacent time differences exceed **5 ms**.
+
+The calculation retains original `x`/`y`, source flags and identities. It does not fill missing gaze across gaps or interpolate unsupported eye movements. Velocity is derived from adjacent smoothed coordinates and observed time differences, reported in **dva/s**; a segment's first sample has no preceding within-run velocity.
+
+Because the median uses samples on both sides of a point, it is **offline/non-causal** and cannot be described as a demonstrated real-time pipeline. The executed saved motion representation retained all **2,778,008** source rows, and the processed sample CSV occupied **623.4 MiB**.
+
+### 3.3 Peak-window diagnostic and consequential limitation
+
+Notebook 02 separately reviewed the three largest per-record velocity maxima, examining source and smoothed gaze, neighbouring `val` flags, timestamp differences and run continuity. Reported maxima include **27,819.1 dva/s** from `S_1007_S1_TEX` and **24,946.5 dva/s** from `S_1002_S1_TEX`. For the three investigated peak windows, adjacent source flags were `val = 0` and adjacent time differences were **1 ms**; numerically reconstructed speeds matched the saved summaries.
+
+These checks establish **calculation consistency at the selected samples**, not physiological plausibility, tracker correctness or a valid event interpretation. The cause of the very large coordinate changes remains unresolved. The observations were neither deleted nor used to retrospectively alter the detector settings. This limitation propagates to detector-derived speed and event features.
+
+### 3.4 Event-labelled and feature representations
+
+[Notebook 03](code/notebooks/03_ivt_idt_event_detection.ipynb) saves one sample-label row per prepared source row, a method-labelled event-interval table and per-record vendor comparisons. [Notebook 04](code/notebooks/04_gaze_features_and_scanpaths.ipynb) uses the saved motion and event outputs to construct **40 per-record feature rows**, a feature dictionary and an example of a path through **I-VT fixation centroids**.
+
+The centroid sequence is a detector-dependent spatial summary. Without source-stimulus coordinates and verified word/region mapping, it is not a validated reading path or a measurement of comprehension.
 
 ## 4. Experimental Design and Evaluation
 
-Notebook 03 computes I-VT and fixation-only I-DT assignments on exactly the prepared sample set. I-VT uses an initial threshold of 30 dva/s, minimum fixation duration 80 ms and minimum saccade duration 6 ms. I-DT uses a 1-dva sum-of-axis-range dispersion threshold and 80-ms fixation minimum. Non-fixation I-DT samples remain unknown rather than being presented as saccades or blinks. Vendor comparison uses only records/samples with compatible available reference labels, reporting denominator and coverage. It is conditional agreement, not an independently adjudicated event-level accuracy estimate.
+### 4.1 Exploratory, non-predictive analysis design
 
-Notebook 06 evaluates a fixed, exploratory 20/30/40-dva/s I-VT threshold grid on Notebook 02's stored motion representation. The observed change in label fractions and conditional reference agreement is sensitivity analysis, not outcome-driven parameter selection. Vendor agreement is computed only for recognised vendor labels that also receive an evaluable I-VT fixation/saccade assignment. Consequently, comparison denominators change with the threshold, and record-mean agreement is not a direct fixed-support accuracy comparison. There is no fitted model, training split, held-out Test set or generalisation claim in the first S1 programme.
+No data-driven model is fitted and no held-out Test group is defined. The defined analyses are: a fixed selected source subset; per-record source and motion quality summaries; two provisional detector definitions; participant-aware descriptive statistics; an exploratory, **prespecified 20/30/40-dva/s I-VT threshold grid**; and consistency checks between named producer and consumer files.
+
+Notebook 06 applies its three thresholds to the **same 40 source recordings**, using the unchanged Notebook 02 motion representation and the same run-duration criteria. These are within-source sensitivity conditions, not independent test cohorts or prospectively validated operating points.
+
+### 4.2 Sample-level event and parser comparison
+
+I-VT assigns `fixation`, `saccade` or `unknown`. I-DT is deliberately **fixation-only**, so its remaining samples are `unknown` and **must not be reported as I-DT saccades**. The EyeLink comparison is computed only where a recognised parser reference (fixation/saccade) is available **and** the predicted I-VT sample is evaluable (fixation/saccade).
+
+For each record/threshold the implementation reports the **jointly eligible sample count**, vendor-label coverage, fraction of all samples jointly evaluable, and conditional fraction with matching labels. Notebook 06 records both an unweighted **mean across recording-level agreement values** and an **eligible-sample-weighted** conditional mean; they differ in record weighting, but neither makes the comparison denominator invariant across thresholds or converts parser agreement into expert-ground-truth accuracy.
+
+### 4.3 Independent-person descriptive uncertainty
+
+Notebook 05 aggregates eligible data within each **participant–task** before estimating task-feature means and sample standard deviations. It resamples participants with replacement **500 times** using seed **17**, reporting **2.5th and 97.5th percentile** summaries.
+
+All four tasks contain values from ten people. The bootstrap intervals are exploratory with small independent sample support; the Notebook did **not** calculate paired between-task difference intervals, a task-effect significance test or population transportability. Taskwise intervals cannot be interpreted as independent person groups, because the same ten people completed all four tasks.
 
 ## 5. Methods, Models and Configurations
 
-The maintained modules are `gaze_source.py`, `gaze_quality.py`, `gaze_preprocessing.py`, `eye_events.py`, `gaze_features.py` and `gaze_statistics.py` under `code/src/`, with `stage_outputs.py` for explicit reuse of current outputs, `gaze_diagnostics.py` for optional source-aligned peak inspection, `gaze_evidence.py` for conditional vendor denominators and 30-dva/s reconciliation, and `gaze_integration.py` for cross-notebook saved-table alignment. Notebook 04 has computed per-record fixation counts/duration, saccade velocity, an approximate fixation-centroid scanpath length and pupil summaries where valid measurements exist. It does not map gaze to word regions without verified stimulus geometry. Notebook 05 aggregated records at participant-by-task level, calculated exploratory participant-resampled percentile intervals for available features using 500 draws and seed 17, and verified record-level source validity against Notebook 01. Its recorded updated zoomed plot improves visibility without changing the statistical CSV values. This cannot compensate for a small independent cohort.
+The study uses established analytical algorithms and descriptive methods, **not trained predictive models**. The implementation is in [`code/src/`](code/src/) with Colab utilities under the shared [`python_modules/core/`](../python_modules/core/) directory.
 
-All notebooks use numbered Markdown/code sections, non-destructive Colab checkout and source-code imports; external Human Movement infrastructure, when copied, must retain byte-exact code with provenance rather than being silently rewritten. Their scientific event-analysis modules are independent of Human Movement's EMG/IMU methods.
+| Analysis / notebook | Implemented configuration or operation | Recorded role | Maintained implementation |
+| --- | --- | --- | --- |
+| Source audit — 01 | Round 1, Session 1; FXS/HSS/RAN/TEX; first ten complete people | Select and quantify 40 source records | [`gaze_source.py`](code/src/gaze_source.py), [`gaze_quality.py`](code/src/gaze_quality.py) |
+| Gap-aware preprocessing — 02 | Centred five-sample median; max 5-ms gap; chunked full-record processing | Preserve and annotate all source rows | [`gaze_streaming.py`](code/src/gaze_streaming.py), [`gaze_preprocessing.py`](code/src/gaze_preprocessing.py) |
+| Extreme velocity review — 02 | Three record maxima; original `val` and local `Δt` inspection | Diagnose, not exclude or tune | [`gaze_diagnostics.py`](code/src/gaze_diagnostics.py) |
+| I-VT event assignment — 03 | **30 dva/s**, fixation ≥80 ms, saccade ≥6 ms | Provisional fixation/saccade/unknown labels | [`eye_events.py`](code/src/eye_events.py) |
+| Fixation-only I-DT — 03 | **1-dva sum-of-axis-range** dispersion limit, fixation ≥80 ms | Provisional fixation/unknown labels | [`eye_events.py`](code/src/eye_events.py) |
+| Record features — 04 | Event durations, I-VT peak speed, centroid path and available pupil summaries | 40 algorithm-dependent record features | [`gaze_features.py`](code/src/gaze_features.py) |
+| Participant descriptives — 05 | Four prespecified metrics; 500 participant bootstrap draws; seed 17 | 16 task-feature statistics and percentile intervals | [`gaze_statistics.py`](code/src/gaze_statistics.py) |
+| Fixed sensitivity grid — 06 | 20/30/40 dva/s; unchanged Notebook 03 run durations | 120 record-threshold comparisons | [`eye_events.py`](code/src/eye_events.py), [`gaze_evidence.py`](code/src/gaze_evidence.py) |
+| Evidence integration — 07 | Source-key, row-count, validity, participant-mean and threshold-table correspondence | 40-row alignment; one-row bounded summary | [`gaze_integration.py`](code/src/gaze_integration.py) |
+
+Record-level preprocessing and classification computations are implemented in the scientific modules; the notebooks orchestrate source restoration, display, current-file writing and plots. Colab/VS Code execution is recorded in the committed notebook outputs. This record does **not** establish precise environment pinning or independent re-execution in a second computing environment.
 
 ## 6. Results and Comparative Analysis
 
-**Notebook 01 executed:** The committed notebook output reports 10 participants and 40 recordings with a total of 2,778,008 sample rows. Per-record valid gaze fractions range from approximately 67.35% to 100% (the minimum and maximum printed in the notebook). These observed source-audit values are descriptive and not reproduced independently here. **Notebook 02 executed:** The committed results preserve all 40 source recordings and 2,778,008 samples; the saved processed CSV was 623.4 MiB. The reported maximum record-level velocities include 27,819.1 dva/s (`S_1007_S1_TEX`) and 24,946.5 dva/s (`S_1002_S1_TEX`). These extremes are algorithmic calculations, not confirmed physiological eye movements. The sample-window review has executed: the three selected peaks all have adjacent `Δt = 1 ms`, current and preceding source `val = 0`, and numerically reconstructed speeds matching the recorded maxima. Large raw coordinate displacements remain unexplained; no values were discarded or retuned. **Notebook 03 executed:** 2,778,008 sample-label rows were written, of which 888,893 received unknown I-VT labels. The event table reports 7,015 I-VT fixation, 9,304 I-VT saccade and 5,409 I-DT fixation intervals (21,728 total). Sample-level vendor comparison was displayed for 40 records, with eligibility and coverage columns; this is not an independently validated accuracy measure. The Notebook 03 class summary has also been executed: I-VT samples comprise 1,627,761 fixation, 261,354 saccade and 888,893 unknown labels; I-DT comprises 2,412,239 fixation and 365,769 unknown labels. **Notebook 04 executed:** 40 source-aligned feature rows across ten participants and all four tasks, with zero missing values in the saved feature coverage display. Its saved plot is an example sequence of I-VT fixation centroids, not a verified reading scanpath. The extreme velocity estimates and provisional detector thresholds remain scientifically consequential. **Notebook 05 executed:** Its recorded 40 source-record feature rows matched the Notebook 01 quality table with maximum valid-fraction difference 0.0. The participant-by-task table contains 40 rows for ten people across FXS, HSS, RAN and TEX. For four prespecified features per task, the statistics table contains 16 rows with ten independent participants in each task and a 500-draw percentile bootstrap (seed 17). Recorded mean valid gaze fractions and exploratory 2.5th–97.5th percentile intervals are:
+### 6.1 Source and motion quality: Notebooks 01–02
 
-| Task | Participant mean | Exploratory percentile interval | Independent participants |
+The source selection yielded **10 participants, 40 recordings and 2,778,008 rows**, with record validity fractions spanning **67.35–100%**. Gap-aware preprocessing kept the full row set and generated a **623.4-MiB** source-keyed motion table.
+
+Extreme calculated speed values of at least **27,819.1** and **24,946.5 dva/s** were recorded. The local peak inspection reconstructed the original calculation but did not resolve whether the coordinates represented reliable eye movement. Subsequent detector-dependent summaries must therefore be interpreted cautiously.
+
+### 6.2 Algorithm-derived event evidence: Notebook 03
+
+| Method and output | Sample/interval class | Recorded count |
+| --- | --- | ---: |
+| I-VT sample labels | Fixation | 1,627,761 |
+| I-VT sample labels | Saccade | 261,354 |
+| I-VT sample labels | Unknown | 888,893 |
+| I-DT sample labels | Fixation | 2,412,239 |
+| I-DT sample labels | Unknown | 365,769 |
+| I-VT event intervals | Fixation | 7,015 |
+| I-VT event intervals | Saccade | 9,304 |
+| I-DT event intervals | Fixation | 5,409 |
+
+Each detector's sample-label counts separately sum to **2,778,008 source rows**. The combined event table contains **21,728 method-labelled intervals** (= 7,015 + 9,304 + 5,409), but I-VT and I-DT are **two analyses of the same gaze recordings**; the combined number must not be interpreted as 21,728 distinct, independent physiological eye movements. There is no independent event-level adjudication.
+
+See [Notebook 03's executed output](code/notebooks/03_ivt_idt_event_detection.ipynb) and its [event-evidence diagram](images/03_ivt_idt_event_detection.svg).
+
+### 6.3 Feature coverage: Notebook 04
+
+Notebook 04 recorded **40 source-aligned feature rows**, including all ten people and four tasks. The saved feature coverage display showed **no missing entries among its reported feature columns**. That observation does not prove every physiological input is complete or that the event-dependent measures are unbiased.
+
+The example [fixation-centroid path](code/notebooks/04_gaze_features_and_scanpaths.ipynb) is empirical in the sense of being derived from saved detector events, but it is **not** a task-normalised, stimulus-aligned or expert-validated reading scanpath.
+
+### 6.4 Participant-balanced task summaries: Notebook 05
+
+Notebook 05 produced **40 participant–task rows** and **16 task-feature statistics** (four features per task); for each statistic the reported independent-person support was **n=10**. The saved feature table matched Notebook 01 source-record quality on `record_id`, participant, task and valid fraction; the maximum saved valid-fraction difference was **0.0**.
+
+| Task | Mean valid gaze fraction | Exploratory bootstrap percentiles (2.5th–97.5th) | Independent people |
 | --- | ---: | ---: | ---: |
 | FXS | 0.970420 | 0.959669–0.979730 | 10 |
 | HSS | 0.942191 | 0.863920–0.992464 | 10 |
 | RAN | 0.974758 | 0.947405–0.992207 | 10 |
 | TEX | 0.940355 | 0.889566–0.979774 | 10 |
 
-The recorded 16-row statistics also contain fixation duration, approximate centroid path length and mean I-VT saccade peak speed. These remain detector-dependent and susceptible to atypical calculated velocities. The four task means are not paired between-task effect estimates, and interval overlap is not a formal significance test. The revised Notebook 05 figure and output package have been rerun. **Notebook 06 executed:** the fixed 20/30/40-dva/s grid produced 120 record-threshold analyses from 40 source records. Record-average fixation proportions were 0.285257/0.612272/0.786466 and unknown proportions 0.622422/0.305744/0.137801. The corresponding unweighted record-mean conditional vendor agreement values were 0.909743/0.981307/0.987844. Because threshold-dependent non-unknown classifications change eligible vendor comparison samples, these values do not indicate independently validated performance or identify an optimal threshold. The executed reference-support table reports 1,015,044, 1,888,902 and 2,357,954 jointly evaluable samples for the three thresholds; all 40 recordings yielded defined vendor comparisons at each setting. Mean predicted-evaluable fractions were 0.377475/0.694083/0.862009, and sample-weighted conditional agreement was 0.947745/0.980780/0.986325. Mean recognised vendor-label coverage across records was 0.999708. The saved 30-dva/s vendor metrics matched Notebook 03 across all 40 recordings.
+Values are means of participant-level records for this selected subset. The percentile ranges were obtained from 500 draws at the participant level; they are **not** formal paired task-comparison confidence statements. Other recorded statistics include I-VT fixation duration, approximate centroid-path length and mean I-VT saccade peak speed, whose interpretation inherits the unresolved large-velocity issue.
 
-**Notebook 07 executed:** Ten compact Notebook 01–06 input tables were read, with 40 reconciled source records, 10 independent participants, 2,778,008 original sample rows, 21,728 detector-derived event intervals, 40 per-record features, 40 participant-by-task rows, 16 task-feature summaries and three prespecified I-VT thresholds. The overall mean of the 40 record-valid fractions was 0.956931 (unweighted). Source-validity differences between the saved Notebook 01 and Notebook 04 tables were 0.0. The derived tables and the 30-dva/s comparison passed their implemented consistency checks, and Notebook 07 saved its 40-row alignment table, one-row evidence summary and three-panel overview. These are internally reconciled, **not** independently repeated or physiologically adjudicated experimental results. Synthetic tests assess software contracts only.
+See [Notebook 05](code/notebooks/05_participant_balanced_statistics.ipynb) and its [observed-interval diagram](images/05_participant_balanced_statistics.svg).
+
+### 6.5 I-VT sensitivity and conditional vendor-reference coverage: Notebook 06
+
+The fixed grid produced **120 record–threshold rows**. Across the **40 recordings per setting**, the recorded unweighted means and eligible sample support were:
+
+| Threshold (dva/s) | Fixation fraction | Unknown fraction | Jointly eligible EyeLink samples | Record-mean agreement | Eligible-sample-weighted agreement |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 20 | 0.285257 | 0.622422 | 1,015,044 | 0.909743 | 0.947745 |
+| 30 | 0.612272 | 0.305744 | 1,888,902 | 0.981307 | 0.980780 |
+| 40 | 0.786466 | 0.137801 | 2,357,954 | 0.987844 | 0.986325 |
+
+All **40 records** supplied defined conditional agreement at each threshold. Mean recognised vendor coverage was **0.999708** across records, while the mean predicted/joint evaluable fraction rose from **0.377475** to **0.694083** and **0.862009** at the successive thresholds.
+
+The **30-dva/s record-level vendor metrics matched Notebook 03 for all 40 records**. The increasing eligible denominator is central: the apparent agreement rise is a **conditional comparison over changing sets of samples**, not a fixed-test accuracy gain or proof that 40 dva/s is preferable.
+
+See [Notebook 06](code/notebooks/06_detector_sensitivity_and_vendor_reference.ipynb) and its [denominator-aware scientific figure](images/06_detector_sensitivity_and_vendor_reference.svg).
+
+### 6.6 Source-aligned integration: Notebook 07
+
+The final Notebook read **ten compact current producer tables** and reported successful consistency checks for the 40-record source scope. Its one-row study summary contains:
+
+| Integrated quantity | Executed observation |
+| --- | ---: |
+| Original sample rows | 2,778,008 |
+| Source records aligned | 40 |
+| Independent people | 10 |
+| Unweighted mean record-valid fraction | 0.956931 |
+| Detector-labelled event intervals, summed across methods | 21,728 |
+| Record-level feature rows / participant–task rows | 40 / 40 |
+| Task–feature descriptive summaries | 16 |
+| Fixed I-VT threshold conditions | 3 |
+| Maximum saved validity discrepancy (Notebook 01 vs 04) | 0.0 |
+| Independent full-pipeline reproduction | **Not performed** |
+
+The alignment check compares record identities, source sample counts, validity fractions, participant support, saved task-feature means, 30-dva/s vendor values and the detailed/summary threshold tables. It does **not** recompute the original gaze preprocessing or validate the physical truth of event assignments.
+
+The saved [Notebook 07 three-panel overview](code/notebooks/07_integrated_evidence_and_reproducibility.ipynb) separately plots participant-mean valid gaze with exploratory bootstrap percentiles, record-mean I-VT class fractions and recorded algorithm-derived event intervals. The first panel explicitly uses a **zoomed y-axis**.
 
 ## 7. Robustness, Uncertainty and Additional Analyses
 
-Recorded data indicate very high calculated velocities in several tasks, especially reading. Their interpretation requires adjacent-sample review of raw and smoothed gaze, source `val` and timestamp differences; the recorded diagnostic examined three record maxima without imposing a new exclusion threshold. Recorded checks include source-level missingness, timestamp gaps, pupil coverage where available, conditional EyeLink agreement, threshold-dependent label fractions and participant-level uncertainty. The executed Notebook 06 support check quantified threshold-dependent comparison denominators and verified 30-dva/s baseline continuity with Notebook 03. The recorded Notebook 07 then checked summary correspondence across producer tables; neither procedure confirms instrument-reference label fidelity. Pupil area is uncalibrated; device labels are reference annotations; viewing conditions and stimulus differences can confound task comparisons. Bootstrap uncertainty from a very small participant subset remains exploratory, not population-level certainty. Any substantive threshold or methodology changes after real-data inspection must be recorded and evaluated independently of favourable scores.
+### 7.1 Temporal continuity and anomalous speed checks
+
+Gap-aware preprocessing keeps original samples and segment boundaries, restricting smoothing and velocity comparisons to contiguous valid runs. The three largest observed velocity peaks were investigated at adjacent-sample level, with matching recalculated magnitudes, `val = 0` at both relevant samples and `Δt = 1 ms`. This protects the *traceability* of the calculations but does **not** determine whether gaze jumps were plausible, calibration errors or other artefacts. No post hoc samples were excluded or thresholds retuned to improve scores.
+
+### 7.2 Small-cohort participant-level uncertainty
+
+The 500-draw bootstrap resamples people rather than millions of rows or individual eye events. With only **ten independent people**, the percentile intervals have limited inferential precision; taskwise bootstrap ranges should not be read as independent comparisons across the same participant cohort. No paired task-effect interval, hypothesis test, separate cohort or external validation was run.
+
+### 7.3 Conditional vendor comparison and threshold sensitivity
+
+The 20/30/40-dva/s analysis changes the proportions of fixation, saccade and unknown assignments and the sample population eligible for parser comparison. The additional support analysis makes that selection visible and the 30-dva/s baseline comparison checks internal implementation continuity. Neither is a comparison against independently adjudicated eye movements or a calibrated physiological error rate.
+
+### 7.4 Source alignment and reproduction limits
+
+Notebook 07 reconciles saved producer-level quantities, not raw-source bytes or independently reproduced detector outputs. Its successful checks are evidence that the named compatible tables agree on the tested keys and summaries. A clean rerun in a separately provisioned environment, explicit environment/version records and independent biological annotation would require additional work and are **not** silently inferred from a completed Colab notebook sequence.
 
 ## 8. Current Outputs and Reproducibility
 
-The seven notebooks write notebook-numbered current CSV files and plots to `output/`. Each downstream notebook directly consumes named producer files; to continue in a new Colab runtime, an explicit Notebook ZIP created by the unchanged `download_outputs_from_colab` helper can restore those current files. No historical output search, approval token, hidden retraining, or automatic source re-download occurs. Notebook 07 reads and reconciles summaries but does not execute earlier stages.
+The notebooks own and overwrite their numbered current outputs under `eye_tracking_foundations/output/`. The large numerical CSVs and generated PNGs are **ignored by Git by default**, while executed notebook displays and curated scientific SVGs are tracked. The source subset includes selected GazeBase task CSVs already tracked in the public repository. The original publication reports **CC BY 4.0** data licensing; appropriate source and licence attribution plus notice of subset selection are required. The repository's MIT licence covers its own code and documentation, not relicensing the upstream dataset.
 
-Static syntax/notebook validity checks and a complete synthetic pipeline exercise are part of the development verification, not independent replication. Notebook 01's Colab execution and saved output cells are visible in its committed notebook, but the generated CSV tables are not published, and no independent reproduction has occurred here. Notebooks 02 and 03 have committed original-data runs on the ten-participant cohort, and Notebook 02's peak-window review is also recorded. The Notebook 03 class summary and Notebook 04 recorded features are executed. Notebook 05 completed source-record reconciliation (40 records, maximum valid-fraction discrepancy 0.0), a 40-row participant/task table and 16 participant-bootstrap statistics. Its revised zoomed plot and output ZIP have been rerun, preserving the statistical CSV values. Notebook 06's 120-row sensitivity output, three-row record-mean summary, three-row eligible-reference support and revised plot are all recorded. Notebook 07 has completed and packaged its current alignment table, evidence summary and three-panel overview, using compact Notebook 01–06 producer tables. The original large gaze and sample-label tables were not reread during this integration. The original Notebook 01 CSV is reused for Notebook 02; bounded ZIP extraction and a chunked reader limit peak RAM without reducing the dataset or changing preprocessing settings. The exact release, environment versions, accessible files and any necessary licence restrictions should be recorded at first genuine execution.
+| Scientific evidence or artefact | Producing notebook | Current named file / access route |
+| --- | --- | --- |
+| Source records and validity | 01 | `01_source_manifest.csv`, `01_quality_by_record.csv` and large `01_gaze_samples.csv`; recorded display in [Notebook 01](code/notebooks/01_source_audit_and_gaze_quality.ipynb) |
+| Prepared motion and anomaly review | 02 | `02_preprocessed_samples.csv`, `02_preprocessing_summary.csv`, `02_velocity_extreme_review.csv` and two plots; [Notebook 02](code/notebooks/02_gap_aware_gaze_preprocessing.ipynb) |
+| Event and vendor evidence | 03 | `03_sample_labels.csv`, `03_events.csv`, `03_vendor_agreement.csv`, `03_event_class_summary.csv`; [Notebook 03](code/notebooks/03_ivt_idt_event_detection.ipynb) |
+| Record features | 04 | `04_features_by_record.csv`, `04_feature_dictionary.csv` and scanpath PNG; [Notebook 04](code/notebooks/04_gaze_features_and_scanpaths.ipynb) |
+| Participant-level statistics | 05 | `05_participant_features.csv`, `05_descriptive_statistics.csv` and statistics PNG; [Notebook 05](code/notebooks/05_participant_balanced_statistics.ipynb) |
+| Threshold sensitivity and eligible support | 06 | `06_sensitivity.csv`, `06_sensitivity_summary.csv`, `06_reference_support.csv` and plot; [Notebook 06](code/notebooks/06_detector_sensitivity_and_vendor_reference.ipynb) |
+| Cross-notebook summary and provenance | 07 | `07_source_alignment.csv`, `07_evidence_summary.csv`, `07_study_overview.png`; [Notebook 07](code/notebooks/07_integrated_evidence_and_reproducibility.ipynb) |
+
+The large Notebook 01 sample table is approximately **511.9 MiB** and Notebook 02's processed sample table **623.4 MiB** in the recorded execution. Use the [Getting Started](../GETTING_STARTED.md) and [data/source guide](../data/README.md) to acquire current inputs and restore each notebook's explicitly named output ZIP in Colab. Output ZIPs are private transfer artefacts and are not promised as publicly downloadable GitHub assets.
+
+The shared environment setup uses the maintained [`python_modules/core/`](../python_modules/core/) helpers and study-specific [`code/src/`](code/src/) modules. GitHub Actions exercises **synthetic code/data contracts**, including source/participant alignment and threshold consistency, and checks the separate **50,000,000-byte Git blob ceiling**. Passing those tests does not constitute execution of the original scientific pipeline.
+
+If source selection, preprocessing settings, event definitions or sample labels change, regenerate every affected downstream current file rather than mixing summaries from incompatible executions. The current saved results have **not** been independently reproduced from scratch in this review.
 
 ## 9. Discussion, Limitations and Future Work
 
-Notebooks 01–07 have recorded original-data runs for the agreed ten-person, four-task S1 subset, including the Notebook 06 conditional reference-support check and Notebook 07 evidence synthesis. This completes the approved seven-notebook execution sequence, **not** scientific validation or repository closure. The three extreme calculated gaze-speed cases were inspected at the sample level, but their physiological plausibility and cause remain unresolved; detector settings are provisional, vendor event taxonomy is not an independent expert reference, and only ten people support the participant-level summaries. Final scientific review should determine whether these limitations can be accepted for a bounded exploratory study or require targeted correction and transparent re-execution. Source licences and any separately authorised publications remain outside the scope of this notebook review. Deep learning, EEG fusion and cognitive inference remain independent later-study responsibilities.
+The seven notebooks fulfil the agreed S1 methodological objective **for a particular ten-person, four-task GazeBase subset**: source identity and validity were audited, original sample rows were preserved through offline motion processing, two provisional event procedures were applied, gaze features and participant-level descriptive uncertainty were recorded, a three-setting I-VT sensitivity study was performed, and the resulting named tables passed specified cross-notebook consistency checks.
 
-### References
+The results are **exploratory and source-bounded**, not a claim that eye-event detection is physiologically validated. The principal unresolved methodological issue is the presence of **extremely high calculated gaze speeds even at source-flagged valid, 1-ms-adjacent samples**. Checks established numerical continuity but not cause or correctness. The choice of I-VT/I-DT parameters also remains provisional, EyeLink parser codes provide a limited comparison rather than independent expert annotation, and the ten ordered participants cannot support population-wide claims.
 
-- Griffith et al. (2021). GazeBase, a large-scale, multi-stimulus, longitudinal eye movement dataset. Scientific Data. https://doi.org/10.1038/s41597-021-00959-y
-- GazeBase Figshare data repository: https://doi.org/10.6084/m9.figshare.12912257
+A useful scientific next step, if a stronger event-validity claim is desired, would be to adjudicate or characterise the anomalous coordinate transitions against source acquisition conditions, specify an event-validation protocol and then re-run dependent outputs after any justified methodological correction. A separate wider-source/participant study or verified cognitive target would be **new research**, not retrospective evidence from S1.
+
+Accordingly, S1 may be presented as an **executed, internally reconciled educational/exploratory pipeline with clearly stated scientific limitations**. The evidence does not establish real-time performance, independent reproducibility, expert ground truth, cognitive state estimation, causal effects or clinical deployment. Closing S1's current presentation does **not** close the wider multi-study Eye-Tracking & Neurocognitive Intelligence programme.
+
+**Original-source references:** [Griffith et al. (2021), *Scientific Data*](https://doi.org/10.1038/s41597-021-00959-y); [GazeBase Figshare dataset](https://doi.org/10.6084/m9.figshare.12912257). The upstream GazeBase data are [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) according to the source publication; [the repository MIT licence](../LICENSE) applies to original repository code and documentation, not to upstream data.
