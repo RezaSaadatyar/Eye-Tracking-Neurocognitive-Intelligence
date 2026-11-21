@@ -26,3 +26,7 @@ Thumbs.db
 # To publish a smaller selected output, review it first and use git add -f.
 /eye_tracking_foundations/output/*
 !/eye_tracking_foundations/output/.gitkeep
+
+# Study 2 machine-learning artefacts and results are local by default.
+/eye_movement_modelling/output/*
+!/eye_movement_modelling/output/.gitkeep
