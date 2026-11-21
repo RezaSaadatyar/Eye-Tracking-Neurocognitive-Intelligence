@@ -1,12 +1,11 @@
 # ==================== Presented by: Reza Saadatyar (2026) ====================
 """Source-identifiable GazeBase task data and participant-disjoint partitions.
 
-Original CSVs are shared with Study 1; all generated outputs belong to Study 2.
-No file from the completed Study 1 output directory is read or overwritten.
+Original CSVs are shared with Eye-Tracking Foundations; all generated outputs belong to Eye-Movement Modelling.
+No file from the completed Eye-Tracking Foundations output directory is read or overwritten.
 """
 from __future__ import annotations
 
-import json
 from pathlib import Path
 
 import numpy as np
@@ -163,7 +162,7 @@ def build_source_tables(
     inventory: pd.DataFrame, split: pd.DataFrame, *,
     window_samples: int = 256, max_windows_per_record: int = 24,
 ) -> tuple[pd.DataFrame, np.ndarray, np.ndarray, np.ndarray]:
-    """Stream each original recording once; never import Study 1 results."""
+    """Stream each original recording once; never import Eye-Tracking Foundations results."""
     from gaze_source import read_record
     if set(inventory.record_id) != set(split.record_id):
         raise ValueError("Inventory/split record IDs differ")
@@ -253,7 +252,7 @@ def normalise_train_only(
 def save_protocol(path: str | Path, *, participants: int,
                   seed: int, window_samples: int,
                   max_windows_per_record: int, purpose: str) -> dict:
-    """An explicit scientific configuration, not an approval/status gate."""
+    """Save the current scientific configuration in a readable CSV row."""
     settings = {
         "dataset": "GazeBase_v2_0", "round_id": 1, "session_id": 1,
         "task_labels": list(TASKS), "max_participants": participants,
@@ -265,13 +264,46 @@ def save_protocol(path: str | Path, *, participants: int,
         "target": "task_identity_not_cognition",
         "temporal_channels": list(CHANNELS),
     }
-    Path(path).write_text(json.dumps(settings, indent=2) + "\n")
+    csv_path = Path(path)
+    if csv_path.suffix.lower() != ".csv":
+        raise ValueError("The protocol must be saved as a CSV file")
+    row = {
+        key: "; ".join(value) if isinstance(value, list) else value
+        for key, value in settings.items()
+    }
+    pd.DataFrame([row]).to_csv(csv_path, index=False)
+    # Remove only the obsolete configuration written by this producer.
+    csv_path.with_suffix(".json").unlink(missing_ok=True)
     return settings
 
 
 def load_protocol(path: str | Path) -> dict:
-    with Path(path).open(encoding="utf-8") as handle:
-        return json.load(handle)
+    """Recover typed settings from a single-row protocol CSV."""
+    csv_path = Path(path)
+    if csv_path.suffix.lower() != ".csv":
+        raise ValueError("The expected protocol input is a CSV file")
+    table = pd.read_csv(csv_path, dtype=str, keep_default_na=False)
+    required = {
+        "dataset", "round_id", "session_id", "task_labels",
+        "max_participants", "split_seed", "window_samples",
+        "max_windows_per_record", "purpose", "test_role", "target",
+        "temporal_channels",
+    }
+    missing = required.difference(table.columns)
+    if len(table) != 1 or missing:
+        raise ValueError(
+            f"Protocol must have one row and required columns: missing={sorted(missing)}"
+        )
+    settings = table.iloc[0].to_dict()
+    for key in (
+        "round_id", "session_id", "max_participants", "split_seed",
+        "window_samples", "max_windows_per_record",
+    ):
+        settings[key] = int(settings[key])
+    for key in ("task_labels", "temporal_channels"):
+        settings[key] = [part.strip() for part in settings[key].split(";")
+                         if part.strip()]
+    return settings
 
 
 def load_windows(path: str | Path) -> dict[str, np.ndarray]:

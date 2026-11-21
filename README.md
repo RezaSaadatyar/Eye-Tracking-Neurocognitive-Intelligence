@@ -2,19 +2,19 @@
 
 **Eye-tracking, gaze signal analysis and neurocognitive AI research**
 
-A Python-based research programme for source-audited eye-movement analysis and related machine-learning research. Each study has its own scientific question, implementation, evidence and limitations. Study 1 is an executed offline GazeBase methodological analysis. Study 2 now has five authored notebooks and model modules for participant-disjoint GazeBase Task classification, **but its own original-data training has not yet executed**. Vision-based gaze estimation and EEG–eye-tracking research remain separate proposed directions.
+A Python research programme for source-audited gaze analysis and separate task-recognition modelling. Eye-Tracking Foundations has seven executed offline GazeBase notebooks. Eye-Movement Modelling has five implemented notebooks; Notebook 01 has recorded pilot execution (10 participants, 40 recordings, 960 windows), while model training and evaluation remain pending. Vision-based gaze estimation and EEG–eye-tracking are proposed directions.
 
 ## Research projects
 
 | Project | Current evidence-based status | Start here |
 | --- | --- | --- |
-| **Study 1: Eye-Tracking Foundations & Signal Analysis (GazeBase)** | **Seven executed notebooks (01–07)** using **10 participants, 40 Round 1 / Session 1 recordings and 2,778,008 source samples**. Source audit, gap-aware preprocessing, provisional I-VT/I-DT events, features, participant statistics, threshold sensitivity and integrated output checks are recorded. Exploratory within-source evidence, not independently validated eye-event accuracy or neurocognitive prediction. | [Study README](eye_tracking_foundations/README.md) · [Scientific methods and evidence](eye_tracking_foundations/RESEARCH_METHODS_AND_EVIDENCE.md) · [Complete workflow diagram](eye_tracking_foundations/images/study_overview.svg) · [How to run](eye_tracking_foundations/README.md#4-running-and-reviewing-the-study) |
-| **Study 2: Eye-Movement Modelling & Advanced AI** | **Implemented, awaiting execution:** five structured notebooks, source-preserving group partitions, classical baselines, CNN, TCN, GRU, Transformer and frozen Test evaluation. Initial ten-person pilot; 20/30-person cohort extension requires additional original CSVs and complete reruns. No Study 2 model results claimed. | [Study README](eye_movement_modelling/README.md) · [Scientific design](eye_movement_modelling/RESEARCH_METHODS_AND_EVIDENCE.md) · [Five-notebook overview](eye_movement_modelling/images/study_overview.svg) |
+| **Eye-Tracking Foundations: Eye-Tracking Foundations & Signal Analysis (GazeBase)** | **Seven executed notebooks (01–07)** using **10 participants, 40 Round 1 / Session 1 recordings and 2,778,008 source samples**. Source audit, gap-aware preprocessing, provisional I-VT/I-DT events, features, participant statistics, threshold sensitivity and integrated output checks are recorded. Exploratory within-source evidence, not independently validated eye-event accuracy or neurocognitive prediction. | [Study README](eye_tracking_foundations/README.md) · [Scientific methods and evidence](eye_tracking_foundations/RESEARCH_METHODS_AND_EVIDENCE.md) · [Complete workflow diagram](eye_tracking_foundations/images/study_overview.svg) · [How to run](eye_tracking_foundations/README.md#4-running-and-reviewing-the-study) |
+| **Eye-Movement Modelling & Advanced AI** | **Notebook 01 executed in a ten-person pilot:** 40 task recordings, 40 feature rows, 960 temporal windows and participant-disjoint 6/2/2 Train/Validation/Test assignments. Notebooks 02–05 are implemented but unexecuted. No classifier score is claimed. A larger cohort requires new original CSVs and fresh held-out IDs. | [Project README](eye_movement_modelling/README.md) · [Scientific methods](eye_movement_modelling/RESEARCH_METHODS_AND_EVIDENCE.md) · [Workflow](eye_movement_modelling/images/study_overview.svg) |
 | **Study 3: Vision-Based Gaze Estimation** | **Optional future study:** camera-based gaze direction or point-of-gaze estimation. No completed experiments are claimed. | No study directory yet |
 | **Study 4: EEG–Eye-Tracking Multimodal Research** | **Planned research pillar:** audited EEG/gaze alignment, fixation-related analysis and multimodal learning, subject to dataset and protocol approval. | No study directory yet |
 | **Study 5: Applied Neurocognitive Studies** | **Future studies:** separately defined reading, attention and other research questions, each requiring appropriate source measurements and targets. | No study directory yet |
 
-**Study 1** is the programme's first project. Its source selection is specifically **GazeBase Round 1, Session 1**; the study number and the dataset session number are different concepts. The listed studies are related directions, **not one completed end-to-end neurocognitive prediction pipeline**.
+**Eye-Tracking Foundations** is the first implemented project. Both implemented projects use original GazeBase Round 1, Session 1 source files but answer different research questions and maintain separate derived outputs.
 
 ## Selected Eye-Tracking Foundations evidence
 
@@ -28,7 +28,7 @@ For the full protocol, exact numerical findings and limitations, use the [study 
 
 ## Planned research directions
 
-Study 2 now has an implemented, but unexecuted, GazeBase Task identity protocol and person-disjoint evaluation design. Vision-Based Gaze Estimation would require suitable image/video data and evaluation units. EEG–Eye-Tracking work would need defensible modality alignment, temporal correspondence and leakage safeguards. Applied neurocognitive studies would require appropriately measured behavioural or cognitive endpoints.
+Eye-Movement Modelling has executed its first pilot data-preparation notebook; model training, Validation comparisons and held-out Test evaluation remain pending. Vision-Based Gaze Estimation requires image/video data, while EEG–Eye-Tracking requires verified cross-modal alignment.
 
 Study 3–5 topics are **future scopes**, not implemented methods or observed results. EMTeC may be considered as a complementary eye-tracking source in a separate approved design; it was **not** used in the completed GazeBase analysis.
 
@@ -51,9 +51,9 @@ Eye-Tracking-Neurocognitive-Intelligence/
 │   ├── images/                         # Overview and notebook scientific SVGs
 │   └── output/                         # Private current numeric outputs
 ├── eye_movement_modelling/
-│   ├── README.md                       # Study 2 protocol and navigation
+│   ├── README.md                       # Modelling protocol and navigation
 │   ├── RESEARCH_METHODS_AND_EVIDENCE.md
-│   ├── code/notebooks/                 # Five authored, unexecuted notebooks
+│   ├── code/notebooks/                 # Five notebooks; 01 has recorded pilot execution
 │   ├── code/src/                       # Data, models, training, evaluation
 │   ├── images/                         # Overview and five stage SVGs
 │   └── output/                         # Separate local generated outputs
@@ -66,7 +66,7 @@ Studies 3–5 have **no dedicated study folders** yet. Their future code, data a
 
 ## Getting started
 
-For the executed first study, start with the [Eye-Tracking Foundations README](eye_tracking_foundations/README.md) and its [methods and evidence](eye_tracking_foundations/RESEARCH_METHODS_AND_EVIDENCE.md). For the unexecuted Study 2 modelling sequence, start with [its data/protocol notebook](eye_movement_modelling/code/notebooks/01_data_and_experimental_protocol.ipynb) and [study README](eye_movement_modelling/README.md). The [complete workflow figure](eye_tracking_foundations/images/study_overview.svg) gives a study-wide view; the [numbered notebooks](eye_tracking_foundations/code/notebooks/) contain the executed calculations and saved displays.
+For the executed Eye-Tracking Foundations analysis, begin with its [README](eye_tracking_foundations/README.md) and [scientific methods](eye_tracking_foundations/RESEARCH_METHODS_AND_EVIDENCE.md). For Eye-Movement Modelling, inspect [Notebook 01](eye_movement_modelling/code/notebooks/01_data_and_experimental_protocol.ipynb) and the [project README](eye_movement_modelling/README.md) before executing the remaining modelling notebooks.
 
 For original GazeBase acquisition, existing source paths and attribution, consult the [data guide](data/README.md). For VS Code, Colab setup and named output ZIP hand-offs, use [GETTING_STARTED.md](GETTING_STARTED.md). Both study output folders are Git-ignored, and large generated CSVs, checkpoints and ZIPs are kept **outside Git by default**, and the repository does not promise their public download. Re-execution requires the compatible original data and notebook-specific current inputs; a documentation change alone does not require rerunning the experiment.
 

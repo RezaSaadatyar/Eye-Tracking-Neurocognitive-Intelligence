@@ -1,12 +1,12 @@
 # Eye-Movement Modelling & Advanced AI | GazeBase v2.0
 
-![Study 2 gaze-task modelling workflow, source provenance, model families and reserved evaluation](images/study_overview.svg)
+![Eye-Movement Modelling gaze-task modelling workflow, source provenance, model families and reserved evaluation](images/study_overview.svg)
 
-*Figure 1. Scientific plan for five Study 2 notebooks: independently select and split original gaze records, compare feature-based classical baselines, train CNN/TCN and GRU/Transformer models separately, and evaluate frozen models on participant-disjoint source records. All model scores and comparison plots remain **unobserved until execution**. The GazeBase source excerpt was observed in Study 1, not produced by Study 2.*
+*Figure 1. Scientific plan for five Eye-Movement Modelling notebooks: independently select and split original gaze records, compare feature-based classical baselines, train CNN/TCN and GRU/Transformer models separately, and evaluate frozen models on participant-disjoint source records. All model scores and comparison plots remain **unobserved until execution**. The GazeBase source excerpt was observed in Eye-Tracking Foundations, not produced by Eye-Movement Modelling.*
 
-**Aim:** Compare record-level interpretable gaze features with four compact temporal neural architectures on a precisely defined **four-class source Task identity** target (FXS, HSS, RAN, TEX). The study is **implemented but not yet executed on GazeBase**. Neither a reading-comprehension measure nor clinical or cognitive status is predicted.
+**Aim:** Compare record-level interpretable gaze features with four compact temporal neural architectures on a precisely defined **four-class source Task identity** target (FXS, HSS, RAN, TEX). The study is **implemented; Notebook 01 has recorded pilot execution, while model notebooks remain unexecuted**. Neither a reading-comprehension measure nor clinical or cognitive status is predicted.
 
-**Independence:** Reuse the already available **original GazeBase Round 1 / Session 1 CSV files**, but create all Study 2 splits, features, temporal windows, models and outputs independently in `eye_movement_modelling/output/`. No processed Study 1 result is mixed into the new modelling cohort.
+**Independence:** Reuse the already available **original GazeBase Round 1 / Session 1 CSV files**, but create all Eye-Movement Modelling splits, features, temporal windows, models and outputs independently in `eye_movement_modelling/output/`. No processed Eye-Tracking Foundations result is mixed into the new modelling cohort.
 
 The first run is an explicit **ten-person pilot**. Increasing the cohort to **20 or 30 complete people** requires additional original GazeBase CSVs, deciding the final participant count **before** inspecting a main Test, and re-executing all five notebooks with the same scientific definitions. Read the [full methods and evidence plan](RESEARCH_METHODS_AND_EVIDENCE.md).
 
@@ -15,7 +15,7 @@ The first run is an explicit **ten-person pilot**. Increasing the cohort to **20
 | Item | Implemented definition and boundary |
 | --- | --- |
 | Dataset | [GazeBase v2.0](https://doi.org/10.6084/m9.figshare.12912257), Round **1**, Session **1**, source CSVs from [`data/raw/gazebase/`](../data/README.md) |
-| Available starting scope | The repository has 10 complete people with four task recordings each (40 original CSVs), established in the executed Study 1 source audit; **no Study 2 results yet** |
+| Available starting scope | The repository has 10 complete people with four task recordings each (40 original CSVs), established in the executed Eye-Tracking Foundations source audit; **Notebook 01 preparation outputs recorded; no model results yet** |
 | Planned extended scope | 20 or 30 complete people, if additional original CSVs are obtained and checked; do not silently assume they are present |
 | Prediction target | Recording protocol: **FXS**, **HSS**, **RAN**, **TEX**. Four known classes; **not cognitive diagnosis** |
 | Predictors: classical | Recording validity, x/y dispersion, step displacement, velocity quantiles, positive pupil coverage/summary where available |
@@ -32,25 +32,25 @@ The first run is an explicit **ten-person pilot**. Increasing the cohort to **20
 
 ## 2. Experimental Programme
 
-These five notebooks are related stages of **one supervised gaze task-modelling experiment**. Their code, Markdown and figures are authored; **they have not been run on the original data in Study 2**.
+These five notebooks form one task-recognition experiment. Notebook 01 has recorded original-data pilot preparation; Notebooks 02–05 remain unexecuted.
 
 | Notebook | Main experiment and visible model-level evidence | Owned current output files |
 | --- | --- | --- |
-| [01 — Data and Experimental Protocol](code/notebooks/01_data_and_experimental_protocol.ipynb) | Select original CSVs, participant-disjoint groups, feature table, temporal windows and Train-only normalisation | `01_source_inventory.csv`, `01_split_assignments.csv`, `01_record_features.csv`, `01_sequence_windows.npz`, `01_sequence_normalisation.csv`, `01_protocol.json`, source plot |
+| [01 — Data and Experimental Protocol](code/notebooks/01_data_and_experimental_protocol.ipynb) | Select original CSVs, participant-disjoint groups, feature table, temporal windows and Train-only normalisation | `01_source_inventory.csv`, `01_split_assignments.csv`, `01_record_features.csv`, `01_sequence_windows.npz`, `01_sequence_normalisation.csv`, `01_protocol.csv`, source plot |
 | [02 — Statistical and Classical ML](code/notebooks/02_statistical_and_classical_ml.ipynb) | Separate sections for class prior, Logistic Regression, Random Forest and Gradient Boosting; each with Validation confusion matrix | `02_validation_metrics.csv`, four fitted `02_*.joblib` files, independent predictions/plots, comparison |
 | [03 — CNN and TCN](code/notebooks/03_cnn_and_tcn_models.ipynb) | Separate CNN and TCN architecture, training, learning curves, record-level Validation metrics and confusion matrices | `03_cnn.pt`, `03_tcn.pt`, histories/predictions/plots, `03_neural_validation_metrics.csv` |
 | [04 — GRU and Transformer](code/notebooks/04_gru_and_transformer_models.ipynb) | Separate GRU and Transformer architecture, training curves, model complexity, Validation and confusion matrices | `04_gru.pt`, `04_transformer.pt`, histories/predictions/plots, `04_neural_validation_metrics.csv` |
-| [05 — Robustness and Final Evaluation](code/notebooks/05_robustness_and_final_evaluation.ipynb) | Validation-selected model, frozen Test evaluation, individual-person errors, Validation-only input perturbation and comparisons | `05_model_selection.json`, `05_test_predictions.csv`, `05_test_metrics.csv`, `05_groupwise_test_metrics.csv`, `05_robustness_validation.csv`, comparison plots |
+| [05 — Robustness and Final Evaluation](code/notebooks/05_robustness_and_final_evaluation.ipynb) | Validation-selected model, frozen Test evaluation, individual-person errors, Validation-only input perturbation and comparisons | `05_model_selection.csv`, `05_test_predictions.csv`, `05_test_metrics.csv`, `05_groupwise_test_metrics.csv`, `05_robustness_validation.csv`, comparison plots |
 
 A separate editable figure accompanies each notebook in [`images/`](images/), matching the approved five-band project style. The [overall diagram](images/study_overview.svg) is **methodological/schematic** until real model outputs exist. The notebooks display separate scientific results for every candidate, rather than combining all neural models into one cell.
 
 ## 3. Main Results
 
-**Original Study 2 training and evaluation are pending.** No new Task-classification Accuracy, Macro F1, AUROC, confusion matrix, learning curve or model ranking has been observed. The source subset sizes in Study 1 establish only **input availability** and do not establish Study 2 results.
+**Data preparation (Notebook 01) has recorded execution; model training and evaluation remain pending.** The pilot selected 10 participants and 40 source recordings, created 40 feature rows and 960 windows `(960, 256, 4)`, and assigned 6/2/2 participants to Train/Validation/Test. No classification scores, confusion matrices or model rankings have been observed.
 
-The Study 2 Python modules and notebook structure have been authored. A synthetic test suite checks source identities, participant separation, train-only normalisation, record-level window aggregation, static notebook syntax and key output contracts; such tests do **not** demonstrate CNN/TCN/GRU/Transformer performance on GazeBase.
+The Eye-Movement Modelling Python modules and notebook structure have been authored. A synthetic test suite checks source identities, participant separation, train-only normalisation, record-level window aggregation, static notebook syntax and key output contracts; such tests do **not** demonstrate CNN/TCN/GRU/Transformer performance on GazeBase.
 
-After Notebook 01, report the actual people, recording rows and window counts. After Notebooks 02–04, report model-by-model Validation results. Notebook 05 must state its **pre-Test Validation selection** and present separate primary and exploratory Test comparisons. The 10-person run will remain labelled Pilot, even if high scores appear.
+The recorded Notebook 01 pilot establishes the preparation baseline. Review its CSV/NPZ bundle and step-speed distribution before Notebook 02; then inspect Validation evidence for each model in 02–04 and the preselected Test comparison in 05. The ten-person Test remains exploratory.
 
 ## 4. Running and Reviewing the Study
 
@@ -71,17 +71,17 @@ After Notebook 01, report the actual people, recording rows and window counts. A
 | [`code/src/`](code/src/) | Study-specific data preparation, classical learners, temporal architectures, training and record-level metrics |
 | [`images/study_overview.svg`](images/study_overview.svg) | Editable study-wide five-band modelling diagram |
 | [`images/`](images/) | Five notebook-specific editable scientific SVGs |
-| `output/` | Current Study 2 feature CSVs, window NPZ, checkpoints, metrics and plots; **local, Git-ignored** |
+| `output/` | Current Eye-Movement Modelling feature CSVs, window NPZ, checkpoints, metrics and plots; **local, Git-ignored** |
 | [`data/raw/gazebase/`](../data/README.md) | Shared upstream **original** source CSVs (read only) |
 | [`README.md`](README.md) | Study overview and navigation |
 | [`RESEARCH_METHODS_AND_EVIDENCE.md`](RESEARCH_METHODS_AND_EVIDENCE.md) | Detailed training, split, metric and interpretation plan |
 | [`tests/test_s2_contracts.py`](../tests/test_s2_contracts.py) | Synthetic contracts, not original-data reproduction |
 
-A per-study output directory prevents overwriting Study 1's `eye_tracking_foundations/output/`. All generated outputs are ignored by Git, and the repository's existing 50-MB Git blob policy is retained. Model weights are not automatically published.
+A per-study output directory prevents overwriting Eye-Tracking Foundations's `eye_tracking_foundations/output/`. All generated outputs are ignored by Git, and the repository's existing 50-MB Git blob policy is retained. Model weights are not automatically published.
 
 ## 6. Interpretation and Scope
 
-**Implemented, awaiting original-data execution.** The study can support a principled comparison of source Task classification from engineered features versus temporal windows **only after** the saved Train/Validation/Test workflow has executed and its participant/group contracts have been checked. More training windows do not increase the number of independent people.
+**Partially executed pilot.** Source preparation and representation construction have recorded execution; model training and participant-disjoint evaluation remain outstanding. The revised CSV protocol output must be regenerated for downstream execution.
 
 The following remain limitations even after a successful run: task identity is confounded with stimulus protocol; Test participant counts are very small in the pilot; the first complete source IDs are not a representative sample; gaze speeds and pupil fields may reflect measurement artefacts; and a model's Validation/held-out Test score does **not** establish neural, clinical or cognitive diagnosis.
 

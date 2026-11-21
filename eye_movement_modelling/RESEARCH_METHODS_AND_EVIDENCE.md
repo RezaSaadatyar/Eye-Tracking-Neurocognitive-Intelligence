@@ -1,6 +1,6 @@
 # Eye-Movement Modelling & Advanced AI | Research Methods and Evidence
 
-**Study:** Study 2 of the Eye-Tracking & Neurocognitive Intelligence programme. **Target:** four-class GazeBase source Task identity. **Status:** five notebooks and reusable model modules are implemented; original-data execution, training metrics and model comparisons are not yet observed. The companion [README](README.md) presents the five-stage workflow and [editable study diagram](images/study_overview.svg).
+**Project:** Eye-Movement Modelling & Advanced AI within Eye-Tracking & Neurocognitive Intelligence. **Target:** four-class GazeBase source-task identity. **Evidence:** Notebook 01 has recorded ten-person pilot execution, while Notebooks 02–05 have not recorded model training or evaluation. The [README](README.md) and [workflow diagram](images/study_overview.svg) describe the stages.
 
 ## 1. Research Objective and Scope
 
@@ -14,9 +14,9 @@ This study does not train a fixation detector, infer reading comprehension, meas
 
 ### 2.1 Source and availability
 
-Use [GazeBase v2.0](https://doi.org/10.6084/m9.figshare.12912257) **Round 1, Session 1** with four tasks: FXS (fixations), HSS (horizontal saccades), RAN (random saccades) and TEX (reading). Ten complete participants and 40 source CSVs exist in the current Repository from Study 1; this is **input availability evidence, not Study 2 execution**.
+Use [GazeBase v2.0](https://doi.org/10.6084/m9.figshare.12912257) **Round 1, Session 1** with four tasks: FXS (fixations), HSS (horizontal saccades), RAN (random saccades) and TEX (reading). Ten complete participants and 40 source CSVs exist in the current Repository from Eye-Tracking Foundations; Notebook 01 has now recorded separate data preparation from these inputs.
 
-Original CSVs are read from [`data/raw/gazebase/`](../data/README.md). Reuse the maintained `gaze_source` source adapter from Study 1 as **read-only infrastructure**, without using any derived Study 1 output CSV. Source data are subject to CC BY 4.0; repository code has a separate MIT licence.
+Original CSVs are read from [`data/raw/gazebase/`](../data/README.md). Reuse the maintained `gaze_source` source adapter from Eye-Tracking Foundations as **read-only infrastructure**, without using any derived Eye-Tracking Foundations output CSV. Source data are subject to CC BY 4.0; repository code has a separate MIT licence.
 
 ### 2.2 Cohort sizing and target mapping
 
@@ -36,7 +36,7 @@ A larger experiment reassigns and reconstructs the entire model cohort and may a
 
 For each original source CSV, read timestamps in milliseconds; `x/y` in degrees of visual angle; `val=0` source-valid gaze; positive `dP` as **uncalibrated pupil measurement** where supplied. Compute: valid fraction, horizontal and vertical position spread, median/95th percentile angular displacement and speed for neighbouring valid steps no more than 5 ms apart, and pupil coverage/median. Keep `record_id`, `participant_id`, `task`, original row count and split as **audit identifiers, not predictors**.
 
-Preprocessing must not import the completed Study 1 smoothed sample table or its feature outputs. Extreme raw step speeds remain possible and should be inspected in execution before interpretation; pilot model results must not be characterised as robust to artefacts automatically.
+Preprocessing must not import the completed Eye-Tracking Foundations smoothed sample table or its feature outputs. Extreme raw step speeds remain possible and should be inspected in execution before interpretation; pilot model results must not be characterised as robust to artefacts automatically.
 
 ### 3.2 Temporal sequences
 
@@ -86,9 +86,9 @@ Models are intentionally small; that does **not** guarantee an observed Colab ru
 
 ## 6. Results and Comparative Analysis
 
-**No original-data Study 2 model training or Test evaluation has yet been observed.** Scientific result tables remain empty until notebooks are executed by the user. The 10-person and 40-record counts are inherited **source availability**, not newly observed model performance.
+**Observed Notebook 01 preparation:** 10 complete participants, 40 task recordings, 40 record-level feature rows and 960 temporal windows of shape `(960, 256, 4)`. The seed-17 Train/Validation/Test groups contain 6/2/2 participants and 24/8/8 recordings. No model training or Test classification metrics have been recorded.
 
-Planned results are: actual sample/window counts and group registry (Notebook 01), four classical Validation comparisons (02), distinct CNN/TCN Validation results (03), distinct GRU/Transformer Validation results (04), and the a priori-selected primary Test model with complete exploratory comparison (05).
+Notebook 01 provides recorded preparation counts and the participant registry. Remaining evidence is classical Validation comparisons (02), CNN/TCN (03), GRU/Transformer (04) and frozen selected-model Test evaluation (05).
 
 Do not insert fabricated Accuracy/Macro F1, learning curves, confusion counts, model rankings or subgroup performance. Numerical evidence must be taken from executed notebook outputs and their named CSVs.
 
@@ -106,7 +106,7 @@ Notebook outputs are written under `eye_movement_modelling/output/` using unique
 
 All generated outputs and ZIP transfer packages are **ignored by Git by default**; the repository's separate policy blocks unapproved blobs above 50,000,000 bytes. The original GazeBase CSVs already tracked in the public repository retain their original CC BY 4.0 attribution. Stages can reuse files in one Colab runtime or restore the exact numbered, current ZIP via `ensure_stage_inputs`.
 
-The Python source code and five Jupyter notebook artefacts are published. **Their execution on original Study 2 data and scientific outcomes remain pending**. A passing synthetic contract test or syntactically correct notebook does not prove that a model has trained successfully or that its results are scientifically valid.
+The notebook implementations are published, and Notebook 01 contains saved original-data execution evidence. The CSV protocol introduced after that run has **not** been re-executed; downstream training and Test metrics remain unverified. Synthetic tests alone do not establish model performance.
 
 ## 9. Discussion, Limitations and Future Work
 
@@ -114,6 +114,6 @@ The implemented workflow is designed to compare simple feature-based models and 
 
 The first ten-person run is a functional feasibility exercise. Expanding to 20/30 people requires **authorised additional original CSVs**, a decided main cohort size, new split assignments and complete source-to-model reruns. The initial ten-person pilot is not an independent external validation. Final-model selection must remain Validation-based, with the main Test held out until the design is frozen.
 
-Once Notebook 01 has been executed, the source selection, window coverage, split assignments and any missing columns should be reviewed before training models. Every later notebook should then be executed, checked for scientific errors and revised where needed, following the same staged review pattern as Eye-Tracking Foundations. Completing authored code is not a claim of completed experiments or repository closure.
+Review the recorded Notebook 01 source selection, 6/2/2 participant split, 40 feature rows, 960 windows, step-speed distributions and regenerated CSV protocol before fitting any model in Notebook 02. Rebuild downstream outputs if the cohort or representation changes.
 
 **Source attribution:** [GazeBase dataset](https://doi.org/10.6084/m9.figshare.12912257) and [Griffith, Lohr, Abdulin and Komogortsev (2021)](https://doi.org/10.1038/s41597-021-00959-y), [Creative Commons Attribution 4.0](https://creativecommons.org/licenses/by/4.0/).

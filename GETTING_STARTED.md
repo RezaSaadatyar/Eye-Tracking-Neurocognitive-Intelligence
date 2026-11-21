@@ -57,14 +57,14 @@ To publish a reviewed output smaller than 50 MB, explicitly use `git add -f`
 for that specific ignored file. Do not force-add the whole `output/` directory.
 
 
-## Study 2: Eye-Movement Modelling & Advanced AI
+## Eye-Movement Modelling & Advanced AI
 
-The [Study 2 README](eye_movement_modelling/README.md) describes five authored,
-**unexecuted** notebooks for GazeBase four-task classification. Start with
+The [Eye-Movement Modelling README](eye_movement_modelling/README.md) describes five implemented notebooks for GazeBase four-task classification;
+Notebook 01 has recorded ten-person pilot execution, while 02–05 remain unexecuted. Start with
 [Notebook 01](eye_movement_modelling/code/notebooks/01_data_and_experimental_protocol.ipynb).
 The standard checkout and `setup_colab("eye_movement_modelling")` pattern is
-identical to the first study. Study 2 reads the **original shared** GazeBase
-CSV files but does not import the first study's derived output tables.
+shared with the Eye-Tracking Foundations project. Eye-Movement Modelling reads the **original shared** GazeBase
+CSV files but does not import derived output tables from Eye-Tracking Foundations.
 
 Leave `MAX_PARTICIPANTS = 10` for the initial exploratory pilot. After checking
 source availability and deciding the intended main cohort before Test exposure,
@@ -76,7 +76,7 @@ Each Notebook `NN` saves current files under
 `eye_movement_modelling/output/` and packages
 `eye_movement_modelling_Notebook_NN_Outputs.zip` for optional manual transfer.
 Use the existing `ensure_stage_inputs` helper if switching Colab sessions.
-Model results do not exist until the new notebooks have actually executed.
+Model results remain pending; only source preparation has recorded execution.
 
 For classical and neural modelling, install the maintained root
 [`requirements.txt`](requirements.txt), including scikit-learn, torch and
