@@ -21,6 +21,7 @@ sys.path.insert(0, str(ROOT / "eye_tracking_foundations" / "code" / "src"))
 from gaze_source import discover_records
 from s2_data import (
     TASKS, participant_split, build_source_tables, normalise_train_only,
+    verify_temporal_source_alignment,
 )
 from s2_metrics import metric_row, record_probabilities, require_split_consistency
 
@@ -162,3 +163,72 @@ def test_s2_all_authored_python_and_notebook_cells_parse():
 def test_s2_pipeline_versions_and_dependencies_declared():
     text = (ROOT / "requirements.txt").read_text(encoding="utf-8")
     assert "scikit-learn" in text and "torch" in text and "joblib" in text
+
+
+def test_s2_temporal_source_alignment_detects_stale_windows():
+    registry = participant_split(_manifest(10))
+    arrays = {
+        "x": np.zeros((len(registry), 32, 4), dtype=np.float32),
+        "record_id": registry.record_id.to_numpy(dtype=str),
+        "y": registry.task.map({
+            label: i for i, label in enumerate(TASKS)
+        }).to_numpy(dtype=np.int64),
+    }
+    counts = verify_temporal_source_alignment(arrays, registry)
+    assert sum(counts.values()) == len(registry)
+    bad = dict(arrays)
+    bad["y"] = arrays["y"].copy()
+    bad["y"][0] = (bad["y"][0] + 1) % 4
+    with pytest.raises(ValueError, match="Task labels differ"):
+        verify_temporal_source_alignment(bad, registry)
+    missing = {key: value[:-1] for key, value in arrays.items()}
+    with pytest.raises(ValueError, match="recording sets differ"):
+        verify_temporal_source_alignment(missing, registry)
+
+
+def test_s2_classical_models_fit_without_test_leakage():
+    from s2_classical import classical_candidates
+    from s2_metrics import (
+        FEATURE_COLUMN_NAMES, classical_record_predictions,
+    )
+
+    registry = participant_split(_manifest(10))
+    rows = []
+    for idx, src in registry.iterrows():
+        class_id = TASKS.index(src.task)
+        row = {
+            "record_id": src.record_id, "participant_id": src.participant_id,
+            "task": src.task, "split": src.split,
+        }
+        for j, feature in enumerate(FEATURE_COLUMN_NAMES):
+            row[feature] = float(
+                class_id * 0.25 + (int(src.participant_id) % 3) * 0.02
+                + 0.001 * j
+            )
+        rows.append(row)
+    frame = pd.DataFrame(rows)
+    train = frame.loc[frame.split.eq("train")]
+    valid = frame.loc[frame.split.eq("validation")]
+    for name, model in classical_candidates().items():
+        model.fit(
+            train[list(FEATURE_COLUMN_NAMES)],
+            train.task.map({x: i for i, x in enumerate(TASKS)}),
+        )
+        pred = classical_record_predictions(
+            model, valid, model_name=name, partition="validation",
+        )
+        assert len(pred) == len(valid)
+        assert np.allclose(pred[[f"p_{x}" for x in TASKS]].sum(axis=1), 1)
+
+
+def test_s2_temporal_architectures_forward_if_torch_available():
+    torch = pytest.importorskip("torch")
+    from s2_models import make_model, parameter_count
+
+    test = torch.zeros(2, 256, 4)
+    for name in ("cnn", "tcn", "gru", "transformer"):
+        model = make_model(name)
+        output = model(test)
+        assert output.shape == (2, 4)
+        assert torch.isfinite(output).all()
+        assert parameter_count(model) > 0
