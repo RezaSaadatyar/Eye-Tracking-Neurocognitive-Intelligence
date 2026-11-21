@@ -14,3 +14,14 @@ jobs:
       - uses: actions/checkout@v4
       - name: Reject unapproved blobs larger than 50 MB
         run: python scripts/check_git_file_sizes.py --all
+
+  synthetic-contract-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare scientific test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install numpy pandas pytest
+      - name: Verify scientific source and handoff contracts
+        run: python -m pytest tests/ -q
