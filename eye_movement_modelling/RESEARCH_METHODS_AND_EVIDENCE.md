@@ -32,6 +32,29 @@ A larger experiment reassigns and reconstructs the entire model cohort and may a
 
 ## 3. Data Preparation and Representations
 
+### Colab-only source acquisition trial (implementation awaiting execution)
+
+Notebook 01, Section 01A uses the public GazeBase v2.0 Figshare file
+`27039812` as its authorised original-data source. The acquisition helper
+reuses original source CSVs already available in the local checkout or the
+user's mounted Google Drive, and downloads the full approximately 6.7-GB
+official archive **only when files are missing**. It checks the published
+source MD5 before selectively extracting four task CSVs for source IDs
+1001–1020, using original filenames. It supports directly contained CSVs and
+nested ZIP members, rejects missing required task records, and checks
+required numeric gaze/timestamp fields and a per-record validity summary.
+
+The preflight writes `01_source_acquisition_preflight.csv` as a current
+source-availability table. These 20 participants are a **download and
+data-integrity test**, not a new evaluation cohort, Cross-Validation fold,
+model comparison or Test partition. Existing recorded 10-person results remain
+the applicable experimental evidence until a larger design has been frozen
+and its stages are executed. The code does not download on module import and
+does not automatically add raw data to Git. The Colab download and Drive
+persistence paths have **not** been verified against a live session.
+
+
+
 ### 3.1 Record feature construction
 
 For each original source CSV, read timestamps in milliseconds; `x/y` in degrees of visual angle; `val=0` source-valid gaze; positive `dP` as **uncalibrated pupil measurement** where supplied. Compute: valid fraction, horizontal and vertical position spread, median/95th percentile angular displacement and speed for neighbouring valid steps no more than 5 ms apart, and pupil coverage/median. Keep `record_id`, `participant_id`, `task`, original row count and split as **audit identifiers, not predictors**.
