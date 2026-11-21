@@ -1,14 +1,12 @@
 # Eye-Tracking Foundations & Signal Analysis | GazeBase v2.0
 
-![Seven-notebook GazeBase workflow from source audit to integrated scientific evidence](images/study_overview.svg)
+![GazeBase eye-tracking workflow from source audit to integrated scientific evidence](images/study_overview.svg)
 
-*Figure 1. Complete seven-notebook S1 workflow: source audit (01), gap-aware preprocessing (02), I-VT/I-DT event detection (03), record-level gaze features (04), participant-level descriptive statistics (05), I-VT threshold sensitivity (06) and integrated evidence checks (07). The source trace is an excerpt of recorded GazeBase gaze; the counts and percentages are taken from saved notebook outputs, not a fitted cognitive prediction model.*
+*Figure 1. Complete eye-tracking analysis workflow for GazeBase Round 1, Session 1: source audit (01), gap-aware preprocessing (02), I-VT/I-DT event detection (03), record-level gaze features (04), participant-level descriptive statistics (05), I-VT threshold sensitivity (06) and integrated evidence checks (07). The source trace is an excerpt of recorded GazeBase gaze; the counts and percentages are taken from saved notebook outputs, not a fitted cognitive prediction model.*
 
 This executed, **offline exploratory study** examines how selected GazeBase eye-tracking records can be quality-audited, processed without bridging invalid gaze gaps, transformed into provisional eye-movement events, and summarised with participant-aware uncertainty and explicit provenance. It is a methodological study rather than a supervised classification experiment.
 
 **Recorded finding:** The seven notebooks processed **2,778,008 source samples** from **40 task recordings by 10 participants**, generated **21,728 algorithm-derived event intervals**, and reconciled 40 record identities across the saved analytical outputs. The I-VT sensitivity experiment shows substantial changes in class assignments and eligible vendor-reference denominators between 20, 30 and 40 dva/s.
-
-**Status:** All seven notebooks contain recorded original-data execution outputs and the source-aligned integration completed its defined checks. The results establish **internal consistency for the selected subset**, not independent reproduction, verified physiological event accuracy or neurocognitive inference. Extreme calculated gaze velocities remain an unresolved interpretive limitation.
 
 **Detailed scientific account:** [Research Methods and Evidence](RESEARCH_METHODS_AND_EVIDENCE.md). **Execution guidance:** [Running and Reviewing the Study](#4-running-and-reviewing-the-study).
 
@@ -25,13 +23,13 @@ This executed, **offline exploratory study** examines how selected GazeBase eye-
 | Analytical unit | A **participant** (n=10) is the independent resampling unit; gaze samples, events and task records are not independent people |
 | Descriptive uncertainty | Four per-record metrics aggregated by participant/task; **500 participant bootstrap draws**, seed **17**, reported as exploratory percentile intervals |
 | Sensitivity comparison | Fixed, descriptive **20 / 30 / 40 dva/s** I-VT thresholds; EyeLink comparison only on recognised and jointly evaluable sample labels |
-| Predictive target / data split | **None**. No Training/Validation/Test partition, supervised cognitive target or fitted AI model exists in S1 |
+| Predictive target / data split | **None**. No Training/Validation/Test partition, supervised cognitive target or fitted AI model exists in this study |
 
 The source selection is an ordered, bounded subset, not a random or population-representative cohort. Source participant keys are preserved through the pipeline; short internal participant identifiers (`001`–`010`) correspond to source subjects `1001`–`1010`. The [scientific methods document](RESEARCH_METHODS_AND_EVIDENCE.md) explains the representation, label rules, thresholds and denominator definitions.
 
 ## 2. Experimental Programme
 
-The seven notebooks form **one completed S1 analytical sequence**, not seven independent studies. Their calculations and original-data outputs are recorded in the committed notebooks.
+The seven notebooks form **one completed analytical sequence**, not seven independent studies. Their calculations and original-data outputs are recorded in the committed notebooks.
 
 | Notebook | Scientific role | Named current outputs |
 | --- | --- | --- |
@@ -114,7 +112,7 @@ Output files are ignored by default regardless of their size. A Git blob policy 
 
 ## 6. Interpretation and Scope
 
-The S1 study demonstrates a **recorded, source-identified offline analytical workflow** and consistency of the specified saved tables across seven notebooks. It provides observations about gaze validity, provisional event labels, derived features, participant-level descriptive uncertainty and how fixed I-VT settings change classified-sample and vendor-comparison support.
+The study demonstrates a **recorded, source-identified offline analytical workflow** and consistency of the specified saved tables across seven notebooks. It provides observations about gaze validity, provisional event labels, derived features, participant-level descriptive uncertainty and how fixed I-VT settings change classified-sample and vendor-comparison support.
 
 The findings **do not** establish reading comprehension, attention status, causal neurocognitive mechanisms, a validated eye-event detector, real-time gaze processing or generalisation to a wider population. The sample contains only ten ordered participants, and the source EyeLink annotations are instrument/parser references rather than independently adjudicated event ground truth. Extremely large calculated speed estimates remain unexplained and affect detector-dependent interpretation.
 
