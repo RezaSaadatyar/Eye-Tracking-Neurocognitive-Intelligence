@@ -9,7 +9,7 @@ import pandas as pd
 def record_features(record: pd.DataFrame, event_table: pd.DataFrame) -> dict:
     """Use event-level quantities; preserve missing estimates as missing."""
     events = event_table[event_table.method.eq("IVT")]
-    fixation = events[events.event_type.eq("fixation")]
+    fixation = events[events.event_type.eq("fixation")].sort_values("start_sample")
     saccades = events[events.event_type.eq("saccade")]
     pupil = pd.to_numeric(record.get("dP", pd.Series(np.nan, index=record.index)), errors="coerce")
     good = record["valid_for_motion"].astype(bool)
@@ -38,7 +38,7 @@ FEATURE_DESCRIPTIONS = [
     ("mean_fixation_ms", "Mean detected fixation duration", "ms"),
     ("median_fixation_ms", "Median detected fixation duration", "ms"),
     ("mean_saccade_peak_dva_s", "Mean peak I-VT saccade speed", "dva/s"),
-    ("scanpath_length_dva", "Distance between consecutive detected fixation centroids", "dva"),
+    ("scanpath_length_dva", "Distance between time-ordered detected fixation centroids", "dva"),
     ("pupil_median_uncalibrated", "Median valid uncalibrated pupil area", "arbitrary units"),
 ]
 

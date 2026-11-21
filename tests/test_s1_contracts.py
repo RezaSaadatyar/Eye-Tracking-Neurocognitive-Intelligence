@@ -16,6 +16,7 @@ from gaze_preprocessing import preprocess_record
 from gaze_streaming import preprocess_stage_file, validate_notebook_01_inputs
 from gaze_diagnostics import inspect_velocity_peaks
 from eye_events import ivt_labels, idt_labels, extract_events, label_agreement
+from gaze_features import record_features, feature_dictionary
 from gaze_statistics import participant_summary, summarise_participant_metrics
 from core.stage_outputs import ensure_stage_inputs
 
@@ -279,3 +280,31 @@ def test_velocity_peak_review_rejects_mismatched_summary(tmp_path):
     ] = 999999.0
     with pytest.raises(ValueError, match="Velocity maximum differs"):
         inspect_velocity_peaks(source, altered, top_records=3, chunksize=17)
+
+
+def test_scanpath_features_follow_event_time_order():
+    """Per-record path length must use source event order, not CSV row order."""
+    record = pd.DataFrame({
+        "record_id": ["S_1001_S1_FXS"] * 6,
+        "participant_id": ["001"] * 6,
+        "task": ["FXS"] * 6,
+        "valid_for_motion": [True, True, True, True, False, True],
+        "dP": [10.0, 12.0, 14.0, 16.0, np.nan, -1.0],
+    })
+    events = pd.DataFrame({
+        "record_id": ["S_1001_S1_FXS"] * 4,
+        "method": ["IVT"] * 4,
+        "event_type": ["fixation", "fixation", "fixation", "saccade"],
+        "start_sample": [300, 100, 200, 250],
+        "duration_ms": [120.0, 110.0, 100.0, 8.0],
+        "mean_x_dva": [3.0, 0.0, 3.0, np.nan],
+        "mean_y_dva": [4.0, 0.0, 0.0, np.nan],
+        "peak_speed_dva_s": [np.nan, np.nan, np.nan, 125.0],
+    })
+    observed = record_features(record, events)
+    assert observed["n_fixations_ivt"] == 3
+    assert observed["n_saccades_ivt"] == 1
+    assert observed["scanpath_length_dva"] == pytest.approx(7.0)
+    assert observed["valid_fraction"] == pytest.approx(5 / 6)
+    assert observed["pupil_median_uncalibrated"] == pytest.approx(13.0)
+    assert "scanpath_length_dva" in feature_dictionary().feature.tolist()
