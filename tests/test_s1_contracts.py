@@ -17,6 +17,7 @@ from gaze_streaming import preprocess_stage_file, validate_notebook_01_inputs
 from gaze_diagnostics import inspect_velocity_peaks
 from eye_events import ivt_labels, idt_labels, extract_events, label_agreement
 from gaze_features import record_features, feature_dictionary
+from gaze_evidence import threshold_reference_support, reconcile_ivt_baseline
 from gaze_statistics import (
     participant_summary, summarise_participant_metrics,
     validate_record_quality_alignment,
@@ -335,3 +336,47 @@ def test_notebook_05_quality_alignment_consistent():
     incomplete = quality.iloc[:1].copy()
     with pytest.raises(ValueError, match="record sets"):
         validate_record_quality_alignment(features, incomplete)
+
+
+def _synthetic_sensitivity_records():
+    rows = []
+    for rid in ("S_1001_S1_FXS", "S_1002_S1_TEX"):
+        for threshold, eligible, score in (
+            (20.0, 2, 0.50), (30.0, 6, 1.00), (40.0, 8, 0.875)
+        ):
+            rows.append({
+                "record_id": rid, "threshold_dva_s": threshold,
+                "eligible_samples": eligible, "sample_agreement": score,
+                "vendor_coverage_fraction": 1.0,
+                "predicted_evaluable_fraction": eligible / 10,
+                "predicted_fixation_fraction": 0.2,
+                "predicted_saccade_fraction": 0.1,
+                "unknown_fraction": 0.7,
+            })
+    return pd.DataFrame(rows)
+
+
+def test_threshold_reference_support_and_denominators():
+    source = _synthetic_sensitivity_records()
+    result = threshold_reference_support(source)
+    assert result.threshold_dva_s.tolist() == [20.0, 30.0, 40.0]
+    assert result.total_vendor_evaluable_samples.tolist() == [4, 12, 16]
+    assert result.n_vendor_evaluable_records.tolist() == [2, 2, 2]
+    bad = source.loc[~(
+        source.record_id.eq("S_1002_S1_TEX")
+        & source.threshold_dva_s.eq(40.0)
+    )]
+    with pytest.raises(ValueError, match="Different source records"):
+        threshold_reference_support(bad)
+
+
+def test_notebook_03_06_baseline_consistency():
+    source = _synthetic_sensitivity_records()
+    vendor = source.loc[source.threshold_dva_s.eq(30.0), [
+        "record_id", "eligible_samples", "vendor_coverage_fraction",
+        "predicted_evaluable_fraction", "sample_agreement",
+    ]].copy()
+    assert len(reconcile_ivt_baseline(source, vendor)) == 2
+    vendor.loc[vendor.record_id.eq("S_1001_S1_FXS"), "eligible_samples"] = 5
+    with pytest.raises(ValueError, match="baseline mismatch: eligible_samples"):
+        reconcile_ivt_baseline(source, vendor)
