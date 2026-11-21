@@ -21,7 +21,8 @@ Thumbs.db
 /data/raw/
 /data/processed/
 
-# Current generated study outputs are local by default.
-# Publish selected, eligible results deliberately rather than tracking them all.
+# Current generated study outputs are local by default, regardless of size.
+# The separate Git blob guard blocks files >50 MB even when force-added.
+# To publish a smaller selected output, review it first and use git add -f.
 /eye_tracking_foundations/output/*
 !/eye_tracking_foundations/output/.gitkeep

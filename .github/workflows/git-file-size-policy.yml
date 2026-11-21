@@ -1,0 +1,16 @@
+name: Git file-size policy
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  file-size-policy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reject unapproved blobs larger than 50 MB
+        run: python scripts/check_git_file_sizes.py --all
