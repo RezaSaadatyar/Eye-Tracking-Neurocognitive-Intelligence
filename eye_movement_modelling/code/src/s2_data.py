@@ -190,6 +190,48 @@ def build_source_tables(
     return frame, features, np.asarray(recs, dtype=str), np.asarray(classes, dtype=np.int64)
 
 
+
+
+def verify_temporal_source_alignment(
+    arrays: dict[str, np.ndarray], partitions: pd.DataFrame,
+) -> dict[str, int]:
+    """Match every temporal window's source Task to the current split table.
+
+    This guards against combining Notebook 01 windows from a previous cohort
+    with participant partitions produced by a newer rerun.
+    """
+    for key in ("x", "y", "record_id"):
+        if key not in arrays:
+            raise ValueError(f"Source sequence archive missing {key}")
+    x, y, ids = arrays["x"], arrays["y"], arrays["record_id"]
+    if x.ndim != 3 or x.shape[2] != len(CHANNELS):
+        raise ValueError("Unexpected temporal channel dimensions")
+    if len(x) != len(y) or len(y) != len(ids):
+        raise ValueError("Temporal source identity rows do not align")
+    if partitions["record_id"].duplicated().any():
+        raise ValueError("Duplicated record IDs in participant registry")
+    if not {"record_id", "task", "split", "participant_id"}.issubset(
+        partitions.columns
+    ):
+        raise ValueError("Current participant registry is incomplete")
+    lookup = dict(zip(
+        partitions.record_id.astype(str),
+        partitions.task.map(CLASS_TO_INDEX),
+    ))
+    source_ids = np.asarray(ids).astype(str)
+    if set(source_ids) != set(lookup):
+        raise ValueError("Window and split recording sets differ")
+    expected = np.array([lookup[key] for key in source_ids], dtype=int)
+    if not np.array_equal(expected, np.asarray(y, dtype=int)):
+        raise ValueError("Temporal window Task labels differ from source records")
+    if not np.isfinite(x).all():
+        raise ValueError("Non-finite model input windows")
+    return {role: int(np.isin(
+        source_ids,
+        partitions.loc[partitions.split.eq(role), "record_id"].astype(str),
+    ).sum()) for role in ("train", "validation", "test")}
+
+
 def normalise_train_only(
     windows: np.ndarray, record_ids: np.ndarray, split: pd.DataFrame,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
