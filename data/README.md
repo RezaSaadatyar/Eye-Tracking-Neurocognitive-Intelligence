@@ -6,7 +6,7 @@ S1 uses original GazeBase source CSV records. As of the current repository revis
 
 - Original dataset: https://doi.org/10.6084/m9.figshare.12912257
 - Publication and variable dictionary: https://doi.org/10.1038/s41597-021-00959-y
-- Published source file: `GazeBase_v2_0.zip`; GazeBase data are reported as CC BY 4.0 in the source publication. Check the current source package and terms before use.
+- Published source file: `GazeBase_v2_0.zip`. The [original GazeBase paper](https://doi.org/10.1038/s41597-021-00959-y) explicitly states the data licence is [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). The 40 tracked source CSVs are a subset of the archive rather than MIT-licensed code; credit Griffith, Lohr, Abdulin and Komogortsev, link the source and licence, and acknowledge the subset selection.
 - Initially selected tasks: `FXS`, `HSS`, `RAN`, and `TEX` from Round 1, Session 1, when available for the same participant.
 - Dataset-specific source fields: `n` in ms, `x`/`y` in degrees of visual angle, `val` indicating missing samples, and optional `xT`/`yT`, `dP` (uncalibrated pupil area) and `lab` (EyeLink parser reference labels).
 - Source parser labels (when present): `1` fixation, `2` saccade, `-1` blink; unavailable for some tasks. Vendor labels are not independent ground truth.

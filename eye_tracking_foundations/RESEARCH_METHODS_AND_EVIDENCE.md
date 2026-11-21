@@ -18,7 +18,7 @@ There is **no supervised cognitive target, learned model, Training/Validation/Te
 
 ### 2.1 Original source and acquisition context
 
-The source is [GazeBase](https://doi.org/10.6084/m9.figshare.12912257), described by [Griffith et al. (2021)](https://doi.org/10.1038/s41597-021-00959-y). The implemented source reader uses the `GazeBase_v2_0` directory layout, selecting original CSV files by round, session, task and participant. This analysis uses **Round 1, Session 1 only**. The published GazeBase data collection is larger; the selection here must not be described as the full dataset or a random sample.
+The source is [GazeBase](https://doi.org/10.6084/m9.figshare.12912257), described by [Griffith, Lohr, Abdulin and Komogortsev (2021)](https://doi.org/10.1038/s41597-021-00959-y). The original publication states that GazeBase data are distributed under [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/). This repository contains a **selected 40-CSV subset** of the original archive; the original data are not re-licensed under the repository software's MIT licence. Retain source credit, the licence link and an indication of subset selection when redistributing. The implemented source reader uses the `GazeBase_v2_0` directory layout, selecting original CSV files by round, session, task and participant. This analysis uses **Round 1, Session 1 only**. The published GazeBase data collection is larger; the selection here must not be described as the full dataset or a random sample.
 
 Relevant source fields are:
 
@@ -222,7 +222,7 @@ Notebook 07 reconciles saved producer-level quantities, not raw-source bytes or 
 
 ## 8. Current Outputs and Reproducibility
 
-The notebooks own and overwrite their numbered current outputs under `eye_tracking_foundations/output/`. The large numerical CSVs and generated PNGs are **ignored by Git by default**, while executed notebook displays and curated scientific SVGs are tracked. The source subset includes selected GazeBase task CSVs already tracked on the public repository; external dataset redistribution rights are separate from the code's MIT licence.
+The notebooks own and overwrite their numbered current outputs under `eye_tracking_foundations/output/`. The large numerical CSVs and generated PNGs are **ignored by Git by default**, while executed notebook displays and curated scientific SVGs are tracked. The source subset includes selected GazeBase task CSVs already tracked in the public repository. The original publication reports **CC BY 4.0** data licensing; appropriate source and licence attribution plus notice of subset selection are required. The repository's MIT licence covers its own code and documentation, not relicensing the upstream dataset.
 
 | Scientific evidence or artefact | Producing notebook | Current named file / access route |
 | --- | --- | --- |
@@ -250,4 +250,4 @@ A useful scientific next step, if a stronger event-validity claim is desired, wo
 
 Accordingly, S1 may be presented as an **executed, internally reconciled educational/exploratory pipeline with clearly stated scientific limitations**. The evidence does not establish real-time performance, independent reproducibility, expert ground truth, cognitive state estimation, causal effects or clinical deployment. Closing S1's current presentation does **not** close the wider multi-study Eye-Tracking & Neurocognitive Intelligence programme.
 
-**Original-source references:** [Griffith et al. (2021), *Scientific Data*](https://doi.org/10.1038/s41597-021-00959-y); [GazeBase Figshare dataset](https://doi.org/10.6084/m9.figshare.12912257). The dataset's publication and redistribution terms should be checked separately from [the repository's MIT licence](../LICENSE).
+**Original-source references:** [Griffith et al. (2021), *Scientific Data*](https://doi.org/10.1038/s41597-021-00959-y); [GazeBase Figshare dataset](https://doi.org/10.6084/m9.figshare.12912257). The upstream GazeBase data are [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) according to the source publication; [the repository MIT licence](../LICENSE) applies to original repository code and documentation, not to upstream data.

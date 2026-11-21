@@ -110,7 +110,7 @@ When a producer's cohort, validity rules or detector configuration changes, rege
 | [`GETTING_STARTED.md`](../GETTING_STARTED.md) | Colab execution, output hand-offs and named ZIP restoration |
 | [`tests/`](../tests/) | Synthetic software/data-contract checks, not original-data replication |
 
-Output files are ignored by default regardless of their size. A Git blob policy blocks unapproved tracked files larger than **50,000,000 bytes**; being smaller than the ceiling is **not** permission to redistribute restricted source records. Original source data retain their own licence conditions independently of the repository's code licence.
+Output files are ignored by default regardless of their size. A Git blob policy blocks unapproved tracked files larger than **50,000,000 bytes**; being smaller than the ceiling is **not** permission to redistribute restricted source records. The original [GazeBase publication](https://doi.org/10.1038/s41597-021-00959-y) explicitly reports a [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) dataset licence. This repository contains a selected 40-file subset of the GazeBase v2.0 source archive; the data are **not re-licensed as MIT code**. Reuse requires source credit, a licence link and acknowledgement of the subset selection.
 
 ## 6. Interpretation and Scope
 
@@ -120,4 +120,4 @@ The findings **do not** establish reading comprehension, attention status, causa
 
 The seven-notebook sequence is complete for its **bounded exploratory scope**; further physiological investigation, a separately specified independent dataset, expert event review or a controlled cognitive study would be new or targeted follow-up work rather than results already obtained here. Refer to [Research Methods and Evidence](RESEARCH_METHODS_AND_EVIDENCE.md) for the full scientific discussion.
 
-**Original source attribution:** [GazeBase (Figshare)](https://doi.org/10.6084/m9.figshare.12912257); [Griffith et al., *Scientific Data* (2021)](https://doi.org/10.1038/s41597-021-00959-y).
+**Original source attribution:** Griffith, H., Lohr, D., Abdulin, E. and Komogortsev, O. (2021), [GazeBase, *Scientific Data*](https://doi.org/10.1038/s41597-021-00959-y); [GazeBase data (Figshare)](https://doi.org/10.6084/m9.figshare.12912257), [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). The study uses a selected Round 1 / Session 1 subset.
