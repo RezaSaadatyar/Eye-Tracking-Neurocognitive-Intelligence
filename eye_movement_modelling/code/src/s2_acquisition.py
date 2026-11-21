@@ -7,7 +7,6 @@ This module does not assign training partitions, fit models, or inspect Test sco
 from __future__ import annotations
 
 import hashlib
-import os
 import re
 import shutil
 import tempfile
@@ -23,6 +22,19 @@ import pandas as pd
 FIGSHARE_FILE = "https://figshare.com/ndownloader/files/27039812"
 ARCHIVE_BYTES = 6_710_984_652
 ARCHIVE_MD5 = "cb7eb895fb48f8661decf038ab998c9a"
+# Try official Figshare endpoints first. This alternate host can bypass a
+# zero-byte download response from the website endpoint on some Colab runtimes.
+FIGSHARE_DOWNLOAD_URLS = (
+    "https://ndownloader.figshare.com/files/27039812",
+    "https://api.figshare.com/v2/file/download/27039812",
+    FIGSHARE_FILE,
+)
+# Exact-archive mirror; accepted only if the official published MD5 matches.
+# The mirror is a fallback transport, not a change to dataset provenance.
+VERIFIED_ARCHIVE_MIRROR = (
+    "https://huggingface.co/datasets/Emulated-Inc/"
+    "eye-movement-biometrics-across-rounds/resolve/main/GazeBase_v2_0.zip"
+)
 TASKS = ("FXS", "HSS", "RAN", "TEX")
 TASK_FOLDERS = {
     "FXS": "S1_Fixations", "HSS": "S1_Horizontal_Saccades",
@@ -58,8 +70,77 @@ def _archive_digest(path: Path) -> str:
     return md5.hexdigest()
 
 
+def _download_response(
+    *, url: str, partial: Path, already: int,
+) -> int:
+    """Download one response with strict HTTP/body validation and safe resume.
+
+    A zero-byte/HTML response is rejected before overwriting a valid partial
+    archive. If a server ignores Range, restart only after receiving ZIP data.
+    """
+    headers = {
+        "User-Agent": "Mozilla/5.0 (compatible; GazeBaseResearch/1.0)",
+        "Accept": "application/octet-stream, application/zip, */*",
+    }
+    if already:
+        headers["Range"] = f"bytes={already}-"
+    request = urllib.request.Request(url, headers=headers)
+    with urllib.request.urlopen(request, timeout=120) as response:
+        status = getattr(response, "status", None)
+        if status is None:
+            status = response.getcode()
+        if status not in (200, 206):
+            raise IOError(f"Unexpected HTTP status {status}")
+        content_type = response.headers.get("Content-Type", "").lower()
+        if "text/html" in content_type or "application/json" in content_type:
+            raise IOError(f"Expected ZIP bytes; server returned {content_type}")
+        reported_length = response.headers.get("Content-Length", "")
+        if reported_length.strip() == "0":
+            raise IOError(f"HTTP {status} response has Content-Length: 0")
+        content_range = response.headers.get("Content-Range", "")
+        resume = (
+            already > 0 and status == 206
+            and content_range.startswith(f"bytes {already}-")
+        )
+        if status == 206 and not resume:
+            raise IOError(
+                f"Unexpected partial-content response: {content_range!r}"
+            )
+        # Do not truncate a resumable partial until nonempty response data
+        # have actually been obtained from the alternative endpoint.
+        first = response.read(1024 * 1024)
+        if not first:
+            raise IOError(f"HTTP {status} response returned zero file bytes")
+        if not resume and not first.startswith(b"PK"):
+            raise IOError(
+                "Response is not a ZIP archive (missing PK signature); "
+                f"Content-Type={content_type or 'unspecified'}"
+            )
+        mode = "ab" if resume else "wb"
+        with partial.open(mode) as target:
+            target.write(first)
+            transferred = (already if resume else 0) + len(first)
+            next_notice = (
+                (transferred // 1_000_000_000) + 1
+            ) * 1_000_000_000
+            while True:
+                block = response.read(8 * 1024 * 1024)
+                if not block:
+                    break
+                target.write(block)
+                transferred += len(block)
+                if transferred >= next_notice:
+                    print(f"Downloaded {transferred / 1e9:.1f} GB.")
+                    next_notice += 1_000_000_000
+        return transferred
+
+
 def _ensure_archive(archive_path: Path) -> None:
-    """Download the official ZIP with a resumable temporary file and check MD5."""
+    """Download GazeBase with validated fallback sources and safe resumption.
+
+    Prefer official Figshare endpoints. If all fail, an exact-archive mirror
+    is tried; in every case the published file length and MD5 are mandatory.
+    """
     archive_path.parent.mkdir(parents=True, exist_ok=True)
     if archive_path.is_file():
         if (archive_path.stat().st_size == ARCHIVE_BYTES
@@ -71,59 +152,81 @@ def _ensure_archive(archive_path: Path) -> None:
         )
 
     partial = archive_path.with_suffix(".zip.part")
+    if partial.exists() and partial.stat().st_size == 0:
+        # This is the precise failure from Figshare observed in Colab;
+        # no source bytes exist to resume, so safely discard that empty file.
+        partial.unlink()
+
     already = partial.stat().st_size if partial.exists() else 0
     if already > ARCHIVE_BYTES:
-        raise ValueError("Partial archive is larger than the published source")
+        raise ValueError("Partial archive exceeds the published source size")
+    if already == ARCHIVE_BYTES:
+        if _archive_digest(partial) != ARCHIVE_MD5:
+            raise ValueError(
+                "Complete temporary ZIP has an unexpected published MD5. "
+                "Remove or inspect the corrupt .zip.part before retrying."
+            )
+        partial.replace(archive_path)
+        return
+
     remaining = ARCHIVE_BYTES - already
     free = shutil.disk_usage(archive_path.parent).free
     if free < remaining + 2_000_000_000:
         raise OSError(
-            "Insufficient free Colab disk for official GazeBase ZIP and "
-            "temporary extraction. Free at least the remaining archive "
-            "bytes plus 2 GB before running this cell."
+            "Insufficient Colab disk capacity for the official GazeBase ZIP. "
+            "Free at least the remaining archive bytes plus 2 GB."
         )
 
-    headers = {"User-Agent": "GazeBase-Colab-Research/1.0"}
-    if already:
-        headers["Range"] = f"bytes={already}-"
-    request = urllib.request.Request(FIGSHARE_FILE, headers=headers)
-    print("Downloading official Figshare GazeBase v2.0 archive; "
-          "the source ZIP is approximately 6.7 GB.")
-    with urllib.request.urlopen(request, timeout=120) as response:
-        status = response.status
-        content_range = response.headers.get("Content-Range", "")
-        is_resume = (
-            already > 0 and status == 206
-            and content_range.startswith(f"bytes {already}-")
-        )
-        if already and not is_resume:
-            # Do not append a full response to a partial archive.
-            already = 0
-        mode = "ab" if is_resume else "wb"
-        with partial.open(mode) as target:
-            transferred = already
-            next_notice = ((transferred // 1_000_000_000) + 1) * 1_000_000_000
-            while True:
-                block = response.read(8 * 1024 * 1024)
-                if not block:
-                    break
-                target.write(block)
-                transferred += len(block)
-                if transferred >= next_notice:
-                    print(f"Downloaded {transferred / 1e9:.1f} GB of source ZIP.")
-                    next_notice += 1_000_000_000
+    endpoints = (*FIGSHARE_DOWNLOAD_URLS, VERIFIED_ARCHIVE_MIRROR)
+    errors = []
+    for index, url in enumerate(endpoints, start=1):
+        previous = partial.stat().st_size if partial.exists() else 0
+        label = "official Figshare" if index <= len(FIGSHARE_DOWNLOAD_URLS) else "verified archive mirror"
+        print(f"Download source {index}/{len(endpoints)} ({label}): {url}")
+        try:
+            transferred = _download_response(
+                url=url, partial=partial, already=previous,
+            )
+        except (OSError, ValueError) as exc:
+            errors.append(f"{label} {url}: {type(exc).__name__}: {exc}")
+            if partial.exists() and partial.stat().st_size == 0:
+                partial.unlink()
+            print(f"Source {index} did not provide usable ZIP bytes.")
+            continue
 
-    if partial.stat().st_size != ARCHIVE_BYTES:
-        raise IOError(
-            f"Source download incomplete: {partial.stat().st_size:,} / "
-            f"{ARCHIVE_BYTES:,} bytes. Rerun the cell to resume."
+        if transferred > ARCHIVE_BYTES:
+            raise IOError(
+                "Download exceeds the published GazeBase ZIP size; "
+                f"source={url}, received={transferred:,} bytes."
+            )
+        if transferred == ARCHIVE_BYTES:
+            print("Verifying archive length and official published MD5...")
+            if _archive_digest(partial) != ARCHIVE_MD5:
+                raise ValueError(
+                    "Downloaded archive has the published size but a "
+                    "different MD5; do not use it. The partial ZIP is "
+                    f"preserved for inspection: {partial}"
+                )
+            partial.replace(archive_path)
+            print("Verified GazeBase archive ready for selective extraction.")
+            return
+        errors.append(
+            f"{label} {url}: incomplete response; "
+            f"{transferred:,}/{ARCHIVE_BYTES:,} bytes"
         )
-    if _archive_digest(partial) != ARCHIVE_MD5:
-        raise ValueError(
-            "Source archive MD5 differs from the published GazeBase v2.0 "
-            "checksum; do not extract or use these bytes."
-        )
-    partial.replace(archive_path)
+        print(f"Incomplete source response: {transferred:,}/{ARCHIVE_BYTES:,}. "
+              "Trying another endpoint with the saved partial ZIP.")
+
+    detail = "\n".join(f"- {line}" for line in errors)
+    saved = partial.stat().st_size if partial.exists() else 0
+    raise OSError(
+        "All GazeBase download endpoints failed or returned insufficient "
+        "data from this Colab runtime. The Drive mount is unrelated.\n"
+        f"Partial source bytes kept: {saved:,} at {partial}\n"
+        "Try a fresh Colab runtime or download the official ZIP from a "
+        "browser and place it at the expected archive path.\n"
+        f"Endpoint diagnostics:\n{detail}"
+    )
 
 
 # ====================== 03. Select Only Intended CSVs ========================
@@ -212,7 +315,7 @@ def extract_selected_csvs(
     return extracted
 
 
-# ================= 04. Source Quality and Persistent Cache ====================
+# ================== 04. Source Quality and Colab-Local Files =================
 def _inspect_csv(path: Path) -> dict:
     """Inspect all rows without loading the entire original recording in RAM."""
     n_rows = n_valid = bad_time_steps = 0
@@ -243,45 +346,23 @@ def _inspect_csv(path: Path) -> dict:
     }
 
 
-def _copy_without_overwriting(source: Path, target: Path) -> None:
-    """Cache or restore a source file without replacing a different file."""
-    target.parent.mkdir(parents=True, exist_ok=True)
-    if target.exists():
-        if target.stat().st_size != source.stat().st_size:
-            raise ValueError(f"Existing source/cache size conflict: {target}")
-        return
-    temporary = target.with_suffix(".csv.partial")
-    try:
-        shutil.copyfile(source, temporary)
-        temporary.replace(target)
-    finally:
-        temporary.unlink(missing_ok=True)
-
-
 def ensure_gazebase_preflight(
-    *, raw_root: Path, cache_root: Path, download_root: Path,
-    output_csv: Path, requested_ids: tuple[int, ...],
+    *, raw_root: Path, download_root: Path, output_csv: Path,
+    requested_ids: tuple[int, ...],
 ) -> pd.DataFrame:
-    """Prepare and inspect a bounded Colab/Drive cohort without model fitting.
+    """Prepare and inspect a bounded cohort entirely in the Colab runtime.
 
-    Requires an already-mounted Google Drive directory for persistence.
-    The original GazeBase ZIP is removed after validated extraction/cache.
-    Outputs are a per-source CSV table, not Train/Validation/Test assignments.
+    Reuse existing original CSVs in the local repository checkout, downloading
+    and extracting only missing requested files. No Drive, Test evaluation,
+    model training or Git publication is performed.
     """
-    raw_root, cache_root = Path(raw_root), Path(cache_root)
-    download_root, output_csv = Path(download_root), Path(output_csv)
-    if not cache_root.is_dir():
-        raise FileNotFoundError(
-            "Drive cache directory is unavailable. Mount Google Drive first."
-        )
-    if len(requested_ids) != len(set(requested_ids)):
-        raise ValueError("Duplicate source IDs requested")
-    for sid in requested_ids:
-        for task in TASKS:
-            local = source_csv_path(raw_root, sid, task)
-            cached = source_csv_path(cache_root, sid, task)
-            if not local.exists() and cached.is_file():
-                _copy_without_overwriting(cached, local)
+    raw_root = Path(raw_root)
+    download_root = Path(download_root)
+    output_csv = Path(output_csv)
+    if not requested_ids or len(requested_ids) != len(set(requested_ids)):
+        raise ValueError("Provide distinct, nonempty source participant IDs")
+    # Preserve source files already present under the local checkout; they
+    # remain available to the existing notebooks in this Colab runtime.
 
     missing = [
         (sid, task) for sid in requested_ids for task in TASKS
@@ -313,9 +394,6 @@ def ensure_gazebase_preflight(
                 "n_bytes": local.stat().st_size,
                 **quality,
             })
-            _copy_without_overwriting(
-                local, source_csv_path(cache_root, sid, task),
-            )
     frame = pd.DataFrame(rows)
     if frame.source_id.nunique() != len(requested_ids):
         raise ValueError("Not all requested independent people are present")

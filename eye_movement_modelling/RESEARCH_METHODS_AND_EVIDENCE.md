@@ -32,27 +32,50 @@ A larger experiment reassigns and reconstructs the entire model cohort and may a
 
 ## 3. Data Preparation and Representations
 
-### Colab-only source acquisition trial (implementation awaiting execution)
+### Colab-only source acquisition and named downstream files
 
-Notebook 01, Section 01A uses the public GazeBase v2.0 Figshare file
-`27039812` as its authorised original-data source. The acquisition helper
-reuses original source CSVs already available in the local checkout or the
-user's mounted Google Drive, and downloads the full approximately 6.7-GB
-official archive **only when files are missing**. It checks the published
-source MD5 before selectively extracting four task CSVs for source IDs
-1001–1020, using original filenames. It supports directly contained CSVs and
-nested ZIP members, rejects missing required task records, and checks
-required numeric gaze/timestamp fields and a per-record validity summary.
+Section 02 of Notebook 01 combines original GazeBase v2.0 acquisition
+with data-source selection. It checks source IDs 1001–1020 in Round 1 /
+Session 1, four task files per person. Files already in the Colab checkout
+are reused; missing CSVs are obtained from Figshare file `27039812`,
+with a checksum-verified exact-source fallback, and extracted selectively.
+The original archive is approximately 6.7 GB. Its full download and
+extraction have not yet been verified in a live Colab session.
 
-The preflight writes `01_source_acquisition_preflight.csv` as a current
-source-availability table. These 20 participants are a **download and
-data-integrity test**, not a new evaluation cohort, Cross-Validation fold,
-model comparison or Test partition. Existing recorded 10-person results remain
-the applicable experimental evidence until a larger design has been frozen
-and its stages are executed. The code does not download on module import and
-does not automatically add raw data to Git. The Colab download and Drive
-persistence paths have **not** been verified against a live session.
+Source quality and availability are recorded in
+`01_source_acquisition_preflight.csv` and
+`01_source_acquisition_task_summary.csv`. These data-audit tables are
+not predictions and do not extend the approved development pilot, which
+currently selects 10 complete people with four source recordings each.
+Other outputs are the source inventory, participant-disjoint split
+registry, recording features, temporal-window NPZ, train-derived channel
+normalisation, protocol CSV and source-distribution figure.
 
+The last cell of Notebook 01 verifies all **nine named current outputs**
+before calling the existing stage packager. It produces exactly one
+`/content/eye_movement_modelling_Notebook_01_Outputs.zip`, containing
+the nine derived files used for quality review and subsequent notebook
+inputs. The original CSVs and large source archive are excluded. Thus,
+downstream Notebooks 02–05 can run without original gaze files when
+using the current, compatible stage-01 output archive.
+
+Each later notebook reads the files directly when the same Colab Runtime
+is active. In a new Runtime, the previously downloaded numbered ZIP must
+be placed in `/content/`. The `ensure_stage_inputs` helper restores
+only named required files, avoiding re-execution of unrelated earlier
+stages. Notebook 05 also requires compatible stage-02, stage-03 and
+stage-04 outputs containing model checkpoints and model-selection metrics.
+Stage-output packages must come from a compatible cohort/feature/split
+contract; success of file restoration alone does not prove scientific
+compatibility.
+
+The pilot's observed original-data outputs and classical Validation
+results predate the integration and remain labelled as pilot evidence.
+A larger 100-person experiment requires a separately established
+sampling, partition and evaluation protocol, then refreshed derived
+outputs and model fitting. Runtime-local source files may be lost after
+Colab disconnects; saving the processed ZIP does not back up original
+raw data for a fresh Notebook 01 run.
 
 
 ### 3.1 Record feature construction
