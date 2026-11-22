@@ -34,20 +34,20 @@ def _manifest(n_people: int) -> pd.DataFrame:
     ])
 
 
-def test_s2_person_groups_and_pilot_partition():
-    inv = _manifest(10)
+def test_modelling_participant_partition_is_deterministic():
+    inv = _manifest(20)
     a = participant_split(inv, seed=17)
     b = participant_split(inv, seed=17)
     pd.testing.assert_frame_equal(a, b)
-    assert len(a) == 40
-    assert a.study_purpose.unique().tolist() == ["pilot"]
+    assert len(a) == 80
+    assert a.study_purpose.unique().tolist() == ["main"]
     assert a.groupby("participant_id").split.nunique().eq(1).all()
     assert set(a.split) == {"train", "validation", "test"}
-    assert a.loc[a.split.eq("test"), "participant_id"].nunique() == 2
-    assert a.loc[a.split.eq("validation"), "participant_id"].nunique() == 2
+    assert a.loc[a.split.eq("test"), "participant_id"].nunique() == 4
+    assert a.loc[a.split.eq("validation"), "participant_id"].nunique() == 4
 
 
-def test_s2_main_test_uses_participants_unseen_in_first_ten():
+def test_modelling_test_uses_highest_source_ids():
     inv = _manifest(20)
     groups = participant_split(inv, seed=17)
     assert groups.study_purpose.unique().tolist() == ["main"]
@@ -61,7 +61,7 @@ def test_s2_source_feature_and_temporal_contract(tmp_path):
     directory = tmp_path / "GazeBase_v2_0" / "Round_1"
     directory.mkdir(parents=True)
     n = np.arange(320, dtype=int)
-    for i in range(1, 11):
+    for i in range(1, 21):
         for j, task in enumerate(TASKS):
             path = directory / f"S_{1000+i}_S1_{task}.csv"
             pd.DataFrame({
@@ -71,13 +71,13 @@ def test_s2_source_feature_and_temporal_contract(tmp_path):
                 "dP": np.ones(len(n)) * 100,
                 "lab": np.ones(len(n), dtype=int),
             }).to_csv(path, index=False)
-    inv = discover_records(directory, max_participants=10)
+    inv = discover_records(directory, max_participants=20)
     group = participant_split(inv)
     frame, windows, record_ids, labels = build_source_tables(
         inv, group, window_samples=256, max_windows_per_record=3,
     )
-    assert len(frame) == 40
-    assert windows.shape == (40, 256, 4)
+    assert len(frame) == 80
+    assert windows.shape == (80, 256, 4)
     assert all(frame.n_windows == 1)
     assert np.isfinite(windows).all()
     assert set(np.unique(labels)) == {0, 1, 2, 3}
@@ -86,7 +86,7 @@ def test_s2_source_feature_and_temporal_contract(tmp_path):
 
 
 def test_s2_train_only_normalisation_resists_test_outliers():
-    inv = _manifest(10)
+    inv = _manifest(20)
     group = participant_split(inv)
     train_ids = group.loc[group.split.eq("train"), "record_id"].values
     test_ids = group.loc[group.split.eq("test"), "record_id"].values
@@ -237,8 +237,8 @@ def test_s2_temporal_architectures_forward_if_torch_available():
 def test_protocol_csv_round_trip(tmp_path):
     path = tmp_path / "01_protocol.csv"
     saved = save_protocol(
-        path, participants=10, seed=17,
-        window_samples=256, max_windows_per_record=24, purpose="pilot",
+        path, participants=100, seed=17,
+        window_samples=256, max_windows_per_record=24, purpose="main",
     )
     loaded = load_protocol(path)
     assert loaded == saved
