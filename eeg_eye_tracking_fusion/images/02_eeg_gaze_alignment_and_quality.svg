@@ -38,7 +38,22 @@
   <g id="band-1-context">
     <rect id="context-container" x="24" y="84" width="1652" height="160" rx="16" fill="#EAF3FA" stroke="#C7D9E6" stroke-width="2"/>
     <g id="source-schematic" data-slot="replace-for-actual-data-source">
-      <g id="paired-signal-icon"><rect x="44" y="123" width="92" height="94" rx="10" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.5"/><path d="M52 155 L62 155 L68 137 L75 177 L83 151 L90 151 L96 145 L103 160 L111 153 L128 153" fill="none" stroke="#174B70" stroke-width="2.2" stroke-linejoin="round"/><path d="M52 195 Q62 184 72 191 T93 190 T128 191" fill="none" stroke="#176363" stroke-width="2.6" stroke-linecap="round"/></g><text id="text-003" x="153" y="110" class="source-heading" data-container="context-container">Z U C O   2.0</text>
+      <g id="paired-signal-icon" aria-label="Schematic EEG recording and left-eye gaze acquisition">
+        <rect x="44" y="121" width="94" height="99" rx="10" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.5"/>
+        <rect x="48" y="125" width="86" height="43" rx="7" fill="#F7FAFD" stroke="#D9E6EF" stroke-width="1"/>
+        <path d="M55 158 C52 149 54 137 62 132 C70 127 79 134 79 145 L77 158" fill="#D9E7F1" stroke="#7298B0" stroke-width="1.9" stroke-linecap="round"/>
+        <path d="M55 140 Q66 129 78 141" fill="none" stroke="#245E9D" stroke-width="1.5"/>
+        <circle cx="58" cy="136" r="2.5" fill="#245E9D" stroke="#FFFFFF" stroke-width="0.8"/>
+        <circle cx="67" cy="133" r="2.5" fill="#245E9D" stroke="#FFFFFF" stroke-width="0.8"/>
+        <circle cx="75" cy="138" r="2.5" fill="#245E9D" stroke="#FFFFFF" stroke-width="0.8"/>
+        <path d="M83 150 H88 L93 143 L97 159 L103 136 L109 154 L115 145 L121 150 H128" fill="none" stroke="#236CDE" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+        <rect x="48" y="173" width="86" height="43" rx="7" fill="#F7FAFD" stroke="#D9E6EF" stroke-width="1"/>
+        <path d="M52 193 Q67 180 83 193 Q67 206 52 193 Z" fill="#FFFFFF" stroke="#7298B0" stroke-width="1.9" stroke-linejoin="round"/>
+        <circle cx="67" cy="193" r="6.5" fill="#D9E7F1" stroke="#245E9D" stroke-width="1.1"/>
+        <circle cx="67" cy="193" r="2.6" fill="#173453"/>
+        <path d="M85 195 L97 192 L104 198 L111 186 L119 193 L129 190" fill="none" stroke="#168C5B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="119" cy="193" r="2.8" fill="#E87929" stroke="#FFFFFF" stroke-width="0.8"/>
+      </g><text id="text-003" x="153" y="110" class="source-heading" data-container="context-container">ZUCO 2.0</text>
       <text id="text-004" x="153" y="157" class="source-label" data-container="context-container">128-channel EEG</text>
       <text id="text-005" x="153" y="182" class="source-label" data-container="context-container">EyeLink left eye</text>
       <text id="text-006" x="153" y="207" class="source-label" data-container="context-container">NR and TSR runs</text>
