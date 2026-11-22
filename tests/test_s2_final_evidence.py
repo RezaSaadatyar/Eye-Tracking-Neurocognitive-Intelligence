@@ -1,5 +1,5 @@
 # ==================== Presented by: Reza Saadatyar (2026) ====================
-"""Reconcile committed Study 2 main Test evidence without refitting models."""
+"""Reconcile Eye-Movement Modelling Test evidence without refitting models."""
 
 from __future__ import annotations
 
