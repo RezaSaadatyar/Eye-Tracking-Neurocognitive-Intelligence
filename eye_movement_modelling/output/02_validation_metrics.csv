@@ -1,5 +1,5 @@
 model,partition,n_records,n_participants,accuracy,macro_f1,balanced_accuracy
-gradient_boosting,validation,8,2,1.0,1.0,1.0
-logistic_regression,validation,8,2,1.0,1.0,1.0
-random_forest,validation,8,2,1.0,1.0,1.0
-class_prior,validation,8,2,0.25,0.1,0.25
+logistic_regression,validation,64,16,1.0,1.0,1.0
+gradient_boosting,validation,64,16,0.984375,0.9843597262952102,0.984375
+random_forest,validation,64,16,0.984375,0.9843597262952102,0.984375
+class_prior,validation,64,16,0.25,0.1,0.25
