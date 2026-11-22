@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1700" height="816" viewBox="0 0 1700 816" role="img" aria-labelledby="title desc">
   <title id="title">03 | EEG and Gaze Feature Engineering and Neurophysiology</title>
-  <desc id="desc">Planned six-stage scientific workflow for EEG/gaze features. Source input consists of 206 Stage-02 eligible twelve-second windows across twelve runs and six original participants. Feature and model results are not yet executed. The EEG and eye streams are only BIDS-relative, not drift-verified.</desc>
+  <desc id="desc">Recorded ZuCo 2.0 Stage-03 EEG and gaze features: 206 matched windows, no extraction failures, eight finite summary feature columns, two arrays each 206 by 6 by 4, and an exploratory unfiltered raw fixation-locked EEG trace with substantial DC offset. No independent synchrony, localisation or cognitive effect is verified.</desc>
   <defs>
     <marker id="arr" markerUnits="userSpaceOnUse" markerWidth="6" markerHeight="6" refX="5.5" refY="3" orient="auto">
       <path d="M0 0 L6 3 L0 6 Z" fill="#245E9D"/>
@@ -33,7 +33,7 @@
   <rect id="canvas" x="0" y="0" width="1700" height="816" rx="20" fill="#F4F9FD"/>
   <g id="band-0-header">
     <text id="text-001" x="30" y="38" class="figure-title" data-container="canvas">03 | EEG and Gaze Feature Engineering and Neurophysiology</text>
-    <text id="text-002" x="30" y="67" class="subtitle" data-container="canvas">From 206 eligible paired windows to EEG and gaze features; Stage 03 not yet executed</text>
+    <text id="text-002" x="30" y="67" class="subtitle" data-container="canvas">206 matched EEG/gaze windows | no extraction exclusions | six two-second bins</text>
   </g>
   <g id="band-1-context">
     <rect id="context-container" x="24" y="84" width="1652" height="160" rx="16" fill="#EAF3FA" stroke="#C7D9E6" stroke-width="2"/>
@@ -44,28 +44,28 @@
       <text id="text-006" x="153" y="207" class="source-label" data-container="context-container">NR and TSR runs</text>
     </g>
     <g id="context-module-1">
-      <text id="text-007" x="358" y="115" class="context-heading" data-container="context-container">EEG SIGNAL</text>
-      <text id="text-008" x="358" y="148" class="context-body" data-container="context-container">Fixed 16 real channels</text>
-      <text id="text-009" x="358" y="174" class="context-body" data-container="context-container">Per-window mean reference</text>
+      <text id="text-007" x="358" y="115" class="context-heading" data-container="context-container">EEG FEATURES</text>
+      <text id="text-008" x="358" y="148" class="context-body" data-container="context-container">16 native EEG channels</text>
+      <text id="text-009" x="358" y="174" class="context-body" data-container="context-container">Within-window reference</text>
       <text id="text-010" x="358" y="200" class="context-body" data-container="context-container">Bandpass 1–40 Hz</text>
     </g>
     <g id="context-module-2">
-      <text id="text-011" x="690" y="115" class="context-heading" data-container="context-container">EYE SIGNAL</text>
-      <text id="text-012" x="690" y="148" class="context-body" data-container="context-container">Left-eye x/y positions</text>
-      <text id="text-013" x="690" y="174" class="context-body" data-container="context-container">Pupil and fixation events</text>
-      <text id="text-014" x="690" y="200" class="context-body" data-container="context-container">Finite-data validity</text>
+      <text id="text-011" x="690" y="115" class="context-heading" data-container="context-container">GAZE FEATURES</text>
+      <text id="text-012" x="690" y="148" class="context-body" data-container="context-container">EyeLink x/y and pupil</text>
+      <text id="text-013" x="690" y="174" class="context-body" data-container="context-container">Event fixation occupancy</text>
+      <text id="text-014" x="690" y="200" class="context-body" data-container="context-container">Valid fraction = 1.0</text>
     </g>
     <g id="context-module-3">
-      <text id="text-015" x="1020" y="115" class="context-heading" data-container="context-container">TEMPORAL BINS</text>
-      <text id="text-016" x="1020" y="148" class="context-body" data-container="context-container">Six bins of two seconds</text>
-      <text id="text-017" x="1020" y="174" class="context-body" data-container="context-container">NR / TSR original task</text>
-      <text id="text-018" x="1020" y="200" class="context-body" data-container="context-container">Source window ID retained</text>
+      <text id="text-015" x="1020" y="115" class="context-heading" data-container="context-container">RECORDED ARRAYS</text>
+      <text id="text-016" x="1020" y="148" class="context-body" data-container="context-container">206 × 6 × 4 per modality</text>
+      <text id="text-017" x="1020" y="174" class="context-body" data-container="context-container">101 NR / 105 TSR</text>
+      <text id="text-018" x="1020" y="200" class="context-body" data-container="context-container">All source IDs preserved</text>
     </g>
     <g id="context-module-4">
-      <text id="text-019" x="1360" y="115" class="context-heading" data-container="context-container">QUALITY BOUNDARY</text>
-      <text id="text-020" x="1360" y="148" class="context-body" data-container="context-container">No spatial localisation</text>
-      <text id="text-021" x="1360" y="174" class="context-body" data-container="context-container">Train-only FRP example</text>
-      <text id="text-022" x="1360" y="200" class="context-body" data-container="context-container">No cognitive explanation</text>
+      <text id="text-019" x="1360" y="115" class="context-heading" data-container="context-container">QUALITY LIMIT</text>
+      <text id="text-020" x="1360" y="148" class="context-body" data-container="context-container">No independent drift check</text>
+      <text id="text-021" x="1360" y="174" class="context-body" data-container="context-container">Raw EEG has DC offset</text>
+      <text id="text-022" x="1360" y="200" class="context-body" data-container="context-container">No cognitive inference</text>
     </g>
   </g>
   <g id="band-2-analysis">
@@ -74,58 +74,58 @@
       <rect id="section-label-box" x="38" y="272" width="238" height="32" rx="9" fill="#173453" stroke="#173453" stroke-width="1.5"/>
       <text id="text-023" x="157" y="293" class="section-label" text-anchor="middle" data-container="section-label-box">SCIENTIFIC DESIGN</text>
       <rect id="focus-card" x="38" y="312" width="238" height="215" rx="10" fill="#F7FAFD" stroke="#DFEAF0" stroke-width="1.5"/>
-      <text id="text-024" x="54" y="344" class="focus-heading" data-container="focus-card">FEATURE DESIGN</text>
-      <text id="text-025" x="54" y="389" class="focus-body" data-container="focus-card">Separate EEG and eye</text>
-      <text id="text-026" x="54" y="416" class="focus-body" data-container="focus-card">feature representations</text>
-      <text id="text-027" x="54" y="443" class="focus-body" data-container="focus-card">Same source windows</text>
-      <text id="text-028" x="54" y="470" class="focus-body" data-container="focus-card">All splits kept distinct</text>
-      <text id="text-029" x="54" y="508" class="qualification" data-container="focus-card">No train-scale leakage</text>
+      <text id="text-024" x="54" y="344" class="focus-heading" data-container="focus-card">FEATURE EVIDENCE</text>
+      <text id="text-025" x="54" y="389" class="focus-body" data-container="focus-card">206 matched EEG and</text>
+      <text id="text-026" x="54" y="416" class="focus-body" data-container="focus-card">gaze window features</text>
+      <text id="text-027" x="54" y="443" class="focus-body" data-container="focus-card">0 feature exclusions</text>
+      <text id="text-028" x="54" y="470" class="focus-body" data-container="focus-card">95 Train / 31 Validation</text>
+      <text id="text-029" x="54" y="508" class="qualification" data-container="focus-card">80 Test rows reserved</text>
     </g>
     <g id="evidence-panel-1">
       <rect id="evidence-card-1" x="292" y="272" width="324" height="254" rx="12" fill="#FFFFFF" stroke="#B6CFDE" stroke-width="1.5"/>
       <path id="evidence-header-1" d="M303 272 H605 Q616 272 616 283 V305 H292 V283 Q292 272 303 272 Z" fill="#174B70"/>
-      <text id="text-030" x="454.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-1">EEG FEATURES</text>
+      <text id="text-030" x="454.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-1">EEG REPRESENTATION</text>
       <g id="evidence-content-1" data-slot="scientific-content">
         <text id="text-031" x="454.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-1">Theta / alpha / beta</text>
-        <text id="text-032" x="454.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-1">Log spectral power</text>
-        <text id="text-033" x="454.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-1">RMS amplitudes</text>
+        <text id="text-032" x="454.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-1">Log power (all finite)</text>
+        <text id="text-033" x="454.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-1">RMS amplitude (all finite)</text>
       </g>
     </g>
     <g id="evidence-panel-2">
       <rect id="evidence-card-2" x="630" y="272" width="324" height="254" rx="12" fill="#FFFFFF" stroke="#B6CFDE" stroke-width="1.5"/>
       <path id="evidence-header-2" d="M641 272 H943 Q954 272 954 283 V305 H630 V283 Q630 272 641 272 Z" fill="#174B70"/>
-      <text id="text-034" x="792.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-2">GAZE FEATURES</text>
+      <text id="text-034" x="792.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-2">GAZE REPRESENTATION</text>
       <g id="evidence-content-2" data-slot="scientific-content">
-        <text id="text-035" x="792.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-2">Valid fraction / speed</text>
-        <text id="text-036" x="792.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-2">Pupil and fixation share</text>
-        <text id="text-037" x="792.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-2">Missing values retained</text>
+        <text id="text-035" x="792.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-2">Speed, pupil and fixation</text>
+        <text id="text-036" x="792.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-2">Finite coordinate fraction</text>
+        <text id="text-037" x="792.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-2">No missing summary values</text>
       </g>
     </g>
     <g id="evidence-panel-3">
       <rect id="evidence-card-3" x="968" y="272" width="324" height="254" rx="12" fill="#FFFFFF" stroke="#B6CFDE" stroke-width="1.5"/>
       <path id="evidence-header-3" d="M979 272 H1281 Q1292 272 1292 283 V305 H968 V283 Q968 272 979 272 Z" fill="#174B70"/>
-      <text id="text-038" x="1130.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-3">TEMPORAL ARRAYS</text>
+      <text id="text-038" x="1130.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-3">TEMPORAL OUTPUT</text>
       <g id="evidence-content-3" data-slot="scientific-content">
-        <text id="text-039" x="1130.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-3">Six steps per window</text>
-        <text id="text-040" x="1130.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-3">Four features / modality</text>
+        <text id="text-039" x="1130.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-3">206 windows × 6 bins</text>
+        <text id="text-040" x="1130.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-3">4 features per modality</text>
         <text id="text-041" x="1130.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-3">Compact compressed NPZ</text>
       </g>
     </g>
     <g id="evidence-panel-4">
       <rect id="evidence-card-4" x="1306" y="272" width="356" height="254" rx="12" fill="#FFFFFF" stroke="#B6CFDE" stroke-width="1.5"/>
       <path id="evidence-header-4" d="M1317 272 H1651 Q1662 272 1662 283 V305 H1306 V283 Q1306 272 1317 272 Z" fill="#174B70"/>
-      <text id="text-042" x="1484.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-4">EEG DIAGNOSTIC</text>
+      <text id="text-042" x="1484.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-4">RAW EEG EXAMPLE</text>
       <g id="evidence-content-4" data-slot="scientific-content">
-        <text id="text-043" x="1484.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-4">Fixation-locked mean</text>
-        <text id="text-044" x="1484.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-4">Train sample only</text>
-        <text id="text-045" x="1484.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-4">Overlapping ERP caution</text>
+        <text id="text-043" x="1484.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-4">Train-only event mean</text>
+        <text id="text-044" x="1484.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-4">Large DC offset visible</text>
+        <text id="text-045" x="1484.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-4">Not a verified FRP</text>
       </g>
     </g>
     <g id="optional-scientific-note" data-optional="true">
       <rect id="note-strip" x="301" y="540" width="1064" height="25" rx="12" fill="#E0F2EC" stroke="#D3EAE2" stroke-width="1.5"/>
       <circle cx="324" cy="552" r="9" fill="#23749A"/>
       <text id="text-046" x="324" y="556" class="info-mark" text-anchor="middle">i</text>
-      <text id="text-047" x="342" y="556" class="scientific-note" data-container="note-strip">The EEG channels are a compact subset, not a mapped anatomical ROI.</text>
+      <text id="text-047" x="342" y="556" class="scientific-note" data-container="note-strip">206 paired feature windows retained; the raw fixation trace is not a validated physiological effect.</text>
     </g>
   </g>
   <g id="band-3-workflow">
@@ -133,67 +133,67 @@
     <g id="workflow-input">
       <rect id="workflow-node-0" x="38" y="613" width="208" height="132" rx="15" fill="#173453" stroke="#173453" stroke-width="1.8"/>
       <text id="text-048" x="142" y="636" class="terminal-id" text-anchor="middle" data-container="workflow-node-0">INPUT</text>
-      <text id="text-049" x="142" y="662" class="terminal-heading" text-anchor="middle" data-container="workflow-node-0">Paired Windows</text>
-      <text id="text-050" x="142" y="684" class="terminal-body" text-anchor="middle" data-container="workflow-node-0">206 eligible in Stage 02</text>
-      <text id="text-051" x="142" y="704" class="terminal-body" text-anchor="middle" data-container="workflow-node-0">12 NR/TSR runs</text>
-      <text id="text-052" x="142" y="724" class="terminal-body" text-anchor="middle" data-container="workflow-node-0">Six people; fixed splits</text>
+      <text id="text-049" x="142" y="662" class="terminal-heading" text-anchor="middle" data-container="workflow-node-0">Matched Windows</text>
+      <text id="text-050" x="142" y="684" class="terminal-body" text-anchor="middle" data-container="workflow-node-0">206 from Stage 02</text>
+      <text id="text-051" x="142" y="704" class="terminal-body" text-anchor="middle" data-container="workflow-node-0">12 NR/TSR source runs</text>
+      <text id="text-052" x="142" y="724" class="terminal-body" text-anchor="middle" data-container="workflow-node-0">Six independent people</text>
     </g>
     <path id="workflow-connector-0" d="M252 679 H266" fill="none" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
     <g id="workflow-process-1">
       <rect id="workflow-node-1" x="274" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
       <text id="text-053" x="378" y="636" class="workflow-id" text-anchor="middle" data-container="workflow-node-1">01</text>
-      <text id="text-054" x="378" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-1">Read EEG</text>
-      <text id="text-055" x="378" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-1">Same 206 source IDs</text>
-      <text id="text-056" x="378" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-1">16 selected electrodes</text>
-      <text id="text-057" x="378" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-1">Filter, then feature bins</text>
+      <text id="text-054" x="378" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-1">Process EEG</text>
+      <text id="text-055" x="378" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-1">206 source windows</text>
+      <text id="text-056" x="378" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-1">16 native EEG channels</text>
+      <text id="text-057" x="378" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-1">Power / RMS features</text>
     </g>
     <path id="workflow-connector-1" d="M488 679 H502" fill="none" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
     <g id="workflow-process-2">
       <rect id="workflow-node-2" x="510" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
       <text id="text-058" x="614" y="636" class="workflow-id" text-anchor="middle" data-container="workflow-node-2">02</text>
-      <text id="text-059" x="614" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-2">Read Gaze</text>
-      <text id="text-060" x="614" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-2">Sidecar-named x/y</text>
-      <text id="text-061" x="614" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-2">Pupil and fixation events</text>
-      <text id="text-062" x="614" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-2">Retain finite-data limits</text>
+      <text id="text-059" x="614" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-2">Process Gaze</text>
+      <text id="text-060" x="614" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-2">206 matching windows</text>
+      <text id="text-061" x="614" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-2">Pupil / gaze / events</text>
+      <text id="text-062" x="614" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-2">Finite values checked</text>
     </g>
     <path id="workflow-connector-2" d="M724 679 H738" fill="none" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
     <g id="workflow-process-3">
       <rect id="workflow-node-3" x="746" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
       <text id="text-063" x="850" y="636" class="workflow-id" text-anchor="middle" data-container="workflow-node-3">03</text>
       <text id="text-064" x="850" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-3">Extract Bins</text>
-      <text id="text-065" x="850" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-3">Six bins of 2 seconds</text>
-      <text id="text-066" x="850" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-3">EEG and gaze separately</text>
-      <text id="text-067" x="850" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-3">Keep participant roles</text>
+      <text id="text-065" x="850" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-3">6 bins × 2 s</text>
+      <text id="text-066" x="850" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-3">4 EEG / 4 gaze fields</text>
+      <text id="text-067" x="850" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-3">Preserve window IDs</text>
     </g>
     <path id="workflow-connector-3" d="M960 679 H974" fill="none" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
     <g id="workflow-process-4">
       <rect id="workflow-node-4" x="982" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
       <text id="text-068" x="1086" y="636" class="workflow-id" text-anchor="middle" data-container="workflow-node-4">04</text>
-      <text id="text-069" x="1086" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-4">Quality Audit</text>
-      <text id="text-070" x="1086" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">Report excluded windows</text>
-      <text id="text-071" x="1086" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">Check NR/TSR support</text>
-      <text id="text-072" x="1086" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">Track missing features</text>
+      <text id="text-069" x="1086" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-4">Verify Quality</text>
+      <text id="text-070" x="1086" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">0 extraction exclusions</text>
+      <text id="text-071" x="1086" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">0 non-finite means</text>
+      <text id="text-072" x="1086" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">12 task/run groups</text>
     </g>
     <path id="workflow-connector-4" d="M1196 679 H1210" fill="none" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
     <g id="workflow-process-5">
       <rect id="workflow-node-5" x="1218" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
       <text id="text-073" x="1322" y="636" class="workflow-id" text-anchor="middle" data-container="workflow-node-5">05</text>
-      <text id="text-074" x="1322" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-5">Export Arrays</text>
-      <text id="text-075" x="1322" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">03_ features and NPZ</text>
-      <text id="text-076" x="1322" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">Paired window IDs</text>
-      <text id="text-077" x="1322" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">Descriptive EEG plots</text>
+      <text id="text-074" x="1322" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-5">Save Evidence</text>
+      <text id="text-075" x="1322" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">206 paired feature rows</text>
+      <text id="text-076" x="1322" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">2 arrays: 206×6×4</text>
+      <text id="text-077" x="1322" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">Raw EEG + trend plots</text>
     </g>
     <path id="workflow-connector-5" d="M1432 679 H1446" fill="none" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
     <g id="workflow-output">
       <rect id="workflow-node-6" x="1454" y="613" width="208" height="132" rx="15" fill="#176363" stroke="#176363" stroke-width="1.8"/>
       <text id="text-078" x="1558" y="636" class="terminal-id" text-anchor="middle" data-container="workflow-node-6">OUTPUT</text>
-      <text id="text-079" x="1558" y="662" class="terminal-heading" text-anchor="middle" data-container="workflow-node-6">Planned Outputs</text>
-      <text id="text-080" x="1558" y="684" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">03_ paired features</text>
-      <text id="text-081" x="1558" y="704" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">Six-step temporal NPZ</text>
-      <text id="text-082" x="1558" y="724" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">No model results yet</text>
+      <text id="text-079" x="1558" y="662" class="terminal-heading" text-anchor="middle" data-container="workflow-node-6">Stage-03 Evidence</text>
+      <text id="text-080" x="1558" y="684" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">206 paired features</text>
+      <text id="text-081" x="1558" y="704" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">NPZ and quality tables</text>
+      <text id="text-082" x="1558" y="724" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">Ready for Stage 04</text>
     </g>
   </g>
   <g id="band-4-summary">
-    <text id="text-083" x="30" y="792" class="footer" data-container="canvas">Stage 02 supports 206 source windows; modality features and physiological diagnostics require execution.</text>
+    <text id="text-083" x="30" y="792" class="footer" data-container="canvas">Feature outputs verified on 206 windows; EEG/eye synchrony and physiological effects remain unverified.</text>
   </g>
 </svg>
