@@ -147,7 +147,7 @@ def test_study_overview_reflects_latest_source_audit():
     root = ET.parse(path).getroot()
     labels = " ".join((item.text or "") for item in root.iter())
     assert "100 people audited" in labels
-    assert "Main models not yet fitted" in labels
+    assert "Classical models fitted" in labels
     assert "20/30 requires more source CSVs" not in labels
 
 
