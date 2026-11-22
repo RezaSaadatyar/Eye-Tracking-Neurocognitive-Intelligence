@@ -1,5 +1,5 @@
 # ==================== Presented by: Reza Saadatyar (2026) ====================
-"""Reconcile committed S2 pilot results without repeating Test inference."""
+"""Reconcile committed Study 2 main Test evidence without refitting models."""
 
 from __future__ import annotations
 
@@ -38,7 +38,7 @@ def _row_metrics(truth: pd.Series, predicted: pd.Series) -> dict:
     }
 
 
-def test_pilot_validation_selection_uses_only_saved_validation_scores():
+def test_main_validation_selection_uses_only_saved_validation_scores():
     """Rebuild the fixed ranking without consulting stage-05 Test scores."""
     metrics = pd.concat(
         [
@@ -63,10 +63,11 @@ def test_pilot_validation_selection_uses_only_saved_validation_scores():
         "validation_macro_f1_then_balanced_accuracy_then_order"
     )
     assert decision["test_used_in_selection"] == False
-    assert decision["purpose"] == "pilot"
+    assert decision["purpose"] == "main"
+    assert decision["validation_n_people"] == 16
 
 
-def test_saved_pilot_test_metrics_and_groupwise_support_reconcile():
+def test_saved_main_test_metrics_and_groupwise_support_reconcile():
     """Recalculate observed Test scores using record-level saved predictions."""
     split = pd.read_csv(
         OUTPUT / "01_split_assignments.csv",
@@ -83,26 +84,16 @@ def test_saved_pilot_test_metrics_and_groupwise_support_reconcile():
         dtype={"participant_id": str},
     )
     decision = pd.read_csv(OUTPUT / "05_model_selection.csv").iloc[0]
-    if decision["purpose"] == "pilot" and split["study_purpose"].eq("main").all():
-        # During staged reruns, Stage 01 has the new main split, while
-        # Stage 05 still holds historical pilot Test predictions. Verify
-        # those historical results internally; do not compare identities
-        # against the unrelated main Test registry.
-        expected = predictions.loc[
-            predictions["model"].eq(decision["selected_model"]),
-            ["record_id", "participant_id", "task"],
-        ].copy()
-        assert expected["record_id"].is_unique
-        assert len(expected) < len(current_test)
-    else:
-        expected = current_test
-        expected_people_check = set(expected["participant_id"])
-        assert set(
-            split.loc[split["split"].eq("train"), "participant_id"]
-        ).isdisjoint(expected_people_check)
-        assert set(
-            split.loc[split["split"].eq("validation"), "participant_id"]
-        ).isdisjoint(expected_people_check)
+    assert decision["purpose"] == "main"
+    assert split["study_purpose"].eq("main").all()
+    expected = current_test
+    expected_people_check = set(expected["participant_id"])
+    assert set(
+        split.loc[split["split"].eq("train"), "participant_id"]
+    ).isdisjoint(expected_people_check)
+    assert set(
+        split.loc[split["split"].eq("validation"), "participant_id"]
+    ).isdisjoint(expected_people_check)
     expected_ids = set(expected["record_id"])
     expected_people = set(expected["participant_id"])
     assert set(predictions["model"]) == set(PRIORITY)
@@ -180,15 +171,19 @@ def test_final_notebook_preserves_test_outputs_and_single_zip_export():
     assert [c.get("id") for c in cells].index("s2c9") < [
         c.get("id") for c in cells
     ].index("s2c11")
-    for ident in ("s2c7", "s2c9", "s2c11", "s2c13", "s2c15", "s2c17"):
-        assert by_id[ident]["execution_count"] is None
-        assert not by_id[ident]["outputs"]
+    before_test = "".join(by_id["s2c7"]["source"])
+    assert "Saved model identity mismatch" in before_test
+    assert "Stored Validation" in before_test
+    test_scoring = "".join(by_id["s2c11"]["source"])
+    assert "selected_name" not in test_scoring.split(
+        "# ----------------------- 2. Score Classical Pipelines"
+    )[0]
+    assert "test_mask = record_roles ==" in test_scoring
     final = by_id["s2c19"]
     code = "".join(final["source"])
+    assert "expected_test_ids" in code
+    assert "Saved Test metric mismatch" in code
     assert 'download_outputs_from_colab("eye_movement_modelling/output", "05")' in code
-    assert "print(" not in code
-    assert final["execution_count"] is None
-    assert not final["outputs"]
 
 
 def test_final_figure_matches_source_and_workflow_reference():
@@ -213,6 +208,7 @@ def test_final_figure_matches_source_and_workflow_reference():
         ]) == 3
     root = ET.parse(FIGURES / "05_robustness_and_final_evaluation.svg")
     words = " ".join(element.text or "" for element in root.iter())
-    assert "Primary: 7/8 correct" in words
-    assert "Test Macro F1: 0.867" in words
+    assert "Primary: 80/80 correct" in words
+    assert "Test Macro F1: 1.000" in words
+    assert "20 Test people" in words
     assert "remain unobserved" not in words
