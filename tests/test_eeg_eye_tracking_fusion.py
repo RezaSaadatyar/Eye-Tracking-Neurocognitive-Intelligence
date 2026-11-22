@@ -633,6 +633,9 @@ def test_two_scientific_documents_retained_in_named_structure():
     methods = (PROJECT / "RESEARCH_METHODS_AND_EVIDENCE.md").read_text()
     assert len([l for l in readme.splitlines() if l.startswith("## ")]) == 6
     assert len([l for l in methods.splitlines() if l.startswith("## ")]) == 9
-    assert "not yet" in readme.lower()
-    assert "not yet" in methods.lower()
+    # Require transparent Test boundaries, not one historical status phrase.
+    # Documentation must remain valid as individual stages are executed.
+    assert "Validation" in readme and "Validation" in methods
+    assert "Test" in readme and "Test" in methods
+    assert "RUN_FINAL_TEST" in readme and "RUN_FINAL_TEST" in methods
     assert "100% accuracy" not in methods
