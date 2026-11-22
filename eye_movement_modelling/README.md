@@ -92,42 +92,19 @@ The GRU made five record-level Validation errors; Transformer classified one HSS
 
 The selected Logistic Regression classified **all four task recordings for each of the 20 Test people** correctly. This perfect observed Test score is not a guarantee of performance on an independent dataset, different stimulus protocol or future session. The model's Validation-only pupil-feature masking retained Macro F1 **1.000 → 1.000** on 64 records, which is a limited sensitivity observation rather than an explanation or proof that pupil fields are irrelevant.
 
-**Historical ten-person pilot results (Notebooks 01–05):** These results are retained for methodological context only; **all current stage-prefixed files now belong to the main 100-person study**. The earlier pilot outputs remain recoverable from Git revision history and must not be presented as additional independent Test participants.
-
-**Observed ten-person pilot:** Notebook 01 processed 40 original recordings into 40 feature rows and 960 temporal windows of shape `(960, 256, 4)`, with 6/2/2 Train/Validation/Test participants (24/8/8 recordings). Notebook 02 evaluated four classical candidates on the same **eight Validation recordings from two people**. The class prior scored **Accuracy 0.25, Macro F1 0.10, Balanced Accuracy 0.25**. Logistic Regression, Random Forest and Gradient Boosting each scored **1.00 on all three metrics** (8/8 correct). These are **exploratory participant-disjoint Validation results**, not independent population estimates, external validation or final Test results.
-
-**Historical pilot Notebook 03 Validation:** CNN and TCN both classified 8/8 Validation recordings correctly (Accuracy, Macro F1 and Balanced Accuracy all **1.00**). CNN selected epoch 8 with **11,492 trainable parameters**; TCN selected epoch 5 with **12,772**. Only two independent Validation participants contributed; this earlier pilot evidence must not be conflated with current 100-person results.
-
-Notebooks 01–04 established the pilot data contract and eight Validation candidates; Notebook 05 applied the predefined Validation ranking, froze the primary choice and recorded pilot Test metrics. Inspect source step-speed artefacts and stimulus/task confounding before interpreting apparently high scores. The 10-person experiment is a functional pilot, not a new population-level model validation.
-
-**Historical pilot Notebook 04 Validation:** GRU selected epoch **1** (3,780 parameters) and correctly classified **2/8** Validation records, predicting TEX for all eight (Macro F1 0.10). Transformer selected epoch **2** (33,764 parameters) and correctly classified **4/8** (Macro F1 0.375), recognising HSS/RAN but missing FXS/TEX. Only two Validation participants contributed to the pilot; these are not the current main-cohort scores. The pilot's downstream Test is historical exploratory evidence.
-
-**Recorded Notebook 05 pilot Test:** Logistic Regression was selected using **Validation Macro F1, Balanced Accuracy and fixed candidate priority**, before the notebook's Test-scoring section. Among five candidates with Validation Macro F1 **1.00**, its prespecified tie-priority made it the primary model. On the **eight Test records belonging to participants 001 and 005**, it achieved **Accuracy 0.875, Macro F1 0.867 and Balanced Accuracy 0.875** (7/8 correct). Its only error was `S_1005_S1_FXS` predicted as TEX. Participant 001 had 4/4 correct; participant 005 had 3/4 correct.
-
-| Candidate | Validation Macro F1 | Pilot Test accuracy | Pilot Test Macro F1 |
-| --- | ---: | ---: | ---: |
-| Class Prior | 0.100 | 0.250 | 0.100 |
-| **Logistic Regression (selected)** | **1.000** | **0.875** | **0.867** |
-| Random Forest | 1.000 | 0.875 | 0.867 |
-| Gradient Boosting | 1.000 | 0.875 | 0.867 |
-| CNN | 1.000 | 0.750 | 0.733 |
-| TCN | 1.000 | 0.750 | 0.742 |
-| GRU | 0.100 | 0.250 | 0.100 |
-| Transformer | 0.375 | 0.500 | 0.333 |
-
-All model comparisons in the Test column are **secondary descriptions**. The selected model's **Validation-only pupil-feature masking** left Macro F1 unchanged (**1.00 to 1.00**, eight records); this is not proof of feature irrelevance or causal explainability. Only **two independent people** contributed to each split's Validation or Test, so scores cannot support stable inference or claims of generalisation. The current pilot Test has been examined and **must not be reused as untouched Test evidence** when adapting the experiment.
+**Pilot context:** A smaller ten-person feasibility run preceded this fixed 100-person study. Its eight-record Test estimates are historical, not additional evidence for the main Test. Detailed pilot methods and results are retained in [Research Methods and Evidence](RESEARCH_METHODS_AND_EVIDENCE.md); the earlier outputs are recoverable from Git history.
 
 ## 4. Running and Reviewing the Study
 
 **All five notebooks are complete for the 100-person main-cohort workflow.** Current source features, temporal windows, classical pipelines, temporal checkpoints, Validation predictions and the nine final Test output files are committed under `eye_movement_modelling/output/`. There is no need to repeat fitting or Test evaluation to inspect the saved evidence.
 
-1. Review the [completed Notebook 05](code/notebooks/05_robustness_and_final_evaluation.ipynb) and its Validation selection section **before** the Test-scoring section.
-2. Inspect the committed `05_model_selection.csv`, `05_test_metrics.csv`, `05_test_predictions.csv` and `05_groupwise_test_metrics.csv` alongside the current `01_*` through `04_*` upstream artefacts. ZIP restoration is unnecessary when these named files are present.
-3. Verify the **64/16/20** participant roles, **64 common Validation source records**, and **80 Test source records** for each of eight frozen candidates; note that there are **20 independent Test people**, not 80.
-4. Interpret the pre-Test selection rule (Macro F1, Balanced Accuracy, fixed priority), primary Test results and secondary eight-model comparisons without changing the selected model based on observed Test scores.
-5. For details of preprocessing, model settings, person-level results, sensitivity and scientific limitations, read [Research Methods and Evidence](RESEARCH_METHODS_AND_EVIDENCE.md). Future cross-session, dataset or target experiments require a separately defined evaluation design.
+1. Start with the [completed Notebook 05](code/notebooks/05_robustness_and_final_evaluation.ipynb): the primary decision appears before Test scoring, followed by confusion, person-level and descriptive sensitivity analyses.
+2. Inspect the committed [output directory](output/) for the primary decision, aggregate metrics, 640 Test predictions, person-level summaries and upstream model artefacts.
+3. To reproduce the study, run [Notebooks 01–05](code/notebooks/) in numerical order using the same original GazeBase source cohort and frozen protocol. All stages write their named results under `output/`.
+4. Interpret the primary selection using Validation Macro F1, Balanced Accuracy and fixed priority; the Test-only model comparisons must not retrospectively change that choice.
+5. For preprocessing, model settings, detailed results, sensitivity and limitations, see [Research Methods and Evidence](RESEARCH_METHODS_AND_EVIDENCE.md).
 
-A later 300-person experiment requires a separately frozen cohort, complete regeneration of its data and models, and a clearly labelled evaluation distinct from the observed 100-person Test. Do not mix ZIPs or checkpoints from different participant sets.
+A different cohort or acquisition protocol requires a separately declared study design and an evaluation that is not retrospectively selected using this observed Test.
 
 ## 5. Files and Saved Outputs
 
@@ -137,13 +114,13 @@ A later 300-person experiment requires a separately frozen cohort, complete rege
 | [`code/src/`](code/src/) | Study-specific data preparation, classical learners, temporal architectures, training and record-level metrics |
 | [`images/study_overview.svg`](images/study_overview.svg) | Editable study-wide five-band modelling diagram |
 | [`images/`](images/) | Five notebook-specific editable scientific SVGs |
-| `output/` | Current Eye-Movement Modelling feature CSVs, window NPZ, checkpoints, metrics and figures; **can be tracked after review**, subject to the 50,000,000-byte file-size policy |
+| [`output/`](output/) | Committed source registries, derived features and windows, eight model artefacts, Validation predictions and final Test evidence |
 | [`data/raw/gazebase/`](../data/README.md) | Shared upstream **original** source CSVs (read only) |
 | [`README.md`](README.md) | Study overview and navigation |
-| [`RESEARCH_METHODS_AND_EVIDENCE.md`](RESEARCH_METHODS_AND_EVIDENCE.md) | Detailed training, split, metric and interpretation plan |
+| [`RESEARCH_METHODS_AND_EVIDENCE.md`](RESEARCH_METHODS_AND_EVIDENCE.md) | Detailed implemented methods, results, evidence and limitations |
 | [`tests/test_s2_contracts.py`](../tests/test_s2_contracts.py) | Synthetic contracts, not original-data reproduction |
 
-A per-study output directory prevents overwriting Eye-Tracking Foundations's `eye_tracking_foundations/output/`. Study outputs are no longer ignored by Git. Raw and processed source datasets remain ignored. Gitignore cannot filter on size; the independent Git blob policy rejects unapproved files larger than 50,000,000 bytes. Model weights are not automatically added or published.
+Study-specific outputs are kept separate from Eye-Tracking Foundations. The current derived features, model checkpoints and evaluation files are tracked; the original GazeBase archive is not duplicated as a model-stage output. The repository's file-size policy rejects individual files exceeding 50,000,000 bytes.
 
 ## 6. Interpretation and Scope
 
