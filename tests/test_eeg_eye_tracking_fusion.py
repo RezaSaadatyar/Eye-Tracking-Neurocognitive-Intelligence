@@ -459,6 +459,95 @@ def test_feature_notebook_preserves_frozen_source_and_reports_exclusions():
     )
 
 
+def test_saved_zuco_matched_features_and_temporal_array_alignment():
+    """Inspect actual Stage-03 outputs against Stage-02 provenance."""
+    folder = PROJECT / "output"
+    required = [
+        "03_features.csv", "03_temporal_sequences.npz",
+        "03_exclusion_reasons.csv", "03_modality_quality.csv",
+        "03_temporal_example.png", "03_fixation_locked_diagnostic.png",
+    ]
+    assert all((folder / name).is_file() for name in required)
+    features = pd.read_csv(
+        folder / "03_features.csv", dtype={"participant_id": str}
+    )
+    windows = pd.read_csv(
+        folder / "02_window_registry.csv", dtype={"participant_id": str}
+    )
+    quality = pd.read_csv(
+        folder / "03_modality_quality.csv", dtype={"participant_id": str}
+    )
+    excluded = pd.read_csv(folder / "03_exclusion_reasons.csv")
+    selected = windows.loc[windows.eligible]
+    assert features.window_id.is_unique
+    assert set(features.window_id) == set(selected.window_id)
+    assert len(features) == len(selected)
+    assert set(excluded.columns) == {"window_id", "reason"}
+    assert excluded.empty
+
+    original = features[
+        ["window_id", "participant_id", "task", "run", "split"]
+    ].merge(
+        selected[["window_id", "participant_id", "task", "run", "split"]],
+        on="window_id", how="left", validate="one_to_one",
+        suffixes=("_feature", "_registry"),
+    )
+    for name in ("participant_id", "task", "run", "split"):
+        assert original[f"{name}_feature"].eq(
+            original[f"{name}_registry"]
+        ).all()
+
+    observed = features.groupby(
+        ["participant_id", "split", "task"]
+    ).size().rename("n_windows").reset_index()
+    columns = ["participant_id", "split", "task"]
+    pd.testing.assert_frame_equal(
+        observed.sort_values(columns).reset_index(drop=True),
+        quality.sort_values(columns).reset_index(drop=True),
+        check_dtype=False,
+    )
+    eeg_names = [c for c in features.columns if c.startswith("eeg_")]
+    gaze_names = [c for c in features.columns if c.startswith("gaze_")]
+    assert len(eeg_names) == 4 and len(gaze_names) == 4
+    assert np.isfinite(features[eeg_names + gaze_names]).all().all()
+    with np.load(
+        folder / "03_temporal_sequences.npz", allow_pickle=False
+    ) as temporal:
+        for field in ("window_id", "participant_id", "task", "split"):
+            np.testing.assert_array_equal(
+                temporal[field], features[field].astype(str).to_numpy()
+            )
+        for field in ("eeg", "gaze"):
+            assert temporal[field].shape == (
+                len(features), 6, 4
+            )
+        assert temporal["eeg"].shape == temporal["gaze"].shape
+
+
+def test_classical_notebook_uses_same_validation_ids_and_no_asserts():
+    """Stage 04 preserves original windows and checks model evidence."""
+    path = (
+        PROJECT / "code" / "notebooks"
+        / "04_unimodal_baselines_and_classical_fusion.ipynb"
+    )
+    obj = json.loads(path.read_text(encoding="utf-8"))
+    code = "\n".join(
+        "".join(c["source"]) for c in obj["cells"]
+        if c["cell_type"] == "code"
+    )
+    assert '02_window_registry.csv' in code
+    assert '03_features.csv' in code
+    assert 'set(table.window_id) != set(expected.window_id)' in code
+    assert 'matched' in code and 'split_registry' in code
+    assert 'prediction_table.duplicated(["model", "window_id"])' in code
+    assert 'model_support.eq(len(valid)).all()' in code
+    assert 'probabilities(model, x_val)' in code
+    assert "y_test" not in code
+    assert not any(
+        line.strip().startswith("assert ") for line in code.splitlines()
+    )
+
+
 def test_alignment_notebook_preserves_scientific_role_checks_without_asserts():
     """Notebook 02 verifies source roles and explicitly diagnoses empty runs."""
     notebook = json.loads(
