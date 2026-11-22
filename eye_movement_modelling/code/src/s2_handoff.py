@@ -2,7 +2,7 @@
 """Restore current Eye-Movement Modelling stage outputs in Colab.
 
 A user-uploaded stage ZIP is an explicit input selection and takes precedence
-over older, tracked pilot outputs in a freshly cloned repository. This helper
+over existing stage files when an archive is explicitly supplied. This helper
 does not download source data or modify scientific model settings.
 """
 from __future__ import annotations
@@ -76,7 +76,7 @@ def ensure_s2_stage_inputs(
 def verify_main_cohort(
     protocol: dict, split: pd.DataFrame,
 ) -> dict[str, int]:
-    """Reject stale ten-person pilot inputs in a prospective main rerun."""
+    """Verify a compatible participant-disjoint modelling cohort."""
     required = {"participant_id", "record_id", "task", "split"}
     if not required.issubset(split.columns):
         raise ValueError("Source split is missing identity or role columns")
@@ -90,8 +90,7 @@ def verify_main_cohort(
         raise ValueError(
             "Expected the current main cohort from Notebook 01, but found "
             f"{count} participants and purpose={protocol.get('purpose')!r}. "
-            "Run the updated Notebook 01 for your chosen cohort, then "
-            "upload its current stage-01 ZIP to /content/ if needed."
+            "Supply matching stage-01 outputs and the corresponding protocol."
         )
     if "selected_source_ids" in protocol:
         recorded = {f"{int(sid) % 1000:03d}"
