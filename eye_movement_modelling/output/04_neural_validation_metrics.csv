@@ -1,3 +1,3 @@
-model,partition,n_records,n_participants,accuracy,macro_f1,balanced_accuracy
-transformer,validation,8,2,0.5,0.375,0.5
-gru,validation,8,2,0.25,0.1,0.25
+model,partition,n_records,n_participants,accuracy,macro_f1,balanced_accuracy,parameters,best_epoch
+transformer,validation,64,16,0.984375,0.9843597262952102,0.984375,33764,8
+gru,validation,64,16,0.921875,0.920940053643057,0.921875,3780,7
