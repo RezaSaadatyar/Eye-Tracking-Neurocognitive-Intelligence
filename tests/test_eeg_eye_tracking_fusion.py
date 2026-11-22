@@ -254,6 +254,83 @@ def test_nemar_invalid_source_path_does_not_trigger_s3(tmp_path):
     assert not list(tmp_path.rglob("*.part"))
 
 
+
+def test_saved_zuco_source_evidence_reconciles():
+    """Check recorded source IDs, participant roles and acquisition evidence."""
+    output = PROJECT / "output"
+    required = (
+        "01_source_manifest.csv", "01_split_assignments.csv",
+        "01_source_eligibility.csv", "01_download_inventory.csv",
+        "01_acquisition_metadata.csv", "01_protocol.json",
+        "01_source_overview.png",
+    )
+    assert all((output / file).is_file() for file in required)
+    assert not (output / "README.md").exists()
+
+    source = pd.read_csv(
+        output / "01_source_manifest.csv", dtype={"participant_id": str}
+    )
+    roles = pd.read_csv(
+        output / "01_split_assignments.csv", dtype={"participant_id": str}
+    )
+    eligible = pd.read_csv(
+        output / "01_source_eligibility.csv", dtype={"participant_id": str}
+    )
+    inventory = pd.read_csv(output / "01_download_inventory.csv")
+    metadata = pd.read_csv(output / "01_acquisition_metadata.csv")
+    protocol = json.loads((output / "01_protocol.json").read_text())
+
+    participants = source.participant_id.nunique()
+    assert participants == roles.participant_id.nunique()
+    assert participants == protocol["max_participants"]
+    assert len(source) == 2 * participants * protocol["runs_per_task"]
+    assert set(source.task) == {"nr", "tsr"}
+    assert source.groupby("participant_id").task.nunique().eq(2).all()
+    assert source.groupby("participant_id").split.nunique().eq(1).all()
+
+    same_roles = source[["participant_id", "split"]].merge(
+        roles, on="participant_id", validate="many_to_one",
+        suffixes=("_manifest", "_registry"),
+    )
+    assert same_roles.split_manifest.eq(same_roles.split_registry).all()
+    assert int(eligible.eligible.sum()) >= participants
+
+    key = ["participant_id", "task", "run"]
+    for evidence in (inventory, metadata):
+        assert not evidence.duplicated(key).any()
+        assert source[key].merge(
+            evidence[key], on=key, how="left", indicator=True,
+            validate="one_to_one",
+        )["_merge"].eq("both").all()
+
+    assert inventory.all_files_present.all()
+    assert (inventory.source_megabytes > 0).all()
+    assert metadata.eeg_sfreq.gt(0).all()
+    assert metadata.eye_sfreq.gt(0).all()
+    assert metadata.eeg_channels.gt(0).all()
+    assert (output / "01_source_overview.png").stat().st_size > 1000
+
+
+def test_alignment_notebook_preserves_scientific_role_checks_without_asserts():
+    """Notebook 02 verifies source roles and explicitly diagnoses empty runs."""
+    notebook = json.loads(
+        (PROJECT / "code" / "notebooks"
+         / "02_eeg_gaze_alignment_and_quality.ipynb").read_text(
+            encoding="utf-8"
+        )
+    )
+    code = "\n".join(
+        "".join(cell["source"]) for cell in notebook["cells"]
+        if cell["cell_type"] == "code"
+    )
+    assert "split_manifest" in code and "split_registry" in code
+    assert "missing_pairs" in code
+    assert "eligible_windows.eq(0)" in code
+    assert "ensure_disjoint_registry(registry)" in code
+    assert not any(
+        line.strip().startswith("assert ") for line in code.splitlines()
+    )
+
 def test_six_complete_colab_notebooks_and_stage_contracts():
     notebook_dir = PROJECT / "code" / "notebooks"
     paths = sorted(notebook_dir.glob("*.ipynb"))
