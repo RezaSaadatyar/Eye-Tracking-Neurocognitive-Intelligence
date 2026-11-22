@@ -27,3 +27,9 @@ Thumbs.db
 # Before committing output files, run:
 #   python scripts/check_git_file_sizes.py --staged
 # Original/raw and intermediate source datasets remain ignored above.
+
+# Large output files exceeding Git size limit (>50MB)
+eye_tracking_foundations/output/01_gaze_samples.csv
+eye_tracking_foundations/output/02_preprocessed_samples.csv
+eye_tracking_foundations/output/03_sample_labels.csv
+

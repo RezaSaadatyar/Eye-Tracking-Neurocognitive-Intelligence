@@ -1,0 +1,9 @@
+feature,definition,unit
+valid_fraction,Proportion of samples eligible for motion analysis,fraction
+n_fixations_ivt,Number of I-VT fixation events,events
+n_saccades_ivt,Number of I-VT saccade events,events
+mean_fixation_ms,Mean detected fixation duration,ms
+median_fixation_ms,Median detected fixation duration,ms
+mean_saccade_peak_dva_s,Mean peak I-VT saccade speed,dva/s
+scanpath_length_dva,Distance between time-ordered detected fixation centroids,dva
+pupil_median_uncalibrated,Median valid uncalibrated pupil area,arbitrary units

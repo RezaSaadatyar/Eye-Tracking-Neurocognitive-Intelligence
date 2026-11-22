@@ -1,0 +1,2 @@
+dataset,round_id,session_id,task_labels,max_participants,split_seed,window_samples,max_windows_per_record,purpose,test_role,target,temporal_channels
+GazeBase_v2_0,1,1,FXS; HSS; RAN; TEX,10,17,256,24,pilot,pilot_exploratory,task_identity_not_cognition,relative_x_dva; relative_y_dva; delta_x_dva; delta_y_dva

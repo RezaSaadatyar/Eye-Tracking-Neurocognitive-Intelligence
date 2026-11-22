@@ -1,0 +1,4 @@
+record_id,participant_id,task,peak_sample_index,peak_time_ms,peak_velocity_dva_s,previous_val,peak_val,previous_valid_for_motion,peak_valid_for_motion,same_valid_run,delta_t_ms,raw_displacement_dva,smoothed_displacement_dva,reconstructed_velocity_dva_s,window_samples
+S_1007_S1_TEX,007,TEX,55528,55528.0,27819.09846813768,0,0,True,True,True,1.0,27.819098468137675,27.819098468137675,27819.098468137676,121
+S_1002_S1_TEX,002,TEX,25482,25482.0,24946.45636836569,0,0,True,True,True,1.0,25.147234530358123,24.946456368365688,24946.45636836569,121
+S_1001_S1_TEX,001,TEX,33999,33999.0,19286.196359172875,0,0,True,True,True,1.0,19.315149055120777,19.286196359172873,19286.196359172875,121

@@ -1,0 +1,4 @@
+method,event_type,n_events
+IDT,fixation,5409
+IVT,fixation,7015
+IVT,saccade,9304

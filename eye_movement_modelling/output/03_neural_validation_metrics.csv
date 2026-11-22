@@ -1,0 +1,3 @@
+model,partition,n_records,n_participants,accuracy,macro_f1,balanced_accuracy,parameters,best_epoch
+cnn,validation,8,2,1.0,1.0,1.0,11492,8
+tcn,validation,8,2,1.0,1.0,1.0,12772,5
