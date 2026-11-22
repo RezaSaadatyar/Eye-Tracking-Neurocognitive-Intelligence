@@ -1,9 +1,9 @@
 model,partition,n_records,n_participants,accuracy,macro_f1,balanced_accuracy,selected_primary,study_purpose
-class_prior,test,8,2,0.25,0.1,0.25,False,pilot
-cnn,test,8,2,0.75,0.7333333333333334,0.75,False,pilot
-gradient_boosting,test,8,2,0.875,0.8666666666666667,0.875,False,pilot
-gru,test,8,2,0.25,0.1,0.25,False,pilot
-logistic_regression,test,8,2,0.875,0.8666666666666667,0.875,True,pilot
-random_forest,test,8,2,0.875,0.8666666666666667,0.875,False,pilot
-tcn,test,8,2,0.75,0.7416666666666667,0.75,False,pilot
-transformer,test,8,2,0.5,0.3333333333333333,0.5,False,pilot
+class_prior,test,80,20,0.25,0.1,0.25,False,main
+cnn,test,80,20,0.95,0.9501694755672724,0.95,False,main
+gradient_boosting,test,80,20,0.9875,0.9874921826141339,0.9875,False,main
+gru,test,80,20,0.8625,0.8649050836550837,0.8625,False,main
+logistic_regression,test,80,20,1.0,1.0,1.0,True,main
+random_forest,test,80,20,1.0,1.0,1.0,False,main
+tcn,test,80,20,0.8375,0.8238284703801946,0.8375,False,main
+transformer,test,80,20,0.925,0.924951174951175,0.925,False,main
