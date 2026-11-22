@@ -125,6 +125,91 @@ def discover_cohort(max_participants: int = 6,
     return pd.DataFrame(selected), pd.DataFrame(eligibility)
 
 
+
+# ============ 04. Pilot-Preserving Expanded Cohort Allocation ================
+# These were assigned in the executed six-person development experiment.
+# Preserve their roles when expanding the cohort: previously inspected
+# Validation participants must never be relabelled as fresh Test people.
+PILOT_ROLE_LOCK = {
+    "sub-YAC": "test",
+    "sub-YAG": "test",
+    "sub-YAK": "train",
+    "sub-YDG": "train",
+    "sub-YDR": "validation",
+    "sub-YFR": "train",
+}
+
+
+def expanded_cohort_roles(selected_ids, eligible_ids, *,
+                          seed: int = 17, test_fraction: float = 0.2,
+                          validation_fraction: float = 0.2) -> pd.DataFrame:
+    """Freeze pilot roles and allocate additional people once per source pool.
+
+    Assign all eligible *additional* people before limiting the selected cohort,
+    so increasing or decreasing MAX_PARTICIPANTS does not change anyone's
+    earlier allocation. The source eligibility pool must have complete paired
+    files at the selected run depth and remain fixed within a dataset release.
+    The mapping is deterministic but is not stratification by a measured
+    participant outcome or a claim of stimulus balance.
+    """
+    selected = sorted(set(map(str, selected_ids)))
+    eligible = sorted(set(map(str, eligible_ids)))
+    locked = set(PILOT_ROLE_LOCK)
+    if not locked.issubset(selected):
+        missing = sorted(locked.difference(selected))
+        raise ValueError(
+            "The expanded workflow needs all six previously assessed pilot "
+            f"participants; missing: {missing}. Select at least six people "
+            "in the original source order.")
+    if not set(selected).issubset(eligible):
+        raise ValueError("Selected people are not in the eligible source pool")
+    if len(eligible) < len(selected):
+        raise ValueError("More selected participants than eligible people")
+    if not (0 < test_fraction < 1 and 0 < validation_fraction < 1):
+        raise ValueError("Split fractions must be between zero and one")
+
+    n_test = max(1, int(np.ceil(test_fraction * len(eligible))))
+    n_validation = max(
+        1, int(np.ceil(validation_fraction * (len(eligible) - n_test))))
+    planned_counts = {
+        "train": len(eligible) - n_test - n_validation,
+        "validation": n_validation, "test": n_test,
+    }
+    locked_counts = {
+        role: list(PILOT_ROLE_LOCK.values()).count(role)
+        for role in planned_counts
+    }
+    if any(planned_counts[role] < locked_counts[role]
+           for role in planned_counts):
+        raise ValueError(
+            "Eligible cohort too small for pilot-preserving roles under "
+            "the specified split fractions")
+
+    additional = sorted(set(eligible).difference(locked))
+    shuffled = list(np.random.default_rng(seed).permutation(additional))
+    n_new_test = planned_counts["test"] - locked_counts["test"]
+    n_new_validation = (
+        planned_counts["validation"] - locked_counts["validation"])
+    planned = dict(PILOT_ROLE_LOCK)
+    planned.update({name: "test" for name in shuffled[:n_new_test]})
+    planned.update({
+        name: "validation"
+        for name in shuffled[n_new_test:n_new_test+n_new_validation]
+    })
+    planned.update({
+        name: "train"
+        for name in shuffled[n_new_test+n_new_validation:]
+    })
+    if set(planned) != set(eligible):
+        raise ValueError("Expanded roles do not cover the eligible pool")
+    roles = pd.DataFrame({
+        "participant_id": selected,
+        "split": [planned[name] for name in selected],
+    })
+    if roles.split.nunique() != 3:
+        raise ValueError("Train, Validation and Test must all be present")
+    return roles
+
 def split_people(ids, seed: int = 17, test_fraction: float = 0.2,
                  validation_fraction: float = 0.2) -> pd.DataFrame:
     """Disjoint person-level roles; never include subject ID as a feature."""
