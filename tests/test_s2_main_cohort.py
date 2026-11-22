@@ -262,8 +262,56 @@ def test_stage02_requires_current_validation_before_its_final_zip():
     assert "set(saved.record_id) != expected_ids" in code
     assert "expected_labels.sort_index()" in code
     assert "download_outputs_from_colab" in code
-    assert all(c["execution_count"] is None and not c["outputs"]
+    assert any(c["execution_count"] is not None and c["outputs"]
                for c in cells if c["cell_type"] == "code")
+
+
+def test_stage02_main_predictions_match_current_source_registry():
+    """Cross-check current Validation records and metrics without refitting."""
+    from s2_metrics import metric_row
+
+    folder = ROOT / "eye_movement_modelling" / "output"
+    split = pd.read_csv(
+        folder / "01_split_assignments.csv",
+        dtype={"record_id": str, "participant_id": str},
+    )
+    expected = split.loc[
+        split.split.eq("validation"), ["record_id", "participant_id", "task"],
+    ].set_index("record_id").sort_index()
+    assert not expected.index.has_duplicates
+    mapping = {label: idx for idx, label in enumerate(TASKS)}
+    labels = expected.task.map(mapping)
+    metrics = pd.read_csv(folder / "02_validation_metrics.csv")
+    names = ("class_prior", "logistic_regression",
+             "random_forest", "gradient_boosting")
+    assert set(metrics.model) == set(names)
+    for name in names:
+        pred = pd.read_csv(
+            folder / f"02_{name}_validation_predictions.csv",
+            dtype={"record_id": str, "participant_id": str},
+        )
+        assert not pred.record_id.duplicated().any()
+        assert set(pred.record_id) == set(expected.index)
+        pred = pred.set_index("record_id").sort_index()
+        assert pred.target_index.eq(labels).all()
+        assert pred.participant_id.eq(expected.participant_id).all()
+        assert pred.model.eq(name).all()
+        assert pred.partition.eq("validation").all()
+        p = pred[[f"p_{label}" for label in TASKS]]
+        assert p.notna().all().all()
+        assert ((p.sum(axis=1) - 1).abs() < 1e-6).all()
+        assert (p.to_numpy().argmax(axis=1)
+                == pred.pred_index.to_numpy()).all()
+        calculated = metric_row(
+            pred.target_index, pred.pred_index,
+            model=name, partition="validation",
+            n_participants=expected.participant_id.nunique(),
+        )
+        row = metrics.loc[metrics.model.eq(name)].iloc[0]
+        for metric in ("accuracy", "macro_f1", "balanced_accuracy"):
+            assert abs(calculated[metric] - float(row[metric])) < 1e-9
+        assert int(row.n_records) == len(expected)
+        assert int(row.n_participants) == expected.participant_id.nunique()
 
 
 def test_stage01_saved_source_tables_agree_with_current_protocol():
