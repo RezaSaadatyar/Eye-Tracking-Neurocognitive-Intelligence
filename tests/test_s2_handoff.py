@@ -232,7 +232,7 @@ def test_stage03_svg_workflow_matches_stage02_reference():
         rect = next(x for x in node if x.tag.endswith("rect"))
         assert rect.get("fill") == "#F7FAFD"
         assert rect.get("stroke") == "#B8CFDE"
-        assert len([x for x in node if x.get("class") == "nodedesc"]) == 3
+        assert len([x for x in node if x.get("class") == "workflow-body"]) == 3
     fig = ET.parse(folder / "03_cnn_and_tcn_models.svg")
     text = " ".join((x.text or "") for x in fig.iter())
     assert "Best checkpoint: epoch 7" in text
@@ -340,7 +340,7 @@ def test_stage04_figure_preserves_measured_source_and_card_geometry():
         assert rect.get("fill") == "#F7FAFD"
         assert rect.get("stroke") == "#B8CFDE"
         assert len([
-            c for c in node if c.get("class") == "nodedesc"
+            c for c in node if c.get("class") == "workflow-body"
         ]) == 3
     root = ET.parse(folder / "04_gru_and_transformer_models.svg").getroot()
     figure_words = " ".join((c.text or "") for c in root.iter())

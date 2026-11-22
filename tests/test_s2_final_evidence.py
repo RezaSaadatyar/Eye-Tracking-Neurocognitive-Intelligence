@@ -204,7 +204,7 @@ def test_final_figure_matches_source_and_workflow_reference():
         assert rect.attrib["stroke"] == "#B8CFDE"
         assert len([
             child for child in node
-            if child.attrib.get("class") == "nodedesc"
+            if child.attrib.get("class") == "workflow-body"
         ]) == 3
     root = ET.parse(FIGURES / "05_robustness_and_final_evaluation.svg")
     words = " ".join(element.text or "" for element in root.iter())
@@ -212,3 +212,75 @@ def test_final_figure_matches_source_and_workflow_reference():
     assert "Test Macro F1: 1.000" in words
     assert "20 Test people" in words
     assert "remain unobserved" not in words
+
+
+def test_modelling_figures_use_master_v1_typographic_roles():
+    """All six editable SVGs retain the exact role-based type specification."""
+    import xml.etree.ElementTree as ET
+
+    figures = (
+        "study_overview.svg",
+        "01_data_and_experimental_protocol.svg",
+        "02_statistical_and_classical_ml.svg",
+        "03_cnn_and_tcn_models.svg",
+        "04_gru_and_transformer_models.svg",
+        "05_robustness_and_final_evaluation.svg",
+    )
+    roles = {
+        "figure-title": ("23", "700", "#173453"),
+        "subtitle": ("15", "400", "#54738A"),
+        "source-heading": ("11.5", "700", "#53738A"),
+        "source-label": ("13", "400", "#173453"),
+        "context-heading": ("15", "700", "#173453"),
+        "context-body": ("13.5", "400", "#506C7E"),
+        "section-label": ("13.2", "700", "#FFFFFF"),
+        "focus-heading": ("16.5", "700", "#173453"),
+        "focus-body": ("13.1", "400", "#506C7E"),
+        "qualification": ("11.5", "700", "#506C7E"),
+        "card-heading": ("13.5", "700", "#FFFFFF"),
+        "card-body": ("12.1", "400", "#506C7E"),
+        "chart-label": ("11.8", "400", "#506C7E"),
+        "scientific-note": ("12.1", "700", "#173453"),
+        "workflow-id": ("12.5", "700", "#506C7E"),
+        "workflow-heading": ("15", "700", "#173453"),
+        "workflow-body": ("12.1", "400", "#506C7E"),
+        "terminal-id": ("12.5", "700", "#DBF2EF"),
+        "terminal-heading": ("15", "700", "#FFFFFF"),
+        "terminal-body": ("12.1", "400", "#DBF2EF"),
+        "footer": ("13.3", "400", "#54738A"),
+    }
+    for filename in figures:
+        root = ET.parse(FIGURES / filename).getroot()
+        assert root.attrib["viewBox"] == "0 0 1700 816"
+        assert root.attrib["width"] == "1700"
+        assert root.attrib["height"] == "816"
+        elements = list(root.iter())
+        style = next(
+            e.text for e in elements if e.tag.endswith("style")
+        )
+        assert "DejaVu Sans, Arial, sans-serif" in style
+        for name, (size, weight, colour) in roles.items():
+            selector = "." + name + " {"
+            assert selector in style, (filename, selector)
+            rule = style.split(selector, 1)[1].split("}", 1)[0]
+            assert f"font-size:{size}px" in rule, (filename, name)
+            assert f"fill:{colour}" in rule, (filename, name)
+            if weight == "700":
+                assert "font-weight:700" in rule, (filename, name)
+            else:
+                assert "font-weight:700" not in rule, (filename, name)
+
+        texts = [e for e in elements if e.tag.endswith("text")]
+        assert len(texts) >= 80
+        assert all(e.attrib.get("class") in roles for e in texts)
+        assert not any("style" in e.attrib for e in texts)
+        note = next(e for e in elements if e.attrib.get("id") == "scientific-note")
+        assert [
+            child.attrib.get("class") for child in note if child.tag.endswith("text")
+        ] == ["scientific-note"]
+        for node_id in ("node-0", "node-6"):
+            node = next(e for e in elements if e.attrib.get("id") == node_id)
+            node_text = [child for child in node if child.tag.endswith("text")]
+            assert [e.attrib.get("class") for e in node_text] == [
+                "terminal-id", "terminal-heading", "terminal-body"
+            ]
