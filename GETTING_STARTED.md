@@ -41,44 +41,61 @@ Inspect the recorded 40-record preprocessing summary and the `02_velocity_extrem
 
 ## Git output and file-size protection
 
-Generated Notebook CSV, PNG and ZIP files under `eye_tracking_foundations/output/`
-are ignored by default, regardless of size. The separate Git blob check blocks
-files larger than **50,000,000 bytes (50 MB)** unless the owner deliberately
-adds the exact path to `.git-large-file-allowlist`. Enable the repository's
-local pre-commit/pre-push hooks once with:
+Reviewed derived outputs under `eye_tracking_foundations/output/` and
+`eye_movement_modelling/output/` may now be staged in Git when appropriate.
+The `.gitignore` file cannot filter by file size; a separate policy checks
+Git blobs and blocks files above **50,000,000 bytes (50 decimal MB)** unless
+explicitly approved. Certain known large S1 sample CSVs remain ignored by
+their exact filenames. Raw/processed source data also remain ignored.
+
+Before publishing selected results:
+
+```bash
+git add eye_movement_modelling/output/
+python scripts/check_git_file_sizes.py --staged
+```
+
+Unstage oversized or unsuitable files using `git restore --staged <path>`.
+The separately maintained local hooks can be enabled with:
 
 ```bash
 git config core.hooksPath .githooks
 ```
 
-The GitHub Actions size check also reports oversized tracked files, but an
-unprotected remote branch may still accept a push before that check runs.
-To publish a reviewed output smaller than 50 MB, explicitly use `git add -f`
-for that specific ignored file. Do not force-add the whole `output/` directory.
-
+GitHub Actions runs the file-size policy as well, but an unprotected
+branch may accept a push before CI reports a problem. Do not commit
+unauthorised source records, private data or unnecessarily large archives.
 
 ## Eye-Movement Modelling & Advanced AI
 
-The [Eye-Movement Modelling README](eye_movement_modelling/README.md) describes five implemented notebooks for GazeBase four-task classification;
-Notebooks 01 and 02 have recorded ten-person pilot execution; 03–05 remain unexecuted. Start with
-[Notebook 01](eye_movement_modelling/code/notebooks/01_data_and_experimental_protocol.ipynb).
-The standard checkout and `setup_colab("eye_movement_modelling")` pattern is
-shared with the Eye-Tracking Foundations project. Eye-Movement Modelling reads the **original shared** GazeBase
-CSV files but does not import derived output tables from Eye-Tracking Foundations.
+The [Eye-Movement Modelling README](eye_movement_modelling/README.md) and
+[methods/evidence document](eye_movement_modelling/RESEARCH_METHODS_AND_EVIDENCE.md)
+describe five executed GazeBase task-classification notebooks. The recorded
+**ten-person pilot** comprises source preparation (01), classical Validation
+(02), CNN/TCN Validation (03), GRU/Transformer Validation (04) and
+Validation-based selection with exploratory participant-disjoint Test (05).
+Logistic Regression was selected from Validation and correctly classified
+**7/8 Test recordings from two people**; Test Macro F1 was **0.867**.
+The target is the original FXS/HSS/RAN/TEX recording protocol, not a
+neurocognitive or clinical label.
 
-Leave `MAX_PARTICIPANTS = 10` for the initial exploratory pilot. After checking
-source availability and deciding the intended main cohort before Test exposure,
-select 20 or 30; extra complete GazeBase original CSVs must exist first. Rerun
-**all five** notebooks in source order after changing the cohort. Never reuse
-incompatible previous-stage output files or fitted model weights.
+The original GazeBase Round 1 / Session 1 data are shared as read-only
+source inputs, but Eye-Movement Modelling creates its own representations,
+partitions and saved outputs. Do not import processed Eye-Tracking Foundations
+features as model inputs. The completed pilot has **10 modelled people**;
+the source-acquisition check separately audited **20 people**. A
+**100-person main experiment is a proposal only**, not a completed result.
 
-Each Notebook `NN` saves current files under
-`eye_movement_modelling/output/` and packages
-`eye_movement_modelling_Notebook_NN_Outputs.zip` for optional manual transfer.
-Use the existing `ensure_stage_inputs` helper if switching Colab sessions.
-Classical-model Validation results have been recorded in Notebook 02; neural-model and Test results remain pending.
+Stage `NN` outputs are saved under `eye_movement_modelling/output/` and
+can be packaged as
+`/content/eye_movement_modelling_Notebook_NN_Outputs.zip`. In a new Colab
+Runtime, place matching upstream ZIPs in `/content/` so
+`ensure_stage_inputs` can restore required files. Use one compatible
+cohort/split/model run; do not mix pilot files with a changed main protocol.
 
-For classical and neural modelling, install the maintained root
-[`requirements.txt`](requirements.txt), including scikit-learn, torch and
-joblib. The generated weights and source-level probability tables are
-Git-ignored by default; the repository's 50-MB Git size guard also applies.
+**Next research stage:** First fix the prospective cohort selection,
+person-disjoint Train/Validation/Test design, principal metrics and
+robustness checks (including source artefacts and task-stimulus confounding).
+Then acquire the required original data and rerun producer and consumer
+stages in order. The two-person pilot Test is already observed and must
+not be described as untouched for further adaptive work.

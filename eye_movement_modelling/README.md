@@ -2,9 +2,9 @@
 
 ![Eye-Movement Modelling gaze-task modelling workflow, source provenance, model families and reserved evaluation](images/study_overview.svg)
 
-*Figure 1. Scientific programme for independent source preparation and classical/temporal modelling. The ten-person GazeBase pilot now has recorded source preparation (Notebook 01), four classical Validation comparisons (Notebook 02), and CNN/TCN Validation results (Notebook 03); GRU and Transformer Validation is also recorded (Notebook 04); held-out Test results remain pending. The small measured source excerpt is taken from an original GazeBase CSV, while conceptual model/workflow elements are schematic.*
+*Figure 1. Scientific programme for independent source preparation and classical/temporal modelling. The ten-person GazeBase pilot now has recorded source preparation (Notebook 01), four classical Validation comparisons (Notebook 02), and CNN/TCN Validation results (Notebook 03); GRU and Transformer Validation is also recorded (Notebook 04); the pilot Test has also been executed (Notebook 05). The small measured source excerpt is taken from an original GazeBase CSV, while conceptual model/workflow elements are schematic.*
 
-**Aim:** Compare record-level engineered gaze features and four compact temporal neural architectures for the **four-class GazeBase recording-protocol target** (FXS, HSS, RAN, TEX). **Notebooks 01–04 have recorded pilot execution**; the held-out pilot Test in Notebook 05 remains pending. Neither reading comprehension nor clinical/neurocognitive status is predicted.
+**Aim:** Compare record-level engineered gaze features and four compact temporal neural architectures for the **four-class GazeBase recording-protocol target** (FXS, HSS, RAN, TEX). **All five notebooks (01–05) have recorded ten-person pilot execution**, including Validation-based model selection, participant-disjoint pilot Test and descriptive robustness. The proposed 100-person main study has not been executed. Neither reading comprehension nor clinical/neurocognitive status is predicted.
 
 **Independence:** Reuse the already available **original GazeBase Round 1 / Session 1 CSV files**, but create all Eye-Movement Modelling splits, features, temporal windows, models and outputs independently in `eye_movement_modelling/output/`. No processed Eye-Tracking Foundations result is mixed into the new modelling cohort.
 
@@ -15,7 +15,7 @@ The executed modelling run remains a **ten-person pilot**, although source acqui
 | Item | Implemented definition and boundary |
 | --- | --- |
 | Dataset | [GazeBase v2.0](https://doi.org/10.6084/m9.figshare.12912257), Round **1**, Session **1**, source CSVs from [`data/raw/gazebase/`](../data/README.md) |
-| Recorded pilot scope | GazeBase Round 1 / Session 1: **10 participants, 40 source recordings, 40 record feature rows and 960 temporal windows**. Notebook 02 fitted four classical candidates on 24 Train records and evaluated 8 Validation records from 2 independent people; no Test model scores have been observed |
+| Recorded pilot scope | GazeBase Round 1 / Session 1: **10 participants, 40 source recordings, 40 record feature rows and 960 temporal windows**. Notebook 02 fitted four classical candidates on 24 Train records and evaluated 8 Validation records from 2 independent people; the pilot Test was then observed on 8 recordings from 2 independent people in Notebook 05 |
 | Prospective extended scope | A 100-person study is proposed, not implemented. The original source audit covers 20 people; the currently evaluated modelling cohort contains 10 |
 | Prediction target | Recording protocol: **FXS**, **HSS**, **RAN**, **TEX**. Four known classes; **not cognitive diagnosis** |
 | Predictors: classical | Recording validity, x/y dispersion, step displacement, velocity quantiles, positive pupil coverage/summary where available |
@@ -32,7 +32,7 @@ The executed modelling run remains a **ten-person pilot**, although source acqui
 
 ## 2. Experimental Programme
 
-These five notebooks form one task-recognition experiment. **Notebooks 01–04 have recorded original-data outputs.** Notebook 05 is implemented but has not yet run on the held-out pilot Test.
+These five notebooks form one task-recognition experiment. **All five notebooks have recorded original-data pilot outputs.** The Test was opened only for the ten-person pilot; no 100-person main experiment has been conducted.
 
 | Notebook | Main experiment and visible model-level evidence | Owned current output files |
 | --- | --- | --- |
@@ -40,9 +40,9 @@ These five notebooks form one task-recognition experiment. **Notebooks 01–04 h
 | [02 — Statistical and Classical ML](code/notebooks/02_statistical_and_classical_ml.ipynb) | Separate sections for class prior, Logistic Regression, Random Forest and Gradient Boosting; each with Validation confusion matrix | `02_validation_metrics.csv`, four fitted `02_*.joblib` files, independent predictions/plots, comparison |
 | [03 — CNN and TCN](code/notebooks/03_cnn_and_tcn_models.ipynb) | CNN and TCN trained and evaluated on the same eight Validation recordings from two participants; both 8/8 correct, with epochs and parameter counts recorded | `03_cnn.pt`, `03_tcn.pt`, histories/predictions/plots, `03_neural_validation_metrics.csv` |
 | [04 — GRU and Transformer](code/notebooks/04_gru_and_transformer_models.ipynb) | Recorded GRU (2/8 correct) and Transformer (4/8 correct) Validation, with checkpoints, histories and confusion matrices | `04_gru.pt`, `04_transformer.pt`, histories/predictions/plots, `04_neural_validation_metrics.csv` |
-| [05 — Robustness and Final Evaluation](code/notebooks/05_robustness_and_final_evaluation.ipynb) | Validation-selected model, frozen Test evaluation, individual-person errors, Validation-only input perturbation and comparisons | `05_model_selection.csv`, `05_test_predictions.csv`, `05_test_metrics.csv`, `05_groupwise_test_metrics.csv`, `05_robustness_validation.csv`, comparison plots |
+| [05 — Robustness and Final Evaluation](code/notebooks/05_robustness_and_final_evaluation.ipynb) | Executed Validation-selected Logistic Regression; 7/8 pilot Test correct, Macro F1 0.867; person-level errors and unchanged Validation F1 after pupil masking | `05_model_selection.csv`, `05_test_predictions.csv`, `05_test_metrics.csv`, `05_groupwise_test_metrics.csv`, `05_robustness_validation.csv`, comparison plots |
 
-A separate editable figure accompanies each notebook in [`images/`](images/), matching the approved five-band project style. The [overall diagram](images/study_overview.svg) distinguishes executed preparation and Validation results for all eight candidates from the pending held-out Test. The notebooks display separate scientific results for every candidate, rather than combining all neural models into one cell.
+A separate editable figure accompanies each notebook in [`images/`](images/), matching the approved five-band project style. The [overall diagram](images/study_overview.svg) distinguishes executed preparation and Validation results for all eight candidates from the now-recorded exploratory pilot Test; the proposed main experiment remains pending. The notebooks display separate scientific results for every candidate, rather than combining all neural models into one cell.
 
 ## 3. Main Results
 
@@ -50,9 +50,24 @@ A separate editable figure accompanies each notebook in [`images/`](images/), ma
 
 **Recorded Notebook 03 Validation:** CNN and TCN both classified 8/8 Validation recordings correctly (Accuracy, Macro F1 and Balanced Accuracy all **1.00**). CNN selected epoch 8 with **11,492 trainable parameters**; TCN selected epoch 5 with **12,772**. This is observed notebook evidence from only two independent Validation participants, not an independent reproduction or estimate of population accuracy. Synthetic tests check source identity, grouped splits, train-only normalisation, record-level aggregation and file contracts; they do not establish generalisation.
 
-The recorded Notebook 01 and 02 outputs establish the pilot data contract and classical Validation evidence. Notebook 02 saves four fitted models, predictions, confusion matrices and a comparative table, but **not a final model choice**. Inspect high source step speeds and the small-sample/stimulus confounding before interpreting perfect Validation scores. GRU and Transformer are recorded as executed in Notebook 04; the frozen Test in Notebook 05 remains unevaluated.
+Notebooks 01–04 established the pilot data contract and eight Validation candidates; Notebook 05 applied the predefined Validation ranking, froze the primary choice and recorded pilot Test metrics. Inspect source step-speed artefacts and stimulus/task confounding before interpreting apparently high scores. The 10-person experiment is a functional pilot, not a new population-level model validation.
 
-**Recorded Notebook 04 Validation:** GRU selected epoch **1** (3,780 trainable parameters) and classified **2/8** records correctly, predicting TEX for all eight (Accuracy 0.25; Macro F1 0.10; Balanced Accuracy 0.25). Transformer selected epoch **2** (33,764 parameters) and correctly classified **4/8**, recognising both HSS and both RAN records but missing FXS and TEX (Accuracy 0.50; Macro F1 0.375; Balanced Accuracy 0.50). The two models used the **same two Validation people** as the other six candidates. These are exploratory pilot observations, not reliable population-level rankings. Final model selection remains a separate, pre-Test operation in Notebook 05.
+**Recorded Notebook 04 Validation:** GRU selected epoch **1** (3,780 trainable parameters) and classified **2/8** records correctly, predicting TEX for all eight (Accuracy 0.25; Macro F1 0.10; Balanced Accuracy 0.25). Transformer selected epoch **2** (33,764 parameters) and correctly classified **4/8**, recognising both HSS and both RAN records but missing FXS and TEX (Accuracy 0.50; Macro F1 0.375; Balanced Accuracy 0.50). The two models used the **same two Validation people** as the other six candidates. These are exploratory pilot observations, not reliable population-level rankings. Notebook 05 subsequently applied the fixed Validation-based selection rule and evaluated the pilot Test.
+
+**Recorded Notebook 05 pilot Test:** Logistic Regression was selected using **Validation Macro F1, Balanced Accuracy and fixed candidate priority**, before the notebook's Test-scoring section. Among five candidates with Validation Macro F1 **1.00**, its prespecified tie-priority made it the primary model. On the **eight Test records belonging to participants 001 and 005**, it achieved **Accuracy 0.875, Macro F1 0.867 and Balanced Accuracy 0.875** (7/8 correct). Its only error was `S_1005_S1_FXS` predicted as TEX. Participant 001 had 4/4 correct; participant 005 had 3/4 correct.
+
+| Candidate | Validation Macro F1 | Pilot Test accuracy | Pilot Test Macro F1 |
+| --- | ---: | ---: | ---: |
+| Class Prior | 0.100 | 0.250 | 0.100 |
+| **Logistic Regression (selected)** | **1.000** | **0.875** | **0.867** |
+| Random Forest | 1.000 | 0.875 | 0.867 |
+| Gradient Boosting | 1.000 | 0.875 | 0.867 |
+| CNN | 1.000 | 0.750 | 0.733 |
+| TCN | 1.000 | 0.750 | 0.742 |
+| GRU | 0.100 | 0.250 | 0.100 |
+| Transformer | 0.375 | 0.500 | 0.333 |
+
+All model comparisons in the Test column are **secondary descriptions**. The selected model's **Validation-only pupil-feature masking** left Macro F1 unchanged (**1.00 to 1.00**, eight records); this is not proof of feature irrelevance or causal explainability. Only **two independent people** contributed to each split's Validation or Test, so scores cannot support stable inference or claims of generalisation. The current pilot Test has been examined and **must not be reused as untouched Test evidence** when adapting the experiment.
 
 ## 4. Running and Reviewing the Study
 
@@ -133,7 +148,7 @@ A per-study output directory prevents overwriting Eye-Tracking Foundations's `ey
 
 ## 6. Interpretation and Scope
 
-**Partially executed pilot.** All eight candidates have recorded Validation results; final Validation-based model selection and the participant-disjoint held-out Test in Notebook 05 remain outstanding. The Test has only two people in this pilot. High task-recognition performance is not evidence of cognitive understanding or generalisation to new participants, sessions, stimuli or hardware.
+**Completed ten-person pilot pipeline.** All five notebooks have recorded execution, with Validation-based primary selection and an exploratory held-out Test. This closes the pilot execution sequence, **not the proposed 100-person study or repository-wide research programme**. The observed Test contains only two people. High task-recognition performance is not evidence of cognitive understanding or generalisation to new participants, sessions, stimuli or hardware.
 
 The following remain limitations even after a successful run: task identity is confounded with stimulus protocol; Test participant counts are very small in the pilot; the first complete source IDs are not a representative sample; gaze speeds and pupil fields may reflect measurement artefacts; and a model's Validation/held-out Test score does **not** establish neural, clinical or cognitive diagnosis.
 

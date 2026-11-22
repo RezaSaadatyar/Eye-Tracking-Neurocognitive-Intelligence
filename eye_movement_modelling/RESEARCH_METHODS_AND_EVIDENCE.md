@@ -1,6 +1,6 @@
 # Eye-Movement Modelling & Advanced AI | Research Methods and Evidence
 
-**Project:** Eye-Movement Modelling & Advanced AI within Eye-Tracking & Neurocognitive Intelligence. **Target:** four-class GazeBase recording-protocol identity. **Evidence:** Notebooks 01–04 record source preparation and Validation results for four classical and four temporal candidates in a ten-person pilot; final Validation-based selection and Test evaluation remain pending. See [README](README.md) and the [editable workflow](images/study_overview.svg).
+**Project:** Eye-Movement Modelling & Advanced AI within Eye-Tracking & Neurocognitive Intelligence. **Target:** four-class GazeBase recording-protocol identity. **Evidence:** Notebooks 01–05 have recorded complete source-to-Test execution of a ten-person task-classification pilot, including the Validation-selected primary model, person-disjoint Test and one Validation-only perturbation. The proposed 100-person main experiment remains unexecuted. See [README](README.md) and the [editable workflow](images/study_overview.svg).
 
 ## 1. Research Objective and Scope
 
@@ -100,19 +100,19 @@ Train-only median imputation is part of each classical scikit-learn Pipeline, wi
 
 ### 4.1 Train, Validation and Test roles
 
-Train participants fit model parameters, imputer/scaler values and temporal normalisation. Validation participants inform early stopping and the final **pre-Test** model selection. Test participants are opened **only in Notebook 05**, when models have been trained, candidates compared on Validation and the selected model saved.
+Train participants fit model parameters, imputer/scaler values and temporal normalisation. Validation participants inform early stopping and the final **pre-Test** model selection. Pilot Test participants were opened in **Notebook 05** after the code's Validation-based selection stage, with trained candidates and their fixed checkpoint files loaded. This is an observed pilot Test, not a still-unseen cohort.
 
 Evaluation is **record-based**: a classical model produces one prediction per source recording; a neural model produces probabilities for each window, which are then averaged by original recording before classification. Every model is compared on the same recording set in the relevant split.
 
 ### 4.2 Primary metrics and selection
 
-Report fixed-label **Macro F1**, **Balanced Accuracy**, Accuracy, confusion matrices and, where available, performance by independent person. Validation selection sorts by Macro F1, then Balanced Accuracy, then the prespecified order: class prior, Logistic Regression, Random Forest, Gradient Boosting, CNN, TCN, GRU and Transformer. The selected primary model must be identified **before** reading any Test results.
+Report fixed-label **Macro F1**, **Balanced Accuracy**, Accuracy, confusion matrices and, where available, performance by independent person. Validation selection sorts by Macro F1, then Balanced Accuracy, then the prespecified order: class prior, Logistic Regression, Random Forest, Gradient Boosting, CNN, TCN, GRU and Transformer. The code identifies the primary model **before its Test-scoring cell**. This order and selection flag are documented in the saved notebook; external chronological verification or formal preregistration has not been established.
 
 All-class Test comparison is secondary and exploratory; a model with the best observed Test score does not retrospectively replace the Validation-selected primary candidate. Report sample size and participant support near every Test metric.
 
 ### 4.3 Pilot versus main evaluation
 
-At n=10, two Test people cannot provide a reliable population accuracy estimate or robust model-ranking inference. Treat all scores as **developmental pilot diagnostics**. The proposed 100-person study needs its own frozen source cohort, participant-group evaluation and stimulus-confounding review; no main Test has been executed.
+At n=10, two Test people cannot provide a reliable population accuracy estimate or robust model-ranking inference. Treat all scores as **developmental pilot diagnostics**. The proposed 100-person study needs its own frozen source cohort, participant-group evaluation and stimulus-confounding review; the ten-person pilot Test has been examined, but **no main 100-person Test has been executed**.
 
 ## 5. Methods, Models and Configurations
 
@@ -130,7 +130,7 @@ At n=10, two Test people cannot provide a reliable population accuracy estimate 
 | 03–04 | Neural training and epoch selection | AdamW lr 0.001, weight decay 0.01, batch 64, up to eight epochs, early stopping patience 3, seed 17 |
 | 05 | Final comparison and descriptive robustness | Frozen models; Validation-based choice; one Test evaluation; feature-channel intervention on Validation |
 
-Models are intentionally small; that does **not** guarantee an observed Colab runtime, numerical stability or fair compute cost across architectures. Each neural model independently saves its state dictionary, learning curve, record-level Validation predictions and confusion plot. Parameter counts and selected epochs are recorded for CNN, TCN, GRU and Transformer; the held-out Test remains pending.
+Models are intentionally small; that does **not** guarantee an observed Colab runtime, numerical stability or fair compute cost across architectures. Each neural model independently saves its state dictionary, learning curve, record-level Validation predictions and confusion plot. Parameter counts and selected epochs are recorded for CNN, TCN, GRU and Transformer; the exploratory pilot Test has now been recorded.
 
 ## 6. Results and Comparative Analysis
 
@@ -138,15 +138,32 @@ Models are intentionally small; that does **not** guarantee an observed Colab ru
 
 **Recorded Notebook 02 Validation:** Four fixed classical candidates fitted to 24 Train records (6 people) and evaluated on **the same eight Validation records (2 independent people)**. The class-prior baseline scored Accuracy **0.25**, fixed-label Macro F1 **0.10**, Balanced Accuracy **0.25**. Logistic Regression, Random Forest and Gradient Boosting each scored **1.00** on all three metrics, correctly classifying 2/2 recordings in each of FXS/HSS/RAN/TEX. These are observed *notebook output values*, not independently recomputed from downloadable raw predictions in this review.
 
-**Interpretation and limits:** The class-prior model predicted FXS for all 8 Validation records (2 correct). The three feature-based models have tied perfect pilot Validation scores, but there are only **two independent Validation people**. Acquisition protocol and stimulus differences may dominate discrimination. These scores do not establish unbiased selected-model performance, generalisation, causal gaze mechanisms or cognitive inference. Notebook 05 has not yet made the predefined selection or opened the pilot Test.
+**Interpretation and limits:** The class-prior model predicted FXS for all 8 Validation records (2 correct). The three feature-based models have tied perfect pilot Validation scores, but there are only **two independent Validation people**. Acquisition protocol and stimulus differences may dominate discrimination. These scores do not establish unbiased selected-model performance, generalisation, causal gaze mechanisms or cognitive inference. Notebook 05 has now applied the predefined selection and opened the two-person pilot Test; this does not support an unbiased estimate of broad model superiority.
 
 **Recorded Notebook 03 Validation:** CNN and TCN both achieved **Accuracy = Macro F1 = Balanced Accuracy = 1.00**, on **eight Validation recordings from two independent people**. CNN had **11,492 trainable parameters** and selected epoch **8**; TCN had **12,772** and selected epoch **5**. Although the TCN Validation window loss decreased after epoch 5, its record-level Macro F1 declined, so checkpoint choice follows the declared selection metric. Both models' checkpoints, histories, Validation predictions and figures were recorded; the last cell reported **10 stage-owned files**. These are original notebook output values, not independently reproduced training or evidence of generalisation.
 
 **Recorded Notebook 04 Validation:** GRU (3,780 trainable parameters; selected **epoch 1**) achieved **Accuracy 0.25, Macro F1 0.10 and Balanced Accuracy 0.25**. It assigned TEX to every one of the eight Validation recordings, correctly predicting only two TEX records. Transformer (33,764 parameters; selected **epoch 2**) achieved **Accuracy 0.50, Macro F1 0.375 and Balanced Accuracy 0.50**, correctly identifying both HSS and both RAN records, but missing FXS and TEX. Both use **the same eight recordings from two independent Validation people** as earlier candidates. GRU trained for four epochs and Transformer five; checkpoint selection followed record-level Macro F1, rather than lowest window-level loss. Both checkpoints, histories, prediction tables and assessment figures are now available in the repository, with **ten stage-04 files** recorded. These are observed pilot results, not independent training reproduction or reliable evidence of architectural superiority. No held-out Test results were calculated.
 
+**Recorded Notebook 05 pilot model selection and Test:** The saved Validation-based rule uses descending Macro F1, then Balanced Accuracy, then a fixed candidate priority. Logistic Regression, Random Forest, Gradient Boosting, CNN and TCN tied at **Validation Macro F1 1.00** on eight recordings from two people; the fixed priority selected **Logistic Regression**. The stage-owned `05_model_selection.csv` records `test_used_in_selection=False`. This is a flag reflecting the code's intended selection rule; it does not independently verify the timing of execution or constitute formal preregistration.
+
+The subsequently recorded **pilot Test comprises eight original task recordings from two people (001 and 005)**. The primary Logistic Regression achieved **Accuracy 0.875 (7/8)**, fixed-label **Macro F1 0.867** and **Balanced Accuracy 0.875**. Its only incorrect label was `S_1005_S1_FXS`, classified as TEX. Participant 001 had **4/4** correct (Macro F1 1.00); participant 005 had **3/4** correct (Macro F1 0.667). The Test predictions of all eight models were saved for descriptive comparison, but Test scores did not change the recorded primary choice.
+
+| Frozen candidate | Pilot Test accuracy | Pilot Test Macro F1 | Pilot Test balanced accuracy |
+| --- | ---: | ---: | ---: |
+| Class Prior | 0.250 | 0.100 | 0.250 |
+| **Logistic Regression (primary)** | **0.875** | **0.867** | **0.875** |
+| Random Forest | 0.875 | 0.867 | 0.875 |
+| Gradient Boosting | 0.875 | 0.867 | 0.875 |
+| CNN | 0.750 | 0.733 | 0.750 |
+| TCN | 0.750 | 0.742 | 0.750 |
+| GRU | 0.250 | 0.100 | 0.250 |
+| Transformer | 0.500 | 0.333 | 0.500 |
+
+All eight models used the same Test records. These are **within-GazeBase, two-person pilot observations**, not external validation, an independent replication or evidence of generalisation to new sessions, stimuli and devices.
+
 ## 7. Robustness, Uncertainty and Additional Analyses
 
-The implementation includes a prescribed Validation-only input perturbation: pupil features masked for a classical selected model, or relative x/y channels masked for a selected temporal model. This assesses **sensitivity to an input change**, not causal feature attribution or a faithful explanation. A class-prior model necessarily ignores gaze predictors.
+The executed **Validation-only input perturbation** masked `pupil_coverage` and `pupil_median_uncalibrated` for the frozen Logistic Regression pipeline, without refitting. Its Macro F1 was **1.00 with the original features and 1.00 with masked pupil features** on the same eight Validation recordings. This is a limited sensitivity check, not causal feature attribution, a faithful model explanation or proof that pupil measurements are generally irrelevant. A class-prior model necessarily ignores gaze predictors.
 
 Additional scientific review should examine leakage due to shared people, Task stimuli, temporal overlap, unequal windows per record, source validity and anomalous step speeds. No independent expert event annotations are used. With ten pilot people, resampling Test people into a precise confidence interval would be misleading; report individual-person variability without overstating uncertainty.
 
@@ -154,11 +171,11 @@ Potential future additions—different source rounds/sessions, stimulus-disjoint
 
 ## 8. Current Outputs and Reproducibility
 
-Notebook outputs are written under `eye_movement_modelling/output/` using unique two-digit prefixes. Notebook 01 has produced its source inventory, split table, feature CSV, `01_protocol.csv` and train-normalised temporal NPZ. Notebook 02 has recorded four fitted Pipeline outputs, Validation probability tables, confusion matrices and aggregate `02_validation_metrics.csv` plus its comparison plot. Notebook 03 has recorded two PyTorch state dictionaries, histories, record-level Validation predictions, assessment figures and aggregate metrics; Notebook 04 has recorded GRU and Transformer model checkpoints, histories, record-level Validation predictions, evaluation figures and aggregate metrics. Notebook 05 produces pre-Test selection metadata, frozen Test predictions, record and person-level metrics, a Validation-only perturbation table and summary figures.
+Notebook outputs are written under `eye_movement_modelling/output/` using unique two-digit prefixes. Notebook 01 has produced its source inventory, split table, feature CSV, `01_protocol.csv` and train-normalised temporal NPZ. Notebook 02 has recorded four fitted Pipeline outputs, Validation probability tables, confusion matrices and aggregate `02_validation_metrics.csv` plus its comparison plot. Notebook 03 has recorded two PyTorch state dictionaries, histories, record-level Validation predictions, assessment figures and aggregate metrics; Notebook 04 has recorded GRU and Transformer model checkpoints, histories, record-level Validation predictions, evaluation figures and aggregate metrics. Notebook 05 has produced its model-selection CSV, eight-model Test prediction table, pooled and per-person Test metrics, Validation-only perturbation table, and four assessment figures (nine current stage-owned files).
 
 Study outputs can now be staged after review. `.gitignore` cannot apply size rules; the separate Git policy blocks unapproved blobs larger than **50,000,000 bytes**. Raw source folders remain ignored. ZIPs generated in `/content/` are not automatically copied into Git. The original GazeBase CSVs already tracked in the public repository retain their original CC BY 4.0 attribution. Stages can reuse files in one Colab runtime or restore the exact numbered, current ZIP via `ensure_stage_inputs`.
 
-The notebook implementations are published. Notebooks 01 and 02 retain original-data execution outputs, including the new CSV protocol contract and the classical model Validation tables/figures. Stage-01 through stage-04 output files are present in the GitHub tree, and saved Notebook 04 prediction CSVs and metrics were examined alongside recorded notebook output. This does not reproduce training or independently verify the user-downloaded ZIP archive. The latest committed Notebook 02 shows execution counts 1–9 and reports a successful 14-file ZIP package. CNN, TCN, GRU and Transformer execution is recorded. Final Validation-based selection and held-out Test in Notebook 05 remain unverified.
+The notebook implementations are published. Notebooks 01 and 02 retain original-data execution outputs, including the new CSV protocol contract and the classical model Validation tables/figures. Stage-01 through stage-04 output files are present in the GitHub tree, and saved Notebook 04 prediction CSVs and metrics were examined alongside recorded notebook output. This does not reproduce training or independently verify the user-downloaded ZIP archive. The latest committed Notebook 02 shows execution counts 1–9 and reports a successful 14-file ZIP package. CNN, TCN, GRU and Transformer execution is recorded. Notebook 05 has recorded Validation-based selection and pilot Test metrics. Saved numerical tables were checked for schema and internal consistency, but no full re-execution of the original-data training/evaluation pipeline was performed here.
 
 ## 9. Discussion, Limitations and Future Work
 
@@ -166,6 +183,6 @@ The implemented workflow is designed to compare simple feature-based models and 
 
 The ten-person modelling run is a functional feasibility exercise; the source acquisition stage has also audited 20 participants. The proposed 100-person main study needs additional original CSVs, a fixed cohort and independent-participant evaluation design, and complete source-to-model reruns. The initial ten-person pilot is not an independent external validation. Final-model selection must remain Validation-based, with the main Test held out until the design is frozen.
 
-Notebook 01–04 evidence supports proceeding to Notebook 05 for a **pilot-only** Validation-based selection and reserved Test evaluation, provided the current frozen participant registry and matching model outputs are preserved. The named stage-01 through stage-04 outputs are tracked in the current GitHub tree; downloaded ZIP files have not been independently verified. Use the current compatible stage-01 inputs for a fresh Colab Runtime. Keep the Validation/Test boundary, inspect potential extreme step-speed influence in a subsequent robustness analysis, and do not infer future Test results from the pilot Validation scores.
+Notebook 01–05 evidence now supports **closure of the ten-person pilot execution sequence**, preserving all recorded outputs and their limitations. The proposed main study requires a newly fixed participant cohort and evaluation protocol; it is not authorised or completed merely by running the pilot. The named stage-01 through stage-04 outputs are tracked in the current GitHub tree; downloaded ZIP files have not been independently verified. For future work, retain the complete stage-owned outputs and provenance. Design a prospective **100-person main study** with source eligibility, participant-disjoint Test assignment, group-aware Validation/model selection, adequate person-level support and sensitivity checks for task/stimulus and extreme gaze-step artefacts before opening a new main Test. Do **not** treat either pilot Test person as untouched if pilot feedback informs subsequent choices; retrain and regenerate all dependent outputs after changing the cohort.
 
 **Source attribution:** [GazeBase dataset](https://doi.org/10.6084/m9.figshare.12912257) and [Griffith, Lohr, Abdulin and Komogortsev (2021)](https://doi.org/10.1038/s41597-021-00959-y), [Creative Commons Attribution 4.0](https://creativecommons.org/licenses/by/4.0/).
