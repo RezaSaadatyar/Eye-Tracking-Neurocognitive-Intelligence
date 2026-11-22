@@ -129,9 +129,18 @@ def test_all_five_current_notebooks_draft_main_not_pilot_results():
     for notebook in files:
         n = json.loads(notebook.read_text(encoding="utf-8"))
         for cell in n["cells"]:
-            if cell["cell_type"] == "code":
-                assert cell["execution_count"] is None
-                assert not cell["outputs"]
+            if cell["cell_type"] != "code":
+                continue
+            # Notebook 01 was partially run by the operator and committed
+            # with authentic setup-cell evidence. Preserve those records;
+            # only code cells revised by this acquisition fix are reset.
+            if notebook.name.startswith("01_") and cell.get("id") not in {
+                "s2-c-cohort-config", "s2-c-source-acquisition",
+                "s2-c-007", "s2-c-015",
+            }:
+                continue
+            assert cell["execution_count"] is None
+            assert not cell["outputs"]
     first = json.loads(files[0].read_text(encoding="utf-8"))
     config = next(
         c for c in first["cells"] if c.get("id") == "s2-c-cohort-config"
