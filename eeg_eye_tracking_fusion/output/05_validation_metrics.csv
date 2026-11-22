@@ -1,0 +1,4 @@
+model,partition,n_windows,n_people,parameters,best_epoch,accuracy,macro_f1,balanced_accuracy
+gaze_gru,validation,31,1,1090,15,0.6451612903225806,0.39215686274509803,0.5
+eeg_gru,validation,31,1,1090,9,0.7096774193548387,0.6889632107023411,0.6931818181818181
+gated_fusion_gru,validation,31,1,2354,15,0.3548387096774194,0.2619047619047619,0.5
