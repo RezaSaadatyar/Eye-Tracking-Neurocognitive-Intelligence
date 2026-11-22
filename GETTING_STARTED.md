@@ -84,13 +84,19 @@ source inputs, but Eye-Movement Modelling creates its own representations,
 partitions and saved outputs. Do not import processed Eye-Tracking Foundations
 features as model inputs. The completed pilot has **10 modelled people**;
 the source-acquisition check separately audited **20 people**. A
-**100-person main experiment is a proposal only**, not a completed result.
+**100-person main implementation is now configured and ready to execute, but not yet run**.
+
+For the next **100-person** study set `MAX_PARTICIPANTS = 100` in
+Notebook 01, Section 02; for a separate 300-person study change that
+single value **before** data acquisition or new Test exposure. The default
+100-person split is 64 Train, 16 Validation, 20 Test people (seed 17).
+All original sources are handled inside Colab, with no Google Drive mount.
 
 Stage `NN` outputs are saved under `eye_movement_modelling/output/` and
 can be packaged as
 `/content/eye_movement_modelling_Notebook_NN_Outputs.zip`. In a new Colab
 Runtime, place matching upstream ZIPs in `/content/` so
-`ensure_stage_inputs` can restore required files. Use one compatible
+`ensure_s2_stage_inputs` prioritises an explicitly uploaded current-stage ZIP over stale pilot outputs from Git; `verify_main_cohort` checks the source-person count and split. Use one compatible
 cohort/split/model run; do not mix pilot files with a changed main protocol.
 
 **Next research stage:** First fix the prospective cohort selection,

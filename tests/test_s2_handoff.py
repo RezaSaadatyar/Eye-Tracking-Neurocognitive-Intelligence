@@ -58,15 +58,20 @@ def test_notebook_01_acquisition_inside_standard_section_02():
     assert "emm-01a-acquire-code" not in ids
     assert "emm-01a-acquire-md" not in ids
     section = "".join(cells[ids.index("s2-m-006")]["source"])
-    assert "02. Acquire and Select Original GazeBase" in section
+    assert "02. Configure, Acquire and Select Original GazeBase" in section
+    config_idx = ids.index("s2-c-cohort-config")
     acquisition_idx = ids.index("s2-c-source-acquisition")
-    assert acquisition_idx == ids.index("s2-m-006") + 1
+    assert config_idx == ids.index("s2-m-006") + 1
+    assert acquisition_idx == config_idx + 1
     assert ids[acquisition_idx + 1] == "s2-c-007"
+    config = "".join(cells[config_idx]["source"])
     acquire = "".join(cells[acquisition_idx]["source"])
     selection = "".join(cells[ids.index("s2-c-007")]["source"])
-    assert "SOURCE_AUDIT_IDS = tuple(range(1001, 1021))" in acquire
+    assert "MAX_PARTICIPANTS = 100" in config
+    assert "FIRST_SOURCE_ID = 1001" in config
+    assert "SOURCE_AUDIT_IDS = tuple(" in config
     assert "ensure_gazebase_preflight(" in acquire
-    assert "MAX_PARTICIPANTS = 10" in selection
+    assert "max_participants=MAX_PARTICIPANTS" in selection
     assert "drive.mount" not in acquire
     assert "ZipFile" not in acquire
     end = "".join(cells[ids.index("s2-c-017")]["source"])
@@ -115,7 +120,7 @@ def test_temporal_stage_artifact_prefixes_match_final_evaluation():
         if c["cell_type"] == "code"
     )
     for stage in ("03", "04"):
-        assert f'ensure_stage_inputs(output_dir, {int(stage)}, (' in eval_code
+        assert f'ensure_s2_stage_inputs(output_dir, {int(stage)}, (' in eval_code
         assert f'"{stage}_neural_validation_metrics.csv"' in eval_code
 
 def test_temporal_model_complexity_is_saved_with_validation_metrics():
@@ -129,8 +134,8 @@ def test_temporal_model_complexity_is_saved_with_validation_metrics():
         assert f'model_name = "{name}"' in source
         assert 'result["parameters"] = int(info["parameters"])' in source
         assert 'result["best_epoch"] = int(info["best_epoch"])' in source
-        assert isinstance(cell["execution_count"], int)
-        assert cell["outputs"]
+        assert cell["execution_count"] is None
+        assert not cell["outputs"]
     comparison = next(c for c in cells if c.get("id") == "s2c13")
     assert '"03_neural_validation_metrics.csv"' in "".join(comparison["source"])
 
@@ -250,24 +255,19 @@ def test_stage04_figure_preserves_measured_source_and_card_geometry():
     assert "Results unexecuted" not in figure_words
 
 
-def test_stage04_export_cleanup_preserves_model_execution():
+def test_stage04_main_draft_and_export_contract():
     notebook = ROOT / "eye_movement_modelling" / "code" / "notebooks" / (
         "04_gru_and_transformer_models.ipynb"
     )
     cells = json.loads(notebook.read_text(encoding="utf-8"))["cells"]
-    by_id = {cell.get("id"): cell for cell in cells}
-    for identifier in ("s2c9", "s2c11", "s2c13"):
-        cell = by_id[identifier]
-        assert isinstance(cell["execution_count"], int)
-        assert cell["outputs"]
-    final = by_id["s2c15"]
-    final_code = "".join(final["source"])
-    assert 'download_outputs_from_colab("eye_movement_modelling/output", "04")' in final_code
-    assert "print(" not in final_code
-    # The operator may rerun the cleaned export cell and commit its ZIP
-    # listing. Both an unexecuted cell and a valid new execution are allowed.
-    if final["execution_count"] is None:
-        assert not final["outputs"]
-    else:
-        assert isinstance(final["execution_count"], int)
-        assert final["outputs"]
+    by_id = {c.get("id"): c for c in cells}
+    for code_id in ("s2c7", "s2c9", "s2c11", "s2c13", "s2c15"):
+        c = by_id[code_id]
+        assert c["execution_count"] is None and not c["outputs"]
+    for code_id in ("s2c9", "s2c11"):
+        source = "".join(by_id[code_id]["source"])
+        assert 'result["parameters"] = int(info["parameters"])' in source
+        assert 'result["best_epoch"] = int(info["best_epoch"])' in source
+    text = "".join(by_id["s2c15"]["source"])
+    assert 'download_outputs_from_colab("eye_movement_modelling/output", "04")' in text
+

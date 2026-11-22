@@ -2,7 +2,7 @@
 
 **Eye-tracking, gaze signal analysis and neurocognitive AI research**
 
-A Python research programme for source-audited gaze analysis and separate GazeBase task-recognition modelling. Eye-Tracking Foundations has seven executed offline notebooks. Eye-Movement Modelling has now recorded the complete **five-notebook ten-person pilot**, from source preparation and eight Validation candidates to Validation-selected Logistic Regression and the exploratory participant-disjoint Test in Notebook 05. The proposed 100-person main experiment remains unexecuted. Vision-based gaze estimation and EEG–eye-tracking are proposed directions.
+A Python research programme for source-audited gaze analysis and separate GazeBase task-recognition modelling. Eye-Tracking Foundations has seven executed offline notebooks. Eye-Movement Modelling has now recorded the complete **five-notebook ten-person pilot**, from source preparation and eight Validation candidates to Validation-selected Logistic Regression and the exploratory participant-disjoint Test in Notebook 05. The main cohort has now been configured for **100 people** in all five notebooks but **has not been executed**. All numerical results belong to the historical ten-person pilot. Vision-based gaze estimation and EEG–eye-tracking are proposed directions.
 
 ## Research projects
 
@@ -53,7 +53,7 @@ Eye-Tracking-Neurocognitive-Intelligence/
 ├── eye_movement_modelling/
 │   ├── README.md                       # Modelling protocol and navigation
 │   ├── RESEARCH_METHODS_AND_EVIDENCE.md
-│   ├── code/notebooks/                 # Five notebooks; 01–05 have recorded pilot outputs
+│   ├── code/notebooks/                 # Five main-ready, unexecuted notebooks
 │   ├── code/src/                       # Data, models, training, evaluation
 │   ├── images/                         # Overview and five stage SVGs
 │   └── output/                         # Separate local generated outputs
@@ -78,4 +78,4 @@ For original GazeBase acquisition, existing source paths and attribution, consul
 - Distinguish committed execution output, synthetic software tests, internal source-table reconciliation and independent scientific reproduction.
 - Do not extend the completed study's findings to clinical diagnosis, generalised cognitive inference or real-time gaze processing.
 
-Original repository code and documentation are covered by the [MIT licence](LICENSE). The original [GazeBase dataset](https://doi.org/10.6084/m9.figshare.12912257) is reported under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) in the [source publication](https://doi.org/10.1038/s41597-021-00959-y). A **40-file GazeBase source subset is already tracked** in this public repository; source credit, licence links and indication of subset selection remain necessary. The dataset is not relicensed under MIT. Generated output files are Git-ignored by default, and an independent Git blob guard rejects unapproved tracked files above **50 MB (50,000,000 bytes)**.
+Original repository code and documentation are covered by the [MIT licence](LICENSE). The original [GazeBase dataset](https://doi.org/10.6084/m9.figshare.12912257) is reported under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) in the [source publication](https://doi.org/10.1038/s41597-021-00959-y). A **40-file GazeBase source subset is already tracked** in this public repository; source credit, licence links and indication of subset selection remain necessary. The dataset is not relicensed under MIT. Reviewed derived outputs may be committed; raw/processed sources remain locally ignored and a separate Git blob check blocks files above **50 MB (50,000,000 bytes)**.

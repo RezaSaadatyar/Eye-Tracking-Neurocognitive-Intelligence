@@ -168,7 +168,8 @@ def test_final_notebook_preserves_test_outputs_and_single_zip_export():
         c.get("id") for c in cells
     ].index("s2c11")
     for ident in ("s2c7", "s2c9", "s2c11", "s2c13", "s2c15", "s2c17"):
-        assert by_id[ident]["outputs"]
+        assert by_id[ident]["execution_count"] is None
+        assert not by_id[ident]["outputs"]
     final = by_id["s2c19"]
     code = "".join(final["source"])
     assert 'download_outputs_from_colab("eye_movement_modelling/output", "05")' in code

@@ -1,10 +1,10 @@
 # Eye-Movement Modelling & Advanced AI | Research Methods and Evidence
 
-**Project:** Eye-Movement Modelling & Advanced AI within Eye-Tracking & Neurocognitive Intelligence. **Target:** four-class GazeBase recording-protocol identity. **Evidence:** Notebooks 01–05 have recorded complete source-to-Test execution of a ten-person task-classification pilot, including the Validation-selected primary model, person-disjoint Test and one Validation-only perturbation. The proposed 100-person main experiment remains unexecuted. See [README](README.md) and the [editable workflow](images/study_overview.svg).
+**Project:** Eye-Movement Modelling & Advanced AI within Eye-Tracking & Neurocognitive Intelligence. **Target:** four-class GazeBase recording-protocol identity. **Evidence:** Notebooks 01–05 have recorded complete source-to-Test execution of a ten-person task-classification pilot, including the Validation-selected primary model, person-disjoint Test and one Validation-only perturbation. The **100-person main-cohort implementation is prepared but unexecuted**. Main-study results are not yet available; all numerical results below are from the committed ten-person pilot. See [README](README.md) and the [editable workflow](images/study_overview.svg).
 
 ## 1. Research Objective and Scope
 
-The primary question is whether supervised models trained on gaze-derived features or temporal sequences can classify **which original GazeBase recording protocol** generated an unseen participant's sample: FXS, HSS, RAN or TEX. This is **task identity**, not a cognitive or medical label. The first-stage objective is a bounded ten-person feasibility and pipeline check; the intended more substantive comparison requires at least twenty complete people, a cohort-size decision before final Test, and an independent-person hold-out.
+The primary question is whether supervised models trained on gaze-derived features or temporal sequences can classify **which original GazeBase recording protocol** generated an unseen participant's sample: FXS, HSS, RAN or TEX. This is **task identity**, not a cognitive or medical label. The executed ten-person pilot established the pipeline and exposed its exploratory Test. The next, separately configured comparison uses 100 source people by default, with a held-out group of independent participants. This design must remain frozen before opening the new main Test.
 
 Five research questions guide the implementation: do simple priors/linear models offer meaningful baselines; do nonlinear classical models improve record-level Validation; do local/dilated temporal convolutions add information; do recurrent/attention models warrant their extra complexity; and how stable are selected predictions to withheld participants and input-channel removal?
 
@@ -20,13 +20,13 @@ Original CSVs are read from [`data/raw/gazebase/`](../data/README.md). Reuse the
 
 ### 2.2 Cohort sizing and target mapping
 
-Notebook 01 deterministically selects up to `MAX_PARTICIPANTS` complete participants in original source-ID order; incomplete requests raise an error. For initial development use **10**. The current source audit covers **20 people and 80 original recordings**, but modelling still uses **10**. A **100-person study is proposed**; its cohort, participant-disjoint evaluation and Test protocol must be fixed **before main Test** and all stages rerun. The four Task names are mapped to fixed class indices 0–3 using the exact order FXS/HSS/RAN/TEX.
+Notebook 01 now configures `MAX_PARTICIPANTS = 100` in one user-facing Section 02 cell. For 100, it requests original source IDs 1001–1100 (400 task recordings); for a separate 300-person experiment it requests 1001–1300 (1,200 recordings). The published Round 1 includes 322 people; actual file/task eligibility must be verified, and incomplete requests stop rather than shrinking silently. The earlier recorded source audit covered 20 people, but **100-person acquisition, model fitting and Test have not been executed**. The main Test assignment is fixed before any new Test results are opened. The four Task names are mapped to fixed class indices 0–3 using the exact order FXS/HSS/RAN/TEX.
 
 Each record has one Task target. Each time window inherits that record target, so thousands of windows from one person **are not independent observations**. No person/Task/record ID, sample duration, vendor parser label, source file path or post-outcome covariate enters a model input.
 
 ### 2.3 Explicit independence boundary
 
-Use a seeded (`seed=17`) **person-disjoint** Train/Validation/Test registry. In the ten-person pilot, the split is fixed and exploratory. Once 20 or more people are available, choose the highest complete source IDs for Test; those people are distinct from the original pilot cohort. Remaining people are divided into Train/Validation. The main cohort size must be fixed **before its Test is opened**.
+Use a seeded (`seed=17`) **person-disjoint** Train/Validation/Test registry. The main split keeps the **highest 20% source IDs for Test** and selects **20% of the remaining development people for Validation**, allocating the rest to Train. For 100 people this yields 64/16/20; for 300, 192/48/60. These are **intended sizes, not observed results**. All four task records remain together for each person. A different cohort size requires a new frozen Test assignment before main Test exposure.
 
 A larger experiment reassigns and reconstructs the entire model cohort and may alter Train/Validation distribution, model weights and Test composition; it is **not merely a larger copy of the Pilot score**. Inspecting a preliminary main Test and then adapting the cohort using its results would invalidate an untouched-Test claim.
 
@@ -57,7 +57,7 @@ before calling the existing stage packager. It produces exactly one
 the nine derived files used for quality review and subsequent notebook
 inputs. The original CSVs and large source archive are excluded. Thus,
 downstream Notebooks 02–05 can run without original gaze files when
-using the current, compatible stage-01 output archive.
+using the current, compatible stage-01 output archive. For fresh-Runtime reruns, the new `s2_handoff.ensure_s2_stage_inputs` **prioritises an explicitly uploaded current-stage ZIP** over stale tracked pilot outputs; `verify_main_cohort` checks current source participant counts, group roles, record identities and main-study purpose.
 
 Each later notebook reads the files directly when the same Colab Runtime
 is active. In a new Runtime, the previously downloaded numbered ZIP must
@@ -73,7 +73,7 @@ The latest Notebook 01 output reports source acquisition for 20 people,
 followed by ten-person pilot data preparation. Notebook 02 records four
 classical candidates evaluated on two Validation people. These remain
 pilot evidence, not main-study results.
-A larger 100-person experiment requires a separately established
+A larger main experiment now has a prepared code path, but requires a successful original-data execution of
 sampling, partition and evaluation protocol, then refreshed derived
 outputs and model fitting. Runtime-local source files may be lost after
 Colab disconnects; saving the processed ZIP does not back up original
@@ -100,7 +100,7 @@ Train-only median imputation is part of each classical scikit-learn Pipeline, wi
 
 ### 4.1 Train, Validation and Test roles
 
-Train participants fit model parameters, imputer/scaler values and temporal normalisation. Validation participants inform early stopping and the final **pre-Test** model selection. Pilot Test participants were opened in **Notebook 05** after the code's Validation-based selection stage, with trained candidates and their fixed checkpoint files loaded. This is an observed pilot Test, not a still-unseen cohort.
+Train participants fit model parameters, imputer/scaler values and temporal normalisation. Validation participants inform early stopping and the final **pre-Test** model selection. Pilot Test participants were opened in **Notebook 05 of the completed ten-person pilot** after the code's Validation-based selection. In the **new 100-person run**, highest-source-ID Test participants are reserved and must remain unobserved until after model selection on the current Validation group.
 
 Evaluation is **record-based**: a classical model produces one prediction per source recording; a neural model produces probabilities for each window, which are then averaged by original recording before classification. Every model is compared on the same recording set in the relevant split.
 
@@ -112,7 +112,7 @@ All-class Test comparison is secondary and exploratory; a model with the best ob
 
 ### 4.3 Pilot versus main evaluation
 
-At n=10, two Test people cannot provide a reliable population accuracy estimate or robust model-ranking inference. Treat all scores as **developmental pilot diagnostics**. The proposed 100-person study needs its own frozen source cohort, participant-group evaluation and stimulus-confounding review; the ten-person pilot Test has been examined, but **no main 100-person Test has been executed**.
+At n=10, two Test people cannot provide a reliable population accuracy estimate or robust model-ranking inference. Treat all scores as **developmental pilot diagnostics**. The configured 100-person run uses a prespecified deterministic source ID range and split percentages, but **no new original-data main Test has been executed**. Pilot feedback and task-stimulus confounding must be disclosed; cross-session, external and clinical generalisation remain unsupported.
 
 ## 5. Methods, Models and Configurations
 
@@ -173,9 +173,9 @@ Potential future additions—different source rounds/sessions, stimulus-disjoint
 
 Notebook outputs are written under `eye_movement_modelling/output/` using unique two-digit prefixes. Notebook 01 has produced its source inventory, split table, feature CSV, `01_protocol.csv` and train-normalised temporal NPZ. Notebook 02 has recorded four fitted Pipeline outputs, Validation probability tables, confusion matrices and aggregate `02_validation_metrics.csv` plus its comparison plot. Notebook 03 has recorded two PyTorch state dictionaries, histories, record-level Validation predictions, assessment figures and aggregate metrics; Notebook 04 has recorded GRU and Transformer model checkpoints, histories, record-level Validation predictions, evaluation figures and aggregate metrics. Notebook 05 has produced its model-selection CSV, eight-model Test prediction table, pooled and per-person Test metrics, Validation-only perturbation table, and four assessment figures (nine current stage-owned files).
 
-Study outputs can now be staged after review. `.gitignore` cannot apply size rules; the separate Git policy blocks unapproved blobs larger than **50,000,000 bytes**. Raw source folders remain ignored. ZIPs generated in `/content/` are not automatically copied into Git. The original GazeBase CSVs already tracked in the public repository retain their original CC BY 4.0 attribution. Stages can reuse files in one Colab runtime or restore the exact numbered, current ZIP via `ensure_stage_inputs`.
+Study outputs can now be staged after review. `.gitignore` cannot apply size rules; the separate Git policy blocks unapproved blobs larger than **50,000,000 bytes**. Raw source folders remain ignored. ZIPs generated in `/content/` are not automatically copied into Git. The original GazeBase CSVs already tracked in the public repository retain their original CC BY 4.0 attribution. Stages reuse files in one Colab Runtime or explicitly upload the matching stage ZIP in `/content/` for `ensure_s2_stage_inputs`; uploaded ZIP files supersede older tracked pilot stage outputs. The main-cohort gate stops an unintentional 10-person read.
 
-The notebook implementations are published. Notebooks 01 and 02 retain original-data execution outputs, including the new CSV protocol contract and the classical model Validation tables/figures. Stage-01 through stage-04 output files are present in the GitHub tree, and saved Notebook 04 prediction CSVs and metrics were examined alongside recorded notebook output. This does not reproduce training or independently verify the user-downloaded ZIP archive. The latest committed Notebook 02 shows execution counts 1–9 and reports a successful 14-file ZIP package. CNN, TCN, GRU and Transformer execution is recorded. Notebook 05 has recorded Validation-based selection and pilot Test metrics. Saved numerical tables were checked for schema and internal consistency, but no full re-execution of the original-data training/evaluation pipeline was performed here.
+The ten-person pilot implementation and its executed notebook snapshots are preserved in earlier commits; the current Notebook 01–05 source has been prepared for the **new, unexecuted** 100-person main run and its execution counters/output displays have been reset to avoid misattributing pilot results. Existing committed stage files still represent the ten-person pilot until replaced by their producing stages. Stage-01 through stage-04 output files are present in the GitHub tree, and saved Notebook 04 prediction CSVs and metrics were examined alongside recorded notebook output. This does not reproduce training or independently verify the user-downloaded ZIP archive. The latest committed Notebook 02 shows execution counts 1–9 and reports a successful 14-file ZIP package. CNN, TCN, GRU and Transformer execution is recorded. Notebook 05 has recorded Validation-based selection and pilot Test metrics. Saved numerical tables were checked for schema and internal consistency, but no full re-execution of the original-data training/evaluation pipeline was performed here.
 
 ## 9. Discussion, Limitations and Future Work
 

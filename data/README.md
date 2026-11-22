@@ -11,6 +11,21 @@ S1 uses original GazeBase source CSV records. As of the current repository revis
 - Dataset-specific source fields: `n` in ms, `x`/`y` in degrees of visual angle, `val` indicating missing samples, and optional `xT`/`yT`, `dP` (uncalibrated pupil area) and `lab` (EyeLink parser reference labels).
 - Source parser labels (when present): `1` fixation, `2` saccade, `-1` blink; unavailable for some tasks. Vendor labels are not independent ground truth.
 
+## Next main-cohort acquisition for Eye-Movement Modelling
+
+The modelling Notebook 01 now defaults to **100 participants** from
+GazeBase v2.0 Round 1 / Session 1, four original FXS/HSS/RAN/TEX
+recordings per person. The single `MAX_PARTICIPANTS` value can be set
+to 300 for a new separately defined run. The selected original files
+must all be present and valid; incomplete cohorts are rejected.
+
+If needed, the official 6.7-GB GazeBase archive is downloaded and
+verified **inside Colab**, and only requested original CSVs are extracted.
+The completed archive is deleted after extraction. Derived outputs
+are packaged as one stage ZIP for downstream modelling, not as a raw
+source backup. No Google Drive mount or automatic raw-data publication
+is used. The 100/300-person original-data run **has not yet occurred**.
+
 ## Prepare bounded CSV files
 
 Obtain the original GazeBase source from the official Figshare record. Extract a small number of task CSVs *without renaming them*, retaining, for example, source names of the form `S_1001_S1_FXS.csv`. Place them under:

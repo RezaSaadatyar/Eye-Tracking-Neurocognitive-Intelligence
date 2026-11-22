@@ -22,12 +22,16 @@ CHANNELS = ("relative_x_dva", "relative_y_dva",
             "delta_x_dva", "delta_y_dva")
 
 
-def participant_split(inventory: pd.DataFrame, *, seed: int = 17) -> pd.DataFrame:
-    """Group all task recordings of each individual; reserve new people for Test.
+def participant_split(
+    inventory: pd.DataFrame, *, seed: int = 17,
+    test_fraction: float = 0.20,
+    validation_fraction: float = 0.20,
+) -> pd.DataFrame:
+    """Group recordings by person and reserve independent Test participants.
 
-    A ten-person pilot is development-only. Once >=20 complete people exist,
-    the highest source IDs form the prospective Test group; these subjects are
-    absent from the ten-person pilot. Decide 20 versus 30 before first main Test.
+    For cohorts of at least twenty people, reserve the highest source IDs
+    for Test and select Validation reproducibly from the development pool.
+    Validation fraction refers to the development pool, not the full cohort.
     """
     required = {"record_id", "participant_id", "task"}
     if not required.issubset(inventory):
@@ -38,21 +42,27 @@ def participant_split(inventory: pd.DataFrame, *, seed: int = 17) -> pd.DataFram
     n = len(groups)
     if n < 10:
         raise ValueError("At least ten complete people needed for pilot splits")
+    if not (
+        0 < test_fraction < 0.5 and 0 < validation_fraction < 0.5
+        and np.isfinite(test_fraction) and np.isfinite(validation_fraction)
+    ):
+        raise ValueError("Split fractions must be finite and between 0 and 0.5")
     rng = np.random.default_rng(seed)
     if n >= 20:
-        count_test = max(2, int(np.ceil(0.2 * n)))
+        count_test = max(2, int(np.ceil(test_fraction * n)))
         held_out = set(groups[-count_test:])
         pool = np.array(groups[:-count_test], dtype=str)
         rng.shuffle(pool)
-        count_val = max(2, int(np.ceil(0.2 * len(pool))))
+        count_val = max(2, int(np.ceil(validation_fraction * len(pool))))
         validation = set(pool[:count_val])
         training = set(pool[count_val:])
         purpose = "main"
     else:
+        # Seed-17 defaults preserve the previous ten-person pilot partitions.
         pool = np.array(groups, dtype=str)
         rng.shuffle(pool)
-        count_test = max(2, int(np.ceil(0.2 * n)))
-        count_val = max(2, int(np.ceil(0.2 * n)))
+        count_test = max(2, int(np.ceil(test_fraction * n)))
+        count_val = max(2, int(np.ceil(test_fraction * n)))
         held_out = set(pool[:count_test])
         validation = set(pool[count_test:count_test + count_val])
         training = set(pool[count_test + count_val:])
@@ -251,13 +261,20 @@ def normalise_train_only(
 
 def save_protocol(path: str | Path, *, participants: int,
                   seed: int, window_samples: int,
-                  max_windows_per_record: int, purpose: str) -> dict:
+                  max_windows_per_record: int, purpose: str,
+                  test_fraction: float = 0.20,
+                  validation_fraction: float = 0.20,
+                  source_first_id: int = 1001) -> dict:
     """Save the current scientific configuration in a readable CSV row."""
     settings = {
         "dataset": "GazeBase_v2_0", "round_id": 1, "session_id": 1,
         "task_labels": list(TASKS), "max_participants": participants,
         "split_seed": seed, "window_samples": window_samples,
         "max_windows_per_record": max_windows_per_record,
+        "test_fraction": test_fraction,
+        "validation_fraction_in_development": validation_fraction,
+        "source_first_id": source_first_id,
+        "source_last_id": source_first_id + participants - 1,
         "purpose": purpose,
         "test_role": "pilot_exploratory" if purpose == "pilot"
                      else "new_source_id_reserved_participants",
@@ -303,6 +320,12 @@ def load_protocol(path: str | Path) -> dict:
     for key in ("task_labels", "temporal_channels"):
         settings[key] = [part.strip() for part in settings[key].split(";")
                          if part.strip()]
+    for key in ("source_first_id", "source_last_id"):
+        if key in settings:
+            settings[key] = int(settings[key])
+    for key in ("test_fraction", "validation_fraction_in_development"):
+        if key in settings:
+            settings[key] = float(settings[key])
     return settings
 
 
