@@ -646,9 +646,14 @@ def test_six_complete_colab_notebooks_and_stage_contracts():
         imports = "".join(cells[4]["source"])
         assert "%cd {repo_path}" in checkout
         assert "git", "clone" in checkout
-        assert 'root = setup_colab("eeg_eye_tracking_fusion"' in imports
-        assert 'sync_mode="off"' in imports
-        assert "Eye-Tracking-Neurocognitive-Intelligence-fusion-expanded" in checkout
+        if index == 1:
+            # Notebook 01 follows the approved short Colab template.
+            assert 'root = setup_colab("eeg_eye_tracking_fusion")' in imports
+            assert 'repo_path = Path("/content") / repo_url.rsplit(' in checkout
+        else:
+            assert 'root = setup_colab("eeg_eye_tracking_fusion"' in imports
+            assert 'sync_mode="off"' in imports
+            assert "Eye-Tracking-Neurocognitive-Intelligence-fusion-expanded" in checkout
         assert 'from core.output_download import download_outputs_from_colab' in imports
         assert 'from core.plot_style import plot_style' in imports
         for cell_index, cell in enumerate(cells):
