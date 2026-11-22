@@ -4,7 +4,7 @@ A reproducible six-notebook workflow for evaluating whether EEG and eye movement
 
 ![Overview of EEG and eye-tracking data processing and evaluation](images/study_overview.svg)
 
-*Figure 1. Planned source audit, temporal co-registration, feature processing, unimodal comparators, compact fusion models and one frozen held-out evaluation. No experimental scores are depicted.*
+*Figure 1. Overview of the six executed development stages, including source audit, paired-window processing, ten-model Validation comparison, recorded model selection and the still-reserved Test. The schematic is a workflow summary, not a display of independent generalisation.*
 
 ## 1. Dataset and Experimental Protocol
 
