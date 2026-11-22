@@ -264,5 +264,10 @@ def test_stage04_export_cleanup_preserves_model_execution():
     final_code = "".join(final["source"])
     assert 'download_outputs_from_colab("eye_movement_modelling/output", "04")' in final_code
     assert "print(" not in final_code
-    assert final["execution_count"] is None
-    assert not final["outputs"]
+    # The operator may rerun the cleaned export cell and commit its ZIP
+    # listing. Both an unexecuted cell and a valid new execution are allowed.
+    if final["execution_count"] is None:
+        assert not final["outputs"]
+    else:
+        assert isinstance(final["execution_count"], int)
+        assert final["outputs"]
