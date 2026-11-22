@@ -65,17 +65,16 @@ def test_large_cohort_grouping_and_reserved_main_test(
     )
 
 
-def test_stale_pilot_cohort_rejected_without_main_archive():
-    split = participant_split(_source_manifest(10))
-    with pytest.raises(ValueError, match="current main cohort"):
-        verify_main_cohort({"purpose": "pilot", "max_participants": 10}, split)
+def test_insufficient_cohort_rejected():
+    with pytest.raises(ValueError, match="At least twenty complete"):
+        participant_split(_source_manifest(10))
 
 
-def test_uploaded_stage_zip_overrides_stale_tracked_pilot_data(tmp_path):
+def test_uploaded_stage_zip_overrides_existing_stage_files(tmp_path):
     folder = tmp_path / "checkout" / "eye_movement_modelling" / "output"
     folder.mkdir(parents=True)
     protocol = folder / "01_protocol.csv"
-    protocol.write_text("old pilot data", encoding="utf-8")
+    protocol.write_text("outdated stage data", encoding="utf-8")
     current = "dataset,round_id\nGazeBase_v2_0,1\n"
     name = "eye_movement_modelling_Notebook_01_Outputs.zip"
     archive = tmp_path / name
