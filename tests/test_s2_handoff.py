@@ -253,66 +253,67 @@ def test_output_folders_are_no_longer_ignored_but_size_guard_remains():
 
 
 def test_stage04_saved_metrics_match_record_predictions():
-    """Recalculate saved scores, distinguishing pilot from main source IDs."""
+    """Recalculate main-cohort GRU/Transformer Validation against source IDs."""
+    import numpy as np
     import pandas as pd
-    import pytest
-    from sklearn.metrics import accuracy_score, balanced_accuracy_score, f1_score
+    from s2_data import TASKS
+    from s2_metrics import metric_row
 
     output = ROOT / "eye_movement_modelling" / "output"
     split = pd.read_csv(
         output / "01_split_assignments.csv",
         dtype={"participant_id": str, "record_id": str},
     )
-    current = split.loc[split["split"].eq("validation")]
-    current_ids = set(current["record_id"])
-    current_people = current["participant_id"].nunique()
-    purpose = pd.read_csv(output / "01_protocol.csv")["purpose"].iloc[0]
+    current = split.loc[split.split.eq("validation")].set_index(
+        "record_id"
+    ).sort_index()
+    expected = current.task.map({label: i for i, label in enumerate(TASKS)})
     summary = pd.read_csv(output / "04_neural_validation_metrics.csv")
-    assert set(summary["model"]) == {"gru", "transformer"}
-    common_record_ids = None
+    assert len(summary) == 2
+    assert set(summary.model) == {"gru", "transformer"}
 
-    for model in ("gru", "transformer"):
-        scores = summary.loc[summary["model"].eq(model)].iloc[0]
+    for name in ("gru", "transformer"):
         saved = pd.read_csv(
-            output / f"04_{model}_validation_predictions.csv",
+            output / f"04_{name}_validation_predictions.csv",
             dtype={"record_id": str},
         )
-        assert saved["record_id"].is_unique
-        assert saved["partition"].eq("validation").all()
-        ids = set(saved["record_id"])
-        if common_record_ids is None:
-            common_record_ids = ids
-        else:
-            assert ids == common_record_ids
-        original_people = saved["record_id"].str.extract(
-            r"^S_(\d{4})_S1_"
-        )[0]
-        assert original_people.notna().all()
-        assert int(scores["n_records"]) == len(saved)
-        assert int(scores["n_participants"]) == original_people.nunique()
-
-        # After Notebook 01's 100-person rerun, Stage 04 is still from
-        # the ten-person pilot. Keep its scientific outputs and check them
-        # internally until Stage 04 is trained on the current main cohort.
-        if len(saved) == len(current):
-            assert ids == current_ids
-            assert int(scores["n_participants"]) == current_people
-        else:
-            assert purpose == "main"
-            assert len(saved) < len(current)
-
-        truth, predicted = saved["target_index"], saved["pred_index"]
-        assert scores["accuracy"] == pytest.approx(
-            accuracy_score(truth, predicted)
+        assert saved.record_id.is_unique
+        assert set(saved.record_id) == set(current.index)
+        observed = saved.set_index("record_id").sort_index()
+        assert observed.target_index.eq(expected).all()
+        assert observed.model.eq(name).all()
+        assert observed.partition.eq("validation").all()
+        assert observed.n_windows.eq(24).all()
+        probabilities = observed[
+            [f"p_{label}" for label in TASKS]
+        ].to_numpy(dtype=float)
+        assert np.isfinite(probabilities).all()
+        assert np.allclose(probabilities.sum(axis=1), 1.0, atol=1e-6)
+        assert np.array_equal(
+            probabilities.argmax(axis=1),
+            observed.pred_index.to_numpy(dtype=int),
         )
-        assert scores["macro_f1"] == pytest.approx(
-            f1_score(truth, predicted, labels=[0, 1, 2, 3],
-                     average="macro", zero_division=0)
+        metric = metric_row(
+            observed.target_index, observed.pred_index,
+            model=name, partition="validation",
+            n_participants=current.participant_id.nunique(),
         )
-        assert scores["balanced_accuracy"] == pytest.approx(
-            balanced_accuracy_score(truth, predicted)
-        )
+        row = summary.loc[summary.model.eq(name)].iloc[0]
+        assert int(row.n_records) == len(current)
+        assert int(row.n_participants) == current.participant_id.nunique()
+        for key in ("accuracy", "macro_f1", "balanced_accuracy"):
+            assert np.isclose(metric[key], row[key], atol=1e-10)
 
+        history = pd.read_csv(output / f"04_{name}_history.csv")
+        chosen = history.loc[history.epoch.eq(row.best_epoch)]
+        assert len(chosen) == 1
+        best = history.macro_f1.max()
+        finalists = history.loc[np.isclose(history.macro_f1, best)]
+        assert np.isclose(row.macro_f1, best, atol=1e-10)
+        assert np.isclose(
+            float(chosen.validation_window_loss.iloc[0]),
+            float(finalists.validation_window_loss.min()), atol=1e-8,
+        )
 
 def test_stage04_figure_preserves_measured_source_and_card_geometry():
     """Compare with the executed stage-03 editable SVG convention."""
@@ -336,9 +337,10 @@ def test_stage04_figure_preserves_measured_source_and_card_geometry():
         ]) == 3
     root = ET.parse(folder / "04_gru_and_transformer_models.svg").getroot()
     figure_words = " ".join((c.text or "") for c in root.iter())
-    assert "Best checkpoint: epoch 1" in figure_words
-    assert "Best checkpoint: epoch 2" in figure_words
-    assert "Results unexecuted" not in figure_words
+    assert "Best checkpoint: epoch 7" in figure_words
+    assert "Best checkpoint: epoch 8" in figure_words
+    assert "59/64 Validation records" in figure_words
+    assert "63/64 Validation records" in figure_words
 
 
 def test_stage04_main_draft_and_export_contract():
@@ -356,4 +358,20 @@ def test_stage04_main_draft_and_export_contract():
     assert "expected_ids" in text
     assert "metric_row(" in text
     assert "probabilities.sum(axis=1)" in text
+
+    final = json.loads(
+        (ROOT / "eye_movement_modelling" / "code" / "notebooks"
+         / "05_robustness_and_final_evaluation.ipynb").read_text(
+            encoding="utf-8"
+        )
+    )
+    by_id = {cell["id"]: cell for cell in final["cells"]}
+    pre_test = "".join(by_id["s2c7"]["source"])
+    assert "Saved model identity mismatch" in pre_test
+    assert "Stored Validation" in pre_test
+    assert "class_prob.argmax" in pre_test
+    after_test = "".join(by_id["s2c19"]["source"])
+    assert "stage05_files" in after_test
+    assert "expected_test_ids" in after_test
+    assert "Saved Test metric mismatch" in after_test
 
