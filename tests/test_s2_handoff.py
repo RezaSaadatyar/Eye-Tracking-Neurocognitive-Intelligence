@@ -134,10 +134,73 @@ def test_temporal_model_complexity_is_saved_with_validation_metrics():
         assert f'model_name = "{name}"' in source
         assert 'result["parameters"] = int(info["parameters"])' in source
         assert 'result["best_epoch"] = int(info["best_epoch"])' in source
-        assert cell["execution_count"] is None
-        assert not cell["outputs"]
     comparison = next(c for c in cells if c.get("id") == "s2c13")
     assert '"03_neural_validation_metrics.csv"' in "".join(comparison["source"])
+
+
+def test_stage03_current_validation_predictions_are_source_aligned():
+    """Recalculate both current neural scores using the frozen source registry."""
+    import numpy as np
+    from s2_metrics import metric_row
+
+    folder = ROOT / "eye_movement_modelling" / "output"
+    split = pd.read_csv(
+        folder / "01_split_assignments.csv",
+        dtype={"record_id": str, "participant_id": str},
+    )
+    expected = split.loc[
+        split.split.eq("validation"), ["record_id", "participant_id", "task"],
+    ].set_index("record_id").sort_index()
+    class_index = {label: i for i, label in enumerate(TASKS)}
+    true_labels = expected.task.map(class_index)
+    summary = pd.read_csv(folder / "03_neural_validation_metrics.csv")
+    assert len(summary) == 2
+    assert set(summary.model) == {"cnn", "tcn"}
+
+    for name in ("cnn", "tcn"):
+        table = pd.read_csv(
+            folder / f"03_{name}_validation_predictions.csv",
+            dtype={"record_id": str},
+        )
+        assert table.record_id.is_unique
+        assert set(table.record_id) == set(expected.index)
+        observed = table.set_index("record_id").sort_index()
+        assert observed.target_index.eq(true_labels).all()
+        assert observed.n_windows.eq(24).all()
+        assert observed.model.eq(name).all()
+        assert observed.partition.eq("validation").all()
+        probabilities = observed[[f"p_{t}" for t in TASKS]].to_numpy(
+            dtype=float
+        )
+        assert np.isfinite(probabilities).all()
+        assert np.allclose(probabilities.sum(axis=1), 1.0, atol=1e-6)
+        assert np.array_equal(
+            probabilities.argmax(axis=1), observed.pred_index.to_numpy(),
+        )
+
+        computed = metric_row(
+            observed.target_index, observed.pred_index,
+            model=name, partition="validation",
+            n_participants=expected.participant_id.nunique(),
+        )
+        row = summary.loc[summary.model.eq(name)].iloc[0]
+        assert int(row.n_records) == len(expected)
+        assert int(row.n_participants) == expected.participant_id.nunique()
+        for key in ("accuracy", "macro_f1", "balanced_accuracy"):
+            assert np.isclose(computed[key], row[key], atol=1e-10)
+        history = pd.read_csv(folder / f"03_{name}_history.csv")
+        chosen = history.loc[history.epoch.eq(row.best_epoch)]
+        assert len(chosen) == 1
+        assert np.isclose(
+            float(chosen.macro_f1.iloc[0]), row.macro_f1, atol=1e-10
+        )
+        best = history.macro_f1.max()
+        finalists = history.loc[np.isclose(history.macro_f1, best)]
+        assert np.isclose(row.macro_f1, best, atol=1e-10)
+        assert np.isclose(
+            float(chosen.validation_window_loss.iloc[0]),
+            float(finalists.validation_window_loss.min()), atol=1e-8,
+        )
 
 
 def test_study_overview_reflects_latest_source_audit():
@@ -169,8 +232,10 @@ def test_stage03_svg_workflow_matches_stage02_reference():
         assert len([x for x in node if x.get("class") == "nodedesc"]) == 3
     fig = ET.parse(folder / "03_cnn_and_tcn_models.svg")
     text = " ".join((x.text or "") for x in fig.iter())
-    assert "Best checkpoint: epoch 8" in text
-    assert "Best checkpoint: epoch 5" in text
+    assert "Best checkpoint: epoch 7" in text
+    assert "Best checkpoint: epoch 6" in text
+    assert "62/64 Validation records" in text
+    assert "61/64 Validation records" in text
     assert "implemented and unexecuted" not in text
 
 
@@ -280,13 +345,13 @@ def test_stage04_main_draft_and_export_contract():
     )
     cells = json.loads(notebook.read_text(encoding="utf-8"))["cells"]
     by_id = {c.get("id"): c for c in cells}
-    for code_id in ("s2c7", "s2c9", "s2c11", "s2c13", "s2c15"):
-        c = by_id[code_id]
-        assert c["execution_count"] is None and not c["outputs"]
     for code_id in ("s2c9", "s2c11"):
         source = "".join(by_id[code_id]["source"])
         assert 'result["parameters"] = int(info["parameters"])' in source
         assert 'result["best_epoch"] = int(info["best_epoch"])' in source
     text = "".join(by_id["s2c15"]["source"])
     assert 'download_outputs_from_colab("eye_movement_modelling/output", "04")' in text
+    assert "expected_ids" in text
+    assert "metric_row(" in text
+    assert "probabilities.sum(axis=1)" in text
 
