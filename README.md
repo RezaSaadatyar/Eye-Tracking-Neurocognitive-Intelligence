@@ -53,7 +53,7 @@ Eye-Tracking-Neurocognitive-Intelligence/
 ├── eye_movement_modelling/
 │   ├── README.md                       # Modelling protocol and navigation
 │   ├── RESEARCH_METHODS_AND_EVIDENCE.md
-│   ├── code/notebooks/                 # Notebook 01 executed on 100; 02–05 main pending
+│   ├── code/notebooks/                 # Main Notebooks 01–03 complete; 04–05 pending
 │   ├── code/src/                       # Data, models, training, evaluation
 │   ├── images/                         # Overview and five stage SVGs
 │   └── output/                         # Separate local generated outputs
