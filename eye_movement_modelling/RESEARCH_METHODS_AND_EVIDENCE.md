@@ -1,10 +1,10 @@
 # Eye-Movement Modelling & Advanced AI | Research Methods and Evidence
 
-**Project:** Eye-Movement Modelling & Advanced AI in Eye-Tracking & Neurocognitive Intelligence. **Target:** original four-class GazeBase recording-protocol identity. **Evidence:** The historical ten-person pilot completed all five notebooks with exploratory Test. The **100-person main study has now completed Notebooks 01–05**, with eight Validation candidates compared on 64 records from 16 people and final Test evaluation on **80 records from 20 independent people**. The pre-Test Validation-selected primary Logistic Regression achieved main Test Macro F1 **1.000** (80/80). Current `01_*`–`05_*` outputs belong to the main study; pilot evidence remains identifiable in older Git revisions. See [README](README.md) and [study workflow](images/study_overview.svg).
+**Project:** Eye-Movement Modelling & Advanced AI, within Eye-Tracking & Neurocognitive Intelligence. **Target:** four-class GazeBase recording-protocol identity. **Scope:** 100 independent people (64 Train, 16 Validation, 20 Test), 400 source task recordings and eight fixed candidate models. The Validation-selected Logistic Regression achieved held-out Test Accuracy and Macro F1 **1.000 (80/80 across 20 people)**. Current `01_*`–`05_*` outputs document this one completed experiment. See [README](README.md) and [workflow](images/study_overview.svg).
 
 ## 1. Research Objective and Scope
 
-The primary question is whether supervised models using engineered gaze features or temporal sequences can distinguish the original GazeBase recording protocol for samples from unseen participants: FXS, HSS, RAN or TEX. This is **task identity**, not a cognitive or clinical endpoint. The historical ten-person pilot established the workflow. The **100-person main cohort now has all eight candidate Validation results and a reserved Test evaluation**: 64/16/20 person Train/Validation/Test groups, 64 Validation and 80 Test task recordings. Logistic Regression was selected on Validation before Test, and achieved **80/80 correct on the main Test**.
+The primary question is whether engineered gaze features and temporal sequences distinguish the original GazeBase recording protocols FXS, HSS, RAN and TEX for unseen participants. The target is **task identity**, not cognition or clinical status. The fixed 100-person cohort comprises **64 Train, 16 Validation and 20 Test people**. Eight candidates were compared on the same 64 Validation records; the selected primary achieved **80/80 correct** on the held-out Test.
 
 Five research questions guide the implementation: do simple priors/linear models offer meaningful baselines; do nonlinear classical models improve record-level Validation; do local/dilated temporal convolutions add information; do recurrent/attention models warrant their extra complexity; and how stable are selected predictions to withheld participants and input-channel removal?
 
@@ -14,7 +14,7 @@ This study does not train a fixation detector, infer reading comprehension, meas
 
 ### 2.1 Source and availability
 
-The study uses [GazeBase v2.0](https://doi.org/10.6084/m9.figshare.12912257), **Round 1 / Session 1**, with FXS (fixations), HSS (horizontal saccades), RAN (random saccades) and TEX (reading). The completed main cohort comprises **100 eligible participants and 400 original recordings** from the published release. An initial ten-person pilot preceded the main experiment. Derived outputs are tracked in GitHub; the complete original GazeBase archive is not duplicated in this repository.
+The study uses [GazeBase v2.0](https://doi.org/10.6084/m9.figshare.12912257), **Round 1 / Session 1**, with four recording tasks: FXS (fixations), HSS (horizontal saccades), RAN (random saccades) and TEX (reading). The source audit identified **100 eligible participants and 400 original task recordings**. Derived outputs are in GitHub, while the complete original GazeBase archive is not duplicated here.
 
 Original CSVs are read from [`data/raw/gazebase/`](../data/README.md). Reuse the maintained `gaze_source` source adapter from Eye-Tracking Foundations as **read-only infrastructure**, without using any derived Eye-Tracking Foundations output CSV. Source data are subject to CC BY 4.0; repository code has a separate MIT licence.
 
@@ -51,7 +51,7 @@ The processed main cohort produced **400 record-feature rows** and **9,600 tempo
 
 Notebook 01 saved **nine stage-owned derived outputs**, including the source inventory, eligibility audit, split assignments, record features, normalised window NPZ (approximately **19.7 MB**), normalisation statistics, protocol, task summary and source-distribution plot. Downstream stages consume these named files from `eye_movement_modelling/output/`; `verify_main_cohort` checks participant identities against the protocol.
 
-**Recorded stage boundary:** All five notebooks belong to the same fixed **100-person main cohort**. Current `01_*` outputs define source inputs, `02_*` classical candidates, `03_*` CNN/TCN, `04_*` GRU/Transformer, and `05_*` the Validation-selected primary and subsequent Test evidence. Earlier ten-person pilot results are documented separately and must not be combined as additional main-study participants. `01_protocol.csv` is the governing cohort specification.
+**Recorded stage boundary:** All five notebooks use the same fixed 100-person cohort. Current `01_*` stores source inputs, `02_*` classical candidates, `03_*` CNN/TCN, `04_*` GRU/Transformer, and `05_*` the selected primary and held-out Test evidence. `01_protocol.csv` specifies the governing cohort.
 
 ### 3.1 Record feature construction
 
@@ -73,7 +73,7 @@ Train-only median imputation is part of each classical scikit-learn Pipeline, wi
 
 ### 4.1 Train, Validation and Test roles
 
-Train participants fit model parameters, classical imputation/scaling and temporal normalisation. Validation participants inform neural checkpoint selection and the final **pre-Test model ranking**. The main Test group comprises **20 independent people (80 source task recordings)** and was examined only after the fixed Validation-based primary decision was saved in Notebook 05. The historical pilot Test was separately examined in its earlier run. This chronology is supported by the notebook's code order and stored decision, not formal preregistration; any later Test-informed tuning requires a distinct qualification.
+Train participants fit model parameters, classical imputation/scaling and temporal normalisation. Validation participants inform neural checkpoint choice and the **pre-Test ranking**. The Test has **20 independent people (80 source recordings)** and was examined only after saving the Validation-selected primary model. The code's execution order and saved decision support this chronology, without implying formal preregistration or a prospective external study.
 
 Evaluation is **record-based**: a classical model produces one prediction per source recording; a neural model produces probabilities for each window, which are then averaged by original recording before classification. Every model is compared on the same recording set in the relevant split.
 
@@ -83,15 +83,15 @@ Report fixed-label **Macro F1**, **Balanced Accuracy**, Accuracy, confusion matr
 
 All-class Test comparison is secondary and exploratory; a model with the best observed Test score does not retrospectively replace the Validation-selected primary candidate. Report sample size and participant support near every Test metric.
 
-### 4.3 Pilot versus main evaluation
+### 4.3 Independence and Test interpretation
 
-At n=10, two independent Test people cannot support a stable population accuracy estimate; the earlier results remain **pilot diagnostics**. The **100-person main cohort** provides eight candidate Validation comparisons on 16 independent people and a final Test on **20 different people**, each with four task recordings. The main Test is now observed. The first eligible source IDs are not a representative population sample; shared session/stimulus/protocol conditions and lack of external or cross-session data limit generalisation.
+The main cohort provides eight Validation evaluations on **64 recordings from 16 independent participants**, followed by a held-out Test with **80 recordings from 20 different people**. Each person contributes four task records, not four independent participants. The first eligible source IDs are not a random population sample; common session, stimuli and acquisition conditions limit generalisation.
 
 ## 5. Methods, Models and Configurations
 
 | Notebook | Implemented approach | Fixed initial settings |
 | --- | --- | --- |
-| 01 | Complete-source discovery, person-disjoint partitions, feature extraction and train-only normalisation | Main: `MAX_PARTICIPANTS=100` (historical pilot: 10); source R1/S1; `seed=17`; 256 samples × four channels; up to 24 windows/record |
+| 01 | Source audit, person-disjoint split, record features and Train-only temporal normalisation | `MAX_PARTICIPANTS=100`; Round 1 / Session 1; `seed=17`; 256 samples × four channels; up to 24 windows/record |
 | 02 | Class-prior DummyClassifier | Train-class prior with no gaze-discriminative model |
 | 02 | Logistic Regression | Median imputation, StandardScaler, balanced classes, max 800 iterations |
 | 02 | Random Forest | 120 trees, depth ≤8, min leaf 2, balanced classes |
@@ -153,36 +153,9 @@ The GRU made five Validation errors; Transformer made one, HSS→RAN. Transforme
 
 The selected model classified **all four task recordings for each of the 20 Test people** correctly. Random Forest also attained 80/80 but was not selected using Test. The secondary models' errors were concentrated in specific original task confusions, particularly RAN/HSS/FXS among temporal networks; they are descriptive comparisons, not a basis for post-Test model changes. There are 20 independent Test participants, not 80 independent people, and no external/session-disjoint validation was carried out.
 
-**Historical ten-person pilot Notebook 01 preparation:** GazeBase Round 1 / Session 1, 10 complete participants, 40 recordings, 40 record feature rows and 960 temporal windows `(960, 256, 4)`. Seed-17 Train/Validation/Test: 6/2/2 people and 24/8/8 source records.
-
-**Historical pilot Notebook 02 Validation:** Four fixed classical candidates fitted on 24 Train records from 6 participants and evaluated on eight Validation records from 2 participants. Class Prior achieved Accuracy **0.25**, Macro F1 **0.10** and Balanced Accuracy **0.25**; Logistic Regression, Random Forest and Gradient Boosting scored **1.00** on all three metrics. These exploratory pilot observations are separate from the main-cohort classical results.
-
-**Interpretation and limits:** The class-prior model predicted FXS for all 8 Validation records (2 correct). The three feature-based models have tied perfect pilot Validation scores, but there are only **two independent Validation people**. Acquisition protocol and stimulus differences may dominate discrimination. These scores do not establish unbiased selected-model performance, generalisation, causal gaze mechanisms or cognitive inference. Notebook 05 has now applied the predefined selection and opened the two-person pilot Test; this does not support an unbiased estimate of broad model superiority.
-
-**Historical pilot Notebook 03 Validation:** CNN and TCN each reached **Accuracy = Macro F1 = Balanced Accuracy = 1.00** on eight Validation recordings from two people. CNN had **11,492 trainable parameters** and selected epoch **8**; TCN had **12,772** and selected epoch **5**. These are historical pilot results, distinct from the current main-cohort CNN/TCN scores; their limited Validation support does not establish generalisation.
-
-**Historical ten-person pilot Notebook 04 Validation:** GRU (3,780 parameters, epoch 1) achieved 2/8 correct and Macro F1 0.10; Transformer (33,764 parameters, epoch 2) achieved 4/8 correct and Macro F1 0.375. Only two independent Validation participants contributed to these historical pilot results. This is distinct from the **current main-cohort Notebook 04** with 64 Validation recordings. The pilot Test was exploratory and cannot substitute for the reserved main Test.
-
-**Recorded Notebook 05 pilot model selection and Test:** The saved Validation-based rule uses descending Macro F1, then Balanced Accuracy, then a fixed candidate priority. Logistic Regression, Random Forest, Gradient Boosting, CNN and TCN tied at **Validation Macro F1 1.00** on eight recordings from two people; the fixed priority selected **Logistic Regression**. The stage-owned `05_model_selection.csv` records `test_used_in_selection=False`. This is a flag reflecting the code's intended selection rule; it does not independently verify the timing of execution or constitute formal preregistration.
-
-The subsequently recorded **pilot Test comprises eight original task recordings from two people (001 and 005)**. The primary Logistic Regression achieved **Accuracy 0.875 (7/8)**, fixed-label **Macro F1 0.867** and **Balanced Accuracy 0.875**. Its only incorrect label was `S_1005_S1_FXS`, classified as TEX. Participant 001 had **4/4** correct (Macro F1 1.00); participant 005 had **3/4** correct (Macro F1 0.667). The Test predictions of all eight models were saved for descriptive comparison, but Test scores did not change the recorded primary choice.
-
-| Frozen candidate | Pilot Test accuracy | Pilot Test Macro F1 | Pilot Test balanced accuracy |
-| --- | ---: | ---: | ---: |
-| Class Prior | 0.250 | 0.100 | 0.250 |
-| **Logistic Regression (primary)** | **0.875** | **0.867** | **0.875** |
-| Random Forest | 0.875 | 0.867 | 0.875 |
-| Gradient Boosting | 0.875 | 0.867 | 0.875 |
-| CNN | 0.750 | 0.733 | 0.750 |
-| TCN | 0.750 | 0.742 | 0.750 |
-| GRU | 0.250 | 0.100 | 0.250 |
-| Transformer | 0.500 | 0.333 | 0.500 |
-
-All eight models used the same Test records. These are **within-GazeBase, two-person pilot observations**, not external validation, an independent replication or evidence of generalisation to new sessions, stimuli and devices.
-
 ## 7. Robustness, Uncertainty and Additional Analyses
 
-The **100-person main Validation-only sensitivity analysis** masked `pupil_coverage` and `pupil_median_uncalibrated` for the fixed Logistic Regression pipeline without refitting. The observed Macro F1 was **1.000 on original Validation records and 1.000 after masking (64 records, 16 people)**. The historical ten-person pilot had also shown 1.00 → 1.00 on eight Validation records. Neither result demonstrates causal feature irrelevance, a faithful model explanation, or stability on new acquisition protocols. A Class Prior model ignores gaze predictors.
+The Validation-only sensitivity analysis masked `pupil_coverage` and `pupil_median_uncalibrated` for the fixed selected Logistic Regression pipeline without refitting. Macro F1 remained **1.000 → 1.000** on 64 Validation records from 16 people. The result is a limited descriptive perturbation, not evidence of causal feature irrelevance or a faithful explanation.
 
 Scientific interpretation must consider stimulus/task-protocol confounding, sample eligibility (first 100 complete source people), source validity and anomalous step speeds, participant dependence among the four recordings per person, and the absence of session-disjoint or external testing. One Test split from **20 independent people** is useful but not a population-wide reliability or calibrated uncertainty guarantee. Do not treat 80 task records as 80 independent participants.
 
@@ -190,18 +163,18 @@ Potential future additions—different source rounds/sessions, stimulus-disjoint
 
 ## 8. Current Outputs and Reproducibility
 
-Study outputs are written under `eye_movement_modelling/output/` with distinct stage prefixes. Current `01_*` contains the 100-person source registry, features and 9,600-window archive; `02_*` contains four classical models and their current Validation evidence; `03_*` and `04_*` contain the four fitted temporal candidates, histories and 64-record Validation predictions. **Current `05_*` now contains the main Validation-selected primary decision, 640 Test predictions, eight Test metric rows, 160 model-by-participant rows, Validation-only sensitivity and four figures (nine stage-owned files).** The earlier pilot is recoverable through Git history and must not be mixed with these current outputs.
+Study outputs are stored under `eye_movement_modelling/output/` with stage prefixes. Current `01_*` contains the 100-person source registry, features and 9,600 windows; `02_*` the classical model pipelines and Validation scores; `03_*` and `04_*` the four temporal checkpoints, histories and Validation predictions; and `05_*` the saved primary decision, **640 Test predictions**, eight aggregate Test rows, **160 per-model participant rows**, Validation sensitivity table and four figures.
 
 The reviewed derived outputs are tracked in `eye_movement_modelling/output/`, separate from the original GazeBase source archive. The repository retains a **50,000,000-byte per-file size policy** and source attribution under GazeBase's CC BY 4.0 licence. Stages use current named outputs, with a stage ZIP available as an optional transfer mechanism; ZIP files are not required when corresponding outputs are present.
 
-The main study's five stages have compatible source, model and evaluation outputs. The **640 saved Test prediction rows** match the frozen 80 original Test record IDs across eight models; class probabilities, recorded aggregate scores and 160 model-by-person rows are internally consistent. This provides an auditable numerical record, whereas reproducing source processing and training independently requires rerunning the relevant stages. The earlier pilot remains traceable through historical Git revisions.
+The five notebooks contain compatible source, model and evaluation outputs. The **640 Test predictions** match the same 80 Test source records across eight models. Saved probabilities, aggregate scores and 160 model-by-person rows are internally consistent. Independent reconstruction would still require rerunning source preparation, training and evaluation.
 
 ## 9. Discussion, Limitations and Future Work
 
 The implemented workflow is designed to compare simple feature-based models and compact temporal neural networks with participant-disjoint partitions, separate per-model outputs and explicit Test boundaries. Its scientific interpretation will remain narrow: **classification of the original recording task**. Differences in stimulus layout and recording duration, even when duration itself is excluded as a predictor, may drive Task identity. These scores would not demonstrate neurocognitive insight.
 
-The ten-person pilot remains a historical feasibility study. The **100-person main study is now complete for its fixed GazeBase recording-protocol recognition objective**. Logistic Regression was selected from 64 Validation recordings before Test and scored **80/80** on 20 participant-disjoint Test people; Random Forest also scored 80/80 as a secondary comparison, but Test performance did not change the primary selection. The conclusion is narrow to this source, round, session, task protocol and cohort. Cross-session or external evaluation is a separate experiment, not an unperformed step in this completed study.
+The fixed 100-person experiment supports recognition of the original recording protocols within GazeBase Round 1 / Session 1. Logistic Regression was selected on 64 Validation recordings before Test and scored **80/80** on 20 participant-disjoint Test people. Random Forest also scored 80/80 as a secondary comparison, without changing the selected primary.
 
-The historical ten-person pilot and fixed **100-person main study are complete** for GazeBase recording-task recognition. The observed Test should not be reused to tune this primary model or claim prospective validation. Future work could separately examine different source rounds or sessions, stimulus-controlled designs, more representative participant sampling or genuinely independent datasets, each with its own protocol and held-out evaluation.
+The **100-person five-notebook workflow is complete**. The observed Test must not be treated as untouched for retrospective model changes. Future work could independently examine different sessions, stimuli, more representative participant sampling or external data under a separately defined evaluation protocol.
 
 **Source attribution:** [GazeBase dataset](https://doi.org/10.6084/m9.figshare.12912257) and [Griffith, Lohr, Abdulin and Komogortsev (2021)](https://doi.org/10.1038/s41597-021-00959-y), [Creative Commons Attribution 4.0](https://creativecommons.org/licenses/by/4.0/).
