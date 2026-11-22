@@ -1,0 +1,21 @@
+{
+  "dataset_id": "nm000279",
+  "dataset_version": "v1.0.0",
+  "target": {
+    "nr": 0,
+    "tsr": 1
+  },
+  "max_participants": 6,
+  "runs_per_task": 1,
+  "seed": 17,
+  "participant_split": {
+    "test": 2,
+    "train": 3,
+    "validation": 1
+  },
+  "window_seconds": 12.0,
+  "bin_seconds": 2.0,
+  "max_windows_per_run": 20,
+  "min_eye_fraction": 0.6,
+  "final_test_policy": "select using Validation, then score Test"
+}

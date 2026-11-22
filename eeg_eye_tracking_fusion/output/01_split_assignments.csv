@@ -1,0 +1,7 @@
+participant_id,split
+sub-YAC,test
+sub-YAG,test
+sub-YAK,train
+sub-YDG,train
+sub-YDR,validation
+sub-YFR,train

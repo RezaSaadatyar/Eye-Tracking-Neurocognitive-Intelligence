@@ -1,0 +1,13 @@
+participant_id,task,run,eeg_sfreq,eye_sfreq,eeg_channels,eye_start_time,eye_columns
+sub-YAC,nr,1,500.0,500.0,128,-0.035,"eye1_x_coordinate,eye1_y_coordinate,eye1_pupil_size"
+sub-YAC,tsr,1,500.0,500.0,128,-0.033,"eye1_x_coordinate,eye1_y_coordinate,eye1_pupil_size"
+sub-YAG,nr,1,500.0,500.0,128,0.009,"eye1_x_coordinate,eye1_y_coordinate,eye1_pupil_size"
+sub-YAG,tsr,1,500.0,500.0,128,0.01,"eye1_x_coordinate,eye1_y_coordinate,eye1_pupil_size"
+sub-YAK,nr,1,500.0,500.0,128,-0.046,"eye1_x_coordinate,eye1_y_coordinate,eye1_pupil_size"
+sub-YAK,tsr,1,500.0,500.0,128,-0.012,"eye1_x_coordinate,eye1_y_coordinate,eye1_pupil_size"
+sub-YDG,nr,1,500.0,500.0,128,0.005,"eye1_x_coordinate,eye1_y_coordinate,eye1_pupil_size"
+sub-YDG,tsr,1,500.0,500.0,128,0.007,"eye1_x_coordinate,eye1_y_coordinate,eye1_pupil_size"
+sub-YDR,nr,1,500.0,500.0,128,0.001,"eye1_x_coordinate,eye1_y_coordinate,eye1_pupil_size"
+sub-YDR,tsr,1,500.0,500.0,128,-0.018,"eye1_x_coordinate,eye1_y_coordinate,eye1_pupil_size"
+sub-YFR,nr,1,500.0,500.0,128,-0.018,"eye1_x_coordinate,eye1_y_coordinate,eye1_pupil_size"
+sub-YFR,tsr,1,500.0,500.0,128,0.003,"eye1_x_coordinate,eye1_y_coordinate,eye1_pupil_size"

@@ -1,0 +1,13 @@
+participant_id,task,run,source_megabytes,all_files_present
+sub-YAC,nr,1,116.542709,True
+sub-YAC,tsr,1,88.018981,True
+sub-YAG,nr,1,179.730351,True
+sub-YAG,tsr,1,165.852069,True
+sub-YAK,nr,1,3.945487,True
+sub-YAK,tsr,1,68.58576,True
+sub-YDG,nr,1,102.789181,True
+sub-YDG,tsr,1,49.442757,True
+sub-YDR,nr,1,110.90266,True
+sub-YDR,tsr,1,36.383238,True
+sub-YFR,nr,1,130.062497,True
+sub-YFR,tsr,1,83.330228,True
