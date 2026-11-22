@@ -1,6 +1,7 @@
 """Synthetic and static contracts; no original ZuCo data are reproduced."""
 from __future__ import annotations
 
+import ast
 import json
 import sys
 import xml.etree.ElementTree as ET
@@ -131,13 +132,29 @@ def test_six_complete_colab_notebooks_and_stage_contracts():
         assert "Imports and Research Environment" in "".join(cells[3]["source"])
         assert len(cells) >= 17
         assert len([c for c in cells if c["cell_type"] == "code"]) >= 8
-        for c in cells:
-            if c["cell_type"] == "code":
-                source = "".join(c["source"])
-                compile(source, str(path), "exec")
-                assert not c.get("outputs")
-                assert "drive.mount" not in source
-        assert "FINAL" in path.name.upper() or index < 6 or True
+        checkout = "".join(cells[2]["source"])
+        imports = "".join(cells[4]["source"])
+        assert "%cd {repo_path}" in checkout
+        assert "git", "clone" in checkout
+        assert 'root = setup_colab("eeg_eye_tracking_fusion")' in imports
+        assert 'from core.output_download import download_outputs_from_colab' in imports
+        assert 'from core.plot_style import plot_style' in imports
+        for cell_index, cell in enumerate(cells):
+            if cell["cell_type"] != "code":
+                continue
+            source = "".join(cell["source"])
+            compilable = (source.replace('%cd {repo_path}', 'pass')
+                          if cell_index == 2 else source)
+            compile(compilable, str(path), "exec")
+            assert not cell.get("outputs")
+            assert "drive.mount" not in source
+            if cell_index >= 5:
+                parsed = ast.parse(source)
+                assert not any(isinstance(node, (ast.Import, ast.ImportFrom))
+                               for node in ast.walk(parsed))
+        ending = "".join(cells[-1]["source"])
+        assert 'download_outputs_from_colab(' in ending
+        assert f'"{index:02d}"' in ending
     last = json.loads(paths[-1].read_text())
     body = "\n".join("".join(c["source"]) for c in last["cells"])
     assert "RUN_FINAL_TEST = False" in body
