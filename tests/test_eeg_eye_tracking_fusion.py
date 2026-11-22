@@ -20,7 +20,9 @@ sys.path.insert(0, str(PROJECT / "code" / "src"))
 
 from alignment import (eye_sample_times, ensure_disjoint_registry,
                        valid_eye_rows, window_registry)
-from features import summarise_eeg, summarise_eye
+from features import (
+    summarise_eeg, summarise_eye, verify_temporal_feature_alignment,
+)
 from models import CLASSICAL_ORDER, MODEL_ORDER, metrics
 from zuco_io import (
     API, DATA, S3, download_file, read_eye_physio, select_run_paths,
@@ -513,15 +515,13 @@ def test_saved_zuco_matched_features_and_temporal_array_alignment():
     with np.load(
         folder / "03_temporal_sequences.npz", allow_pickle=False
     ) as temporal:
-        for field in ("window_id", "participant_id", "task", "split"):
-            np.testing.assert_array_equal(
-                temporal[field], features[field].astype(str).to_numpy()
-            )
+        verify_temporal_feature_alignment(temporal, features)
         for field in ("eeg", "gaze"):
-            assert temporal[field].shape == (
-                len(features), 6, 4
-            )
+            assert temporal[field].shape == (len(features), 6, 4)
         assert temporal["eeg"].shape == temporal["gaze"].shape
+        wrong_order = features.iloc[::-1].reset_index(drop=True)
+        with pytest.raises(ValueError, match="do not align"):
+            verify_temporal_feature_alignment(temporal, wrong_order)
 
 
 def test_classical_notebook_uses_same_validation_ids_and_no_asserts():
@@ -538,7 +538,7 @@ def test_classical_notebook_uses_same_validation_ids_and_no_asserts():
     assert '02_window_registry.csv' in code
     assert '03_features.csv' in code
     assert 'set(table.window_id) != set(expected.window_id)' in code
-    assert 'matched' in code and 'split_registry' in code
+    assert 'matched' in code and 'validate="one_to_one"' in code
     assert 'prediction_table.duplicated(["model", "window_id"])' in code
     assert 'model_support.eq(len(valid)).all()' in code
     assert 'probabilities(model, x_val)' in code

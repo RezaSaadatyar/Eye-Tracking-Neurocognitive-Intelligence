@@ -100,3 +100,35 @@ def extract_window(raw, eye, events, eye_meta, row,
         signal.append(summarise_eeg(eeg_window[:, lo:hi], sfreq))
         gaze.append(summarise_eye(eye, eye_t, events, b0, b1))
     return np.stack(signal), np.stack(gaze)
+
+
+def verify_temporal_feature_alignment(
+    sequences, table: pd.DataFrame, expected_bins: int = 6
+) -> None:
+    """Check original-unit EEG/gaze sequence order against recorded means.
+
+    Source CSV means were calculated from the same numerical temporal arrays.
+    Comparing their per-window means verifies row identity without loading
+    object-encoded text inside an older NPZ with unsafe pickle enabled.
+    """
+    if table.empty or table.window_id.duplicated().any():
+        raise ValueError("Empty or duplicated paired feature identities")
+    for key, fields in (("eeg", EEG_FIELDS), ("gaze", GAZE_FIELDS)):
+        array = np.asarray(sequences[key])
+        expected_shape = (len(table), expected_bins, len(fields))
+        if array.shape != expected_shape or array.dtype.kind not in "fi":
+            raise ValueError(
+                f"Invalid {key} temporal shape or dtype: {array.shape}"
+            )
+        summary = table[
+            [f"{key}_{field}" for field in fields]
+        ].to_numpy(dtype=float)
+        with np.errstate(invalid="ignore"):
+            means = np.nanmean(array, axis=1)
+        if not np.allclose(
+            means, summary, rtol=3e-5, atol=1e-4, equal_nan=True
+        ):
+            raise ValueError(
+                f"{key.upper()} temporal rows do not align with "
+                "the saved per-window feature means"
+            )
