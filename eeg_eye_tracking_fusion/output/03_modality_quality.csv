@@ -1,0 +1,13 @@
+participant_id,split,task,n_windows
+sub-YAC,test,nr,20
+sub-YAC,test,tsr,20
+sub-YAG,test,nr,20
+sub-YAG,test,tsr,20
+sub-YAK,train,nr,1
+sub-YAK,train,tsr,20
+sub-YDG,train,nr,20
+sub-YDG,train,tsr,14
+sub-YDR,validation,nr,20
+sub-YDR,validation,tsr,11
+sub-YFR,train,nr,20
+sub-YFR,train,tsr,20
