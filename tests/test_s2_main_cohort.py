@@ -233,7 +233,7 @@ def test_stage01_figure_matches_observed_cohort_and_stage02_main_validation():
     figure1 = " ".join(el.text or "" for el in first.iter())
     figure2 = " ".join(el.text or "" for el in second.iter())
     for expected in ("100 complete people", "64 Train participants",
-                     "16 Validation people", "20 reserved Test people"):
+                     "16 Validation people", "20 Test participants"):
         assert expected in figure1
     assert "256 Train recordings" in figure2
     assert "64 records; 16 people" in figure2
