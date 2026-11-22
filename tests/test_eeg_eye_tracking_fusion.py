@@ -358,6 +358,107 @@ def test_saved_zuco_source_evidence_reconciles():
     assert (output / "01_source_overview.png").stat().st_size > 1000
 
 
+def test_saved_zuco_paired_window_evidence_is_source_consistent():
+    """Reconcile real Stage-02 CSVs without assuming fixed window counts."""
+    folder = PROJECT / "output"
+    file_names = (
+        "02_window_registry.csv",
+        "02_alignment_quality.csv",
+        "02_window_summary.csv",
+        "02_alignment_quality.png",
+    )
+    assert all((folder / name).is_file() for name in file_names)
+    source = pd.read_csv(
+        folder / "01_source_manifest.csv", dtype={"participant_id": str}
+    )
+    windows = pd.read_csv(
+        folder / "02_window_registry.csv", dtype={"participant_id": str}
+    )
+    quality = pd.read_csv(
+        folder / "02_alignment_quality.csv", dtype={"participant_id": str}
+    )
+    summary = pd.read_csv(folder / "02_window_summary.csv")
+    protocol = json.loads((folder / "01_protocol.json").read_text())
+
+    assert not windows.empty
+    assert windows.window_id.is_unique
+    assert set(windows.participant_id) == set(source.participant_id)
+    assert windows.eligible.dtype == bool
+    assert quality.drift_verified.eq(False).all()
+    assert windows.eye_valid_fraction.between(0, 1).all()
+    np.testing.assert_allclose(
+        windows.end_seconds - windows.start_seconds,
+        protocol["window_seconds"], atol=1e-7,
+    )
+    assert (folder / "02_alignment_quality.png").stat().st_size > 1000
+
+    keys = ["participant_id", "task", "run"]
+    role_check = windows.merge(
+        source[keys + ["split"]], on=keys, how="left",
+        validate="many_to_one", suffixes=("_window", "_source"),
+    )
+    assert role_check.split_source.notna().all()
+    assert role_check.split_window.eq(role_check.split_source).all()
+    observed_run = (
+        windows.groupby(keys).agg(
+            total_windows=("window_id", "size"),
+            eligible_windows=("eligible", "sum"),
+        ).reset_index()
+    )
+    expected_run = quality[keys + ["total_windows", "eligible_windows"]]
+    pd.testing.assert_frame_equal(
+        observed_run.sort_values(keys).reset_index(drop=True),
+        expected_run.sort_values(keys).reset_index(drop=True),
+        check_dtype=False,
+    )
+    for win in windows.itertuples(index=False):
+        per_run = quality.loc[
+            quality.participant_id.eq(win.participant_id)
+            & quality.task.eq(win.task)
+            & quality.run.eq(win.run)
+        ].iloc[0]
+        assert win.start_seconds >= per_run.common_start_seconds - 1e-6
+        assert win.end_seconds <= per_run.common_end_seconds + 1e-6
+
+    observed_summary = (
+        windows.groupby(["split", "task"]).agg(
+            total=("window_id", "size"),
+            eligible=("eligible", "sum"),
+            people=("participant_id", "nunique"),
+        ).reset_index()
+    )
+    pd.testing.assert_frame_equal(
+        observed_summary.sort_values(["split", "task"])
+        .reset_index(drop=True),
+        summary.sort_values(["split", "task"]).reset_index(drop=True),
+        check_dtype=False,
+    )
+
+
+def test_feature_notebook_preserves_frozen_source_and_reports_exclusions():
+    """Stage 03 should not hide cohort changes or failed feature windows."""
+    nb = json.loads(
+        (PROJECT / "code" / "notebooks"
+         / "03_preprocessing_features_and_neurophysiology.ipynb")
+        .read_text(encoding="utf-8")
+    )
+    source = "\n".join(
+        "".join(c["source"]) for c in nb["cells"]
+        if c["cell_type"] == "code"
+    )
+    assert "02_window_registry.csv" in source
+    assert "02_alignment_quality.csv" in source
+    assert "split_window" in source and "split_source" in source
+    assert "ensure_disjoint_registry(registry)" in source
+    assert "features.window_id.duplicated().any()" in source
+    assert "preceding_issues" in source
+    assert "group_support" in source
+    assert "03_temporal_sequences.npz" in source
+    assert not any(
+        line.strip().startswith("assert ") for line in source.splitlines()
+    )
+
+
 def test_alignment_notebook_preserves_scientific_role_checks_without_asserts():
     """Notebook 02 verifies source roles and explicitly diagnoses empty runs."""
     notebook = json.loads(
