@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1700" height="816" viewBox="0 0 1700 816" role="img" aria-labelledby="title desc">
-  <title id="title">06 | Validation Selection and Person-Disjoint Final Test</title>
-  <desc id="desc">Planned five-band scientific workflow for 06_robustness_and_final_evaluation. No measured model results or unverified alignment quality values are represented.</desc>
+  <title id="title">06 | Validation Selection and Development QA</title>
+  <desc id="desc">Pre-execution Stage-06 five-band development workflow. Seven classical and three temporal candidates have recorded predictions on 31 Validation windows from a single ZuCo 2.0 participant. Recorded Stage-04/05 Validation leader: gaze logistic Macro F1 0.8862. The first Stage-06 run will verify the saved evidence, freeze the selected candidate and perform descriptive Validation feature masking. RUN_FINAL_TEST is False and all 80 Test windows remain unscored. No Stage-06 numerical result or Test claim is depicted.</desc>
   <defs>
     <marker id="arr" markerUnits="userSpaceOnUse" markerWidth="6" markerHeight="6" refX="5.5" refY="3" orient="auto">
       <path d="M0 0 L6 3 L0 6 Z" fill="#245E9D"/>
@@ -32,8 +32,8 @@
   </defs>
   <rect id="canvas" x="0" y="0" width="1700" height="816" rx="20" fill="#F4F9FD"/>
   <g id="band-0-header">
-    <text id="text-001" x="30" y="38" class="figure-title" data-container="canvas">06 | Validation Selection and Person-Disjoint Final Test</text>
-    <text id="text-002" x="30" y="67" class="subtitle" data-container="canvas">Fixed ranking then one held-out evaluation; development-only mode keeps Test unexamined</text>
+    <text id="text-001" x="30" y="38" class="figure-title" data-container="canvas">06 | Validation Selection and Development QA</text>
+    <text id="text-002" x="30" y="67" class="subtitle" data-container="canvas">Ten recorded Validation candidates | 31 windows from one person | Test scoring disabled</text>
   </g>
   <g id="band-1-context">
     <rect id="context-container" x="24" y="84" width="1652" height="160" rx="16" fill="#EAF3FA" stroke="#C7D9E6" stroke-width="2"/>
@@ -44,88 +44,88 @@
       <text id="text-006" x="153" y="207" class="source-label" data-container="context-container">NR and TSR runs</text>
     </g>
     <g id="context-module-1">
-      <text id="text-007" x="358" y="115" class="context-heading" data-container="context-container">EVIDENCE INPUTS</text>
-      <text id="text-008" x="358" y="148" class="context-body" data-container="context-container">04_ classical candidates</text>
-      <text id="text-009" x="358" y="174" class="context-body" data-container="context-container">05_ temporal candidates</text>
-      <text id="text-010" x="358" y="200" class="context-body" data-container="context-container">Shared Validation IDs</text>
+      <text id="text-007" x="358" y="115" class="context-heading" data-container="context-container">RECONCILED INPUTS</text>
+      <text id="text-008" x="358" y="148" class="context-body" data-container="context-container">7 classical models (04)</text>
+      <text id="text-009" x="358" y="174" class="context-body" data-container="context-container">3 GRU models (05)</text>
+      <text id="text-010" x="358" y="200" class="context-body" data-container="context-container">Same 31 Validation IDs</text>
     </g>
     <g id="context-module-2">
-      <text id="text-011" x="690" y="115" class="context-heading" data-container="context-container">PRIMARY RULE</text>
-      <text id="text-012" x="690" y="148" class="context-body" data-container="context-container">Macro F1 then balance</text>
-      <text id="text-013" x="690" y="174" class="context-body" data-container="context-container">Fixed candidate priority</text>
-      <text id="text-014" x="690" y="200" class="context-body" data-container="context-container">Save before Test</text>
+      <text id="text-011" x="690" y="115" class="context-heading" data-container="context-container">FROZEN SELECTION</text>
+      <text id="text-012" x="690" y="148" class="context-body" data-container="context-container">Macro F1; balanced acc.</text>
+      <text id="text-013" x="690" y="174" class="context-body" data-container="context-container">Fixed priority ties</text>
+      <text id="text-014" x="690" y="200" class="context-body" data-container="context-container">Decision before any Test</text>
     </g>
     <g id="context-module-3">
-      <text id="text-015" x="1020" y="115" class="context-heading" data-container="context-container">FINAL TEST</text>
-      <text id="text-016" x="1020" y="148" class="context-body" data-container="context-container">One unseen-person cohort</text>
-      <text id="text-017" x="1020" y="174" class="context-body" data-container="context-container">Same paired windows</text>
-      <text id="text-018" x="1020" y="200" class="context-body" data-container="context-container">Do not reselect model</text>
+      <text id="text-015" x="1020" y="115" class="context-heading" data-container="context-container">TEST POLICY</text>
+      <text id="text-016" x="1020" y="148" class="context-body" data-container="context-container">Development: disabled</text>
+      <text id="text-017" x="1020" y="174" class="context-body" data-container="context-container">80 windows reserved</text>
+      <text id="text-018" x="1020" y="200" class="context-body" data-container="context-container">Separate approval required</text>
     </g>
     <g id="context-module-4">
-      <text id="text-019" x="1360" y="115" class="context-heading" data-container="context-container">SENSITIVITY</text>
-      <text id="text-020" x="1360" y="148" class="context-body" data-container="context-container">EEG/gaze feature masks</text>
-      <text id="text-021" x="1360" y="174" class="context-body" data-container="context-container">Cluster bootstrap people</text>
-      <text id="text-022" x="1360" y="200" class="context-body" data-container="context-container">Task confounds reported</text>
+      <text id="text-019" x="1360" y="115" class="context-heading" data-container="context-container">SENSITIVITY SCOPE</text>
+      <text id="text-020" x="1360" y="148" class="context-body" data-container="context-container">Mask EEG or gaze</text>
+      <text id="text-021" x="1360" y="174" class="context-body" data-container="context-container">Validation only; no refit</text>
+      <text id="text-022" x="1360" y="200" class="context-body" data-container="context-container">Not causal attribution</text>
     </g>
   </g>
   <g id="band-2-analysis">
     <rect id="analysis-container" x="24" y="258" width="1652" height="314" rx="16" fill="#EDF6FB" stroke="#B4CFE0" stroke-width="1.5"/>
     <g id="analysis-focus">
       <rect id="section-label-box" x="38" y="272" width="238" height="32" rx="9" fill="#173453" stroke="#173453" stroke-width="1.5"/>
-      <text id="text-023" x="157" y="293" class="section-label" text-anchor="middle" data-container="section-label-box">SCIENTIFIC DESIGN</text>
+      <text id="text-023" x="157" y="293" class="section-label" text-anchor="middle" data-container="section-label-box">DEVELOPMENT REVIEW</text>
       <rect id="focus-card" x="38" y="312" width="238" height="215" rx="10" fill="#F7FAFD" stroke="#DFEAF0" stroke-width="1.5"/>
-      <text id="text-024" x="54" y="344" class="focus-heading" data-container="focus-card">FINAL INFERENCE</text>
-      <text id="text-025" x="54" y="389" class="focus-body" data-container="focus-card">Do combined signals</text>
-      <text id="text-026" x="54" y="416" class="focus-body" data-container="focus-card">help on unseen people?</text>
-      <text id="text-027" x="54" y="443" class="focus-body" data-container="focus-card">Validation freezes choice</text>
-      <text id="text-028" x="54" y="470" class="focus-body" data-container="focus-card">Test used only once</text>
-      <text id="text-029" x="54" y="508" class="qualification" data-container="focus-card">Not a clinical target</text>
+      <text id="text-024" x="54" y="344" class="focus-heading" data-container="focus-card">VALIDATION QUESTION</text>
+      <text id="text-025" x="54" y="389" class="focus-body" data-container="focus-card">Which candidate leads</text>
+      <text id="text-026" x="54" y="416" class="focus-body" data-container="focus-card">on one held-out person?</text>
+      <text id="text-027" x="54" y="443" class="focus-body" data-container="focus-card">Ten fixed comparisons</text>
+      <text id="text-028" x="54" y="470" class="focus-body" data-container="focus-card">No Test-based tuning</text>
+      <text id="text-029" x="54" y="508" class="qualification" data-container="focus-card">Test remains reserved</text>
     </g>
     <g id="evidence-panel-1">
       <rect id="evidence-card-1" x="292" y="272" width="324" height="254" rx="12" fill="#FFFFFF" stroke="#B6CFDE" stroke-width="1.5"/>
       <path id="evidence-header-1" d="M303 272 H605 Q616 272 616 283 V305 H292 V283 Q292 272 303 272 Z" fill="#174B70"/>
-      <text id="text-030" x="454.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-1">VALIDATION QA</text>
+      <text id="text-030" x="454.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-1">TEN-MODEL QA</text>
       <g id="evidence-content-1" data-slot="scientific-content">
-        <text id="text-031" x="454.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-1">Ten fixed candidates</text>
+        <text id="text-031" x="454.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-1">7 classical + 3 temporal</text>
         <text id="text-032" x="454.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-1">Recalculate metrics</text>
-        <text id="text-033" x="454.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-1">Exact source identities</text>
+        <text id="text-033" x="454.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-1">Exact Validation identities</text>
       </g>
     </g>
     <g id="evidence-panel-2">
       <rect id="evidence-card-2" x="630" y="272" width="324" height="254" rx="12" fill="#FFFFFF" stroke="#B6CFDE" stroke-width="1.5"/>
       <path id="evidence-header-2" d="M641 272 H943 Q954 272 954 283 V305 H630 V283 Q630 272 641 272 Z" fill="#174B70"/>
-      <text id="text-034" x="792.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-2">PRIMARY FREEZE</text>
+      <text id="text-034" x="792.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-2">PRIMARY SELECTION</text>
       <g id="evidence-content-2" data-slot="scientific-content">
-        <text id="text-035" x="792.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-2">Macro F1 / balance</text>
-        <text id="text-036" x="792.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-2">Priority tie-break</text>
-        <text id="text-037" x="792.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-2">Decision saved before Test</text>
+        <text id="text-035" x="792.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-2">Macro F1, then balance</text>
+        <text id="text-036" x="792.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-2">Fixed-priority tie-break</text>
+        <text id="text-037" x="792.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-2">Save decision before Test</text>
       </g>
     </g>
     <g id="evidence-panel-3">
       <rect id="evidence-card-3" x="968" y="272" width="324" height="254" rx="12" fill="#FFFFFF" stroke="#B6CFDE" stroke-width="1.5"/>
       <path id="evidence-header-3" d="M979 272 H1281 Q1292 272 1292 283 V305 H968 V283 Q968 272 979 272 Z" fill="#174B70"/>
-      <text id="text-038" x="1130.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-3">UNSEEN TEST</text>
+      <text id="text-038" x="1130.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-3">RESERVED TEST</text>
       <g id="evidence-content-3" data-slot="scientific-content">
-        <text id="text-039" x="1130.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-3">Separate participants</text>
-        <text id="text-040" x="1130.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-3">One frozen evaluation</text>
-        <text id="text-041" x="1130.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-3">No retrospective choice</text>
+        <text id="text-039" x="1130.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-3">Disabled in this run</text>
+        <text id="text-040" x="1130.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-3">80 windows / two people</text>
+        <text id="text-041" x="1130.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-3">No Test outputs created</text>
       </g>
     </g>
     <g id="evidence-panel-4">
       <rect id="evidence-card-4" x="1306" y="272" width="356" height="254" rx="12" fill="#FFFFFF" stroke="#B6CFDE" stroke-width="1.5"/>
       <path id="evidence-header-4" d="M1317 272 H1651 Q1662 272 1662 283 V305 H1306 V283 Q1306 272 1317 272 Z" fill="#174B70"/>
-      <text id="text-042" x="1484.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-4">UNCERTAINTY</text>
+      <text id="text-042" x="1484.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-4">VALIDATION MASKING</text>
       <g id="evidence-content-4" data-slot="scientific-content">
-        <text id="text-043" x="1484.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-4">Person-level results</text>
-        <text id="text-044" x="1484.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-4">Cluster bootstrap</text>
-        <text id="text-045" x="1484.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-4">Limits for small n</text>
+        <text id="text-043" x="1484.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-4">Fixed early-fusion model</text>
+        <text id="text-044" x="1484.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-4">Mask one modality</text>
+        <text id="text-045" x="1484.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-4">No model retraining</text>
       </g>
     </g>
     <g id="optional-scientific-note" data-optional="true">
       <rect id="note-strip" x="301" y="540" width="1064" height="25" rx="12" fill="#E0F2EC" stroke="#D3EAE2" stroke-width="1.5"/>
       <circle cx="324" cy="552" r="9" fill="#23749A"/>
       <text id="text-046" x="324" y="556" class="info-mark" text-anchor="middle">i</text>
-      <text id="text-047" x="342" y="556" class="scientific-note" data-container="note-strip">Fusion improvement remains a hypothesis; selected metrics require observed evidence.</text>
+      <text id="text-047" x="342" y="556" class="scientific-note" data-container="note-strip">Recorded Stages 04/05: gaze logistic leads Validation (F1 0.8862); Stage 06 has not executed.</text>
     </g>
   </g>
   <g id="band-3-workflow">
@@ -133,67 +133,67 @@
     <g id="workflow-input">
       <rect id="workflow-node-0" x="38" y="613" width="208" height="132" rx="15" fill="#173453" stroke="#173453" stroke-width="1.8"/>
       <text id="text-048" x="142" y="636" class="terminal-id" text-anchor="middle" data-container="workflow-node-0">INPUT</text>
-      <text id="text-049" x="142" y="662" class="terminal-heading" text-anchor="middle" data-container="workflow-node-0">Prior Evidence</text>
-      <text id="text-050" x="142" y="684" class="terminal-body" text-anchor="middle" data-container="workflow-node-0">Stages 01–05</text>
-      <text id="text-051" x="142" y="704" class="terminal-body" text-anchor="middle" data-container="workflow-node-0">Matched source IDs</text>
-      <text id="text-052" x="142" y="724" class="terminal-body" text-anchor="middle" data-container="workflow-node-0">Saved fitted models</text>
+      <text id="text-049" x="142" y="662" class="terminal-heading" text-anchor="middle" data-container="workflow-node-0">Stored Validation</text>
+      <text id="text-050" x="142" y="684" class="terminal-body" text-anchor="middle" data-container="workflow-node-0">Stage 04 + Stage 05</text>
+      <text id="text-051" x="142" y="704" class="terminal-body" text-anchor="middle" data-container="workflow-node-0">310 prediction records</text>
+      <text id="text-052" x="142" y="724" class="terminal-body" text-anchor="middle" data-container="workflow-node-0">Ten candidate models</text>
     </g>
     <path id="workflow-connector-0" d="M252 679 H266" fill="none" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
     <g id="workflow-process-1">
       <rect id="workflow-node-1" x="274" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
       <text id="text-053" x="378" y="636" class="workflow-id" text-anchor="middle" data-container="workflow-node-1">01</text>
-      <text id="text-054" x="378" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-1">Reconcile Val</text>
-      <text id="text-055" x="378" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-1">Identical window units</text>
-      <text id="text-056" x="378" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-1">Verify metrics / labels</text>
-      <text id="text-057" x="378" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-1">No Test in ranking</text>
+      <text id="text-054" x="378" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-1">Check Val IDs</text>
+      <text id="text-055" x="378" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-1">Same 31 windows</text>
+      <text id="text-056" x="378" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-1">Metrics and labels</text>
+      <text id="text-057" x="378" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-1">One independent person</text>
     </g>
     <path id="workflow-connector-1" d="M488 679 H502" fill="none" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
     <g id="workflow-process-2">
       <rect id="workflow-node-2" x="510" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
       <text id="text-058" x="614" y="636" class="workflow-id" text-anchor="middle" data-container="workflow-node-2">02</text>
-      <text id="text-059" x="614" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-2">Select Primary</text>
+      <text id="text-059" x="614" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-2">Freeze Primary</text>
       <text id="text-060" x="614" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-2">Macro F1 / balance</text>
-      <text id="text-061" x="614" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-2">Fixed priority order</text>
-      <text id="text-062" x="614" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-2">Persist choice first</text>
+      <text id="text-061" x="614" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-2">Fixed model priority</text>
+      <text id="text-062" x="614" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-2">No Test information</text>
     </g>
     <path id="workflow-connector-2" d="M724 679 H738" fill="none" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
     <g id="workflow-process-3">
       <rect id="workflow-node-3" x="746" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
       <text id="text-063" x="850" y="636" class="workflow-id" text-anchor="middle" data-container="workflow-node-3">03</text>
-      <text id="text-064" x="850" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-3">Test Switch</text>
-      <text id="text-065" x="850" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-3">Development: disabled</text>
-      <text id="text-066" x="850" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-3">Final: enabled once</text>
-      <text id="text-067" x="850" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-3">Frozen model settings</text>
+      <text id="text-064" x="850" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-3">Test Policy</text>
+      <text id="text-065" x="850" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-3">Default: False</text>
+      <text id="text-066" x="850" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-3">No Test scoring</text>
+      <text id="text-067" x="850" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-3">Separate final protocol</text>
     </g>
     <path id="workflow-connector-3" d="M960 679 H974" fill="none" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
     <g id="workflow-process-4">
       <rect id="workflow-node-4" x="982" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
       <text id="text-068" x="1086" y="636" class="workflow-id" text-anchor="middle" data-container="workflow-node-4">04</text>
-      <text id="text-069" x="1086" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-4">Score Test</text>
-      <text id="text-070" x="1086" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">All candidate models</text>
-      <text id="text-071" x="1086" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">Primary fixed in advance</text>
-      <text id="text-072" x="1086" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">Person-disjoint</text>
+      <text id="text-069" x="1086" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-4">Val Sensitivity</text>
+      <text id="text-070" x="1086" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">Fixed early fusion</text>
+      <text id="text-071" x="1086" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">Mask EEG or gaze</text>
+      <text id="text-072" x="1086" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">Do not refit</text>
     </g>
     <path id="workflow-connector-4" d="M1196 679 H1210" fill="none" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
     <g id="workflow-process-5">
       <rect id="workflow-node-5" x="1218" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
       <text id="text-073" x="1322" y="636" class="workflow-id" text-anchor="middle" data-container="workflow-node-5">05</text>
-      <text id="text-074" x="1322" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-5">Robustness</text>
-      <text id="text-075" x="1322" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">Mask EEG or gaze</text>
-      <text id="text-076" x="1322" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">Validation-only control</text>
-      <text id="text-077" x="1322" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">Cluster confidence</text>
+      <text id="text-074" x="1322" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-5">Save Evidence</text>
+      <text id="text-075" x="1322" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">Selection CSV</text>
+      <text id="text-076" x="1322" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">Sensitivity CSV</text>
+      <text id="text-077" x="1322" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">Validation figure</text>
     </g>
     <path id="workflow-connector-5" d="M1432 679 H1446" fill="none" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
     <g id="workflow-output">
       <rect id="workflow-node-6" x="1454" y="613" width="208" height="132" rx="15" fill="#176363" stroke="#176363" stroke-width="1.8"/>
       <text id="text-078" x="1558" y="636" class="terminal-id" text-anchor="middle" data-container="workflow-node-6">OUTPUT</text>
-      <text id="text-079" x="1558" y="662" class="terminal-heading" text-anchor="middle" data-container="workflow-node-6">Final Evidence</text>
-      <text id="text-080" x="1558" y="684" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">06_ scored results</text>
-      <text id="text-081" x="1558" y="704" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">Person-level tables</text>
-      <text id="text-082" x="1558" y="724" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">Limitations and figures</text>
+      <text id="text-079" x="1558" y="662" class="terminal-heading" text-anchor="middle" data-container="workflow-node-6">Dev Outputs</text>
+      <text id="text-080" x="1558" y="684" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">No Test results</text>
+      <text id="text-081" x="1558" y="704" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">3 stage-owned files</text>
+      <text id="text-082" x="1558" y="724" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">Review before final</text>
     </g>
   </g>
   <g id="band-4-summary">
-    <text id="text-083" x="30" y="792" class="footer" data-container="canvas">No Test or model result is asserted until the final evaluation has actually executed.</text>
+    <text id="text-083" x="30" y="792" class="footer" data-container="canvas">Stage 06 is not yet executed: development mode is Validation-only, with all Test scores deferred.</text>
   </g>
 </svg>
