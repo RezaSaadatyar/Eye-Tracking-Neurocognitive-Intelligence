@@ -178,3 +178,91 @@ def test_output_folders_are_no_longer_ignored_but_size_guard_remains():
         encoding="utf-8"
     )
     assert "MAX_BYTES = 50_000_000" in policy
+
+
+def test_stage04_saved_metrics_match_record_predictions():
+    """Recalculate recorded results without fitting or opening the Test set."""
+    import pandas as pd
+    import pytest
+    from sklearn.metrics import accuracy_score, balanced_accuracy_score, f1_score
+
+    output = ROOT / "eye_movement_modelling" / "output"
+    split = pd.read_csv(
+        output / "01_split_assignments.csv",
+        dtype={"participant_id": str, "record_id": str},
+    )
+    val = split.loc[split["split"].eq("validation")]
+    expected_ids = set(val["record_id"])
+    n_people = val["participant_id"].nunique()
+    summary = pd.read_csv(output / "04_neural_validation_metrics.csv")
+    assert set(summary["model"]) == {"gru", "transformer"}
+    for model in ("gru", "transformer"):
+        scores = summary.loc[summary["model"].eq(model)].iloc[0]
+        predictions = pd.read_csv(
+            output / f"04_{model}_validation_predictions.csv",
+            dtype={"record_id": str},
+        )
+        assert predictions["record_id"].is_unique
+        assert set(predictions["record_id"]) == expected_ids
+        assert predictions["partition"].eq("validation").all()
+        truth = predictions["target_index"]
+        predicted = predictions["pred_index"]
+        assert scores["n_records"] == len(predictions)
+        assert scores["n_participants"] == n_people
+        assert scores["accuracy"] == pytest.approx(
+            accuracy_score(truth, predicted)
+        )
+        assert scores["macro_f1"] == pytest.approx(
+            f1_score(
+                truth, predicted, labels=[0, 1, 2, 3],
+                average="macro", zero_division=0,
+            )
+        )
+        assert scores["balanced_accuracy"] == pytest.approx(
+            balanced_accuracy_score(truth, predicted)
+        )
+
+
+def test_stage04_figure_preserves_measured_source_and_card_geometry():
+    """Compare with the executed stage-03 editable SVG convention."""
+    import xml.etree.ElementTree as ET
+
+    folder = ROOT / "eye_movement_modelling" / "images"
+    def part(filename, name):
+        root = ET.parse(folder / filename).getroot()
+        return next(el for el in root.iter() if el.get("id") == name)
+
+    source3 = part("03_cnn_and_tcn_models.svg", "source-record")
+    source4 = part("04_gru_and_transformer_models.svg", "source-record")
+    assert ET.tostring(source3) == ET.tostring(source4)
+    for i in range(1, 6):
+        node = part("04_gru_and_transformer_models.svg", f"node-{i}")
+        rect = next(c for c in node if c.tag.endswith("rect"))
+        assert rect.get("fill") == "#F7FAFD"
+        assert rect.get("stroke") == "#B8CFDE"
+        assert len([
+            c for c in node if c.get("class") == "nodedesc"
+        ]) == 3
+    root = ET.parse(folder / "04_gru_and_transformer_models.svg").getroot()
+    figure_words = " ".join((c.text or "") for c in root.iter())
+    assert "Best checkpoint: epoch 1" in figure_words
+    assert "Best checkpoint: epoch 2" in figure_words
+    assert "Results unexecuted" not in figure_words
+
+
+def test_stage04_export_cleanup_preserves_model_execution():
+    notebook = ROOT / "eye_movement_modelling" / "code" / "notebooks" / (
+        "04_gru_and_transformer_models.ipynb"
+    )
+    cells = json.loads(notebook.read_text(encoding="utf-8"))["cells"]
+    by_id = {cell.get("id"): cell for cell in cells}
+    for identifier in ("s2c9", "s2c11", "s2c13"):
+        cell = by_id[identifier]
+        assert isinstance(cell["execution_count"], int)
+        assert cell["outputs"]
+    final = by_id["s2c15"]
+    final_code = "".join(final["source"])
+    assert 'download_outputs_from_colab("eye_movement_modelling/output", "04")' in final_code
+    assert "print(" not in final_code
+    assert final["execution_count"] is None
+    assert not final["outputs"]
