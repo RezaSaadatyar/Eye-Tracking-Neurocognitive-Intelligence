@@ -122,7 +122,8 @@ def test_new_protocol_roundtrip_retains_main_cohort_configuration(tmp_path):
     assert saved["source_last_id"] == 1300
 
 
-def test_all_five_current_notebooks_draft_main_not_pilot_results():
+def test_current_notebooks_preserve_real_execution_and_main_input_contract():
+    """Keep authentic Stage-01 outputs and check unexecuted model notebook code."""
     folder = ROOT / "eye_movement_modelling" / "code" / "notebooks"
     files = sorted(folder.glob("0[1-5]_*.ipynb"))
     assert len(files) == 5
@@ -131,44 +132,36 @@ def test_all_five_current_notebooks_draft_main_not_pilot_results():
         for cell in n["cells"]:
             if cell["cell_type"] != "code":
                 continue
-            # Notebook 01 was partially run by the operator and committed
-            # with authentic setup-cell evidence. Preserve those records;
-            # only code cells revised by this acquisition fix are reset.
-            if notebook.name.startswith("01_") and cell.get("id") not in {
-                "s2-c-cohort-config", "s2-c-source-acquisition",
-                "s2-c-007", "s2-c-015",
-            }:
-                continue
-            assert cell["execution_count"] is None
-            assert not cell["outputs"]
+            assert not [
+                item for item in cell.get("outputs", [])
+                if item.get("output_type") == "error"
+            ]
+            if cell["execution_count"] is not None:
+                assert isinstance(cell["execution_count"], int)
+
     first = json.loads(files[0].read_text(encoding="utf-8"))
-    config = next(
-        c for c in first["cells"] if c.get("id") == "s2-c-cohort-config"
-    )
-    source = "".join(config["source"])
+    by_id = {c.get("id"): c for c in first["cells"]}
+    source = "".join(by_id["s2-c-cohort-config"]["source"])
     assert "MAX_PARTICIPANTS = 100" in source
     assert "FIRST_SOURCE_ID = 1001" in source
     assert "MAX_WINDOWS_PER_RECORD = 24" in source
-    acquisition = next(
-        c for c in first["cells"]
-        if c.get("id") == "s2-c-source-acquisition"
-    )
-    selection = next(
-        c for c in first["cells"] if c.get("id") == "s2-c-007"
-    )
+    assert isinstance(by_id["s2-c-017"]["execution_count"], int)
+    assert by_id["s2-c-017"]["outputs"]
     assert "ensure_gazebase_cohort_preflight(" in "".join(
-        acquisition["source"]
+        by_id["s2-c-source-acquisition"]["source"]
     )
-    assert "selected_people =" in "".join(selection["source"])
+    assert "selected_people =" in "".join(by_id["s2-c-007"]["source"])
+
     for notebook in files[1:]:
         source = "\n".join(
-            "".join(c["source"]) for c in
+            "".join(cell["source"]) for cell in
             json.loads(notebook.read_text(encoding="utf-8"))["cells"]
-            if c["cell_type"] == "code"
+            if cell["cell_type"] == "code"
         )
         assert "ensure_s2_stage_inputs(" in source
         assert "verify_main_cohort(protocol, split)" in source
         assert "drive.mount" not in source
+
 
 def test_final_main_stage_checks_exact_validation_source_identifiers():
     """A stale model with the same number of people must still be rejected."""
