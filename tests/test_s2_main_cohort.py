@@ -104,7 +104,7 @@ def test_stage_zip_missing_falls_back_only_to_complete_local_files(tmp_path):
     assert ensure_s2_stage_inputs(
         folder, 1, ("01_protocol.csv",), upload_dir=tmp_path,
     ) == [filename]
-    with pytest.raises(FileNotFoundError, match="Missing stage 01"):
+    with pytest.raises(RuntimeError, match="Incomplete stage 01"):
         ensure_s2_stage_inputs(
             folder, 1, ("01_split_assignments.csv",), upload_dir=tmp_path,
         )
