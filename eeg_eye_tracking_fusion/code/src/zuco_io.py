@@ -158,7 +158,7 @@ def _annex_object(relative_path: str, handle) -> tuple[str, int, str]:
         pointer = base64.b64decode(item["content"]).decode("utf-8").strip()
     key = pointer.rsplit("/", 1)[-1]
     match = re.fullmatch(
-        r"SHA256E-s([0-9]+)--([0-9a-f]{64})(?:\\.[a-zA-Z0-9.]+)?", key
+        r"SHA256E-s([0-9]+)--([0-9a-f]{64})(?:\.[a-zA-Z0-9.]+)?", key
     )
     if not pointer.startswith("/annex/objects/") or not match:
         raise ValueError(
