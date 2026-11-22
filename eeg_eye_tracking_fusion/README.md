@@ -1,6 +1,6 @@
 # EEG–Eye-Tracking Multimodal Research
 
-A reproducible, **not yet executed** six-notebook research workflow for evaluating whether simultaneously recorded EEG and eye movements provide complementary information about **ZuCo 2.0 reading-task conditions**. The objective is to compare unimodal and fusion models on the *same* paired temporal windows from participant-disjoint Train, Validation and Test groups. The target is **normal reading (NR) versus task-specific reading (TSR)**, not comprehension, intelligence, a clinical outcome or cognitive ability.
+A reproducible six-notebook research workflow, with **Notebook 01 executed on six ZuCo 2.0 participants** and later EEG–gaze processing and modelling not yet executed for evaluating whether simultaneously recorded EEG and eye movements provide complementary information about **ZuCo 2.0 reading-task conditions**. The objective is to compare unimodal and fusion models on the *same* paired temporal windows from participant-disjoint Train, Validation and Test groups. The target is **normal reading (NR) versus task-specific reading (TSR)**, not comprehension, intelligence, a clinical outcome or cognitive ability.
 
 ![Overview of EEG and eye-tracking data processing and evaluation](images/study_overview.svg)
 
@@ -8,7 +8,7 @@ A reproducible, **not yet executed** six-notebook research workflow for evaluati
 
 ## 1. Dataset and Experimental Protocol
 
-The source is **ZuCo 2.0**, NEMAR dataset [`nm000279`, release `v1.0.0`](https://www.nemar.org/dataset/nm000279), with original BIDS EEG/eye recordings from simultaneous reading tasks. The release documents 18 participants, 128-channel EEG and EyeLink data at nominal 500 Hz. The *eligible modelling cohort and window counts are deliberately not claimed before Notebook 01 and Notebook 02 run*.
+The source is **ZuCo 2.0**, NEMAR dataset [`nm000279`, release `v1.0.0`](https://www.nemar.org/dataset/nm000279), with original BIDS EEG/eye recordings from simultaneous reading tasks. The release documents 18 participants, 128-channel EEG and EyeLink data at nominal 500 Hz. Notebook 01 selected **six participants and twelve original NR/TSR runs**. The number of scientifically eligible paired windows remains undetermined until Notebook 02.
 
 Source acquisition reads only requested BIDS participants and NR/TSR runs using the public NEMAR file gateway. The same code supports an initial six-person development subset and an expanded source cohort by changing `MAX_PARTICIPANTS` (and, if needed, `RUNS_PER_TASK`) in Notebook 01. The complete original archive is not required in advance. Raw signals remain outside the Git repository, in Colab's temporary `/content/zuco2_source_cache` directory.
 
@@ -18,7 +18,7 @@ The initial design uses **one run per task per eligible person**, 12-second non-
 
 ## 2. Experimental Programme
 
-The notebooks are fully authored but **have not been executed on the original ZuCo data in this repository**. They run sequentially in Google Colab. Each stage owns named output files that subsequent stages read; rerunning a stage regenerates its current outputs rather than collecting historical fallback results.
+All six notebooks are authored. **Notebook 01 has been executed and its seven outputs are committed**; Notebooks 02–06 have not yet been run on original ZuCo signals. They run sequentially in Google Colab. Each stage owns named output files that subsequent stages read; rerunning a stage regenerates its current outputs rather than collecting historical fallback results.
 
 | Stage | Notebook | Scientific role | Intended named outputs |
 | --- | --- | --- | --- |
@@ -29,21 +29,21 @@ The notebooks are fully authored but **have not been executed on the original Zu
 | 05 | [Temporal and Advanced Fusion](code/notebooks/05_temporal_and_advanced_fusion.ipynb) | Compare compact EEG/gaze GRUs and a gated fusion GRU on identical Validation windows | `05_validation_metrics.csv`, `05_validation_predictions.csv`, checkpoints, scaler and histories |
 | 06 | [Robustness and Final Evaluation](code/notebooks/06_robustness_and_final_evaluation.ipynb) | Freeze the Validation-selected model before optional final Test; assess participant-level uncertainty | `06_model_selection.csv`, Validation sensitivity, and, when enabled, Test predictions/metrics and figures |
 
-Each notebook also has an editable five-band scientific SVG in [`images/`](images/) using the same role-based typography as the other projects in this repository. These figures describe **methods and planned evidence**, not observed numerical results.
+Each notebook also has an editable five-band scientific SVG in [`images/`](images/) using the same role-based typography as the other projects in this repository. The Notebook 01 figure now reports observed source-acquisition counts; figures for later notebooks remain methodological and contain no invented scores.
 
 ## 3. Main Results
 
-**No results have yet been reproduced or generated for this project.** The baseline, unimodal and fusion comparisons, eligible participant counts, paired-window support and uncertainty estimates are pending original-data execution. The first run is an **engineering/development subset**, not a confirmatory population-level evaluation.
+**Recorded source audit (Notebook 01):** NEMAR listed **18 participants**. Six were selected with NR and TSR Run 1, yielding **12 original source runs** and **1,135.6 MB** of downloaded EEG, EyeLink and BIDS files. The saved split contains **3 Train, 1 Validation and 2 Test people**. Source metadata report **128 EEG channels**, nominal **500-Hz EEG and eye sampling** and eye-start offsets from **−0.046 to +0.010 seconds**. These are acquisition observations, not verified synchronisation or model performance.
 
 The relevant comparison is whether a fusion model improves over the strongest **EEG-only or gaze-only** comparator on *identical*, participant-disjoint examples. A negative or mixed fusion result is scientifically informative and will be reported without changing the primary selection based on the eventual Test scores.
 
-Once outputs are available, this section will show verified Validation and held-out Test metrics with independent participant counts, not placeholder performance tables.
+**Pending:** Notebook 02 will determine EEG–gaze overlap, valid gaze fractions and eligible paired-window counts. The short `sub-YAK / NR` source (~**15.2 seconds** according to its EEG sidecar) warrants review. No feature, Validation or Test model results exist yet.
 
 ## 4. Running and Reviewing the Study
 
-1. Open [Notebook 01](code/notebooks/01_zuco_source_audit_and_protocol.ipynb) from the current `main` branch in **Google Colab** and run it in order. It clones this repository, uses public NEMAR access and writes `01_*` artefacts under `eeg_eye_tracking_fusion/output/`.
-2. Review the actual source IDs, selected runs, file sizes and group roles before progressing. **Default:** `MAX_PARTICIPANTS = 6` and `RUNS_PER_TASK = 1`, both configured in Notebook 01. To use a larger cohort, change the setting and regenerate **all dependent stages** consistently.
-3. Run Notebooks 02–05 sequentially. In a new Colab Runtime, the original selected runs may need to be downloaded again because `/content/` is ephemeral; the notebooks reuse existing cached files and do not require Google Drive or full-archive acquisition.
+1. Review the [executed Notebook 01](code/notebooks/01_zuco_source_audit_and_protocol.ipynb) and its seven committed [`01_*` files](output/). The fixed source manifest and split are available without rerunning acquisition.
+2. Run [Notebook 02](code/notebooks/02_eeg_gaze_alignment_and_quality.ipynb) using the same six-person cohort and the saved Stage-01 inputs. Original ZuCo EEG/eye files are read from the Colab cache or downloaded again if the Runtime was reset.
+3. Inspect the Notebook 02 per-run duration, eye-coverage and eligible-window reports, especially the short NR recording. Then run Notebooks 03–05 on the resulting fixed, participant-disjoint paired windows.
 4. For an initial development run, Notebook 06 uses `RUN_FINAL_TEST = False`. It verifies all Validation results and records a primary model **without scoring Test**. Only after finalising the source cohort and model specification should `RUN_FINAL_TEST` be set to `True` for the single final Test evaluation.
 5. Review and commit the *named, reasonably sized* output files and executed notebook after each stage. Do not publish raw EEG or eye physiology files to this repository or claim completion of scientific results until they have been checked.
 
@@ -60,11 +60,11 @@ eeg_eye_tracking_fusion/
 │   ├── notebooks/              # Six ordered Colab notebooks
 │   └── src/                    # Source, alignment, features and model helpers
 ├── images/                     # Overview and six role-based SVG figures
-├── output/                     # Stage-owned derived evidence, once executed
+├── output/                     # Seven committed source-audit files
 └── data/                       # Source cache is external to Git by design
 ```
 
-Notebook outputs in `output/` use their own stage prefix (`01_*` through `06_*`). Producer/consumer dependencies are explicit; no routine historical fallback directories, approval tokens or artificial fixed-count assertions are required. The source cache is `/content/zuco2_source_cache` during Colab execution, not `data/raw` in the tracked repository.
+Notebook outputs in [`output/`](output/) use distinct `01_*` through `06_*` prefixes. Seven source-acquisition outputs are already committed; later stage files will appear after their respective executions. No separate output-directory README is required. The source cache is `/content/zuco2_source_cache` during Colab execution, not `data/raw` in the tracked repository.
 
 ## 6. Interpretation and Scope
 
