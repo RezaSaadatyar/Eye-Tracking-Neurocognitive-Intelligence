@@ -149,3 +149,26 @@ def test_all_five_current_notebooks_draft_main_not_pilot_results():
         assert "ensure_s2_stage_inputs(" in source
         assert "verify_main_cohort(protocol, split)" in source
         assert "drive.mount" not in source
+
+def test_final_main_stage_checks_exact_validation_source_identifiers():
+    """A stale model with the same number of people must still be rejected."""
+    notebook = (
+        ROOT / "eye_movement_modelling" / "code" / "notebooks"
+        / "05_robustness_and_final_evaluation.ipynb"
+    )
+    cells = json.loads(notebook.read_text(encoding="utf-8"))["cells"]
+    recovery = next(c for c in cells if c.get("id") == "s2c7")
+    code = "".join(recovery["source"])
+    for stage, name in (
+        ("02", "class_prior"),
+        ("02", "logistic_regression"),
+        ("02", "random_forest"),
+        ("02", "gradient_boosting"),
+        ("03", "cnn"), ("03", "tcn"),
+        ("04", "gru"), ("04", "transformer"),
+    ):
+        assert f'("{name}", "{stage}")' in code
+    assert "pred.record_id.duplicated().any()" in code
+    assert "set(pred.record_id) != expected_val_ids" in code
+    assert "pred.record_id.map(target_lookup)" in code
+    assert "do not mix model checkpoints" in code
