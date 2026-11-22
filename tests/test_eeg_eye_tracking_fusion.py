@@ -646,9 +646,9 @@ def test_six_complete_colab_notebooks_and_stage_contracts():
         imports = "".join(cells[4]["source"])
         assert "%cd {repo_path}" in checkout
         assert "git", "clone" in checkout
-        if index in (1, 2):
-            # The acquisition and alignment notebooks use the short Colab setup.
-            assert 'root = setup_colab("eeg_eye_tracking_fusion")' in imports
+        # The approved short Colab setup is valid wherever it is used.
+        # Other notebooks can retain their existing isolated checkout.
+        if 'root = setup_colab("eeg_eye_tracking_fusion")' in imports:
             assert 'repo_path = Path("/content") / repo_url.rsplit(' in checkout
         else:
             assert 'root = setup_colab("eeg_eye_tracking_fusion"' in imports
