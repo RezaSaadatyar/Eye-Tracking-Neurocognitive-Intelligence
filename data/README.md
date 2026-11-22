@@ -1,6 +1,6 @@
 # Dataset Access and Provenance
 
-S1 uses original GazeBase source CSV records. As of the current repository revision, the public Git history includes 40 original Round 1 / Session 1 task CSVs (ten participants, four tasks each), committed by the operator. The raw archive is not automatically downloaded. Generated stage-owned tables remain untracked by default; future raw-data publication requires a deliberate rights/provenance decision.
+Eye-Tracking Foundations & Signal Analysis uses original GazeBase source CSV recordings. As of the current repository revision, the public Git history includes 40 original Round 1 / Session 1 task CSVs (ten participants, four tasks each), committed by the operator. The raw archive is not automatically downloaded. Generated stage-owned tables remain untracked by default; future raw-data publication requires a deliberate rights/provenance decision.
 
 ## GazeBase source
 
@@ -11,9 +11,9 @@ S1 uses original GazeBase source CSV records. As of the current repository revis
 - Dataset-specific source fields: `n` in ms, `x`/`y` in degrees of visual angle, `val` indicating missing samples, and optional `xT`/`yT`, `dP` (uncalibrated pupil area) and `lab` (EyeLink parser reference labels).
 - Source parser labels (when present): `1` fixation, `2` saccade, `-1` blink; unavailable for some tasks. Vendor labels are not independent ground truth.
 
-## Next main-cohort acquisition for Eye-Movement Modelling
+## Eye-Movement Modelling & Advanced AI: source acquisition
 
-The modelling Notebook 01 now defaults to **100 participants** from
+The completed modelling Notebook 01 uses **100 participants** from
 GazeBase v2.0 Round 1 / Session 1, four original FXS/HSS/RAN/TEX
 recordings per person. The single `MAX_PARTICIPANTS` value can be set
 to 300 for a new separately defined run. The requested number of **eligible complete people** is selected by
@@ -29,7 +29,7 @@ The verified archive is deleted **only after successful extraction and
 source audit**. Failures retain it for a retry in the same Runtime. Derived outputs
 are packaged as one stage ZIP for downstream modelling, not as a raw
 source backup. No Google Drive mount or automatic raw-data publication
-is used. The **100-person** original-data acquisition and 400-record audit have now executed in Colab; **300 people remain a separate, unexecuted option**. The selected IDs range 1001–1108 with eight unavailable/incomplete IDs omitted; model stages are still pending.
+is used. The **100-person** source audit selected 400 task recordings, using source IDs 1001–1108 with eight incomplete/unavailable IDs omitted. All five modelling notebooks and the 20-person held-out Test evaluation are complete for that fixed cohort. A different cohort size would require a separately specified experiment.
 
 ## Prepare bounded CSV files
 
