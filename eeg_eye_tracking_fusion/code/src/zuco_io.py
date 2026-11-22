@@ -261,15 +261,44 @@ def read_sidecar(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def read_eye_physio(path: Path, metadata: dict) -> pd.DataFrame:
+    """Read headerless BIDS physiology using sidecar-defined column names.
+
+    In BIDS, compressed *_physio.tsv.gz files do not have a header row.
+    Their column names and order come from the companion JSON "Columns"
+    field. Reading with pandas' default header=0 loses the first sample
+    and assigns sample values as column names.
+    """
+    columns = metadata.get("Columns")
+    if (not isinstance(columns, list) or not columns
+            or any(not isinstance(name, str) or not name.strip()
+                   for name in columns)
+            or len(columns) != len(set(columns))):
+        raise ValueError(
+            f"Invalid or missing BIDS physio Columns sidecar: {path}"
+        )
+    required = {"eye1_x_coordinate", "eye1_y_coordinate"}
+    if not required.issubset(columns):
+        raise ValueError(
+            f"Eye physio sidecar lacks required gaze columns: {path}"
+        )
+    eye = pd.read_csv(
+        path, sep="\t", compression="gzip", header=None,
+        names=columns, na_values=["n/a", "NA", "NaN", ""],
+    )
+    if eye.empty:
+        raise ValueError(f"Eye physio has no samples: {path}")
+    return eye
+
+
 def open_run(row, raw_root: Path, handle=None):
     """Return an MNE lazy BrainVision raw, eye stream and event metadata."""
     import mne
     files = fetch_run(row, raw_root, handle)
+    eye_meta = read_sidecar(files["eye_json"])
+    eye = read_eye_physio(files["eye"], eye_meta)
+    events = pd.read_csv(files["events"], sep="\t", na_values="n/a")
+    eeg_meta = read_sidecar(files["eeg_json"])
     raw = mne.io.read_raw_brainvision(files["header"], preload=False,
                                      verbose="ERROR")
-    eye = pd.read_csv(files["eye"], sep="\t", compression="gzip",
-                      na_values=["n/a", "NA", "NaN", ""])
-    events = pd.read_csv(files["events"], sep="\t", na_values="n/a")
-    eye_meta = read_sidecar(files["eye_json"])
-    eeg_meta = read_sidecar(files["eeg_json"])
     return raw, eye, events, eye_meta, eeg_meta

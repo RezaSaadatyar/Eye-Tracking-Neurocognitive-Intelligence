@@ -19,11 +19,12 @@ PROJECT = ROOT / "eeg_eye_tracking_fusion"
 sys.path.insert(0, str(PROJECT / "code" / "src"))
 
 from alignment import (eye_sample_times, ensure_disjoint_registry,
-                       window_registry)
+                       valid_eye_rows, window_registry)
 from features import summarise_eeg, summarise_eye
 from models import CLASSICAL_ORDER, MODEL_ORDER, metrics
 from zuco_io import (
-    API, DATA, S3, download_file, select_run_paths, session, split_people,
+    API, DATA, S3, download_file, read_eye_physio, select_run_paths,
+    session, split_people,
 )
 
 
@@ -57,6 +58,52 @@ def test_split_is_deterministic_and_person_disjoint():
     assert len(a) == 10
     with pytest.raises(ValueError):
         split_people(people[:4])
+
+
+def test_headerless_eye_physio_uses_bids_sidecar_columns(tmp_path):
+    """Read every original sample and preserve sidecar column order."""
+    path = tmp_path / "sub-YAC_task-nr_recording-eyetrack_physio.tsv.gz"
+    original = pd.DataFrame([
+        [37.0, 15.0, 80.0],
+        [38.0, 16.0, 81.0],
+        ["n/a", 17.0, 82.0],
+        [40.0, 18.0, 83.0],
+    ])
+    original.to_csv(
+        path, sep="\t", header=False, index=False, compression="gzip"
+    )
+    metadata = {
+        "SamplingFrequency": 500.0,
+        "StartTime": -0.035,
+        "Columns": [
+            "eye1_x_coordinate", "eye1_y_coordinate", "eye1_pupil_size"
+        ],
+    }
+    eye = read_eye_physio(path, metadata)
+    assert eye.columns.tolist() == metadata["Columns"]
+    assert len(eye) == 4  # First actual gaze sample must not be dropped.
+    assert eye.iloc[0]["eye1_x_coordinate"] == 37.0
+    assert eye.iloc[0]["eye1_y_coordinate"] == 15.0
+    assert pd.isna(eye.iloc[2]["eye1_x_coordinate"])
+    t = eye_sample_times(metadata, len(eye))
+    assert np.isclose(t[0], -0.035)
+    assert np.isclose(t[-1], -0.029)
+    eye_valid = valid_eye_rows(eye)
+    assert eye_valid.tolist() == [True, True, False, True]
+
+
+def test_eye_physio_requires_valid_named_bids_columns(tmp_path):
+    path = tmp_path / "sub-YAC_task-nr_recording-eyetrack_physio.tsv.gz"
+    with gzip.open(path, "wt") as file:
+        file.write("1\t2\t3\n")
+    for metadata in (
+        {},
+        {"Columns": []},
+        {"Columns": ["eye1_x_coordinate", "eye1_x_coordinate"]},
+        {"Columns": ["eye1_x_coordinate", "eye1_pupil_size"]},
+    ):
+        with pytest.raises(ValueError, match="BIDS physio|gaze columns"):
+            read_eye_physio(path, metadata)
 
 
 def test_bids_timebase_and_eye_eligibility():
