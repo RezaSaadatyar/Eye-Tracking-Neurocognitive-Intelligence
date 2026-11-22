@@ -2,13 +2,13 @@
 
 ![Eye-Movement Modelling gaze-task modelling workflow, source provenance, model families and reserved evaluation](images/study_overview.svg)
 
-*Figure 1. Programme status following 100-person source preparation and completed classical Validation. Notebook 01 prepared the main cohort; Notebook 02 recorded four classical Validation models; Notebooks 03–05 remain pending on the main cohort. The ten-person pilot is historical evidence. Measured source traces are distinct from schematic workflow elements.*
+*Figure 1. Main 100-person source preparation and six candidate Validation models are now recorded: Notebook 01 (source features and windows), Notebook 02 (four classical baselines) and Notebook 03 (CNN and TCN). Main-cohort GRU, Transformer and final Test evaluation remain pending. The earlier ten-person pilot is separate historical evidence; measured source traces and schematic elements are distinguished.*
 
-**Aim:** Compare record-level engineered gaze features and four compact temporal architectures for the **four-class GazeBase recording-protocol target** (FXS, HSS, RAN, TEX). All five notebooks have a recorded historical ten-person pilot. The **100-person main cohort has completed Notebooks 01 and 02**, with 400 recordings, 9,600 temporal windows and four classical models evaluated on **64 Validation records from 16 participants**. Notebooks 03–05 remain pending on the main cohort; the 20-person main Test is reserved. This study does not predict comprehension or clinical/neurocognitive status.
+**Aim:** Compare record-level engineered gaze features and compact temporal architectures for four-class GazeBase **recording-protocol identity** (FXS, HSS, RAN, TEX), not comprehension or clinical/neurocognitive status. The historical ten-person pilot completed all five notebooks. **The 100-person main cohort has now completed Notebooks 01–03**: 400 original recordings, 9,600 windows, four classical models and two temporal networks evaluated on the same **64 Validation records from 16 independent people**. **Notebooks 04 and 05 are pending** on this cohort; its 20-person main Test remains reserved.
 
 **Independence:** Reuse the already available **original GazeBase Round 1 / Session 1 CSV files**, but create all Eye-Movement Modelling splits, features, temporal windows, models and outputs independently in `eye_movement_modelling/output/`. No processed Eye-Tracking Foundations result is mixed into the new modelling cohort.
 
-The ten-person pilot remains preserved in earlier Git revisions. **Current `01_*` and `02_*` files belong to the 100-person main cohort**; current `03_*` through `05_*` files still belong to the pilot until those stages are rerun. Main model selection and Test evaluation remain pending. Read the [scientific methods and evidence](RESEARCH_METHODS_AND_EVIDENCE.md).
+The ten-person pilot remains preserved in earlier Git revisions. **Current `01_*`, `02_*` and `03_*` artefacts all belong to the 100-person main cohort**. Current `04_*` and `05_*` files still belong to the pilot until those notebooks are run for the main cohort. Selection across all eight candidates and the reserved main Test remain pending. Read the [scientific methods and evidence](RESEARCH_METHODS_AND_EVIDENCE.md).
 
 ## 1. Dataset and Experimental Protocol
 
@@ -16,7 +16,7 @@ The ten-person pilot remains preserved in earlier Git revisions. **Current `01_*
 | --- | --- |
 | Dataset | [GazeBase v2.0](https://doi.org/10.6084/m9.figshare.12912257), Round **1**, Session **1**, source CSVs from [`data/raw/gazebase/`](../data/README.md) |
 | Recorded pilot scope | GazeBase Round 1 / Session 1: **10 participants, 40 source recordings, 40 record feature rows and 960 temporal windows**. Notebook 02 fitted four classical candidates on 24 Train records and evaluated 8 Validation records from 2 independent people; the pilot Test was then observed on 8 recordings from 2 independent people in Notebook 05 |
-| **Executed main source cohort** | **100 complete people** (source IDs 1001–1108, excluding 1028, 1036, 1050, 1056, 1075, 1082, 1104 and 1105); **400 records**, **9,600 windows**. Notebook 02 fitted four classical models on 256 Train records and evaluated 64 Validation records; main temporal models remain pending |
+| **Executed main source cohort** | **100 complete people** (source IDs 1001–1108, excluding 1028, 1036, 1050, 1056, 1075, 1082, 1104 and 1105); **400 records**, **9,600 windows**. Notebook 02 fitted four classical models, and Notebook 03 trained CNN and TCN on the same 64/16/20 person split. GRU and Transformer still await the main run |
 | Prediction target | Recording protocol: **FXS**, **HSS**, **RAN**, **TEX**. Four known classes; **not cognitive diagnosis** |
 | Predictors: classical | Recording validity, x/y dispersion, step displacement, velocity quantiles, positive pupil coverage/summary where available |
 | Predictors: temporal | Fixed 256-sample windows; source-valid contiguous segments only; relative x/y and their first differences (four channels) |
@@ -32,17 +32,17 @@ The ten-person pilot remains preserved in earlier Git revisions. **Current `01_*
 
 ## 2. Experimental Programme
 
-These five notebooks form one task-recognition study. **Notebooks 01 and 02 are executed for the 100-person main cohort**, and Notebooks 03–05 remain pending. The historical ten-person pilot completed all five stages, including its exploratory Test, while the **20-person main Test is reserved**.
+These five notebooks form one task-recognition study. **Notebooks 01–03 are executed for the 100-person main cohort; Notebooks 04–05 remain pending.** The historical ten-person pilot completed all five stages, including exploratory Test, but the **20-person main Test remains reserved**.
 
 | Notebook | Main experiment and visible model-level evidence | Owned current output files |
 | --- | --- | --- |
 | [01 — Data and Experimental Protocol](code/notebooks/01_data_and_experimental_protocol.ipynb) | **Executed on 100 people**: 400 records, 9,600 windows, full task audit and independent 64/16/20 person split; nine current stage files packaged | `01_source_inventory.csv`, `01_split_assignments.csv`, `01_record_features.csv`, `01_sequence_windows.npz`, `01_sequence_normalisation.csv`, `01_protocol.csv`, `01_source_distribution.png`; source-audit files `01_source_acquisition_preflight.csv` and `01_source_acquisition_task_summary.csv` |
 | [02 — Statistical and Classical ML](code/notebooks/02_statistical_and_classical_ml.ipynb) | **Executed on 100 people:** four fixed candidates fitted on 256 Train records, scored on 64 Validation recordings from 16 people; four fitted pipelines and 14 stage-owned outputs | `02_validation_metrics.csv`, four `02_*.joblib` pipelines, four prediction tables, four confusion plots and comparison plot |
-| [03 — CNN and TCN](code/notebooks/03_cnn_and_tcn_models.ipynb) | CNN and TCN trained and evaluated on the same eight Validation recordings from two participants; both 8/8 correct, with epochs and parameter counts recorded | `03_cnn.pt`, `03_tcn.pt`, histories/predictions/plots, `03_neural_validation_metrics.csv` |
-| [04 — GRU and Transformer](code/notebooks/04_gru_and_transformer_models.ipynb) | Recorded GRU (2/8 correct) and Transformer (4/8 correct) Validation, with checkpoints, histories and confusion matrices | `04_gru.pt`, `04_transformer.pt`, histories/predictions/plots, `04_neural_validation_metrics.csv` |
+| [03 — CNN and TCN](code/notebooks/03_cnn_and_tcn_models.ipynb) | **Executed on 100 people:** CNN **62/64** (Macro F1 **0.968735**) and TCN **61/64** (Macro F1 **0.953036**) on the 16-person Validation set. Selected epochs 7/6; parameter counts 11,492/12,772 | `03_cnn.pt`, `03_tcn.pt`, histories, 64-row predictions, evaluation plots and `03_neural_validation_metrics.csv` (10 files) |
+| [04 — GRU and Transformer](code/notebooks/04_gru_and_transformer_models.ipynb) | **Next main-cohort run pending.** Existing GRU/Transformer scores and figures are still from the ten-person pilot (GRU 2/8, Transformer 4/8 Validation correct) | `04_gru.pt`, `04_transformer.pt`, histories, predictions, evaluation figures and `04_neural_validation_metrics.csv` (currently pilot) |
 | [05 — Robustness and Final Evaluation](code/notebooks/05_robustness_and_final_evaluation.ipynb) | Executed Validation-selected Logistic Regression; 7/8 pilot Test correct, Macro F1 0.867; person-level errors and unchanged Validation F1 after pupil masking | `05_model_selection.csv`, `05_test_predictions.csv`, `05_test_metrics.csv`, `05_groupwise_test_metrics.csv`, `05_robustness_validation.csv`, comparison plots |
 
-A separate editable five-band figure accompanies each notebook in [`images/`](images/). The [overview](images/study_overview.svg) distinguishes completed main-cohort preparation and classical Validation from pending neural stages. Notebook 01's figure shows source preparation; Notebook 02's diagram now reports the observed current Validation results while keeping schematic motifs clearly labelled.
+A separate editable five-band figure accompanies each notebook in [`images/`](images/). The [overview](images/study_overview.svg) distinguishes the **six current main Validation candidates** from pending GRU/Transformer and Test stages. Notebook 03's diagram now shows the observed 100-person CNN/TCN comparison; Notebook 04's diagram is clearly identified as historical pilot evidence until rerun.
 
 ## 3. Main Results
 
@@ -59,11 +59,20 @@ A separate editable five-band figure accompanies each notebook in [`images/`](im
 
 Both nonlinear models misclassified one TEX recording as RAN. High task discrimination may reflect source stimulus and recording-protocol differences; **Logistic Regression is not yet the main-study selected model**, since the temporal models' Validation results are pending.
 
-**Historical ten-person pilot results (Notebooks 02–05):** These scores describe the earlier pilot, **not the current 100-person classical models**. Current stage-03 through stage-05 model outputs have not been regenerated for the main cohort.
+**Observed 100-person CNN/TCN Validation (Notebook 03):** Both networks trained only on **6,144 Train windows from 64 people**, with checkpoints chosen using **64 Validation recordings from 16 disjoint people**, each represented by 24 windows. Current predictions, saved histories and metrics were independently checked for source/label alignment and numerical consistency.
+
+| Main temporal model | Accuracy | Macro F1 | Balanced accuracy | Correct records | Selected epoch |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| CNN | 0.968750 | 0.968735 | 0.968750 | 62/64 | 7 |
+| TCN | 0.953125 | 0.953036 | 0.953125 | 61/64 | 6 |
+
+CNN misclassified one HSS as RAN and one RAN as FXS. TCN misclassified one HSS as RAN and two RAN as FXS. CNN had slightly higher Validation Macro F1; this is **not** final Test performance or evidence of superiority across datasets or acquisition protocols. **Main Test was not used**.
+
+**Historical ten-person pilot results (Notebooks 01–05):** These earlier results are **not** current 100-person scores. The current `04_*` and `05_*` model outputs still belong to the pilot; pilot Notebook 03 results are recoverable from earlier Git revisions.
 
 **Observed ten-person pilot:** Notebook 01 processed 40 original recordings into 40 feature rows and 960 temporal windows of shape `(960, 256, 4)`, with 6/2/2 Train/Validation/Test participants (24/8/8 recordings). Notebook 02 evaluated four classical candidates on the same **eight Validation recordings from two people**. The class prior scored **Accuracy 0.25, Macro F1 0.10, Balanced Accuracy 0.25**. Logistic Regression, Random Forest and Gradient Boosting each scored **1.00 on all three metrics** (8/8 correct). These are **exploratory participant-disjoint Validation results**, not independent population estimates, external validation or final Test results.
 
-**Recorded Notebook 03 Validation:** CNN and TCN both classified 8/8 Validation recordings correctly (Accuracy, Macro F1 and Balanced Accuracy all **1.00**). CNN selected epoch 8 with **11,492 trainable parameters**; TCN selected epoch 5 with **12,772**. This is observed notebook evidence from only two independent Validation participants, not an independent reproduction or estimate of population accuracy. Synthetic tests check source identity, grouped splits, train-only normalisation, record-level aggregation and file contracts; they do not establish generalisation.
+**Historical pilot Notebook 03 Validation:** CNN and TCN both classified 8/8 Validation recordings correctly (Accuracy, Macro F1 and Balanced Accuracy all **1.00**). CNN selected epoch 8 with **11,492 trainable parameters**; TCN selected epoch 5 with **12,772**. Only two independent Validation participants contributed; this earlier pilot evidence must not be conflated with current 100-person results.
 
 Notebooks 01–04 established the pilot data contract and eight Validation candidates; Notebook 05 applied the predefined Validation ranking, froze the primary choice and recorded pilot Test metrics. Inspect source step-speed artefacts and stimulus/task confounding before interpreting apparently high scores. The 10-person experiment is a functional pilot, not a new population-level model validation.
 
@@ -86,13 +95,13 @@ All model comparisons in the Test column are **secondary descriptions**. The sel
 
 ## 4. Running and Reviewing the Study
 
-**Notebooks 01 and 02 are complete for their 100-person main-cohort stages.** Their current outputs are committed under `eye_movement_modelling/output/`. The original GazeBase archive and raw CSVs do not need to be downloaded again for Notebook 03 because the current normalised stage-01 windows are already tracked.
+**Notebooks 01–03 are complete for their respective 100-person main-cohort stages.** Their current source preparation, classical pipelines and temporal models are committed under `eye_movement_modelling/output/`. The original GazeBase archive and raw CSVs are not required for Notebook 04; the stage-01 normalised window NPZ is available.
 
-1. Open [Notebook 03: CNN and TCN](code/notebooks/03_cnn_and_tcn_models.ipynb) from the current `main` branch in a fresh Colab Runtime.
-2. The notebook reads committed `01_sequence_windows.npz`, `01_split_assignments.csv` and `01_protocol.csv`. Upload the matching `eye_movement_modelling_Notebook_01_Outputs.zip` to `/content/` only if deliberately replacing those current files; an explicitly uploaded ZIP takes precedence.
-3. Verify **100 participants**, the frozen **64/16/20** person roles and **6,144/1,536/1,920** Train/Validation/reserved Test windows. The existing `03_*` outputs in GitHub still belong to the pilot and must not be used as current main results.
-4. Run CNN and TCN sequentially, inspect their Validation metrics, histories, checkpoints and figures, then use the strengthened export cell to check both models against the exact Validation record identities and metric values before packaging `eye_movement_modelling_Notebook_03_Outputs.zip`.
-5. Preserve the executed Notebook 03 and its reviewed outputs. Continue with Notebook 04 on the same frozen split; main model selection and the first main Test evaluation belong to Notebook 05.
+1. Open [Notebook 04: GRU and Transformer](code/notebooks/04_gru_and_transformer_models.ipynb) from the current `main` branch in a fresh Colab Runtime.
+2. Read the **current** `01_sequence_windows.npz`, `01_split_assignments.csv` and `01_protocol.csv` already committed in GitHub. An optional matching `eye_movement_modelling_Notebook_01_Outputs.zip` under `/content/` takes precedence; do not use an old pilot ZIP. Notebook 03 does not need to be rerun.
+3. Confirm **100 participants**, the frozen **64/16/20** person roles and **6,144/1,536/1,920** Train/Validation/reserved Test windows. The old `04_*` pilot outputs will be replaced by the current-cohort GRU and Transformer outputs upon successful execution.
+4. Fit GRU and Transformer independently on Train windows, inspect their record-level Validation metrics, histories and figures, and run the stage-04 export check for the exact 64 current Validation records before packaging `eye_movement_modelling_Notebook_04_Outputs.zip`.
+5. Preserve the reviewed Notebook 04 and its outputs. Then use Notebook 05 for the predefined **Validation-only eight-model selection** and subsequent reserved main Test evaluation.
 
 A later 300-person experiment requires a separately frozen cohort, complete regeneration of its data and models, and a clearly labelled evaluation distinct from the observed 100-person Test. Do not mix ZIPs or checkpoints from different participant sets.
 
@@ -114,7 +123,7 @@ A per-study output directory prevents overwriting Eye-Tracking Foundations's `ey
 
 ## 6. Interpretation and Scope
 
-**The ten-person pilot is completed, and Notebooks 01 and 02 have now executed on the 100-person main cohort.** Four current classical Validation results are recorded; current neural Validation and main Test remain pending. Files `03_*` through `05_*` still represent the pilot and must not be mixed with the current classical comparison. High within-GazeBase task-recognition performance does not establish cognitive inference, clinical utility, or generalisation across sessions, stimuli or equipment.
+**The historical ten-person pilot is complete. The 100-person main study has now completed Notebooks 01–03**, including four classical baselines plus CNN and TCN Validation on the same 16 independent people. **GRU, Transformer, main model selection and Test remain pending.** Current `04_*` and `05_*` files belong to the pilot. High within-GazeBase task recognition does not establish cognitive inference, clinical utility, or generalisation across sessions, stimuli or equipment.
 
 The following remain limitations even after a successful run: task identity is confounded with stimulus protocol; Test participant counts are very small in the pilot; the first complete source IDs are not a representative sample; gaze speeds and pupil fields may reflect measurement artefacts; and a model's Validation/held-out Test score does **not** establish neural, clinical or cognitive diagnosis.
 
