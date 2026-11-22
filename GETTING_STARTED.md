@@ -68,42 +68,13 @@ unauthorised source records, private data or unnecessarily large archives.
 
 ## Eye-Movement Modelling & Advanced AI
 
-The [Eye-Movement Modelling README](eye_movement_modelling/README.md) and
-[methods/evidence document](eye_movement_modelling/RESEARCH_METHODS_AND_EVIDENCE.md)
-describe five executed GazeBase task-classification notebooks. The recorded
-**ten-person pilot** comprises source preparation (01), classical Validation
-(02), CNN/TCN Validation (03), GRU/Transformer Validation (04) and
-Validation-based selection with exploratory participant-disjoint Test (05).
-Logistic Regression was selected from Validation and correctly classified
-**7/8 Test recordings from two people**; Test Macro F1 was **0.867**.
-The target is the original FXS/HSS/RAN/TEX recording protocol, not a
-neurocognitive or clinical label.
+The [study README](eye_movement_modelling/README.md), [methods and evidence](eye_movement_modelling/RESEARCH_METHODS_AND_EVIDENCE.md), and [Notebook 01](eye_movement_modelling/code/notebooks/01_data_and_experimental_protocol.ipynb) document the **executed 100-person GazeBase Round 1 / Session 1 preparation**. It comprises 400 FXS/HSS/RAN/TEX recordings, 400 record-level feature rows and 9,600 `(256, 4)` windows. The selected people occupy source IDs 1001–1108, excluding eight unavailable/incomplete IDs. The saved participant-disjoint split is **64 Train, 16 Validation and 20 reserved Test people**. Original source files are processed inside Colab without Google Drive; the 6.7-GB archive is not included in derived outputs.
 
-The original GazeBase Round 1 / Session 1 data are shared as read-only
-source inputs, but Eye-Movement Modelling creates its own representations,
-partitions and saved outputs. Do not import processed Eye-Tracking Foundations
-features as model inputs. The completed pilot has **10 modelled people**;
-the source-acquisition check separately audited **20 people**. A
-**100-person main implementation is now configured and ready to execute, but not yet run**.
+**Next: run Notebook 02, not Notebook 01 again.** The derived stage-01 files are committed in `eye_movement_modelling/output/` and can be read from a new GitHub checkout. In a new Colab Runtime you may instead upload the matching `eye_movement_modelling_Notebook_01_Outputs.zip` to `/content/`; `ensure_s2_stage_inputs` uses that explicit ZIP first. Its purpose is transfer of **derived study outputs**, not backup of the original source archive.
 
-For the next **100-person** study set `MAX_PARTICIPANTS = 100` in
-Notebook 01, Section 02; for a separate 300-person study change that
-single value **before** data acquisition or new Test exposure. The intended default
-100-person split is 64 Train, 16 Validation, 20 Test people (seed 17),
-chosen from the first 100 people with all four original source task files
-rather than from 100 assumed consecutive IDs. Skipped source IDs are logged.
-All original sources are handled inside Colab, with no Google Drive mount.
+1. Open [Notebook 02](eye_movement_modelling/code/notebooks/02_statistical_and_classical_ml.ipynb) from the latest `main` in a fresh Colab Runtime.
+2. Confirm it prints **256 Train recordings** and **64 Validation recordings** from **16 independent Validation people**. Never use the 80 reserved main-Test recordings for this stage.
+3. Execute all four classical model sections and the comparison. The final cell checks current Validation identities, model files and 14 stage-owned results before packaging `/content/eye_movement_modelling_Notebook_02_Outputs.zip`.
+4. Download the ZIP and commit the executed Notebook 02 plus reviewed output files within the repository's per-file 50,000,000-byte limit. Review its new Validation results before proceeding to CNN and TCN in Notebook 03.
 
-Stage `NN` outputs are saved under `eye_movement_modelling/output/` and
-can be packaged as
-`/content/eye_movement_modelling_Notebook_NN_Outputs.zip`. In a new Colab
-Runtime, place matching upstream ZIPs in `/content/` so
-`ensure_s2_stage_inputs` prioritises an explicitly uploaded current-stage ZIP over stale pilot outputs from Git; `verify_main_cohort` checks the source-person count and split. Use one compatible
-cohort/split/model run; do not mix pilot files with a changed main protocol.
-
-**Next research stage:** First fix the prospective cohort selection,
-person-disjoint Train/Validation/Test design, principal metrics and
-robustness checks (including source artefacts and task-stimulus confounding).
-Then acquire the required original data and rerun producer and consumer
-stages in order. The two-person pilot Test is already observed and must
-not be described as untouched for further adaptive work.
+Stage-02 through stage-05 model artefacts currently tracked in GitHub are **historical ten-person pilot outputs**. Do not combine them with the current 100-person split as though they came from one execution. The obsolete `01_protocol.json` belongs to the retired pilot representation and must not be used; `01_protocol.csv` is the current source of truth. The 100-person main Test remains unevaluated.

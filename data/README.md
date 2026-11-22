@@ -29,7 +29,7 @@ The verified archive is deleted **only after successful extraction and
 source audit**. Failures retain it for a retry in the same Runtime. Derived outputs
 are packaged as one stage ZIP for downstream modelling, not as a raw
 source backup. No Google Drive mount or automatic raw-data publication
-is used. The 100/300-person original-data run **has not yet occurred**.
+is used. The **100-person** original-data acquisition and 400-record audit have now executed in Colab; **300 people remain a separate, unexecuted option**. The selected IDs range 1001–1108 with eight unavailable/incomplete IDs omitted; model stages are still pending.
 
 ## Prepare bounded CSV files
 

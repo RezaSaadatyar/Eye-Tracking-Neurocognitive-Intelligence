@@ -222,3 +222,52 @@ def test_sparse_selected_ids_roundtrip_and_downstream_reconciliation(tmp_path):
     )
     with pytest.raises(ValueError, match="Protocol-selected"):
         verify_main_cohort(recovered, tampered)
+
+
+def test_stage01_figure_matches_observed_cohort_and_stage02_is_prospective():
+    """Both editable figures retain measured gaze but avoid copied pilot scores."""
+    import xml.etree.ElementTree as ET
+
+    base = ROOT / "eye_movement_modelling" / "images"
+    first = ET.parse(base / "01_data_and_experimental_protocol.svg")
+    second = ET.parse(base / "02_statistical_and_classical_ml.svg")
+    def component(document, identifier):
+        return next(el for el in document.iter()
+                    if el.attrib.get("id") == identifier)
+    assert ET.tostring(component(first, "source-record")) == ET.tostring(
+        component(second, "source-record")
+    )
+    figure1 = " ".join(el.text or "" for el in first.iter())
+    figure2 = " ".join(el.text or "" for el in second.iter())
+    for expected in ("100 complete people", "64 Train participants",
+                     "16 Validation people", "20 reserved Test people"):
+        assert expected in figure1
+    assert "256 Train recordings" in figure2
+    assert "64 records; 16 people" in figure2
+    assert "Main Validation pending" in figure2
+    assert "8/8" not in figure2 and "Macro F1 1.00" not in figure2
+    for document in (first, second):
+        for i in range(1, 6):
+            node = component(document, f"node-{i}")
+            rect = next(el for el in node if el.tag.endswith("rect"))
+            assert rect.attrib.get("fill") == "#F7FAFD"
+            assert rect.attrib.get("stroke") == "#B8CFDE"
+            assert len([el for el in node
+                        if el.attrib.get("class") == "nodedesc"]) == 3
+
+
+def test_stage02_requires_current_validation_before_its_final_zip():
+    notebook = (
+        ROOT / "eye_movement_modelling" / "code"
+        / "notebooks" / "02_statistical_and_classical_ml.ipynb"
+    )
+    cells = json.loads(notebook.read_text(encoding="utf-8"))["cells"]
+    by_id = {c["id"]: c for c in cells}
+    code = "".join(by_id["s2c19"]["source"])
+    assert "required_stage02" in code
+    assert "saved.record_id.duplicated().any()" in code
+    assert "set(saved.record_id) != expected_ids" in code
+    assert "expected_labels.sort_index()" in code
+    assert "download_outputs_from_colab" in code
+    assert all(c["execution_count"] is None and not c["outputs"]
+               for c in cells if c["cell_type"] == "code")
