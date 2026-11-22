@@ -32,6 +32,53 @@ def metrics(y_true, y_pred) -> dict:
             "balanced_accuracy": float(balanced_accuracy_score(y, p))}
 
 
+
+
+def participant_prediction_metrics(predictions: pd.DataFrame) -> pd.DataFrame:
+    """Describe Validation performance per independent person and model.
+
+    Fixed-label Macro F1 is retained for comparability. Balanced Accuracy
+    is undefined for a person with no examples of either source class, so
+    the person-level table records NaN rather than inventing class recall.
+    This table is descriptive; it does not replace the frozen model-ranking
+    rule based on the pooled Validation predictions.
+    """
+    required = {
+        "model", "participant_id", "window_id", "task", "split",
+        "target_index", "pred_index",
+    }
+    if predictions.empty or not required.issubset(predictions.columns):
+        raise ValueError("Missing per-person prediction evidence")
+    if predictions.duplicated(["model", "window_id"]).any():
+        raise ValueError("Duplicate model/window identifiers")
+    if not predictions.split.eq("validation").all():
+        raise ValueError("Person-level summary must use Validation only")
+    if not predictions.task.isin(CLASS_TO_INDEX).all():
+        raise ValueError("Unexpected original NR/TSR task")
+    if not np.array_equal(
+            predictions.task.map(CLASS_TO_INDEX).to_numpy(dtype=int),
+            predictions.target_index.to_numpy(dtype=int)):
+        raise ValueError("Original task and target indices disagree")
+    if not predictions.pred_index.isin((0, 1)).all():
+        raise ValueError("Unexpected prediction label")
+
+    rows = []
+    for (name, person), part in predictions.groupby(
+            ["model", "participant_id"], sort=True):
+        labels = part.target_index.to_numpy(dtype=int)
+        guesses = part.pred_index.to_numpy(dtype=int)
+        result = metrics(labels, guesses)
+        n_nr = int((labels == 0).sum())
+        n_tsr = int((labels == 1).sum())
+        if not (n_nr and n_tsr):
+            result["balanced_accuracy"] = float("nan")
+        rows.append({
+            "model": name, "participant_id": person,
+            "n_windows": len(part), "n_nr": n_nr, "n_tsr": n_tsr,
+            **result,
+        })
+    return pd.DataFrame(rows)
+
 def estimator(name: str, seed: int = 17):
     """Identical fixed training protocol; no Test-dependent hyperparameters."""
     if name == "class_prior":
