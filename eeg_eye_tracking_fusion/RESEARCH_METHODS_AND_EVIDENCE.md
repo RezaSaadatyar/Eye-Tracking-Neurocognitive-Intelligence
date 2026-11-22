@@ -1,6 +1,6 @@
 # EEG–Eye-Tracking Multimodal Research: Research Methods and Evidence
 
-**Current status:** architecture, six notebooks, helper modules, schematic figures and documentation authored; **original ZuCo 2.0 processing, model fitting and evaluation not yet run**. All numerical evaluation outputs below remain to be generated and checked. The first planned execution uses a bounded six-person source subset for engineering verification; this is not a completed scientific experiment.
+**Current status:** Notebook 01 has been executed, with **seven saved source-audit outputs** for **six selected ZuCo 2.0 people and twelve NR/TSR runs**. Alignment, usable-window selection, feature extraction, model fitting and final evaluation have **not yet been run**. The recorded Stage-01 results describe data availability and acquisition metadata, not model performance.
 
 ## 1. Research Objective and Scope
 
@@ -16,13 +16,13 @@ The study extends existing eye-tracking infrastructure with EEG reading, source-
 
 Source: [ZuCo 2.0](https://www.nemar.org/dataset/nm000279), BIDS version 1.9.0, NEMAR release `nm000279` **v1.0.0**. The source's BIDS description attributes the dataset to Hollenstein, Tröndle, Zhang and Langer (2020), with reported **CC-BY-4.0** terms. The release lists 18 people and nominally 128-channel EEG (EGI) and EyeLink 1000 left-eye data at 500 Hz. Some *per-run* EEG sidecars use different manufacturer/reference strings from general task metadata; preprocessing must follow the run actually read, and the acquisition reference cannot be inferred from the source-level summary.
 
-The repository does not bundle original EEG/eye source signals. The source helper uses the public NEMAR `data.nemar.org/nm000279/v1.0.0/` file gateway to retrieve just named BIDS run files; GitHub's [`nemarDatasets/nm000279`](https://github.com/nemarDatasets/nm000279) index provides the actual file listing. Each selected run needs its BrainVision `.eeg` / `.vhdr` / `.vmrk`, EEG JSON, channel table, event table, eye `physio.tsv.gz` and eye JSON. File retrieval is repeated as needed after Colab Runtime resets. The first cohort is defined by the **first six eligible subject identifiers in source order**, with **one paired run per task**. Enlarging the cohort changes the experiment and requires regeneration of dependent outputs.
+The repository does not bundle original EEG/eye source signals. The source helper uses the public NEMAR `data.nemar.org/nm000279/v1.0.0/` file gateway to retrieve just named BIDS run files; GitHub's [`nemarDatasets/nm000279`](https://github.com/nemarDatasets/nm000279) index provides the actual file listing. Each selected run needs its BrainVision `.eeg` / `.vhdr` / `.vmrk`, EEG JSON, channel table, event table, eye `physio.tsv.gz` and eye JSON. File retrieval is repeated as needed after Colab Runtime resets. The selected source subset contains **sub-YAC, sub-YAG, sub-YAK, sub-YDG, sub-YDR and sub-YFR**, with **one NR and one TSR run per participant**. Enlarging the cohort changes the experiment and requires regeneration of dependent outputs.
 
 ### Cohort and analytical units
 
 The original person is the **independent partition and uncertainty unit**. Each person may contribute paired NR/TSR runs, each run supplies non-overlapping **12-second temporal windows**, and each window supplies **six two-second bins**. Prediction rows are windows, not independent participants; windows from the same person never cross Train/Validation/Test roles.
 
-The initial development partition uses a seeded (`seed=17`) random permutation of eligible people, with 20% Test and 20% of the remainder Validation (minimum one each), leaving the rest for Train. Actual eligible people/windows and class support will be reported from source outputs; no population or window counts have been assumed. Small development runs must not be used as evidence of reliable generalisation.
+The initial development partition uses a seeded (`seed=17`) random permutation of eligible people, with 20% Test and 20% of the remainder Validation (minimum one each), leaving the rest for Train. The recorded participant split contains **3 Train, 1 Validation and 2 Test people** (6, 2 and 4 original runs respectively). Actual eligible paired-window counts will only be established after Notebook 02. Small development runs must not be used as evidence of reliable generalisation.
 
 ### Inputs and targets
 
@@ -30,7 +30,7 @@ The initial development partition uses a seeded (`seed=17`) random permutation o
 
 ## 3. Data Preparation and Representations
 
-Stage 01 checks real BIDS file availability for paired NR/TSR runs and records `01_source_manifest.csv`, `01_split_assignments.csv`, acquisition metadata and `01_protocol.json`. Original source files are downloaded into untracked, ephemeral Colab cache. Only derived artefacts are intended for GitHub.
+**Observed Stage 01 evidence:** The source index lists **18 participants**, with the first **six** selected for one NR and one TSR run each. All **twelve original run packages** were retrieved, totalling **1,135.6 MB**, and the eight BIDS files per run were recorded as present. All selected EEG/eye sidecars report nominal **500-Hz** sampling and **128 EEG channels**; gaze start offsets range from **−0.046 to +0.010 seconds**. The smallest run package, `sub-YAK / NR` (~**3.95 MB**), has a source EEG duration of about **15.2 seconds**; its actual common EEG–gaze support remains unverified. Seven stage-owned source outputs are available without committing the raw recordings.
 
 Stage 02 reads the lazy BrainVision EEG and compressed EyeLink table for each selected run; timebase construction is **EEG-relative sample time** versus **EyeLink `StartTime + sample_number / gaze_sampling_frequency`**. Only common temporal overlap is considered. Fixation/saccade/blink and trigger rows are checked for plausible onset within recording duration, but the independent inter-device clock drift has **not** been established from shared raw triggers; the report explicitly records `drift_verified=False`. Eligible 12-s windows are non-overlapping, limited to 20/run by default, and must have at least 60% finite gaze x/y samples. Non-eligible windows remain in the audit registry with exclusion reasons.
 
@@ -62,7 +62,7 @@ The temporal models apply Train-only feature-wise medians, means and standard de
 
 ## 6. Results and Comparative Analysis
 
-**No original-data model results are currently available.** The first execution will generate eligible participant and window counts, pair quality metrics and Validation tables. The full evaluation will eventually report all models' Test Accuracy, fixed-label Macro F1 and Balanced Accuracy with **independent person counts**, correctly separating windows from participants.
+**Recorded source audit:** six people, twelve downloaded original NR/TSR runs, a fixed 3/1/2 participant split and consistent EEG/eye acquisition metadata. **No EEG–gaze quality, paired-window count, feature extraction or model-evaluation results are yet available.** The next original-data execution is Notebook 02. The full evaluation will eventually report all models' Test Accuracy, fixed-label Macro F1 and Balanced Accuracy with **independent person counts**, correctly separating windows from participants.
 
 A genuine negative fusion outcome (unimodal outperforming fusion) will be reported. The documented published ZuCo analyses do not licence borrowing their scores as results of this pipeline. No empirical fusion gain, high accuracy, sample size or clinical inference is claimed here.
 
@@ -76,14 +76,14 @@ Task/stimulus confounding, unequal quality, eye artefacts in EEG, reading-event 
 
 | Artefact | Path | Producing stage and intended use |
 | --- | --- | --- |
-| Paired source and frozen roles | `output/01_source_manifest.csv`, `01_split_assignments.csv`, `01_protocol.json` | Source registry and person-disjoint splits |
+| **Recorded source audit and frozen roles** | `output/01_source_manifest.csv`, `01_split_assignments.csv`, `01_source_eligibility.csv`, `01_download_inventory.csv`, `01_acquisition_metadata.csv`, `01_protocol.json`, `01_source_overview.png` | **Seven Stage-01 files:** original run paths, participant roles, retrieval volumes, sidecar metadata and source figure |
 | Window alignment and quality | `output/02_window_registry.csv`, `02_alignment_quality.csv` | Eligible paired time windows and timing audit |
 | Independent modality representations | `output/03_features.csv`, `03_temporal_sequences.npz` | Classical predictors and temporal sequences |
 | Classical candidate evidence | `output/04_validation_metrics.csv`, `04_validation_predictions.csv`, `04_*.joblib` | Train-fitted baselines, Validation scores |
 | Temporal candidate evidence | `output/05_validation_metrics.csv`, `05_validation_predictions.csv`, `05_*.pt`, `05_scaling.npz` | Neural checkpoints and Validation scores |
 | Frozen final evidence | `output/06_model_selection.csv`, optional `06_test_metrics.csv`, `06_test_predictions.csv` | Pre-Test primary decision and eventual held-out evaluation |
 
-All six notebooks and their SVG diagrams are authored; **none of these numerical output artefacts has yet been generated by an actual ZuCo run in this repository**. A stage replaces its named artefacts on rerun, and later stages consume only current named files. Upstream cohort/feature changes require rerunning affected downstream stages. Data access requires the original public dataset and a live Colab Runtime; a GitHub clone alone does not reconstruct raw data or execute the experiment.
+All six notebooks and their scientific SVGs are authored; **seven Stage-01 source outputs have been committed**, while Stages 02–06 have not been executed on the original data. A stage replaces its named artefacts on rerun, and later stages consume only current named files. Upstream cohort/feature changes require rerunning affected downstream stages. Data access requires the original public dataset and a live Colab Runtime; a GitHub clone alone does not reconstruct raw data or execute the experiment.
 
 ## 9. Discussion, Limitations and Future Work
 
