@@ -141,6 +141,7 @@ def test_temporal_model_complexity_is_saved_with_validation_metrics():
 def test_stage03_current_validation_predictions_are_source_aligned():
     """Recalculate both current neural scores using the frozen source registry."""
     import numpy as np
+    import pandas as pd
     from s2_metrics import metric_row
 
     folder = ROOT / "eye_movement_modelling" / "output"
