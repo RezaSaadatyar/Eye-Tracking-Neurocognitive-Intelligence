@@ -1,6 +1,6 @@
 # EEG–Eye-Tracking Multimodal Research: Research Methods and Evidence
 
-**Current status:** Notebooks **01–03 have been executed** on a six-person ZuCo 2.0 development cohort (12 NR/TSR runs), producing **seven acquisition, four paired-window and six EEG/gaze feature outputs**. The source registry contains **206 eligible 12-second windows**, and Stage 03 retained all **206** with finite window-mean features. Model fitting, Validation comparison and final Test evaluation have **not** been executed. The recorded Stage-01 results describe data availability and acquisition metadata, not model performance.
+**Current status:** Notebooks **01–04 have recorded original-data executions** for a six-person ZuCo 2.0 development cohort (12 NR/TSR runs). Stages 01–03 produced **seven acquisition, four paired-window and six EEG/gaze feature outputs**, including **206 eligible 12-second windows** and eight finite window-mean features per window. Stage 04 trained classical and simple-fusion candidates on 95 Train windows (three people) and recorded seven Validation comparisons on 31 windows (one person). Its saved predictions and reported metrics were reconciled independently without retraining. Notebook 05 temporal training, Notebook 06 model selection and final Test scoring have **not** been executed. The 80 Test windows remain reserved.
 
 ## 1. Research Objective and Scope
 
@@ -66,9 +66,23 @@ The temporal models apply Train-only feature-wise medians, means and standard de
 
 ## 6. Results and Comparative Analysis
 
-**Recorded original-data preparation:** Notebook 01 audited six people and twelve NR/TSR runs; Notebook 02 constructed **206 eligible 12-second windows** under the BIDS-relative EEG/EyeLink timing and finite x/y criterion. Notebook 03 produced **206 paired EEG/gaze feature rows** and **two aligned (206, 6, 4) temporal arrays**, with **zero extraction exclusions** and **zero non-finite mean feature values**. Original partition support remains **95/31/80 windows** from **3/1/2 independent people**. The single Validation participant and unequal per-run window support limit interpretation. No model predictions, Validation metrics or Test results have been generated. **Next: Notebook 04, classical unimodal and simple-fusion baselines.** The full evaluation will eventually report all models' Test Accuracy, fixed-label Macro F1 and Balanced Accuracy with **independent person counts**, correctly separating windows from participants.
+**Recorded original-data preparation:** Notebook 01 audited six participants and twelve original NR/TSR runs. Notebook 02 constructed **206 eligible 12-second windows** using BIDS-relative EEG/EyeLink timing and a finite x/y criterion. Notebook 03 retained all **206 paired feature rows** and two aligned temporal arrays of shape **(206, 6, 4)**, with no extraction exclusions or non-finite window-mean features. Fixed partition support remains **95 Train windows from three people**, **31 Validation windows from one person** and **80 reserved Test windows from two people**.
 
-A genuine negative fusion outcome (unimodal outperforming fusion) will be reported. The documented published ZuCo analyses do not licence borrowing their scores as results of this pipeline. No empirical fusion gain, high accuracy, sample size or clinical inference is claimed here.
+**Classical and simple-fusion Validation comparison (Notebook 04).** The seven predeclared candidates were fitted using the Train split alone, except the fixed 0.50/0.50 late fusion of the two already fitted logistic model probabilities. All candidate predictions refer to the same **31 Validation windows (20 NR / 11 TSR)** from **one independent participant**. Recalculation from all **217 saved prediction rows** reproduced the recorded Accuracy, fixed-label Macro F1 and Balanced Accuracy values.
+
+| Candidate | Validation Macro F1 | Balanced Accuracy | Accuracy |
+| --- | ---: | ---: | ---: |
+| Gaze logistic regression | **0.8862** | **0.8636** | **0.9032** |
+| Equal-weight late fusion | 0.7786 | 0.7682 | 0.8065 |
+| Gaze random forest | 0.6601 | 0.6682 | 0.6774 |
+| Early-fusion logistic regression | 0.5620 | 0.5909 | 0.7097 |
+| EEG random forest | 0.2955 | 0.2955 | 0.3548 |
+| Class prior | 0.2619 | 0.5000 | 0.3548 |
+| EEG logistic regression | 0.1622 | 0.2727 | 0.1935 |
+
+The highest-scoring classical candidate, gaze logistic regression, correctly predicted **20/20 NR** and **8/11 TSR** windows. Compared with this strongest unimodal comparator, late fusion scored **0.1076 lower** and early fusion **0.3242 lower** in Validation Macro F1. These comparisons are descriptive: repeated windows from one held-out person do not establish a population-level model ranking or independent generalisation. Source text/task differences, unequal run contributions, gaze artefacts and ocular activity in EEG may contribute to task discrimination.
+
+**Evidence and limits:** The saved `04_validation_predictions.csv` and `04_validation_metrics.csv` agree for all seven candidates. Each prediction has the source window identity, participant, task, split, target index and finite normalised NR/TSR probabilities; no Test predictions occur in Stage 04. This verification of saved outputs is **not a second training run**. No temporal-model comparison, cross-family selection, Test score, clinical outcome or comprehension prediction is yet available. The original ZuCo papers' reported results are not substituted for this study's observations.
 
 ## 7. Robustness, Uncertainty and Additional Analyses
 
@@ -83,15 +97,15 @@ Task/stimulus confounding, unequal quality, eye artefacts in EEG, reading-event 
 | **Recorded source audit and frozen roles** | `output/01_source_manifest.csv`, `01_split_assignments.csv`, `01_source_eligibility.csv`, `01_download_inventory.csv`, `01_acquisition_metadata.csv`, `01_protocol.json`, `01_source_overview.png` | **Seven Stage-01 files:** original run paths, participant roles, retrieval volumes, sidecar metadata and source figure |
 | **Completed BIDS-relative paired-window audit** | `output/02_window_registry.csv`, `02_alignment_quality.csv`, `02_window_summary.csv`, `02_alignment_quality.png` | **Four Stage-02 files:** 206 original window IDs, 12-run timing/eligibility evidence, six group counts and finite-x/y figure; independent drift not verified |
 | **Recorded paired EEG and gaze representations** | `output/03_features.csv`, `03_temporal_sequences.npz`, `03_exclusion_reasons.csv`, `03_modality_quality.csv`, `03_temporal_example.png`, `03_fixation_locked_diagnostic.png` | **Six Stage-03 files:** all 206 windows retained, eight finite mean features, matched 6×4 arrays, zero exclusions, descriptive figures (raw EEG trace not a validated FRP) |
-| Classical candidate evidence | `output/04_validation_metrics.csv`, `04_validation_predictions.csv`, `04_*.joblib` | Train-fitted baselines, Validation scores |
+| **Executed classical candidate evidence** | `output/04_validation_metrics.csv`, `04_validation_predictions.csv`, `04_*.joblib`, `04_late_fusion.json`, `04_validation_comparison.png`, `04_validation_confusion.png` | **Eleven Stage-04 files:** six Train-fitted estimators, fixed late-fusion rule, seven matched Validation predictions/metrics and two recorded plots |
 | Temporal candidate evidence | `output/05_validation_metrics.csv`, `05_validation_predictions.csv`, `05_*.pt`, `05_scaling.npz` | Neural checkpoints and Validation scores |
 | Frozen final evidence | `output/06_model_selection.csv`, optional `06_test_metrics.csv`, `06_test_predictions.csv` | Pre-Test primary decision and eventual held-out evaluation |
 
-All six notebooks and their scientific SVGs are authored; **seven Stage-01, four Stage-02 and six Stage-03 outputs have been committed**, while Stages 04–06 have not been executed on the original data. A stage replaces its named artefacts on rerun, and later stages consume only current named files. Upstream cohort/feature changes require rerunning affected downstream stages. Data access requires the original public dataset and a live Colab Runtime; a GitHub clone alone does not reconstruct raw data or execute the experiment.
+All six notebooks and their scientific SVGs are authored; **seven Stage-01, four Stage-02, six Stage-03 and eleven Stage-04 outputs have been committed**. Stages 01–04 have recorded executions, while Stages 05–06 remain unexecuted. A stage replaces its named artefacts on rerun, and later stages consume only current named files. Upstream cohort/feature changes require rerunning affected downstream stages. Data access requires the original public dataset and a live Colab Runtime; a GitHub clone alone does not reconstruct raw data or execute the experiment.
 
 ## 9. Discussion, Limitations and Future Work
 
-The intended contribution is a transparent, grouped comparison of EEG-only, gaze-only and fusion approaches with explicit source provenance, timebase uncertainty, model-selection discipline and groupwise evaluation. **The scientific comparison is not yet performed**, so no conclusion about fusion improvement is supported.
+The intended contribution is a transparent, grouped comparison of EEG-only, gaze-only and fusion approaches with explicit source provenance, timebase uncertainty, model-selection discipline and groupwise evaluation. The executed classical Validation comparison favoured gaze-only logistic regression over early and fixed late fusion **for one held-out person**. This does not demonstrate a population-level fusion disadvantage. The temporal-model comparison, cross-family choice and reserved Test evaluation remain unperformed.
 
 ZuCo NR and TSR differ in task instructions and likely source-text characteristics, meaning models may detect protocol conditions rather than cognitive processes. Source-file coverage, the full 206-window feature registry and person-role integrity have been checked. The diagnostic raw fixation EEG has a large uncorrected offset; broader signal-level artefact control, gaze calibration and independently measured clock drift remain unresolved, so descriptive features and later model scores must not be treated as physiological explanations. The BIDS eye-stream `StartTime` is a documented offset, not proof of drift-free clock synchronisation. Fixation-locked EEG examples are descriptive and cannot establish cognitive or causal claims. Future work may consider source-matched text controls, independent timing markers, broader channel/montage analysis, additional sessions and genuine external datasets under new protocols.
 
