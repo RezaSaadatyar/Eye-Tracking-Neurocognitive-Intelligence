@@ -1,0 +1,17 @@
+model,partition,n_records,n_participants,accuracy,macro_f1,balanced_accuracy,participant_id
+class_prior,test_person,4,1,0.25,0.1,0.25,001
+class_prior,test_person,4,1,0.25,0.1,0.25,005
+cnn,test_person,4,1,1.0,1.0,1.0,001
+cnn,test_person,4,1,0.5,0.3333333333333333,0.5,005
+gradient_boosting,test_person,4,1,1.0,1.0,1.0,001
+gradient_boosting,test_person,4,1,0.75,0.6666666666666666,0.75,005
+gru,test_person,4,1,0.25,0.1,0.25,001
+gru,test_person,4,1,0.25,0.1,0.25,005
+logistic_regression,test_person,4,1,1.0,1.0,1.0,001
+logistic_regression,test_person,4,1,0.75,0.6666666666666666,0.75,005
+random_forest,test_person,4,1,1.0,1.0,1.0,001
+random_forest,test_person,4,1,0.75,0.6666666666666666,0.75,005
+tcn,test_person,4,1,1.0,1.0,1.0,001
+tcn,test_person,4,1,0.5,0.41666666666666663,0.5,005
+transformer,test_person,4,1,0.5,0.375,0.5,001
+transformer,test_person,4,1,0.5,0.375,0.5,005

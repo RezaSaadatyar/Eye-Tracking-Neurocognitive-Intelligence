@@ -1,0 +1,3 @@
+model,condition,macro_f1,n_records
+logistic_regression,original_validation,1.0,8
+logistic_regression,pupil_features_masked,1.0,8

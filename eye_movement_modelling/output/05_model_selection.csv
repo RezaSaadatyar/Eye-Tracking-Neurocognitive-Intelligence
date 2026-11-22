@@ -1,0 +1,2 @@
+selected_model,selection_rule,purpose,test_used_in_selection,validation_n_people
+logistic_regression,validation_macro_f1_then_balanced_accuracy_then_order,pilot,False,2

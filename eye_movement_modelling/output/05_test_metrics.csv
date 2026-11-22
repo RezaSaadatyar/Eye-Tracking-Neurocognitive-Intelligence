@@ -1,0 +1,9 @@
+model,partition,n_records,n_participants,accuracy,macro_f1,balanced_accuracy,selected_primary,study_purpose
+class_prior,test,8,2,0.25,0.1,0.25,False,pilot
+cnn,test,8,2,0.75,0.7333333333333334,0.75,False,pilot
+gradient_boosting,test,8,2,0.875,0.8666666666666667,0.875,False,pilot
+gru,test,8,2,0.25,0.1,0.25,False,pilot
+logistic_regression,test,8,2,0.875,0.8666666666666667,0.875,True,pilot
+random_forest,test,8,2,0.875,0.8666666666666667,0.875,False,pilot
+tcn,test,8,2,0.75,0.7416666666666667,0.75,False,pilot
+transformer,test,8,2,0.5,0.3333333333333333,0.5,False,pilot
