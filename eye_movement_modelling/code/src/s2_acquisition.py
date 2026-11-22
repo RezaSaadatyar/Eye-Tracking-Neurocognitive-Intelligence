@@ -18,7 +18,7 @@ import numpy as np
 import pandas as pd
 
 
-# =================== 01. Published Source and Expected Tasks =================
+# ================== 01. Published Source and Expected Tasks ==================
 FIGSHARE_FILE = "https://figshare.com/ndownloader/files/27039812"
 ARCHIVE_BYTES = 6_710_984_652
 ARCHIVE_MD5 = "cb7eb895fb48f8661decf038ab998c9a"
@@ -64,7 +64,7 @@ def _source_key(member_name: str):
     return int(match.group(1)), match.group(2).upper()
 
 
-# ==================== 02. Resume and Check Official Archive ==================
+# =================== 02. Resume and Check Official Archive ===================
 def _archive_digest(path: Path) -> str:
     md5 = hashlib.md5()
     with path.open("rb") as stream:
@@ -232,7 +232,7 @@ def _ensure_archive(archive_path: Path) -> None:
     )
 
 
-# ====================== 03. Select Only Intended CSVs ========================
+# ======================= 03. Select Only Intended CSVs =======================
 def _copy_archive_member(archive: zipfile.ZipFile, info: zipfile.ZipInfo,
                          destination: Path) -> None:
     """Extract an identified CSV without trusting archive-relative paths."""
@@ -318,7 +318,7 @@ def extract_selected_csvs(
     return extracted
 
 
-# ================= 04. Archive-Indexed Participant Eligibility ==============
+# ================ 04. Archive-Indexed Participant Eligibility ================
 def _archive_task_coverage(
     archive_path: Path, *, max_nested_depth: int = 3,
 ) -> dict[int, set[str]]:
