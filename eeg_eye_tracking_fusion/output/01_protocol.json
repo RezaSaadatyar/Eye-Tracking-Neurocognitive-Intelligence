@@ -5,13 +5,13 @@
     "nr": 0,
     "tsr": 1
   },
-  "max_participants": 6,
+  "max_participants": 18,
   "runs_per_task": 1,
   "seed": 17,
   "participant_split": {
-    "test": 2,
-    "train": 3,
-    "validation": 1
+    "test": 4,
+    "train": 11,
+    "validation": 3
   },
   "window_seconds": 12.0,
   "bin_seconds": 2.0,
