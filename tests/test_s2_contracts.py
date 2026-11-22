@@ -167,7 +167,7 @@ def test_s2_pipeline_versions_and_dependencies_declared():
 
 
 def test_s2_temporal_source_alignment_detects_stale_windows():
-    registry = participant_split(_manifest(10))
+    registry = participant_split(_manifest(20))
     arrays = {
         "x": np.zeros((len(registry), 32, 4), dtype=np.float32),
         "record_id": registry.record_id.to_numpy(dtype=str),
@@ -193,7 +193,7 @@ def test_s2_classical_models_fit_without_test_leakage():
         FEATURE_COLUMN_NAMES, classical_record_predictions,
     )
 
-    registry = participant_split(_manifest(10))
+    registry = participant_split(_manifest(20))
     rows = []
     for idx, src in registry.iterrows():
         class_id = TASKS.index(src.task)
