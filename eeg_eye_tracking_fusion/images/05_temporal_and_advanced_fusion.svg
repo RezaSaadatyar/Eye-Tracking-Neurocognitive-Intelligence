@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1700" height="816" viewBox="0 0 1700 816" role="img" aria-labelledby="title desc">
   <title id="title">05 | Temporal Learning and Gated Multimodal Fusion</title>
-  <desc id="desc">Planned five-band scientific workflow for 05_temporal_and_advanced_fusion. No measured model results or unverified alignment quality values are represented.</desc>
+  <desc id="desc">Executed three-model temporal experiment using ZuCo 2.0 six-bin EEG and gaze windows. Each model trained using 95 windows from three people and was evaluated on the same 31 Validation windows from one held-out person. Observed fixed-label Macro F1: EEG GRU 0.6890, gaze GRU 0.3922, gated EEG-gaze GRU 0.2619. The previously recorded classical gaze logistic candidate scored 0.8862 on these same Validation windows. All 80 Test windows are reserved without scoring. No generalisation, causal, comprehension or clinical claim is made.</desc>
   <defs>
     <marker id="arr" markerUnits="userSpaceOnUse" markerWidth="6" markerHeight="6" refX="5.5" refY="3" orient="auto">
       <path d="M0 0 L6 3 L0 6 Z" fill="#245E9D"/>
@@ -33,7 +33,7 @@
   <rect id="canvas" x="0" y="0" width="1700" height="816" rx="20" fill="#F4F9FD"/>
   <g id="band-0-header">
     <text id="text-001" x="30" y="38" class="figure-title" data-container="canvas">05 | Temporal Learning and Gated Multimodal Fusion</text>
-    <text id="text-002" x="30" y="67" class="subtitle" data-container="canvas">Compact modality-specific GRUs and gated fusion on the same matched six-step windows</text>
+    <text id="text-002" x="30" y="67" class="subtitle" data-container="canvas">Recorded Stage 05 | 95 Train (3 people) | 31 Validation (1 person) | 80 Test windows reserved</text>
   </g>
   <g id="band-1-context">
     <rect id="context-container" x="24" y="84" width="1652" height="160" rx="16" fill="#EAF3FA" stroke="#C7D9E6" stroke-width="2"/>
@@ -62,70 +62,86 @@
       <text id="text-018" x="1020" y="200" class="context-body" data-container="context-container">No causal explanation</text>
     </g>
     <g id="context-module-4">
-      <text id="text-019" x="1360" y="115" class="context-heading" data-container="context-container">SELECTION</text>
-      <text id="text-020" x="1360" y="148" class="context-body" data-container="context-container">Train-only normalisation</text>
-      <text id="text-021" x="1360" y="174" class="context-body" data-container="context-container">Checkpoint by Validation</text>
-      <text id="text-022" x="1360" y="200" class="context-body" data-container="context-container">Test withheld</text>
+      <text id="text-019" x="1360" y="115" class="context-heading" data-container="context-container">RECORDED SUPPORT</text>
+      <text id="text-020" x="1360" y="148" class="context-body" data-container="context-container">31 Validation windows</text>
+      <text id="text-021" x="1360" y="174" class="context-body" data-container="context-container">20 NR / 11 TSR; 1 person</text>
+      <text id="text-022" x="1360" y="200" class="context-body" data-container="context-container">No Test predictions</text>
     </g>
   </g>
   <g id="band-2-analysis">
     <rect id="analysis-container" x="24" y="258" width="1652" height="314" rx="16" fill="#EDF6FB" stroke="#B4CFE0" stroke-width="1.5"/>
     <g id="analysis-focus">
       <rect id="section-label-box" x="38" y="272" width="238" height="32" rx="9" fill="#173453" stroke="#173453" stroke-width="1.5"/>
-      <text id="text-023" x="157" y="293" class="section-label" text-anchor="middle" data-container="section-label-box">SCIENTIFIC DESIGN</text>
+      <text id="text-023" x="157" y="293" class="section-label" text-anchor="middle" data-container="section-label-box">RECORDED EVIDENCE</text>
       <rect id="focus-card" x="38" y="312" width="238" height="215" rx="10" fill="#F7FAFD" stroke="#DFEAF0" stroke-width="1.5"/>
-      <text id="text-024" x="54" y="344" class="focus-heading" data-container="focus-card">TEMPORAL MODELS</text>
-      <text id="text-025" x="54" y="389" class="focus-body" data-container="focus-card">Does time structure</text>
-      <text id="text-026" x="54" y="416" class="focus-body" data-container="focus-card">improve task recognition?</text>
-      <text id="text-027" x="54" y="443" class="focus-body" data-container="focus-card">Compare matched windows</text>
-      <text id="text-028" x="54" y="470" class="focus-body" data-container="focus-card">Control parameter count</text>
-      <text id="text-029" x="54" y="508" class="qualification" data-container="focus-card">Small independent N</text>
+      <text id="text-024" x="54" y="344" class="focus-heading" data-container="focus-card">TEMPORAL FINDING</text>
+      <text id="text-025" x="54" y="389" class="focus-body" data-container="focus-card">EEG GRU led Stage 05</text>
+      <text id="text-026" x="54" y="416" class="focus-body" data-container="focus-card">Macro F1 = 0.6890</text>
+      <text id="text-027" x="54" y="443" class="focus-body" data-container="focus-card">Gaze GRU = 0.3922</text>
+      <text id="text-028" x="54" y="470" class="focus-body" data-container="focus-card">Gated GRU = 0.2619</text>
+      <text id="text-029" x="54" y="508" class="qualification" data-container="focus-card">One held-out person</text>
     </g>
     <g id="evidence-panel-1">
       <rect id="evidence-card-1" x="292" y="272" width="324" height="254" rx="12" fill="#FFFFFF" stroke="#B6CFDE" stroke-width="1.5"/>
       <path id="evidence-header-1" d="M303 272 H605 Q616 272 616 283 V305 H292 V283 Q292 272 303 272 Z" fill="#174B70"/>
-      <text id="text-030" x="454.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-1">GAZE-ONLY GRU</text>
+      <text id="text-030" x="454.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-1">GAZE GRU</text>
       <g id="evidence-content-1" data-slot="scientific-content">
-        <text id="text-031" x="454.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-1">Six-step gaze sequences</text>
-        <text id="text-032" x="454.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-1">Compact recurrent head</text>
-        <text id="text-033" x="454.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-1">Unimodal comparator</text>
+        <text x="316" y="354" class="card-body">Macro F1: 0.3922</text>
+        <rect x="316" y="365" width="270" height="13" rx="4" fill="#E8F0F6"/>
+        <rect x="316" y="365" width="105.9" height="13" rx="4" fill="#236CDE"/>
+        <text x="316" y="418" class="card-body">Balanced accuracy: 0.5000</text>
+        <rect x="316" y="429" width="270" height="13" rx="4" fill="#E8F0F6"/>
+        <rect x="316" y="429" width="135.0" height="13" rx="4" fill="#236CDE"/>
+        <text x="316" y="488" class="card-body">All 31 predicted NR</text>
       </g>
     </g>
     <g id="evidence-panel-2">
       <rect id="evidence-card-2" x="630" y="272" width="324" height="254" rx="12" fill="#FFFFFF" stroke="#B6CFDE" stroke-width="1.5"/>
       <path id="evidence-header-2" d="M641 272 H943 Q954 272 954 283 V305 H630 V283 Q630 272 641 272 Z" fill="#174B70"/>
-      <text id="text-034" x="792.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-2">EEG-ONLY GRU</text>
+      <text id="text-034" x="792.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-2">EEG GRU</text>
       <g id="evidence-content-2" data-slot="scientific-content">
-        <text id="text-035" x="792.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-2">Six-step spectral bands</text>
-        <text id="text-036" x="792.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-2">Independent recurrent head</text>
-        <text id="text-037" x="792.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-2">EEG comparator</text>
+        <text x="654" y="354" class="card-body">Macro F1: 0.6890</text>
+        <rect x="654" y="365" width="270" height="13" rx="4" fill="#E8F0F6"/>
+        <rect x="654" y="365" width="186.0" height="13" rx="4" fill="#E87929"/>
+        <text x="654" y="418" class="card-body">Balanced accuracy: 0.6932</text>
+        <rect x="654" y="429" width="270" height="13" rx="4" fill="#E8F0F6"/>
+        <rect x="654" y="429" width="187.2" height="13" rx="4" fill="#E87929"/>
+        <text x="654" y="488" class="card-body">15 NR + 7 TSR correct</text>
       </g>
     </g>
     <g id="evidence-panel-3">
       <rect id="evidence-card-3" x="968" y="272" width="324" height="254" rx="12" fill="#FFFFFF" stroke="#B6CFDE" stroke-width="1.5"/>
       <path id="evidence-header-3" d="M979 272 H1281 Q1292 272 1292 283 V305 H968 V283 Q968 272 979 272 Z" fill="#174B70"/>
-      <text id="text-038" x="1130.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-3">GATED FUSION</text>
+      <text id="text-038" x="1130.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-3">GATED FUSION GRU</text>
       <g id="evidence-content-3" data-slot="scientific-content">
-        <text id="text-039" x="1130.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-3">Learnable EEG/gaze mix</text>
-        <text id="text-040" x="1130.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-3">Shared compact GRU</text>
-        <text id="text-041" x="1130.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-3">Gate is not attribution</text>
+        <text x="992" y="354" class="card-body">Macro F1: 0.2619</text>
+        <rect x="992" y="365" width="270" height="13" rx="4" fill="#E8F0F6"/>
+        <rect x="992" y="365" width="70.7" height="13" rx="4" fill="#168C5B"/>
+        <text x="992" y="418" class="card-body">Balanced accuracy: 0.5000</text>
+        <rect x="992" y="429" width="270" height="13" rx="4" fill="#E8F0F6"/>
+        <rect x="992" y="429" width="135.0" height="13" rx="4" fill="#168C5B"/>
+        <text x="992" y="488" class="card-body">All 31 predicted TSR</text>
       </g>
     </g>
     <g id="evidence-panel-4">
       <rect id="evidence-card-4" x="1306" y="272" width="356" height="254" rx="12" fill="#FFFFFF" stroke="#B6CFDE" stroke-width="1.5"/>
       <path id="evidence-header-4" d="M1317 272 H1651 Q1662 272 1662 283 V305 H1306 V283 Q1306 272 1317 272 Z" fill="#174B70"/>
-      <text id="text-042" x="1484.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-4">CHECKPOINT QA</text>
+      <text id="text-042" x="1484.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-4">CROSS-STAGE CONTEXT</text>
       <g id="evidence-content-4" data-slot="scientific-content">
-        <text id="text-043" x="1484.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-4">Validation Macro F1</text>
-        <text id="text-044" x="1484.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-4">Balanced accuracy tie</text>
-        <text id="text-045" x="1484.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-4">Lower Val loss tie</text>
+        <text x="1330" y="352" class="card-body">Stage 04 gaze logistic F1: 0.8862</text>
+        <rect x="1330" y="363" width="286" height="13" rx="4" fill="#E8F0F6"/>
+        <rect x="1330" y="363" width="253.4" height="13" rx="4" fill="#236CDE"/>
+        <text x="1330" y="416" class="card-body">Best Stage 05 EEG GRU F1: 0.6890</text>
+        <rect x="1330" y="427" width="286" height="13" rx="4" fill="#E8F0F6"/>
+        <rect x="1330" y="427" width="197.0" height="13" rx="4" fill="#E87929"/>
+        <text x="1330" y="488" class="card-body">Same 31 Validation windows</text>
       </g>
     </g>
     <g id="optional-scientific-note" data-optional="true">
       <rect id="note-strip" x="301" y="540" width="1064" height="25" rx="12" fill="#E0F2EC" stroke="#D3EAE2" stroke-width="1.5"/>
       <circle cx="324" cy="552" r="9" fill="#23749A"/>
       <text id="text-046" x="324" y="556" class="info-mark" text-anchor="middle">i</text>
-      <text id="text-047" x="342" y="556" class="scientific-note" data-container="note-strip">More temporal windows do not increase the independent subject count.</text>
+      <text id="text-047" x="342" y="556" class="scientific-note" data-container="note-strip">Best temporal F1 = 0.6890; classical gaze logistic scored 0.8862 on the same one-person Validation split.</text>
     </g>
   </g>
   <g id="band-3-workflow">
@@ -187,13 +203,13 @@
     <g id="workflow-output">
       <rect id="workflow-node-6" x="1454" y="613" width="208" height="132" rx="15" fill="#176363" stroke="#176363" stroke-width="1.8"/>
       <text id="text-078" x="1558" y="636" class="terminal-id" text-anchor="middle" data-container="workflow-node-6">OUTPUT</text>
-      <text id="text-079" x="1558" y="662" class="terminal-heading" text-anchor="middle" data-container="workflow-node-6">Stage Outputs</text>
-      <text id="text-080" x="1558" y="684" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">05_ model states</text>
-      <text id="text-081" x="1558" y="704" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">Training histories</text>
-      <text id="text-082" x="1558" y="724" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">Validation evidence</text>
+      <text id="text-079" x="1558" y="662" class="terminal-heading" text-anchor="middle" data-container="workflow-node-6">Saved Stage 05</text>
+      <text id="text-080" x="1558" y="684" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">3 GRU checkpoints</text>
+      <text id="text-081" x="1558" y="704" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">93 Validation rows</text>
+      <text id="text-082" x="1558" y="724" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">Test not evaluated</text>
     </g>
   </g>
   <g id="band-4-summary">
-    <text id="text-083" x="30" y="792" class="footer" data-container="canvas">The gated architecture is exploratory and may be worse than simpler unimodal models.</text>
+    <text id="text-083" x="30" y="792" class="footer" data-container="canvas">EEG GRU led the temporal comparison; gated fusion and gaze GRU collapsed to single-class predictions (n = 1 person).</text>
   </g>
 </svg>
