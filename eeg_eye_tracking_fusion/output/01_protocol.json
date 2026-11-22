@@ -6,6 +6,17 @@
     "tsr": 1
   },
   "max_participants": 18,
+  "selected_people": 18,
+  "eligible_source_pool": 18,
+  "role_policy": "pilot_roles_locked_full_pool_seeded_expansion",
+  "pilot_role_lock": {
+    "sub-YAC": "test",
+    "sub-YAG": "test",
+    "sub-YAK": "train",
+    "sub-YDG": "train",
+    "sub-YDR": "validation",
+    "sub-YFR": "train"
+  },
   "runs_per_task": 1,
   "seed": 17,
   "participant_split": {
