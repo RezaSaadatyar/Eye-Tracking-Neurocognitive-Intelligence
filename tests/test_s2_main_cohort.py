@@ -217,8 +217,8 @@ def test_sparse_selected_ids_roundtrip_and_downstream_reconciliation(tmp_path):
         verify_main_cohort(recovered, tampered)
 
 
-def test_stage01_figure_matches_observed_cohort_and_stage02_is_prospective():
-    """Both editable figures retain measured gaze but avoid copied pilot scores."""
+def test_stage01_figure_matches_observed_cohort_and_stage02_main_validation():
+    """Both editable figures retain measured gaze and current stage status."""
     import xml.etree.ElementTree as ET
 
     base = ROOT / "eye_movement_modelling" / "images"
@@ -237,8 +237,8 @@ def test_stage01_figure_matches_observed_cohort_and_stage02_is_prospective():
         assert expected in figure1
     assert "256 Train recordings" in figure2
     assert "64 records; 16 people" in figure2
-    assert "Main Validation pending" in figure2
-    assert "8/8" not in figure2 and "Macro F1 1.00" not in figure2
+    assert "Macro F1: 1.000" in figure2 and "Macro F1: 0.984" in figure2
+    assert "8/8" not in figure2
     for document in (first, second):
         for i in range(1, 6):
             node = component(document, f"node-{i}")
