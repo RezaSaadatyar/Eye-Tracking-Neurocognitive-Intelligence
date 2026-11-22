@@ -6,6 +6,8 @@ DataLad, cloud drive, archive extraction or dataset-wide download is needed.
 """
 from __future__ import annotations
 
+import base64
+import hashlib
 import json
 import re
 from pathlib import Path
@@ -13,18 +15,28 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 DATASET_ID = "nm000279"
 VERSION = "v1.0.0"
 API = f"https://api.github.com/repos/nemarDatasets/{DATASET_ID}/contents"
 DATA = f"https://data.nemar.org/{DATASET_ID}/{VERSION}"
+S3 = f"https://nemar.s3.us-east-2.amazonaws.com/{DATASET_ID}/objects"
 TASKS = ("nr", "tsr")
+_TRANSIENT_STATUSES = frozenset((429, 500, 502, 503, 504))
 
 
 def session() -> requests.Session:
-    """Return an HTTP session with a descriptive, non-secret user agent."""
+    """Return one HTTP session with bounded retries for transient failures."""
     handle = requests.Session()
     handle.headers.update({"User-Agent": "zuco-2-research-notebook/1.0"})
+    retry = Retry(
+        total=3, connect=3, read=2, status=3, backoff_factor=1.0,
+        status_forcelist=_TRANSIENT_STATUSES, allowed_methods={"GET"},
+        respect_retry_after_header=True, raise_on_status=False,
+    )
+    handle.mount("https://", HTTPAdapter(max_retries=retry))
     return handle
 
 
@@ -136,11 +148,51 @@ def split_people(ids, seed: int = 17, test_fraction: float = 0.2,
                          "split": [roles[s] for s in ids]})
 
 
-def download_file(relative_path: str, raw_root: Path, handle=None) -> Path:
-    """Download one requested original BIDS file, reusing an intact cache.
+def _annex_object(relative_path: str, handle) -> tuple[str, int, str]:
+    """Resolve a source Git-annex pointer to its public, content-addressed S3 URL."""
+    index = handle.get(f"{API}/{relative_path}", timeout=(15, 45))
+    index.raise_for_status()
+    item = index.json()
+    pointer = item.get("target", "")
+    if not pointer and item.get("content"):
+        pointer = base64.b64decode(item["content"]).decode("utf-8").strip()
+    key = pointer.rsplit("/", 1)[-1]
+    match = re.fullmatch(
+        r"SHA256E-s([0-9]+)--([0-9a-f]{64})(?:\\.[a-zA-Z0-9.]+)?", key
+    )
+    if not pointer.startswith("/annex/objects/") or not match:
+        raise ValueError(
+            f"Missing verifiable Git-annex source pointer: {relative_path}"
+        )
+    return f"{S3}/{key}", int(match.group(1)), match.group(2)
 
-    The official NEMAR data endpoint redirects git-annex file paths to
-    hosted bytes. Incomplete downloads use .part and are never accepted.
+
+def _stream_source(url: str, temporary: Path, handle,
+                   expected_size=None, expected_sha256=None) -> None:
+    """Download into a temporary file and verify optional annex integrity."""
+    digest = hashlib.sha256() if expected_sha256 else None
+    size = 0
+    with handle.get(url, timeout=(30, 180), stream=True,
+                    allow_redirects=True) as response:
+        response.raise_for_status()
+        with temporary.open("wb") as target:
+            for chunk in response.iter_content(chunk_size=1024 * 1024):
+                if chunk:
+                    target.write(chunk)
+                    size += len(chunk)
+                    if digest is not None:
+                        digest.update(chunk)
+    if not size or (expected_size is not None and size != expected_size):
+        raise IOError(f"Empty or incomplete source file: {url}")
+    if digest is not None and digest.hexdigest() != expected_sha256:
+        raise IOError(f"SHA-256 mismatch for source file: {url}")
+
+
+def download_file(relative_path: str, raw_root: Path, handle=None) -> Path:
+    """Retrieve one BIDS source file using NEMAR, then its official S3 copy.
+
+    The source gateway is preferred. Only transient gateway failures trigger
+    the content-addressed S3 fallback; successful files remain in the cache.
     """
     handle = handle or session()
     relative_path = str(relative_path).lstrip("/")
@@ -150,22 +202,50 @@ def download_file(relative_path: str, raw_root: Path, handle=None) -> Path:
     if destination.is_file() and destination.stat().st_size > 0:
         return destination
     destination.parent.mkdir(parents=True, exist_ok=True)
-    intermediate = destination.with_name(destination.name + ".part")
+    temporary = destination.with_name(destination.name + ".part")
     try:
-        with handle.get(f"{DATA}/{relative_path}", timeout=(30, 180),
-                        stream=True, allow_redirects=True) as response:
-            response.raise_for_status()
-            with intermediate.open("wb") as target:
-                for chunk in response.iter_content(chunk_size=1024*1024):
-                    if chunk:
-                        target.write(chunk)
-        if intermediate.stat().st_size == 0:
-            raise IOError(f"Empty downloaded source: {relative_path}")
-        if destination.suffix in (".eeg", ".gz") and intermediate.stat().st_size < 512:
-            raise IOError(f"Source content looks like an annex pointer: {relative_path}")
-        intermediate.replace(destination)
+        try:
+            _stream_source(f"{DATA}/{relative_path}", temporary, handle)
+        except (requests.exceptions.ConnectionError,
+                requests.exceptions.Timeout,
+                requests.exceptions.RetryError):
+            temporary.unlink(missing_ok=True)
+            fallback = True
+        except requests.exceptions.HTTPError as error:
+            if (error.response is None
+                    or error.response.status_code not in _TRANSIENT_STATUSES):
+                raise
+            temporary.unlink(missing_ok=True)
+            fallback = True
+        else:
+            fallback = False
+
+        if fallback:
+            try:
+                url, size, digest = _annex_object(relative_path, handle)
+            except (requests.RequestException, ValueError) as error:
+                raise RuntimeError(
+                    f"NEMAR is temporarily unavailable and its public S3 "
+                    f"source could not be resolved: {relative_path}"
+                ) from error
+            print(f"NEMAR gateway unavailable; trying official S3: "
+                  f"{Path(relative_path).name}")
+            try:
+                _stream_source(url, temporary, handle, size, digest)
+            except (requests.RequestException, OSError) as error:
+                raise RuntimeError(
+                    f"Neither NEMAR gateway nor public S3 served the "
+                    f"verified source file: {relative_path}. "
+                    "Keep downloaded files in /content and try again "
+                    "when the source service is available."
+                ) from error
+
+        if (destination.suffix in (".eeg", ".gz")
+                and temporary.stat().st_size < 512):
+            raise IOError(f"Source file is too small: {relative_path}")
+        temporary.replace(destination)
     finally:
-        intermediate.unlink(missing_ok=True)
+        temporary.unlink(missing_ok=True)
     return destination
 
 
