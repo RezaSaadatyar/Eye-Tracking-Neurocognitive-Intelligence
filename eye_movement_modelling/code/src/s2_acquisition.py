@@ -55,6 +55,9 @@ def source_csv_path(raw_root: Path, source_id: int, task: str) -> Path:
 
 def _source_key(member_name: str):
     """Match only original Round 1 / Session 1 source filename identities."""
+    round_hint = re.search(r"Round[_ -]?(\d+)", member_name, re.I)
+    if round_hint and int(round_hint.group(1)) != 1:
+        return None
     match = FILE_RE.fullmatch(Path(member_name).name)
     if match is None:
         return None
@@ -315,6 +318,124 @@ def extract_selected_csvs(
     return extracted
 
 
+# ================= 04. Archive-Indexed Participant Eligibility ==============
+def _archive_task_coverage(
+    archive_path: Path, *, max_nested_depth: int = 3,
+) -> dict[int, set[str]]:
+    """Index actual Round-1/Session-1 task filenames without extracting CSVs.
+
+    Both direct CSVs and nested source ZIPs are supported. Nested archives are
+    inspected one at a time, with spooling to avoid retaining the dataset in RAM.
+    This does not use gaze values, task labels beyond source identity, or Test.
+    """
+    coverage: dict[int, set[str]] = {}
+
+    def inspect(archive: zipfile.ZipFile, depth: int) -> None:
+        for info in sorted(archive.infolist(), key=lambda item: item.filename):
+            if info.is_dir():
+                continue
+            key = _source_key(info.filename)
+            if key and info.filename.lower().endswith(".csv"):
+                if info.file_size > 0:
+                    coverage.setdefault(key[0], set()).add(key[1])
+                continue
+            if not info.filename.lower().endswith(".zip"):
+                continue
+            if depth >= max_nested_depth:
+                continue
+            round_hint = re.search(r"Round[_ -]?(\d+)", info.filename, re.I)
+            if round_hint and int(round_hint.group(1)) != 1:
+                continue
+            with tempfile.SpooledTemporaryFile(
+                max_size=64 * 1024 * 1024
+            ) as nested:
+                with archive.open(info) as stream:
+                    shutil.copyfileobj(
+                        stream, nested, length=8 * 1024 * 1024,
+                    )
+                nested.seek(0)
+                with zipfile.ZipFile(nested) as inner:
+                    inspect(inner, depth + 1)
+
+    with zipfile.ZipFile(archive_path) as top:
+        inspect(top, 0)
+    return coverage
+
+
+def ensure_gazebase_cohort_preflight(
+    *, raw_root: Path, download_root: Path, output_csv: Path,
+    participants: int, first_source_id: int = 1001,
+) -> pd.DataFrame:
+    """Select the first N *actually complete* source people in Round 1.
+
+    The desired count is fixed. Missing source IDs are skipped only based on
+    availability of all four original task files, never model results. Print
+    skipped/ineligible source IDs and keep the chosen IDs in the audit CSV.
+    """
+    if not isinstance(participants, int) or not 10 <= participants <= 322:
+        raise ValueError("Choose 10–322 participants for this Round-1 study")
+    if first_source_id != 1001:
+        raise ValueError("The fixed source order begins at 1001")
+
+    raw_root = Path(raw_root)
+    download_root = Path(download_root)
+    output_csv = Path(output_csv)
+    # Reuse complete original CSVs in the current Colab Runtime when enough
+    # are present, without attempting another 6.7-GB download.
+    complete_local = tuple(
+        sid for sid in range(first_source_id, 2000)
+        if all(source_csv_path(raw_root, sid, task).is_file()
+               for task in TASKS)
+    )
+    archive = download_root / "GazeBase_v2_0.zip"
+    used_archive = False
+    if len(complete_local) >= participants:
+        selected_ids = complete_local[:participants]
+        print(f"Reusing {participants} complete local source people.")
+    else:
+        _ensure_archive(archive)
+        used_archive = True
+        coverage = _archive_task_coverage(archive)
+        complete_archive = sorted(
+            sid for sid, found_tasks in coverage.items()
+            if sid >= first_source_id and set(TASKS).issubset(found_tasks)
+        )
+        if len(complete_archive) < participants:
+            raise FileNotFoundError(
+                "The verified archive contains only "
+                f"{len(complete_archive)} people with all four requested "
+                f"Round-1/Session-1 tasks, fewer than {participants}. "
+                f"Verified archive retained for inspection: {archive}"
+            )
+        selected_ids = tuple(complete_archive[:participants])
+        skipped = sorted(
+            sid for sid in range(first_source_id, selected_ids[-1] + 1)
+            if sid not in selected_ids
+        )
+        print(
+            f"Selected {len(selected_ids)} complete source people "
+            f"(IDs {selected_ids[0]}–{selected_ids[-1]})."
+        )
+        print(f"Unavailable/incomplete IDs skipped: {skipped}")
+        missing_files = sum(
+            not source_csv_path(raw_root, sid, task).is_file()
+            for sid in selected_ids for task in TASKS
+        )
+        print(f"Recovering {missing_files} selected original CSVs.")
+        # A failed extraction leaves the verified archive available to retry.
+        extract_selected_csvs(archive, raw_root, selected_ids)
+
+    # Audit selected people, reject invalid originals, and write only after
+    # all four tasks per participant have passed the existing source checks.
+    audit = ensure_gazebase_preflight(
+        raw_root=raw_root, download_root=download_root,
+        output_csv=output_csv, requested_ids=selected_ids,
+    )
+    if used_archive:
+        archive.unlink(missing_ok=True)
+    return audit
+
+
 # ================== 04. Source Quality and Colab-Local Files =================
 def _inspect_csv(path: Path) -> dict:
     """Inspect all rows without loading the entire original recording in RAM."""
@@ -368,17 +489,14 @@ def ensure_gazebase_preflight(
         (sid, task) for sid in requested_ids for task in TASKS
         if not source_csv_path(raw_root, sid, task).is_file()
     ]
+    used_archive = False
     if missing:
         archive = download_root / "GazeBase_v2_0.zip"
         _ensure_archive(archive)
+        used_archive = True
         print(f"Recovering {len(missing)} missing original CSVs from the archive.")
-        try:
-            extract_selected_csvs(archive, raw_root, requested_ids)
-        finally:
-            # Keep any partially transferred archive for a later resume, but
-            # remove the completed temporary ZIP after extraction is attempted.
-            if archive.is_file():
-                archive.unlink()
+        # On extraction failure retain the verified ZIP for a local retry.
+        extract_selected_csvs(archive, raw_root, requested_ids)
 
     rows = []
     for sid in requested_ids:
@@ -406,4 +524,6 @@ def ensure_gazebase_preflight(
         temporary.replace(output_csv)
     finally:
         temporary.unlink(missing_ok=True)
+    if used_archive:
+        archive.unlink(missing_ok=True)
     return frame

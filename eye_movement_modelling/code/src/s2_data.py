@@ -264,8 +264,21 @@ def save_protocol(path: str | Path, *, participants: int,
                   max_windows_per_record: int, purpose: str,
                   test_fraction: float = 0.20,
                   validation_fraction: float = 0.20,
-                  source_first_id: int = 1001) -> dict:
+                  source_first_id: int = 1001,
+                  selected_source_ids: tuple[int, ...] | None = None) -> dict:
     """Save the current scientific configuration in a readable CSV row."""
+    if selected_source_ids is not None:
+        selected_source_ids = tuple(int(sid) for sid in selected_source_ids)
+        if (
+            len(selected_source_ids) != participants
+            or len(set(selected_source_ids)) != participants
+            or tuple(sorted(selected_source_ids)) != selected_source_ids
+            or selected_source_ids[0] < source_first_id
+        ):
+            raise ValueError(
+                "Selected source IDs must be sorted, distinct and match "
+                "the requested participant count"
+            )
     settings = {
         "dataset": "GazeBase_v2_0", "round_id": 1, "session_id": 1,
         "task_labels": list(TASKS), "max_participants": participants,
@@ -274,18 +287,23 @@ def save_protocol(path: str | Path, *, participants: int,
         "test_fraction": test_fraction,
         "validation_fraction_in_development": validation_fraction,
         "source_first_id": source_first_id,
-        "source_last_id": source_first_id + participants - 1,
+        "source_last_id": (
+            selected_source_ids[-1] if selected_source_ids is not None
+            else source_first_id + participants - 1
+        ),
         "purpose": purpose,
         "test_role": "pilot_exploratory" if purpose == "pilot"
                      else "new_source_id_reserved_participants",
         "target": "task_identity_not_cognition",
         "temporal_channels": list(CHANNELS),
     }
+    if selected_source_ids is not None:
+        settings["selected_source_ids"] = list(selected_source_ids)
     csv_path = Path(path)
     if csv_path.suffix.lower() != ".csv":
         raise ValueError("The protocol must be saved as a CSV file")
     row = {
-        key: "; ".join(value) if isinstance(value, list) else value
+        key: "; ".join(map(str, value)) if isinstance(value, list) else value
         for key, value in settings.items()
     }
     pd.DataFrame([row]).to_csv(csv_path, index=False)
@@ -320,6 +338,11 @@ def load_protocol(path: str | Path) -> dict:
     for key in ("task_labels", "temporal_channels"):
         settings[key] = [part.strip() for part in settings[key].split(";")
                          if part.strip()]
+    if "selected_source_ids" in settings:
+        settings["selected_source_ids"] = [
+            int(part.strip()) for part in
+            settings["selected_source_ids"].split(";") if part.strip()
+        ]
     for key in ("source_first_id", "source_last_id"):
         if key in settings:
             settings[key] = int(settings[key])

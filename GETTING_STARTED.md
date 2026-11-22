@@ -88,8 +88,10 @@ the source-acquisition check separately audited **20 people**. A
 
 For the next **100-person** study set `MAX_PARTICIPANTS = 100` in
 Notebook 01, Section 02; for a separate 300-person study change that
-single value **before** data acquisition or new Test exposure. The default
-100-person split is 64 Train, 16 Validation, 20 Test people (seed 17).
+single value **before** data acquisition or new Test exposure. The intended default
+100-person split is 64 Train, 16 Validation, 20 Test people (seed 17),
+chosen from the first 100 people with all four original source task files
+rather than from 100 assumed consecutive IDs. Skipped source IDs are logged.
 All original sources are handled inside Colab, with no Google Drive mount.
 
 Stage `NN` outputs are saved under `eye_movement_modelling/output/` and

@@ -140,6 +140,17 @@ def test_all_five_current_notebooks_draft_main_not_pilot_results():
     assert "MAX_PARTICIPANTS = 100" in source
     assert "FIRST_SOURCE_ID = 1001" in source
     assert "MAX_WINDOWS_PER_RECORD = 24" in source
+    acquisition = next(
+        c for c in first["cells"]
+        if c.get("id") == "s2-c-source-acquisition"
+    )
+    selection = next(
+        c for c in first["cells"] if c.get("id") == "s2-c-007"
+    )
+    assert "ensure_gazebase_cohort_preflight(" in "".join(
+        acquisition["source"]
+    )
+    assert "selected_people =" in "".join(selection["source"])
     for notebook in files[1:]:
         source = "\n".join(
             "".join(c["source"]) for c in
@@ -172,3 +183,33 @@ def test_final_main_stage_checks_exact_validation_source_identifiers():
     assert "set(pred.record_id) != expected_val_ids" in code
     assert "pred.record_id.map(target_lookup)" in code
     assert "do not mix model checkpoints" in code
+
+
+def test_sparse_selected_ids_roundtrip_and_downstream_reconciliation(tmp_path):
+    source = tuple(i for i in range(1001, 1107) if i not in (
+        1028, 1036, 1044, 1055, 1070, 1091,
+    ))
+    assert len(source) == 100
+    saved = save_protocol(
+        tmp_path / "01_protocol.csv", participants=100, seed=17,
+        window_samples=256, max_windows_per_record=24,
+        purpose="main", selected_source_ids=source,
+    )
+    recovered = load_protocol(tmp_path / "01_protocol.csv")
+    assert recovered == saved
+    assert recovered["source_last_id"] == 1106
+    assert len(recovered["selected_source_ids"]) == 100
+    split = participant_split(pd.DataFrame([
+        {"participant_id": f"{sid % 1000:03d}",
+         "record_id": f"S_{sid}_S1_{task}", "task": task}
+        for sid in source for task in TASKS
+    ]))
+    assert verify_main_cohort(recovered, split) == {
+        "train": 64, "validation": 16, "test": 20,
+    }
+    tampered = split.copy()
+    tampered["participant_id"] = tampered["participant_id"].replace(
+        {"106": "107"}
+    )
+    with pytest.raises(ValueError, match="Protocol-selected"):
+        verify_main_cohort(recovered, tampered)

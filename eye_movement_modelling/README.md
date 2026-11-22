@@ -16,7 +16,7 @@ The executed modelling run remains a **ten-person pilot**, although source acqui
 | --- | --- |
 | Dataset | [GazeBase v2.0](https://doi.org/10.6084/m9.figshare.12912257), Round **1**, Session **1**, source CSVs from [`data/raw/gazebase/`](../data/README.md) |
 | Recorded pilot scope | GazeBase Round 1 / Session 1: **10 participants, 40 source recordings, 40 record feature rows and 960 temporal windows**. Notebook 02 fitted four classical candidates on 24 Train records and evaluated 8 Validation records from 2 independent people; the pilot Test was then observed on 8 recordings from 2 independent people in Notebook 05 |
-| Configured next scope (unexecuted) | First 100 Round-1/Session-1 people, four task files each; Train 64, Validation 16, Test 20 intended. Change one Notebook 01 parameter for a separate 300-person run (192/48/60), with source availability checked on each run |
+| Configured next scope (unexecuted) | First 100 **eligible complete** Round-1/Session-1 people by source ID, with four task files each (not necessarily consecutive IDs); intended Train 64, Validation 16, Test 20. A separately frozen 300-person run uses the same archive-completeness rule (192/48/60 intended), subject to actual eligibility |
 | Prediction target | Recording protocol: **FXS**, **HSS**, **RAN**, **TEX**. Four known classes; **not cognitive diagnosis** |
 | Predictors: classical | Recording validity, x/y dispersion, step displacement, velocity quantiles, positive pupil coverage/summary where available |
 | Predictors: temporal | Fixed 256-sample windows; source-valid contiguous segments only; relative x/y and their first differences (four channels) |
@@ -75,12 +75,16 @@ All model comparisons in the Test column are **secondary descriptions**. The sel
 `MAX_PARTICIPANTS = 100` in Notebook 01, Section 02. For a separate
 300-person study, change it to `300` **before any new main Test results**.
 The source boundary is GazeBase v2.0, Round 1 / Session 1, FXS/HSS/RAN/TEX;
-deterministic source IDs start at 1001, with four complete files required
-per person. Published Round 1 contains 322 people, but every selected file
+source selection starts at ID 1001, then chooses the first requested
+number of people with four complete source files. Missing/incomplete IDs
+are logged and replaced by later eligible IDs; selection is deterministic
+but IDs need not be consecutive. Published Round 1 contains 322 people, but every selected file
 must be checked directly. The original 6,710,984,652-byte archive is
 downloaded and MD5-verified in Colab only if source CSVs are missing;
-only the chosen original CSVs are extracted. The temporary ZIP is removed
-after extraction. **No Google Drive is required.**
+only the chosen original CSVs are extracted. The verified ZIP is removed
+**only after successful extraction and source audit**; failures preserve it
+in the current Runtime. The actual selected source IDs are recorded in
+the preflight CSV and the protocol, and checked downstream. **No Google Drive is required.**
 
 With seed 17 and 20% Test/20% of the development pool for Validation,
 the intended **100-person split is 64 Train, 16 Validation and 20 Test**.

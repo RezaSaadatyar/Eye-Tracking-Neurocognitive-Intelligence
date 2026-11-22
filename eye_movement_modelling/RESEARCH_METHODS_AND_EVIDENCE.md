@@ -20,7 +20,7 @@ Original CSVs are read from [`data/raw/gazebase/`](../data/README.md). Reuse the
 
 ### 2.2 Cohort sizing and target mapping
 
-Notebook 01 now configures `MAX_PARTICIPANTS = 100` in one user-facing Section 02 cell. For 100, it requests original source IDs 1001–1100 (400 task recordings); for a separate 300-person experiment it requests 1001–1300 (1,200 recordings). The published Round 1 includes 322 people; actual file/task eligibility must be verified, and incomplete requests stop rather than shrinking silently. The earlier recorded source audit covered 20 people, but **100-person acquisition, model fitting and Test have not been executed**. The main Test assignment is fixed before any new Test results are opened. The four Task names are mapped to fixed class indices 0–3 using the exact order FXS/HSS/RAN/TEX.
+Notebook 01 now configures `MAX_PARTICIPANTS = 100` in one user-facing Section 02 cell. For 100 people, acquisition selects the first **100 source IDs actually containing all four FXS/HSS/RAN/TEX recordings**, starting at ID 1001; source IDs are not assumed consecutive. The 300-person setting uses the same rule and can only succeed if at least 300 eligible people are found. In the user-reported failed attempt, six source identities did not supply all requested files in the 1001–1100 range, including IDs 1028 and 1036. The verified archive length and published MD5 passed; this was a source-ID availability error, not download corruption. The revised preflight logs skipped identifiers, keeps the requested cohort size unchanged and records the exact selected IDs. The earlier recorded source audit covered 20 people, but **100-person acquisition, model fitting and Test have not been executed**. The main Test assignment is fixed before any new Test results are opened. The four Task names are mapped to fixed class indices 0–3 using the exact order FXS/HSS/RAN/TEX.
 
 Each record has one Task target. Each time window inherits that record target, so thousands of windows from one person **are not independent observations**. No person/Task/record ID, sample duration, vendor parser label, source file path or post-outcome covariate enters a model input.
 
@@ -65,6 +65,14 @@ be placed in `/content/`. The `ensure_stage_inputs` helper restores
 only named required files, avoiding re-execution of unrelated earlier
 stages. Notebook 05 also requires compatible stage-02, stage-03 and
 stage-04 outputs containing model checkpoints and model-selection metrics.
+Notebook 01 now records the exact (possibly nonconsecutive) selected source
+IDs in `01_protocol.csv`, not just the requested number or a guessed final
+ID. Downstream cohort verification checks these identities against the
+participant split; a larger study cannot silently reuse a different cohort.
+The verified source archive is retained in Colab when selection, extraction
+or quality inspection fails, and is removed only after a complete source
+audit. Older code deleted it after failed extraction.
+
 Stage-output packages must come from a compatible cohort/feature/split
 contract; success of file restoration alone does not prove scientific
 compatibility.
@@ -112,7 +120,7 @@ All-class Test comparison is secondary and exploratory; a model with the best ob
 
 ### 4.3 Pilot versus main evaluation
 
-At n=10, two Test people cannot provide a reliable population accuracy estimate or robust model-ranking inference. Treat all scores as **developmental pilot diagnostics**. The configured 100-person run uses a prespecified deterministic source ID range and split percentages, but **no new original-data main Test has been executed**. Pilot feedback and task-stimulus confounding must be disclosed; cross-session, external and clinical generalisation remain unsupported.
+At n=10, two Test people cannot provide a reliable population accuracy estimate or robust model-ranking inference. Treat all scores as **developmental pilot diagnostics**. The configured 100-person run uses a deterministic archive-completeness eligibility rule and split percentages, but **no new original-data main Test has been executed**. Pilot feedback and task-stimulus confounding must be disclosed; cross-session, external and clinical generalisation remain unsupported.
 
 ## 5. Methods, Models and Configurations
 

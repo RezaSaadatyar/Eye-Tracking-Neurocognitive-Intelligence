@@ -16,12 +16,17 @@ S1 uses original GazeBase source CSV records. As of the current repository revis
 The modelling Notebook 01 now defaults to **100 participants** from
 GazeBase v2.0 Round 1 / Session 1, four original FXS/HSS/RAN/TEX
 recordings per person. The single `MAX_PARTICIPANTS` value can be set
-to 300 for a new separately defined run. The selected original files
-must all be present and valid; incomplete cohorts are rejected.
+to 300 for a new separately defined run. The requested number of **eligible complete people** is selected by
+checking all four original source task filenames in the verified archive.
+Missing or incomplete source IDs are logged and skipped, and later complete
+people replace them; a request fails only if the archive has fewer than the
+requested number of eligible people, or if a selected file fails quality
+checks.
 
 If needed, the official 6.7-GB GazeBase archive is downloaded and
 verified **inside Colab**, and only requested original CSVs are extracted.
-The completed archive is deleted after extraction. Derived outputs
+The verified archive is deleted **only after successful extraction and
+source audit**. Failures retain it for a retry in the same Runtime. Derived outputs
 are packaged as one stage ZIP for downstream modelling, not as a raw
 source backup. No Google Drive mount or automatic raw-data publication
 is used. The 100/300-person original-data run **has not yet occurred**.

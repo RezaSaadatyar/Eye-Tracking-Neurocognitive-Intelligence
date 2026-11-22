@@ -69,9 +69,9 @@ def test_notebook_01_acquisition_inside_standard_section_02():
     selection = "".join(cells[ids.index("s2-c-007")]["source"])
     assert "MAX_PARTICIPANTS = 100" in config
     assert "FIRST_SOURCE_ID = 1001" in config
-    assert "SOURCE_AUDIT_IDS = tuple(" in config
-    assert "ensure_gazebase_preflight(" in acquire
-    assert "max_participants=MAX_PARTICIPANTS" in selection
+    assert "Actual source IDs will be selected" in config
+    assert "ensure_gazebase_cohort_preflight(" in acquire
+    assert "selected_people =" in selection
     assert "drive.mount" not in acquire
     assert "ZipFile" not in acquire
     end = "".join(cells[ids.index("s2-c-017")]["source"])

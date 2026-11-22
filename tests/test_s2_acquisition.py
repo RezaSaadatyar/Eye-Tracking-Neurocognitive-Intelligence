@@ -16,6 +16,7 @@ sys.path.insert(0, str(ROOT / "eye_movement_modelling" / "code" / "src"))
 
 from s2_acquisition import (
     TASKS, _inspect_csv, ensure_gazebase_preflight,
+    ensure_gazebase_cohort_preflight, _archive_task_coverage,
     extract_selected_csvs, source_csv_path,
 )
 
@@ -206,3 +207,101 @@ def test_partial_download_resumes_only_with_matching_content_range(
     monkeypatch.setattr(acq.urllib.request, "urlopen", fake_urlopen)
     acq._ensure_archive(tmp_path / "source.zip")
     assert (tmp_path / "source.zip").read_bytes() == payload
+
+
+@pytest.mark.parametrize("nested", [False, True])
+def test_cohort_preflight_fills_gaps_without_reducing_target(
+    tmp_path, monkeypatch, capsys, nested,
+):
+    """A verified archive can skip missing IDs and still select ten people."""
+    import s2_acquisition as acq
+
+    fixture = tmp_path / "fixture.zip"
+    ids = tuple(i for i in range(1001, 1013) if i not in (1003, 1005))
+    build_archive(fixture, ids, nested=nested)
+    root = tmp_path / "raw"
+    # Simulate originals retained from an earlier partial extraction.
+    for task in TASKS:
+        stored = source_csv_path(root, 1001, task)
+        stored.parent.mkdir(parents=True, exist_ok=True)
+        stored.write_bytes(csv_bytes())
+
+    def offline_archive(path):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(fixture.read_bytes())
+
+    monkeypatch.setattr(acq, "_ensure_archive", offline_archive)
+    out = tmp_path / "output" / "01_source_acquisition_preflight.csv"
+    records = ensure_gazebase_cohort_preflight(
+        raw_root=root, download_root=tmp_path / "download",
+        output_csv=out, participants=10,
+    )
+    assert len(records) == 40
+    assert set(records.source_id) == set(ids)
+    assert out.is_file()
+    assert len(pd.read_csv(out)) == 40
+    assert "1003" in capsys.readouterr().out
+    assert not (tmp_path / "download" / "GazeBase_v2_0.zip").exists()
+    assert len(list(root.rglob("*.csv"))) == 40
+
+
+def test_incomplete_cohort_keeps_verified_archive_for_retry(
+    tmp_path, monkeypatch,
+):
+    """Do not delete six gigabytes of verified data on eligibility failures."""
+    import s2_acquisition as acq
+
+    fixture = tmp_path / "fixture.zip"
+    build_archive(fixture, tuple(range(1001, 1010)), nested=True)
+    def offline_archive(path):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(fixture.read_bytes())
+    monkeypatch.setattr(acq, "_ensure_archive", offline_archive)
+    archive = tmp_path / "download" / "GazeBase_v2_0.zip"
+    with pytest.raises(FileNotFoundError, match="only 9 people"):
+        ensure_gazebase_cohort_preflight(
+            raw_root=tmp_path / "raw", download_root=archive.parent,
+            output_csv=tmp_path / "output" / "01_source_acquisition_preflight.csv",
+            participants=10,
+        )
+    assert archive.read_bytes() == fixture.read_bytes()
+
+
+def test_exact_id_extraction_failure_keeps_zip(tmp_path, monkeypatch):
+    """Preserve the verified archive even through the previous exact-ID API."""
+    import s2_acquisition as acq
+
+    fixture = tmp_path / "fixture.zip"
+    build_archive(fixture, (1001,), nested=False)
+    def offline_archive(path):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(fixture.read_bytes())
+    monkeypatch.setattr(acq, "_ensure_archive", offline_archive)
+    archive = tmp_path / "temp" / "GazeBase_v2_0.zip"
+    with pytest.raises(FileNotFoundError, match="still missing"):
+        ensure_gazebase_preflight(
+            raw_root=tmp_path / "raw", download_root=archive.parent,
+            output_csv=tmp_path / "output" / "01_source_acquisition_preflight.csv",
+            requested_ids=(1001, 1002),
+        )
+    assert archive.is_file()
+
+
+def test_archive_index_excludes_other_round_and_incomplete_tasks(tmp_path):
+    """Round-2 source files cannot qualify a missing Round-1 task."""
+    archive = tmp_path / "fixture.zip"
+    with zipfile.ZipFile(archive, "w") as bundle:
+        for task in TASKS:
+            bundle.writestr(
+                f"Round_1/Subject_1001/S_1001_S1_{task}.csv", csv_bytes(),
+            )
+        for task in TASKS[:-1]:
+            bundle.writestr(
+                f"Round_1/Subject_1002/S_1002_S1_{task}.csv", csv_bytes(),
+            )
+        bundle.writestr(
+            "Round_2/Subject_1002/S_1002_S1_TEX.csv", csv_bytes(),
+        )
+    indexed = _archive_task_coverage(archive)
+    assert indexed[1001] == set(TASKS)
+    assert indexed[1002] == set(TASKS[:-1])

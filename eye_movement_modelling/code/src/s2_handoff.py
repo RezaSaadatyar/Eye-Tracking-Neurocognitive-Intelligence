@@ -93,6 +93,14 @@ def verify_main_cohort(
             "Run the updated Notebook 01 for your chosen cohort, then "
             "upload its current stage-01 ZIP to /content/ if needed."
         )
+    if "selected_source_ids" in protocol:
+        recorded = {f"{int(sid) % 1000:03d}"
+                    for sid in protocol["selected_source_ids"]}
+        if len(recorded) != count or recorded != set(participants):
+            raise ValueError(
+                "Protocol-selected original participant IDs differ from "
+                "the current split. Do not combine different cohort runs."
+            )
     if split["record_id"].duplicated().any():
         raise ValueError("Duplicate source record IDs in main split")
     if split.groupby("participant_id")["split"].nunique().max() != 1:
