@@ -213,6 +213,7 @@ def test_study_overview_reflects_latest_source_audit():
     labels = " ".join((item.text or "") for item in root.iter())
     assert "100 people audited" in labels
     assert "Classical models fitted" in labels
+    assert "Primary Test: 80/80 correct" in labels
     assert "20/30 requires more source CSVs" not in labels
 
 
@@ -238,6 +239,12 @@ def test_stage03_svg_workflow_matches_stage02_reference():
     assert "Best checkpoint: epoch 6" in text
     assert "62/64 Validation records" in text
     assert "61/64 Validation records" in text
+    assert "Same 64 records; 16 people" in text
+    assert "Macro F1: 0.969" in text
+    assert "Macro F1: 0.953" in text
+    assert "Same 8 records; 2 people" not in text
+    assert "Best epoch: 8" not in text
+    assert "Best epoch: 5" not in text
     assert "implemented and unexecuted" not in text
 
 
@@ -341,6 +348,10 @@ def test_stage04_figure_preserves_measured_source_and_card_geometry():
     assert "Best checkpoint: epoch 8" in figure_words
     assert "59/64 Validation records" in figure_words
     assert "63/64 Validation records" in figure_words
+    assert "Macro F1: 0.921" in figure_words
+    assert "Macro F1: 0.984" in figure_words
+    assert "Best epoch: 1" not in figure_words
+    assert "Best epoch: 2" not in figure_words
 
 
 def test_stage04_main_draft_and_export_contract():
