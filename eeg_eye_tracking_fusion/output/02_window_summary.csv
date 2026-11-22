@@ -1,0 +1,7 @@
+split,task,total,eligible,people
+test,nr,40,40,2
+test,tsr,40,40,2
+train,nr,41,41,3
+train,tsr,54,54,3
+validation,nr,20,20,1
+validation,tsr,11,11,1
