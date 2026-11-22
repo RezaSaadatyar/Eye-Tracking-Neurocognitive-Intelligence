@@ -264,3 +264,67 @@ def test_stage02_requires_current_validation_before_its_final_zip():
     assert "download_outputs_from_colab" in code
     assert all(c["execution_count"] is None and not c["outputs"]
                for c in cells if c["cell_type"] == "code")
+
+
+def test_stage01_saved_source_tables_agree_with_current_protocol():
+    """Check the observed main-cohort registry and derived record identities."""
+    from s2_data import load_protocol
+
+    folder = ROOT / "eye_movement_modelling" / "output"
+    protocol = load_protocol(folder / "01_protocol.csv")
+    audit = pd.read_csv(folder / "01_source_acquisition_preflight.csv")
+    inventory = pd.read_csv(
+        folder / "01_source_inventory.csv",
+        dtype={"record_id": str, "participant_id": str},
+    )
+    split = pd.read_csv(
+        folder / "01_split_assignments.csv",
+        dtype={"record_id": str, "participant_id": str},
+    )
+    features = pd.read_csv(
+        folder / "01_record_features.csv",
+        dtype={"record_id": str, "participant_id": str},
+    )
+    eligible = set(protocol["selected_source_ids"])
+    assert protocol["purpose"] == "main"
+    assert len(eligible) == protocol["max_participants"]
+    assert set(audit["source_id"]) == eligible
+    assert len(audit) == 4 * len(eligible)
+    for dataframe in (audit, inventory, split, features):
+        assert dataframe["record_id"].is_unique
+    ids = set(audit["record_id"])
+    assert all(set(frame["record_id"]) == ids
+               for frame in (inventory, split, features))
+    assert split.groupby("participant_id")["split"].nunique().eq(1).all()
+    assert split.groupby("participant_id")["task"].nunique().eq(4).all()
+    assert audit["nonincreasing_time_steps"].eq(0).all()
+    assert audit["valid_fraction"].between(0, 1).all()
+    assert features["n_windows"].gt(0).all()
+    verify_main_cohort(protocol, split)
+
+    # The current 100-person compressed windows are tracked; a later larger
+    # cohort may keep its NPZ outside Git under the independent size policy.
+    npz = folder / "01_sequence_windows.npz"
+    if npz.exists():
+        import numpy as np
+
+        with np.load(npz) as archive:
+            x = archive["x"]
+            y = archive["y"]
+            record_ids = archive["record_id"].astype(str)
+            assert x.shape == (
+                int(features["n_windows"].sum()),
+                protocol["window_samples"],
+                len(protocol["temporal_channels"]),
+            )
+            assert len(record_ids) == len(y) == len(x)
+            assert set(record_ids) == ids
+            assert np.isfinite(x).all()
+            expected = dict(
+                zip(inventory["record_id"], inventory["task"].map(
+                    {task: i for i, task in enumerate(TASKS)}
+                ))
+            )
+            assert np.array_equal(
+                y, np.asarray([expected[record] for record in record_ids])
+            )
