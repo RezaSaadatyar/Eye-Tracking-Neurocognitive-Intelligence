@@ -245,7 +245,7 @@ def test_stage01_figure_matches_observed_cohort_and_stage02_main_validation():
             assert rect.attrib.get("fill") == "#F7FAFD"
             assert rect.attrib.get("stroke") == "#B8CFDE"
             assert len([el for el in node
-                        if el.attrib.get("class") == "nodedesc"]) == 3
+                        if el.attrib.get("class") == "workflow-body"]) == 3
 
 
 def test_stage02_requires_current_validation_before_its_final_zip():
