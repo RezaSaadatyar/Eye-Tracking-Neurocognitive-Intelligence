@@ -1,6 +1,6 @@
 # EEG–Eye-Tracking Multimodal Research
 
-A reproducible six-notebook workflow for evaluating whether EEG and eye movements provide complementary information about **ZuCo 2.0 reading-task conditions**. **Notebooks 01–05 have recorded executions for the initial six-person cohort**, including 206 matched EEG/gaze feature windows, seven classical and three temporal Validation candidates. Notebook 06 is prepared but has not executed; the reserved Test partition is unscored. The objective is to compare unimodal and fusion models on the *same* paired temporal windows from participant-disjoint Train, Validation and Test groups. The target is **normal reading (NR) versus task-specific reading (TSR)**, not comprehension, intelligence, a clinical outcome or cognitive ability.
+A reproducible six-notebook workflow for evaluating whether EEG and eye movements provide complementary information about **ZuCo 2.0 reading-task conditions**. **Notebooks 01–06 have recorded development executions for the initial six-person cohort**, including 206 matched EEG/gaze feature windows, seven classical and three temporal Validation candidates. Notebook 06 reconciled all ten models, recorded the **Validation-selected gaze logistic regression** and completed Validation-only sensitivity checks. **The reserved Test partition remains unscored.** The objective is to compare unimodal and fusion models on the *same* paired temporal windows from participant-disjoint Train, Validation and Test groups. The target is **normal reading (NR) versus task-specific reading (TSR)**, not comprehension, intelligence, a clinical outcome or cognitive ability.
 
 ![Overview of EEG and eye-tracking data processing and evaluation](images/study_overview.svg)
 
@@ -18,7 +18,7 @@ The initial design uses **one run per task per eligible person**, 12-second non-
 
 ## 2. Experimental Programme
 
-All six notebooks are authored. **Notebooks 01–05 have been executed** on the six-person development cohort, and **36 stage-owned outputs** are committed. Notebook 06 is prepared for Validation-only development selection and sensitivity analysis; its final Test branch remains disabled. They run sequentially in Google Colab. Each stage owns named output files that subsequent stages read; rerunning a stage regenerates its current outputs rather than collecting historical fallback results.
+All six notebooks have been **executed in development mode** on the six-person cohort, and **39 stage-owned outputs** are committed. Notebook 06 recorded Validation model selection and feature-masking sensitivity with **`RUN_FINAL_TEST=False`**; this does not constitute a final held-out Test evaluation. They run sequentially in Google Colab. Each stage owns named output files that subsequent stages read; rerunning a stage regenerates its current outputs rather than collecting historical fallback results.
 
 | Stage | Notebook | Scientific role | Intended named outputs |
 | --- | --- | --- | --- |
@@ -27,9 +27,9 @@ All six notebooks are authored. **Notebooks 01–05 have been executed** on the 
 | 03 | [Preprocessing, Features and Neurophysiology](code/notebooks/03_preprocessing_features_and_neurophysiology.ipynb) | **Executed:** 206 of 206 source windows retain aligned EEG and gaze features; no feature exclusions or non-finite window-mean values; the raw EEG diagnostic is descriptive only | Six committed `03_*` outputs: paired feature CSV, matched six-bin NPZ, quality/exclusion tables and two figures |
 | 04 | [Unimodal Baselines and Classical Fusion](code/notebooks/04_unimodal_baselines_and_classical_fusion.ipynb) | **Executed:** seven Validation candidates; gaze logistic Macro F1 **0.8862** (one person) | Eleven recorded `04_*` files: metrics, predictions, fitted pipelines and plots |
 | 05 | [Temporal and Advanced Fusion](code/notebooks/05_temporal_and_advanced_fusion.ipynb) | **Executed:** EEG GRU Macro F1 **0.6890** led three temporal Validation models; gated fusion did not improve performance (one person) | Eight recorded `05_*` files: metrics, predictions, checkpoints, scaler, history and plot |
-| 06 | [Validation Selection and Robustness](code/notebooks/06_robustness_and_final_evaluation.ipynb) | **Prepared, not executed:** reconcile ten models, freeze Validation choice and test early-fusion feature masking; no Test scores in development mode | Expected development outputs: `06_model_selection.csv`, `06_validation_sensitivity.csv`, `06_validation_evidence.png` |
+| 06 | [Validation Selection and Robustness](code/notebooks/06_robustness_and_final_evaluation.ipynb) | **Executed in development mode:** reconciled ten models, selected `gaze_logistic` (Validation Macro F1 **0.8862**), assessed fixed-model EEG/gaze masking; **Test unscored** | Three recorded `06_*` outputs: `06_model_selection.csv`, `06_validation_sensitivity.csv`, `06_validation_evidence.png` |
 
-Each notebook also has an editable five-band scientific SVG in [`images/`](images/) using the same role-based typography as the other projects in this repository. Notebook 01–03 figures now report **observed acquisition, eligible-window and feature-extraction counts**. Notebook 04 and 05 figures show their respective **recorded Validation results**. Notebook 06's figure depicts its **planned Validation-only development process** and labels Test evaluation as disabled.
+Each notebook also has an editable five-band scientific SVG in [`images/`](images/) using the same role-based typography as the other projects in this repository. Notebook 01–03 figures now report **observed acquisition, eligible-window and feature-extraction counts**. Notebook 04 and 05 figures show their respective **recorded Validation results**. Notebook 06's figure now shows the **recorded Validation-selected model, sensitivity scores and absence of Test scoring**.
 
 ## 3. Main Results
 
@@ -72,7 +72,26 @@ Gaze logistic regression classified **20/20 NR** and **8/11 TSR** Validation win
 | Gaze GRU | 0.3922 | 0.5000 | All 31 predicted NR |
 | Gated fusion GRU | 0.2619 | 0.5000 | All 31 predicted TSR |
 
-The EEG GRU led the temporal candidates; **gated fusion did not outperform either unimodal GRU**. Comparing all ten saved candidates, gaze logistic regression from Notebook 04 still has the highest observed Validation Macro F1 (**0.8862**), ahead of EEG GRU (**0.6890**). All scores refer to **one independent Validation participant**, and no Test performance or cross-person uncertainty estimate follows from them. The **80 Test windows remain unscored**. Notebook 06 will verify and save the prespecified Validation selection before any separately authorised final evaluation.
+The EEG GRU led the temporal candidates; **gated fusion did not outperform either unimodal GRU**. Comparing all ten saved candidates, gaze logistic regression from Notebook 04 still has the highest observed Validation Macro F1 (**0.8862**), ahead of EEG GRU (**0.6890**). All scores refer to **one independent Validation participant**, and no Test performance or cross-person uncertainty estimate follows from them. The **80 Test windows remain unscored**. Notebook 06 has since **reconciled these results and saved the prespecified Validation selection**; no final Test evaluation was undertaken.
+
+
+**Recorded Validation selection and robustness (Notebook 06):** All **310 prediction rows** across ten candidates were reconciled on the same **31 Validation windows from one independent person**. The selected candidate was **`gaze_logistic`** (Macro F1 **0.8862**, Balanced Accuracy **0.8636**, Accuracy **0.9032**). The `06_model_selection.csv` records `run_mode=development`, `validation_n_people=1` and `test_used_in_selection=False`.
+
+A **fixed early-fusion logistic estimator** was subjected to descriptive imputation-based feature masking, using its existing Train-fitted imputer without model refitting:
+
+| Input condition | Validation Macro F1 | Balanced Accuracy |
+| --- | ---: | ---: |
+| EEG and gaze unchanged | 0.5620 | 0.5909 |
+| EEG masked | **0.8862** | **0.8636** |
+| Gaze masked | 0.4833 | 0.5182 |
+
+These perturbations describe the behaviour of **one unchanged early-fusion model on one Validation person**. They are **not** causal evidence about the EEG or gaze modalities, and the perturbed outputs did not determine the primary-model choice.
+
+![Recorded ten-model Validation ranking and fixed early-fusion masking sensitivity](output/06_validation_evidence.png)
+
+*Figure 2. Executed Notebook-06 development evidence: ranking of ten candidates and descriptive early-fusion input masking on the same single Validation participant. No Test score is depicted.*
+
+**Final-evaluation status:** All six notebooks have executed their **development stages**, but no final Test inference or independent generalisation estimate has been produced. The **80 Test windows from two participants remain reserved**. A reviewed and frozen evaluation protocol is required before enabling the optional final Test branch.
 
 ## 4. Running and Reviewing the Study
 
@@ -81,8 +100,8 @@ The EEG GRU led the temporal candidates; **gated fusion did not outperform eithe
 3. Review the [executed Notebook 03](code/notebooks/03_preprocessing_features_and_neurophysiology.ipynb) and six saved `03_*` outputs. All 206 paired windows were retained with finite feature means; rerunning it is **not required** merely to use the recorded predictors in later stages. The raw fixation trace is exploratory and has an uncorrected offset.
 4. Review the [executed Notebook 04](code/notebooks/04_unimodal_baselines_and_classical_fusion.ipynb) and the eleven saved `04_*` files. It fitted seven classical/simple-fusion candidates on the original **95 Train windows** and scored the **31 Validation windows** only; the saved prediction and metric tables have been reconciled.
 5. Review [executed Notebook 05](code/notebooks/05_temporal_and_advanced_fusion.ipynb) and its eight saved `05_*` files: three checkpoints, a Train-fitted scaler, Validation metrics and predictions, training history and learning curves. It uses the same original participant roles; its recorded results were reconciled without retraining.
-6. Run [Notebook 06](code/notebooks/06_robustness_and_final_evaluation.ipynb) in a **fresh Colab Runtime**, starting from its checkout cell. It uses a separate `-stage06` checkout to avoid stale or conflicting changes from prior notebooks, and reads the committed Stage-01–05 outputs. Keep `RUN_FINAL_TEST = False`. This development run must generate only the selected-model decision, Validation masking sensitivity and a Validation-only figure; do **not** score Test.
-7. Review and commit the *named, reasonably sized* Stage-06 development files and executed notebook after verifying them. Do not publish raw EEG or eye physiology files.
+6. Review the [executed Notebook 06](code/notebooks/06_robustness_and_final_evaluation.ipynb) and the three saved `06_*` development outputs. It reconciled the ten Validation candidates, recorded the selected model and generated fixed-model sensitivity evidence with `RUN_FINAL_TEST = False`. All saved notebook execution counts and outputs are retained; no Test scores were generated.
+7. Before a separate final Test run, review whether the current **six-person pilot cohort**, single-person Validation split, source-task confounding and unverified drift support the intended scientific claim. Any cohort expansion or protocol change requires fresh dependent outputs and a clearly separated development analysis, rather than relabelling the existing scores as final results.
 
 The raw data path is not persistent between Colab sessions. Stage 02/03 source retrieval is intentionally limited to the selected runs rather than the full 18-GB release. GPU use is optional for the compact temporal models; free Colab resource availability is not guaranteed. The original source's attribution and use conditions remain applicable.
 
@@ -97,11 +116,11 @@ eeg_eye_tracking_fusion/
 │   ├── notebooks/              # Six ordered Colab notebooks
 │   └── src/                    # Source, alignment, features and model helpers
 ├── images/                     # Overview and six role-based SVG figures
-├── output/                     # Stage-01–05 evidence files
+├── output/                     # Stage-01–06 development evidence files
 └── data/                       # Source cache is external to Git by design
 ```
 
-Notebook outputs in [`output/`](output/) use distinct `01_*` through `06_*` prefixes. Seven Stage-01, four Stage-02, six Stage-03, eleven Stage-04 and **eight Stage-05 outputs** are committed (**36 in total**). Stage-06 evidence will appear after its development-only execution; no Stage-06 or final Test results are claimed yet. No separate output-directory README is required. The source cache is `/content/zuco2_source_cache` during Colab execution, not `data/raw` in the tracked repository.
+Notebook outputs in [`output/`](output/) use distinct `01_*` through `06_*` prefixes. Seven Stage-01, four Stage-02, six Stage-03, eleven Stage-04, eight Stage-05 and **three Stage-06 outputs** are committed (**39 stage-owned files**). Notebook 06 has executed in **development mode only**; no Test scoring or final Test files have been produced. No separate output-directory README is required. The source cache is `/content/zuco2_source_cache` during Colab execution, not `data/raw` in the tracked repository.
 
 ## 6. Interpretation and Scope
 
