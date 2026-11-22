@@ -23,9 +23,12 @@ from alignment import (eye_sample_times, ensure_disjoint_registry,
 from features import (
     summarise_eeg, summarise_eye, verify_temporal_feature_alignment,
 )
-from models import CLASSICAL_ORDER, MODEL_ORDER, metrics
+from models import (
+    CLASSICAL_ORDER, MODEL_ORDER, metrics, participant_prediction_metrics,
+)
 from zuco_io import (
-    API, DATA, S3, download_file, read_eye_physio, select_run_paths,
+    API, DATA, S3, PILOT_ROLE_LOCK, download_file,
+    expanded_cohort_roles, read_eye_physio, select_run_paths,
     session, split_people,
 )
 
@@ -60,6 +63,63 @@ def test_split_is_deterministic_and_person_disjoint():
     assert len(a) == 10
     with pytest.raises(ValueError):
         split_people(people[:4])
+
+
+
+
+def test_expanded_cohort_preserves_pilot_and_all_existing_allocations():
+    """Independent-source role assignment stays stable as the cap changes."""
+    all_people = [
+        "sub-YAC", "sub-YAG", "sub-YAK", "sub-YDG", "sub-YDR",
+        "sub-YFR", "sub-YFS", "sub-YHS", "sub-YIS", "sub-YLS",
+        "sub-YMD", "sub-YMS", "sub-YRH", "sub-YRK", "sub-YRP",
+        "sub-YSD", "sub-YSL", "sub-YTL",
+    ]
+    original = expanded_cohort_roles(all_people[:6], all_people, seed=17)
+    extended = expanded_cohort_roles(all_people[:12], all_people, seed=17)
+    full = expanded_cohort_roles(all_people, all_people, seed=17)
+    again = expanded_cohort_roles(all_people[::-1], all_people[::-1],
+                                  seed=17)
+    pd.testing.assert_frame_equal(full, again)
+    assert dict(original.values) == PILOT_ROLE_LOCK
+    assert dict(full.loc[full.participant_id.isin(PILOT_ROLE_LOCK),
+                         ['participant_id', 'split']].values) == PILOT_ROLE_LOCK
+    assert dict(full[['participant_id', 'split']].values).items() >= (
+        dict(extended[['participant_id', 'split']].values).items())
+    assert dict(extended[['participant_id', 'split']].values).items() >= (
+        dict(original[['participant_id', 'split']].values).items())
+    assert full.groupby('split').size().to_dict() == {
+        'train': 11, 'validation': 3, 'test': 4}
+    with pytest.raises(ValueError, match="pilot"):
+        expanded_cohort_roles(all_people[:5], all_people)
+
+
+def test_model_predictions_report_window_support_per_person():
+    """One Validation person with one class cannot yield fabricated BA."""
+    rows = [
+        {"window_id": "p1_nr", "participant_id": "p1",
+         "model": "gaze_logistic", "split": "validation",
+         "task": "nr", "target_index": 0, "pred_index": 0},
+        {"window_id": "p1_tsr", "participant_id": "p1",
+         "model": "gaze_logistic", "split": "validation",
+         "task": "tsr", "target_index": 1, "pred_index": 1},
+        {"window_id": "p2_nr", "participant_id": "p2",
+         "model": "gaze_logistic", "split": "validation",
+         "task": "nr", "target_index": 0, "pred_index": 1},
+    ]
+    result = participant_prediction_metrics(pd.DataFrame(rows))
+    assert len(result) == 2
+    assert result.loc[result.participant_id.eq("p1"),
+                      "balanced_accuracy"].iloc[0] == 1.
+    assert np.isnan(result.loc[result.participant_id.eq("p2"),
+                               "balanced_accuracy"].iloc[0])
+    assert result.n_windows.tolist() == [2, 1]
+    assert result.n_nr.tolist() == [1, 1]
+    assert result.n_tsr.tolist() == [1, 0]
+    invalid = pd.DataFrame(rows)
+    invalid.loc[1, "target_index"] = 0
+    with pytest.raises(ValueError, match="target indices"):
+        participant_prediction_metrics(invalid)
 
 
 def test_headerless_eye_physio_uses_bids_sidecar_columns(tmp_path):
