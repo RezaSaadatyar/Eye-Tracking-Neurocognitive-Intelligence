@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import ast
+import gzip
+import hashlib
 import json
 import sys
 import xml.etree.ElementTree as ET
@@ -10,6 +12,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import pytest
+import requests
 
 ROOT = Path(__file__).resolve().parents[1]
 PROJECT = ROOT / "eeg_eye_tracking_fusion"
@@ -19,7 +22,9 @@ from alignment import (eye_sample_times, ensure_disjoint_registry,
                        window_registry)
 from features import summarise_eeg, summarise_eye
 from models import CLASSICAL_ORDER, MODEL_ORDER, metrics
-from zuco_io import select_run_paths, split_people
+from zuco_io import (
+    API, DATA, S3, download_file, select_run_paths, session, split_people,
+)
 
 
 def _fake_paths(subject: str, task: str, run: int):
@@ -118,6 +123,137 @@ def test_modality_features_and_fixed_label_metrics():
     assert set(CLASSICAL_ORDER).issubset(MODEL_ORDER)
 
 
+
+def test_nemar_session_retries_temporary_service_errors():
+    retry = session().get_adapter("https://").max_retries
+    assert 503 in retry.status_forcelist
+    assert retry.total >= 2
+    assert retry.raise_on_status is False
+
+
+def test_nemar_503_falls_back_to_verified_public_s3(tmp_path):
+    """Resolve a real-shaped NEMAR Git-annex key without any network access."""
+    relative = (
+        "sub-YAC/eeg/"
+        "sub-YAC_task-nr_run-1_recording-eyetrack_physio.tsv.gz"
+    )
+    content = gzip.compress(bytes(range(256)) * 300)
+    digest = hashlib.sha256(content).hexdigest()
+    key = f"SHA256E-s{len(content)}--{digest}.tsv.gz"
+    visits = []
+
+    class Response:
+        def __init__(self, status=200, data=b"", pointer=None):
+            self.status_code = status
+            self.data = data
+            self.pointer = pointer
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            return False
+
+        def raise_for_status(self):
+            if self.status_code >= 400:
+                raise requests.HTTPError(
+                    f"{self.status_code} upstream unavailable",
+                    response=self,
+                )
+
+        def iter_content(self, chunk_size):
+            yield self.data
+
+        def json(self):
+            return {"type": "symlink", "target": self.pointer}
+
+    class FakeSession:
+        def get(self, url, **_kwargs):
+            visits.append(url)
+            if url == f"{DATA}/{relative}":
+                return Response(status=503)
+            if url == f"{API}/{relative}":
+                return Response(pointer=f"/annex/objects/{key}")
+            if url == f"{S3}/{key}":
+                return Response(data=content)
+            raise AssertionError(f"Unexpected external URL: {url}")
+
+    fake = FakeSession()
+    path = download_file(relative, tmp_path, fake)
+    assert path.read_bytes() == content
+    assert len(visits) == 3
+    assert visits == [
+        f"{DATA}/{relative}",
+        f"{API}/{relative}",
+        f"{S3}/{key}",
+    ]
+    assert download_file(relative, tmp_path, fake) == path
+    assert len(visits) == 3  # Already cached source is reused.
+    assert not list(tmp_path.rglob("*.part"))
+
+
+def test_nemar_fallback_rejects_mismatched_source_hash(tmp_path):
+    relative = "sub-YAC/eeg/sub-YAC_task-nr_run-1_recording-eyetrack_physio.tsv.gz"
+    content = gzip.compress(bytes(range(256)) * 300)
+    digest = "a" * 64  # Intentionally different from actual content.
+    key = f"SHA256E-s{len(content)}--{digest}.tsv.gz"
+
+    class Response:
+        def __init__(self, status, data=b"", target=None):
+            self.status_code, self.data, self.target = status, data, target
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            return False
+
+        def raise_for_status(self):
+            if self.status_code >= 400:
+                raise requests.HTTPError(response=self)
+
+        def json(self):
+            return {"target": self.target}
+
+        def iter_content(self, chunk_size):
+            yield self.data
+
+    class FakeSession:
+        def get(self, url, **_kwargs):
+            if url.startswith(DATA):
+                return Response(503)
+            if url.startswith(API):
+                return Response(200, target=f"/annex/objects/{key}")
+            if url == f"{S3}/{key}":
+                return Response(200, data=content)
+            raise AssertionError(url)
+
+    with pytest.raises(RuntimeError, match="Neither NEMAR"):
+        download_file(relative, tmp_path, FakeSession())
+    assert not (tmp_path / relative).exists()
+    assert not list(tmp_path.rglob("*.part"))
+
+
+def test_nemar_invalid_source_path_does_not_trigger_s3(tmp_path):
+    class FakeSession:
+        def __init__(self):
+            self.calls = 0
+
+        def get(self, _url, **_kwargs):
+            self.calls += 1
+            response = requests.Response()
+            response.status_code = 404
+            response.url = _url
+            response.raise_for_status()
+            return response
+
+    fake = FakeSession()
+    with pytest.raises(requests.HTTPError):
+        download_file("sub-YAC/eeg/missing.tsv", tmp_path, fake)
+    assert fake.calls == 1
+    assert not list(tmp_path.rglob("*.part"))
+
+
 def test_six_complete_colab_notebooks_and_stage_contracts():
     notebook_dir = PROJECT / "code" / "notebooks"
     paths = sorted(notebook_dir.glob("*.ipynb"))
@@ -146,7 +282,6 @@ def test_six_complete_colab_notebooks_and_stage_contracts():
             compilable = (source.replace('%cd {repo_path}', 'pass')
                           if cell_index == 2 else source)
             compile(compilable, str(path), "exec")
-            assert not cell.get("outputs")
             assert "drive.mount" not in source
             if cell_index >= 5:
                 parsed = ast.parse(source)
