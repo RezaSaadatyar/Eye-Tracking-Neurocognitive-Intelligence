@@ -2,13 +2,13 @@
 
 ![Eye-Movement Modelling gaze-task modelling workflow, source provenance, model families and reserved evaluation](images/study_overview.svg)
 
-*Figure 1. Main 100-person data preparation and eight candidate Validation models are now recorded through Notebook 04. The fixed Validation-based primary selection and the reserved main Test remain pending in Notebook 05. The earlier ten-person pilot is separate historical evidence; measured source traces and schematic elements are distinguished.*
+*Figure 1. Five-stage Eye-Movement Modelling workflow on the completed 100-person main cohort. The eight fixed candidate models have compatible Validation results, the predefined primary selection precedes Test, and the observed main Test comprises 80 original recordings from 20 independent people. The ten-person pilot is separate historical evidence; measured gaze and schematic elements are distinguished.*
 
-**Aim:** Compare engineered record-level gaze features with compact temporal architectures for four-class GazeBase **recording-protocol identity** (FXS, HSS, RAN, TEX), not cognition, comprehension or clinical status. The historical ten-person pilot completed all five notebooks. The **100-person main cohort has completed Notebooks 01–04**, including all **eight candidate models on the same 64 Validation records from 16 independent participants**. The **20-person main Test** remains reserved for the Validation-selected evaluation in Notebook 05.
+**Aim:** Compare engineered record-level gaze features with compact temporal models for four-class GazeBase **recording-protocol identity** (FXS, HSS, RAN, TEX), not cognition, comprehension or clinical status. The historical ten-person pilot completed all five stages. **The 100-person main study has now completed Notebooks 01–05** using 400 source recordings, 9,600 temporal windows, eight compatible Validation models and a reserved 20-person Test. The **Validation-selected Logistic Regression classified all 80 main Test recordings correctly** (Accuracy and Macro F1 **1.000**). This bounded within-source result does not establish generalisation across sessions, stimuli, devices or populations.
 
 **Independence:** Reuse the already available **original GazeBase Round 1 / Session 1 CSV files**, but create all Eye-Movement Modelling splits, features, temporal windows, models and outputs independently in `eye_movement_modelling/output/`. No processed Eye-Tracking Foundations result is mixed into the new modelling cohort.
 
-The ten-person pilot remains preserved in earlier Git revisions. **Current `01_*` through `04_*` artefacts all belong to the 100-person main cohort**. Current `05_*` files still belong to the pilot and will be replaced only when Notebook 05 runs on the main cohort. Read the [scientific methods and evidence](RESEARCH_METHODS_AND_EVIDENCE.md) before interpreting scores.
+The ten-person pilot remains preserved in earlier Git revisions. **All current `01_*` through `05_*` outputs belong to the 100-person main study**; earlier pilot results are labelled separately below and in the scientific report. The selected main Test has been examined and is not an independent confirmation set for future Test-informed model redesign.
 
 ## 1. Dataset and Experimental Protocol
 
@@ -16,7 +16,7 @@ The ten-person pilot remains preserved in earlier Git revisions. **Current `01_*
 | --- | --- |
 | Dataset | [GazeBase v2.0](https://doi.org/10.6084/m9.figshare.12912257), Round **1**, Session **1**, source CSVs from [`data/raw/gazebase/`](../data/README.md) |
 | Recorded pilot scope | GazeBase Round 1 / Session 1: **10 participants, 40 source recordings, 40 record feature rows and 960 temporal windows**. Notebook 02 fitted four classical candidates on 24 Train records and evaluated 8 Validation records from 2 independent people; the pilot Test was then observed on 8 recordings from 2 independent people in Notebook 05 |
-| **Executed main source cohort** | **100 complete people** (source IDs 1001–1108, excluding 1028, 1036, 1050, 1056, 1075, 1082, 1104 and 1105); **400 records**, **9,600 windows**. Main-cohort Notebooks 02–04 fitted all eight candidate models on the same 64 Train / 16 Validation / 20 reserved Test participant split |
+| **Executed main source cohort** | **100 complete people** (source IDs 1001–1108, excluding 1028, 1036, 1050, 1056, 1075, 1082, 1104 and 1105); **400 records**, **9,600 windows**. All five notebooks completed using a 64 Train / 16 Validation / 20 Test participant split; the main Test includes 80 source recordings and is now evaluated |
 | Prediction target | Recording protocol: **FXS**, **HSS**, **RAN**, **TEX**. Four known classes; **not cognitive diagnosis** |
 | Predictors: classical | Recording validity, x/y dispersion, step displacement, velocity quantiles, positive pupil coverage/summary where available |
 | Predictors: temporal | Fixed 256-sample windows; source-valid contiguous segments only; relative x/y and their first differences (four channels) |
@@ -32,7 +32,7 @@ The ten-person pilot remains preserved in earlier Git revisions. **Current `01_*
 
 ## 2. Experimental Programme
 
-These five notebooks form one task-recognition study. **Notebooks 01–04 are complete for the 100-person main cohort; Notebook 05 remains pending**. The ten-person pilot's Test was exploratory and must not be confused with the still-reserved **20-person main Test**.
+These five notebooks form one task-recognition study. **Notebooks 01–05 have completed the 100-person main-cohort workflow.** Model selection used Validation only, followed by record- and person-level Test evaluation. The historical ten-person pilot remains separately documented.
 
 | Notebook | Main experiment and visible model-level evidence | Owned current output files |
 | --- | --- | --- |
@@ -40,15 +40,15 @@ These five notebooks form one task-recognition study. **Notebooks 01–04 are co
 | [02 — Statistical and Classical ML](code/notebooks/02_statistical_and_classical_ml.ipynb) | **Executed on 100 people:** four fixed candidates fitted on 256 Train records, scored on 64 Validation recordings from 16 people; four fitted pipelines and 14 stage-owned outputs | `02_validation_metrics.csv`, four `02_*.joblib` pipelines, four prediction tables, four confusion plots and comparison plot |
 | [03 — CNN and TCN](code/notebooks/03_cnn_and_tcn_models.ipynb) | **Executed on 100 people:** CNN **62/64** (Macro F1 **0.968735**) and TCN **61/64** (Macro F1 **0.953036**) on the 16-person Validation set. Selected epochs 7/6; parameter counts 11,492/12,772 | `03_cnn.pt`, `03_tcn.pt`, histories, 64-row predictions, evaluation plots and `03_neural_validation_metrics.csv` (10 files) |
 | [04 — GRU and Transformer](code/notebooks/04_gru_and_transformer_models.ipynb) | **Executed on 100 people:** GRU **59/64** (Macro F1 **0.920940**, epoch 7) and Transformer **63/64** (Macro F1 **0.984360**, epoch 8) on 16 independent Validation participants; 3,780/33,764 parameters | `04_gru.pt`, `04_transformer.pt`, 64-row predictions, histories, figures and `04_neural_validation_metrics.csv` (10 files) |
-| [05 — Robustness and Final Evaluation](code/notebooks/05_robustness_and_final_evaluation.ipynb) | **Next main-cohort stage:** validate all eight current candidate results, freeze the primary model using Validation only, then open the reserved 20-person main Test; tracked `05_*` still describes the historical ten-person pilot | `05_model_selection.csv`, `05_test_predictions.csv`, `05_test_metrics.csv`, `05_groupwise_test_metrics.csv`, `05_robustness_validation.csv`, comparison figures |
+| [05 — Robustness and Final Evaluation](code/notebooks/05_robustness_and_final_evaluation.ipynb) | **Executed on 100 people:** selected Logistic Regression using 64 Validation records, then evaluated all eight frozen models on **80 Test records from 20 people**; primary achieved **80/80** and Macro F1 **1.000**. The selected model's pupil-feature masking left Validation Macro F1 **1.000 → 1.000** | `05_model_selection.csv`, 640-row Test predictions, eight-model Test metrics, 160 person-level rows, Validation robustness table and four plots (nine stage files) |
 
-A separate editable five-band figure accompanies each notebook in [`images/`](images/). The [overview](images/study_overview.svg) shows all **eight completed main-cohort Validation candidates** and the pending main Test. The Notebook 04 figure now records the observed GRU/Transformer performance. Notebook 05's existing introductory diagram illustrates the historical pilot until the main results are available.
+A separate editable five-band figure accompanies each notebook in [`images/`](images/). The [overview](images/study_overview.svg) now describes the completed main study. The Notebook 05 figure presents current 100-person selection and Test evidence; historical ten-person pilot figures remain recoverable from prior Git revisions.
 
 ## 3. Main Results
 
 **Observed 100-person main source preparation (Notebook 01):** The recorded GazeBase Round 1 / Session 1 source audit selected **100 complete participants** from IDs **1001–1108**, skipping eight unavailable/incomplete IDs. The execution produced **400 records** (100 per task), **400 feature rows** and **9,600 windows** of shape `(256, 4)`, with 24 windows per record. Train/Validation/reserved Test are **64/16/20 participants** (256/64/80 recordings). The audit reported **zero non-increasing timestamp transitions**; mean valid fractions were about **0.960 FXS, 0.964 HSS, 0.970 RAN and 0.947 TEX** (minimum individual value approximately **0.478**). The compressed temporal NPZ is approximately **19.7 MB**.
 
-**Observed 100-person classical Validation (Notebook 02):** Four fixed models were fitted on **256 Train recordings from 64 people** and evaluated on the same **64 Validation recordings from 16 independent people**. Source identities, target labels, probability sums and metrics agree with the committed CSVs. The **20-person main Test was not opened**.
+**Observed 100-person classical Validation (Notebook 02):** Four fixed models were fitted on **256 Train records from 64 people** and compared on **64 Validation records from 16 disjoint people**. Original source IDs, labels, class-probability sums and recorded metrics match the committed CSVs. The Test was preserved through this selection stage and evaluated only later in Notebook 05.
 
 | Main Validation model | Accuracy | Macro F1 | Balanced accuracy | Correct records |
 | --- | ---: | ---: | ---: | ---: |
@@ -57,7 +57,7 @@ A separate editable five-band figure accompanies each notebook in [`images/`](im
 | Random Forest | 0.9844 | 0.9844 | 0.9844 | 63/64 |
 | Gradient Boosting | 0.9844 | 0.9844 | 0.9844 | 63/64 |
 
-Both nonlinear models misclassified one TEX recording as RAN. High task discrimination may reflect source stimulus and recording-protocol differences; **Logistic Regression is not yet the main-study selected model**, since the temporal models' Validation results are pending.
+Both nonlinear classical models misclassified one TEX record as RAN on Validation. These high scores may reflect task-specific stimuli or acquisition conditions; **Logistic Regression was subsequently selected as the primary model in Notebook 05** based on Validation Macro F1 **1.000**, not because of Test performance.
 
 **Observed 100-person CNN/TCN Validation (Notebook 03):** Both networks trained only on **6,144 Train windows from 64 people**, with checkpoints chosen using **64 Validation recordings from 16 disjoint people**, each represented by 24 windows. Current predictions, saved histories and metrics were independently checked for source/label alignment and numerical consistency.
 
@@ -75,9 +75,24 @@ CNN misclassified one HSS as RAN and one RAN as FXS. TCN misclassified one HSS a
 | GRU | 0.921875 | 0.920940 | 0.921875 | 59/64 | 7 |
 | Transformer | 0.984375 | 0.984360 | 0.984375 | 63/64 | 8 |
 
-The GRU made five record-level errors; Transformer misclassified one HSS record as RAN. The Transformer checkpoint selected epoch 8 after tying epoch 6 on Macro F1 and achieving lower Validation window loss. **Neither model used the reserved main Test.** The main study's Validation-only ranking currently favours Logistic Regression (Macro F1 1.000), but the official primary selection belongs to Notebook 05.
+The GRU made five record-level Validation errors; Transformer classified one HSS record as RAN. The Transformer selected epoch 8 after tying epoch 6 in Macro F1 and achieving lower Validation window loss. This development comparison did not use Test and does not support claims about cognition or cross-session generalisation.
 
-**Historical ten-person pilot results (Notebooks 01–05):** These earlier results are **not** current 100-person scores. The tracked `05_*` outputs still belong to the pilot; older `02_*`–`04_*` pilot scores remain recoverable from Git history.
+**Observed 100-person final selection and Test (Notebook 05):** All eight candidate models were ranked on the **same 64-record Validation set (16 people)** using the declared Macro F1, Balanced Accuracy and fixed-priority order. **Logistic Regression** was selected before the reserved Test was scored. Each model subsequently produced one prediction for each of **80 Test records from 20 independent participants**; the main Test was not used to revise the primary choice.
+
+| Frozen candidate | Validation Macro F1 | Main Test accuracy | Main Test Macro F1 | Correct / 80 |
+| --- | ---: | ---: | ---: | ---: |
+| Class Prior | 0.1000 | 0.2500 | 0.1000 | 20 |
+| **Logistic Regression (selected)** | **1.0000** | **1.0000** | **1.0000** | **80** |
+| Random Forest | 0.9844 | 1.0000 | 1.0000 | 80 |
+| Gradient Boosting | 0.9844 | 0.9875 | 0.9875 | 79 |
+| CNN | 0.9687 | 0.9500 | 0.9502 | 76 |
+| TCN | 0.9530 | 0.8375 | 0.8238 | 67 |
+| GRU | 0.9209 | 0.8625 | 0.8649 | 69 |
+| Transformer | 0.9844 | 0.9250 | 0.9250 | 74 |
+
+The selected Logistic Regression classified **all four task recordings for each of the 20 Test people** correctly. This perfect observed Test score is not a guarantee of performance on an independent dataset, different stimulus protocol or future session. The model's Validation-only pupil-feature masking retained Macro F1 **1.000 → 1.000** on 64 records, which is a limited sensitivity observation rather than an explanation or proof that pupil fields are irrelevant.
+
+**Historical ten-person pilot results (Notebooks 01–05):** These results are retained for methodological context only; **all current stage-prefixed files now belong to the main 100-person study**. The earlier pilot outputs remain recoverable from Git revision history and must not be presented as additional independent Test participants.
 
 **Observed ten-person pilot:** Notebook 01 processed 40 original recordings into 40 feature rows and 960 temporal windows of shape `(960, 256, 4)`, with 6/2/2 Train/Validation/Test participants (24/8/8 recordings). Notebook 02 evaluated four classical candidates on the same **eight Validation recordings from two people**. The class prior scored **Accuracy 0.25, Macro F1 0.10, Balanced Accuracy 0.25**. Logistic Regression, Random Forest and Gradient Boosting each scored **1.00 on all three metrics** (8/8 correct). These are **exploratory participant-disjoint Validation results**, not independent population estimates, external validation or final Test results.
 
@@ -104,13 +119,13 @@ All model comparisons in the Test column are **secondary descriptions**. The sel
 
 ## 4. Running and Reviewing the Study
 
-**Notebooks 01–04 are complete for the 100-person main-cohort stages.** The current features, normalised temporal inputs, four classical pipelines and four temporal checkpoints, histories and predictions are all committed under `eye_movement_modelling/output/`. New Colab sessions can read those outputs directly without downloading GazeBase or rerunning training.
+**All five notebooks are complete for the 100-person main-cohort workflow.** Current source features, temporal windows, classical pipelines, temporal checkpoints, Validation predictions and the nine final Test output files are committed under `eye_movement_modelling/output/`. There is no need to repeat fitting or Test evaluation to inspect the saved evidence.
 
-1. Open [Notebook 05: Final Evaluation](code/notebooks/05_robustness_and_final_evaluation.ipynb) from the current `main` branch in a fresh Colab Runtime.
-2. Read the **current** `01_*` through `04_*` output files already tracked in GitHub. A matching stage ZIP in `/content/` is optional; do not upload pilot ZIPs or mix cohorts.
-3. Confirm **100 participants**, the fixed **64/16/20** person Train/Validation/reserved Test split and **64 identical Validation recordings** for all eight candidates. The notebook now recalculates every Validation metric before selection.
-4. Run the predefined ranking (Validation Macro F1, Balanced Accuracy, then fixed candidate priority) and save the selected model **before** the separate Test-scoring section. The 20-person main Test should be evaluated only once and not used to change the selection.
-5. Inspect the selected model's record-level Test confusion, per-person results and the descriptive Validation-only sensitivity analysis. Review the nine stage-05 files and commit the completed notebook and updated outputs.
+1. Review the [completed Notebook 05](code/notebooks/05_robustness_and_final_evaluation.ipynb) and its Validation selection section **before** the Test-scoring section.
+2. Inspect the committed `05_model_selection.csv`, `05_test_metrics.csv`, `05_test_predictions.csv` and `05_groupwise_test_metrics.csv` alongside the current `01_*` through `04_*` upstream artefacts. ZIP restoration is unnecessary when these named files are present.
+3. Verify the **64/16/20** participant roles, **64 common Validation source records**, and **80 Test source records** for each of eight frozen candidates; note that there are **20 independent Test people**, not 80.
+4. Interpret the pre-Test selection rule (Macro F1, Balanced Accuracy, fixed priority), primary Test results and secondary eight-model comparisons without changing the selected model based on observed Test scores.
+5. For details of preprocessing, model settings, person-level results, sensitivity and scientific limitations, read [Research Methods and Evidence](RESEARCH_METHODS_AND_EVIDENCE.md). Future cross-session, dataset or target experiments require a separately defined evaluation design.
 
 A later 300-person experiment requires a separately frozen cohort, complete regeneration of its data and models, and a clearly labelled evaluation distinct from the observed 100-person Test. Do not mix ZIPs or checkpoints from different participant sets.
 
@@ -132,7 +147,7 @@ A per-study output directory prevents overwriting Eye-Tracking Foundations's `ey
 
 ## 6. Interpretation and Scope
 
-**The historical ten-person pilot is complete. The 100-person main study has completed Notebooks 01–04**, with all eight models evaluated on the same 16 independent Validation participants. **Final model selection and the 20-person main Test remain pending in Notebook 05.** Current `05_*` outputs still belong to the pilot. Strong within-GazeBase task recognition does not demonstrate cognitive inference, clinical performance or generalisation across sessions, stimuli or devices.
+**The historical ten-person pilot and the five-stage 100-person main GazeBase study are now complete.** On the main held-out Test (20 independent people; 80 task recordings), the Validation-selected Logistic Regression achieved **Accuracy 1.000, fixed-label Macro F1 1.000 and Balanced Accuracy 1.000**. Random Forest also scored 80/80 but did not replace the selected model. Current `05_*` outputs belong to the main cohort. These results demonstrate within-GazeBase task-protocol discrimination, **not** neurocognitive interpretation, clinical prediction, or generalisation across sessions, stimuli or devices.
 
 The following remain limitations even after a successful run: task identity is confounded with stimulus protocol; Test participant counts are very small in the pilot; the first complete source IDs are not a representative sample; gaze speeds and pupil fields may reflect measurement artefacts; and a model's Validation/held-out Test score does **not** establish neural, clinical or cognitive diagnosis.
 
