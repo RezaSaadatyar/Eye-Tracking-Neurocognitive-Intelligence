@@ -40,33 +40,25 @@ def participant_split(
         raise ValueError("Duplicate original recording identity")
     groups = sorted(inventory.participant_id.astype(str).unique())
     n = len(groups)
-    if n < 10:
-        raise ValueError("At least ten complete people needed for pilot splits")
+    if n < 20:
+        raise ValueError(
+            "At least twenty complete people are needed for "
+            "participant-disjoint model evaluation"
+        )
     if not (
         0 < test_fraction < 0.5 and 0 < validation_fraction < 0.5
         and np.isfinite(test_fraction) and np.isfinite(validation_fraction)
     ):
         raise ValueError("Split fractions must be finite and between 0 and 0.5")
     rng = np.random.default_rng(seed)
-    if n >= 20:
-        count_test = max(2, int(np.ceil(test_fraction * n)))
-        held_out = set(groups[-count_test:])
-        pool = np.array(groups[:-count_test], dtype=str)
-        rng.shuffle(pool)
-        count_val = max(2, int(np.ceil(validation_fraction * len(pool))))
-        validation = set(pool[:count_val])
-        training = set(pool[count_val:])
-        purpose = "main"
-    else:
-        # Seed-17 defaults preserve the previous ten-person pilot partitions.
-        pool = np.array(groups, dtype=str)
-        rng.shuffle(pool)
-        count_test = max(2, int(np.ceil(test_fraction * n)))
-        count_val = max(2, int(np.ceil(test_fraction * n)))
-        held_out = set(pool[:count_test])
-        validation = set(pool[count_test:count_test + count_val])
-        training = set(pool[count_test + count_val:])
-        purpose = "pilot"
+    count_test = max(2, int(np.ceil(test_fraction * n)))
+    held_out = set(groups[-count_test:])
+    pool = np.array(groups[:-count_test], dtype=str)
+    rng.shuffle(pool)
+    count_val = max(2, int(np.ceil(validation_fraction * len(pool))))
+    validation = set(pool[:count_val])
+    training = set(pool[count_val:])
+    purpose = "main"
     if not training or not validation or not held_out:
         raise ValueError("Participant partitions must be nonempty")
     membership = {
@@ -292,8 +284,7 @@ def save_protocol(path: str | Path, *, participants: int,
             else source_first_id + participants - 1
         ),
         "purpose": purpose,
-        "test_role": "pilot_exploratory" if purpose == "pilot"
-                     else "new_source_id_reserved_participants",
+        "test_role": "new_source_id_reserved_participants",
         "target": "task_identity_not_cognition",
         "temporal_channels": list(CHANNELS),
     }
