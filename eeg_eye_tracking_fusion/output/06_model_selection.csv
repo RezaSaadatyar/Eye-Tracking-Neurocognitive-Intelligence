@@ -1,2 +1,2 @@
 selected_model,validation_macro_f1,validation_n_people,test_used_in_selection,run_mode,source_people,dataset_version
-gaze_forest,0.624390243902439,3,False,development,18,v1.0.0
+gaze_forest,0.624390243902439,3,False,final,18,v1.0.0
