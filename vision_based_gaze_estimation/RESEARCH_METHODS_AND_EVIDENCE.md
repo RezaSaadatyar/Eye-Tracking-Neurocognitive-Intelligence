@@ -62,7 +62,7 @@ Potential confounding includes repeated days/images for one person, unverified c
 
 ## 8. Current Outputs and Reproducibility
 
-The repository contains **one implemented Notebook 01 source-audit workflow** and four downstream notebook starters, source-specific archive/MAT utilities, the angular-error helper and the two study documents. Synthetic tests verify safe source inventory/extraction, not original-data validity. **No original MPIIGaze data or model predictions are committed.** The source-audit notebook creates stage-owned metadata and a figure only after it has opened original source files.
+The repository contains **one implemented Notebook 01 source-audit workflow** and four downstream notebook starters, source-specific archive/MAT utilities, the angular-error helper, an editable [five-band scientific workflow figure](images/01_mpiigaze_source_audit_and_protocol.svg) and the two study documents. Synthetic tests verify safe source inventory/extraction, not original-data validity. **No original MPIIGaze data or model predictions are committed.** The source-audit notebook creates stage-owned metadata and a figure only after it has opened original source files.
 
 Intended stage-specific files, all **planned until genuinely produced**:
 
