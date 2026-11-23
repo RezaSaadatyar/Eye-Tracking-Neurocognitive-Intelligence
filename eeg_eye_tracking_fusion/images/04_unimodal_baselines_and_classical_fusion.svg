@@ -58,7 +58,7 @@
     <g id="context-module-3">
       <text id="text-015" x="1020" y="115" class="context-heading" data-container="context-container">FUSION METHODS</text>
       <text id="text-016" x="1020" y="148" class="context-body" data-container="context-container">Early: concatenate 8</text>
-      <text id="text-017" x="1020" y="174" class="context-body" data-container="context-container">Late: 0.5 / 0.5 logits</text>
+      <text id="text-017" x="1020" y="174" class="context-body" data-container="context-container">Late: mean probabilities</text>
       <text id="text-018" x="1020" y="200" class="context-body" data-container="context-container">Same source windows</text>
     </g>
     <g id="context-module-4">
