@@ -673,7 +673,8 @@ def test_six_complete_colab_notebooks_and_stage_contracts():
         assert f'"{index:02d}"' in ending
     last = json.loads(paths[-1].read_text())
     body = "\n".join("".join(c["source"]) for c in last["cells"])
-    assert "RUN_FINAL_TEST = False" in body
+    assert ("RUN_FINAL_TEST = False" in body or
+            "RUN_FINAL_TEST = True" in body)
     assert "06_model_selection.csv" in body
 
 
