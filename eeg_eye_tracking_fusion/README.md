@@ -40,7 +40,7 @@ The six notebooks form **one** multimodal experiment, not six separate studies. 
 | [03 — Features and Neurophysiology](code/notebooks/03_preprocessing_features_and_neurophysiology.ipynb) | **630 aligned rows**, eight finite mean predictors, two **(630, 6, 4)** arrays, zero extraction exclusions; exploratory raw fixation diagnostic | Seven `03_*` files: feature table, temporal NPZ, quality/exclusion tables and two plots |
 | [04 — Classical Baselines and Fusion](code/notebooks/04_unimodal_baselines_and_classical_fusion.ipynb) | Seven candidates, **693 common-window Validation predictions**; best classical model is Gaze Random Forest (Macro F1 **0.6244**) | Twelve `04_*` files: six fitted pipelines, fusion weights, metrics/predictions and two plots |
 | [05 — Temporal and Advanced Fusion](code/notebooks/05_temporal_and_advanced_fusion.ipynb) | Three GRUs, **297 Validation predictions**; Gated Fusion GRU leads this family (Macro F1 **0.6107**) | Nine `05_*` files: three checkpoints, Train scaling, histories, predictions, metrics and curves |
-| [06 — Robustness and Model Selection](code/notebooks/06_robustness_and_final_evaluation.ipynb) | **990 matched predictions across ten candidates**; frozen Gaze Random Forest choice, 30 model/person rows and fixed early-fusion masking; **Test not run** | Four `06_*` files: selection, person metrics, sensitivity and Validation evidence plot |
+| [06 — EEG–Eye-Tracking Model Selection](code/notebooks/06_robustness_and_final_evaluation.ipynb) | **990 matched predictions across ten candidates**; frozen Gaze Random Forest choice, 30 model/person rows and fixed early-fusion masking; **Test not run** | Four `06_*` files: selection, person metrics, sensitivity and Validation evidence plot |
 
 One editable [study-wide workflow](images/study_overview.svg) appears above. Each notebook also has its **own** stage-specific scientific illustration in [`images/`](images/), retained beside the relevant notebook content rather than repeatedly embedded in this README.
 
@@ -65,7 +65,7 @@ One editable [study-wide workflow](images/study_overview.svg) appears above. Eac
 
 **Selection and person-level variation (Notebook 06):** The predefined Validation rule selected **`gaze_forest`** over Gated Fusion GRU by **0.0137 Macro F1**. The selected model correctly classified **44/60 NR** and **20/39 TSR** Validation windows. Its person-level Macro F1 was **0.7654** (sub-YDR, 31 windows), **0.6306** (sub-YRH, 38) and **0.3478** (sub-YTL, 30); pooled scores conceal this heterogeneity. These three independent participants are insufficient for a strong population ranking.
 
-**Validation input sensitivity:** Masking EEG or gaze features in the **fixed early-fusion logistic model**, with its Train-fitted imputer unchanged, yielded Macro F1 **0.5343** (EEG masked) or **0.4907** (gaze masked), versus **0.4518** unchanged. This evaluates perturbation sensitivity of that model only. It is not causal modality attribution and does not explain the selected Gaze Random Forest.
+**Secondary masking check:** For the fixed early-fusion logistic model, Validation Macro F1 was **0.4518** with both modalities, **0.5343** with EEG masked and **0.4907** with gaze masked. The Train-fitted imputer was unchanged and the model was not retrained. This describes sensitivity to modified inputs, not causal modality importance or a reason to revise the selected model.
 
 No held-out Test score is available; final model generalisation remains unmeasured. Detailed calculations and qualifications are in [Research Methods and Evidence](RESEARCH_METHODS_AND_EVIDENCE.md).
 
@@ -76,7 +76,7 @@ No held-out Test score is available; final model generalisation remains unmeasur
 1. Start with the [completed Notebook 06](code/notebooks/06_robustness_and_final_evaluation.ipynb), [saved model decision](output/06_model_selection.csv) and [Validation evidence](output/06_validation_evidence.png). The selection is deliberately independent of Test.
 2. Inspect the [`output/` directory](output/) for the 630-window registry, paired features, ten models' Validation predictions and current quality/sensitivity results.
 3. For original-data reproduction, follow [Notebooks 01–06](code/notebooks/) in numerical order, starting from the source release and frozen participant assignments. Use the study [requirements](requirements.txt) and the existing Colab `setup_colab("eeg_eye_tracking_fusion")` workflow. Raw ZuCo files are **not** bundled with Git; Colab source caches can be ephemeral. Rerunning a stage replaces its stage-owned current outputs and may require rebuilding downstream stages.
-4. Review the [research methods](RESEARCH_METHODS_AND_EVIDENCE.md) for data access, exact representations, candidate settings, evaluation boundaries and limitations. Do **not** enable final Test scoring as an incidental documentation or reproducibility check.
+4. Review the [research methods](RESEARCH_METHODS_AND_EVIDENCE.md) for source access, representations, model settings and evaluation limits. The recorded run is **Validation-only**, with final Test scoring disabled.
 
 A new cohort, timing correction, feature set or evaluation objective is a separate scientific decision; results must not be silently mixed with the current 18-person experiment.
 
