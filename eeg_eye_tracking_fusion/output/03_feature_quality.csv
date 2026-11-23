@@ -1,0 +1,9 @@
+feature,modality,train_windows,train_non_finite,all_windows,all_non_finite,train_std,constant_on_train
+eeg_theta_log_power,eeg,371,0,630,0,0.3187700239366632,False
+eeg_alpha_log_power,eeg,371,0,630,0,0.2337304328418741,False
+eeg_beta_log_power,eeg,371,0,630,0,0.19136336058122316,False
+eeg_eeg_rms_uv,eeg,371,0,630,0,5.455672326455102,False
+gaze_valid_fraction,gaze,371,0,630,0,0.0,True
+gaze_speed_median_px_s,gaze,371,0,630,0,50.051271901144915,False
+gaze_pupil_median,gaze,371,0,630,0,444.38277018998906,False
+gaze_fixation_fraction,gaze,371,0,630,0,0.05276040129625486,False
