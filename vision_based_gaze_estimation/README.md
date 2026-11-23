@@ -6,6 +6,10 @@ This independent study investigates whether camera-derived eye images can estima
 
 **Scientific document:** [Research Methods and Evidence](RESEARCH_METHODS_AND_EVIDENCE.md).
 
+![Five-band MPIIGaze source audit and evaluation protocol schematic](images/01_mpiigaze_source_audit_and_protocol.svg)
+
+*Figure 1. Planned source-to-evidence workflow. This illustrates the implemented Notebook 01 audit operations, not experimental gaze-estimation results.*
+
 ## 1. Dataset and Experimental Protocol
 
 | Aspect | Proposed protocol and verification status |
@@ -60,6 +64,7 @@ The approved architecture uses standard Python and Google Colab. Dataset and mod
 | --- | --- |
 | [`code/notebooks/`](code/notebooks/) | Five numbered study notebooks, currently at scaffold/source-contract stage |
 | [`code/src/`](code/src/) | 3D angular-error helper and [MPIIGaze source reader](code/src/mpiigaze_io.py), including safe archive extraction, observed file inventory and MAT-header inspection |
+| [`images/`](images/) | Editable [five-band source-audit diagram](images/01_mpiigaze_source_audit_and_protocol.svg), describing methods rather than results |
 | [`requirements.txt`](requirements.txt) | Proposed dependencies, to be pinned for executed experiments |
 | `data/raw/mpiigaze/` (repository root) | Original local source data; ignored by Git and **not included** in this repository |
 | `output/` (study root) | Stage-owned outputs generated only when an original-data stage is run; no real MPIIGaze evidence files have been verified here |
