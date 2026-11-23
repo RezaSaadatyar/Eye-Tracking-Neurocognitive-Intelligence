@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1700" height="816" viewBox="0 0 1700 816" role="img" aria-labelledby="title desc">
-  <title id="title">01 | ZuCo 2.0 Source Audit and Frozen Cohort</title>
-  <desc id="desc">Recorded NEMAR ZuCo 2.0 v1.0.0 18-person source audit. All 18 participants have complete NR/TSR Run-1 source-file pairs, with 36 of 36 source-run packages present and 3373.4 MB of recorded retrieved files. All selected source sidecars report 128 EEG channels and nominal 500-Hz EEG and EyeLink sampling, with relative eye StartTime offsets -0.046 to +0.033 seconds. The participant-disjoint allocation has 11 Train, three Validation and four reserved Test people, retaining all six previously assessed pilot roles. Source availability does not independently verify paired-window eligibility, eye calibration or EEG-eye clock drift. The schematic acquisition icon is not a measured EEG or gaze trace.</desc>
+  <title id="title">01 | Original ZuCo 2.0 Source and Cohort Design</title>
+  <desc id="desc">Original BIDS source audit for ZuCo 2.0 NEMAR nm000279 v1.0.0. Eighteen participants each provided one Normal Reading (NR) and one Task-Specific Reading (TSR) Run-1 recording. All 36 run packages were present, containing eight BIDS files each and totalling 3373.4 MB. Sidecars report 128 EEG channels, nominal 500-Hz EEG and EyeLink sampling, and relative eye StartTime offsets from minus 46 to plus 33 milliseconds. Participants were allocated without overlap to 11 Train, three Validation and four reserved Test people. This figure shows source provenance and participant-level experimental design; it does not claim independent clock-drift measurement or cognitive-state recognition. The EEG and eye icon is schematic.</desc>
   <defs>
     <marker id="arr" markerUnits="userSpaceOnUse" markerWidth="6" markerHeight="6" refX="5.5" refY="3" orient="auto">
       <path d="M0 0 L6 3 L0 6 Z" fill="#245E9D"/>
@@ -32,8 +32,8 @@
   </defs>
   <rect id="canvas" x="0" y="0" width="1700" height="816" rx="20" fill="#F4F9FD"/>
   <g id="band-0-header">
-    <text id="text-001" x="30" y="38" class="figure-title" data-container="canvas">01 | ZuCo 2.0 Source Audit and Frozen Cohort</text>
-    <text id="text-002" x="30" y="67" class="subtitle" data-container="canvas">Recorded: 18 participants | 36 source runs | 3,373.4 MB | pilot roles preserved</text>
+    <text id="text-001" x="30" y="38" class="figure-title" data-container="canvas">01 | Original ZuCo 2.0 Source and Cohort Design</text>
+    <text id="text-002" x="30" y="67" class="subtitle" data-container="canvas">18 participants | 36 NR/TSR Run-1 recordings | 11 Train / 3 Validation / 4 Test people</text>
   </g>
   <g id="band-1-context">
     <rect id="context-container" x="24" y="84" width="1652" height="160" rx="16" fill="#EAF3FA" stroke="#C7D9E6" stroke-width="2"/>
@@ -59,59 +59,59 @@
       <text id="text-006" x="153" y="207" class="source-label" data-container="context-container">NR and TSR runs</text>
     </g>
     <g id="context-module-1">
-      <text id="text-007" x="358" y="115" class="context-heading" data-container="context-container">PUBLIC SOURCE</text>
+      <text id="text-007" x="358" y="115" class="context-heading" data-container="context-container">DATASET</text>
       <text id="text-008" x="358" y="148" class="context-body" data-container="context-container">NEMAR nm000279</text>
-      <text id="text-009" x="358" y="174" class="context-body" data-container="context-container">Version v1.0.0</text>
-      <text id="text-010" x="358" y="200" class="context-body" data-container="context-container">EEG and EyeLink</text>
+      <text id="text-009" x="358" y="174" class="context-body" data-container="context-container">ZuCo 2.0 · v1.0.0</text>
+      <text id="text-010" x="358" y="200" class="context-body" data-container="context-container">Original BIDS records</text>
     </g>
     <g id="context-module-2">
-      <text id="text-011" x="690" y="115" class="context-heading" data-container="context-container">SOURCE UNIT</text>
-      <text id="text-012" x="690" y="148" class="context-body" data-container="context-container">Participant / task / run</text>
-      <text id="text-013" x="690" y="174" class="context-body" data-container="context-container">NR and TSR both needed</text>
-      <text id="text-014" x="690" y="200" class="context-body" data-container="context-container">Real BIDS files only</text>
+      <text id="text-011" x="690" y="115" class="context-heading" data-container="context-container">RECORDING UNIT</text>
+      <text id="text-012" x="690" y="148" class="context-body" data-container="context-container">Participant + task + run</text>
+      <text id="text-013" x="690" y="174" class="context-body" data-container="context-container">One NR and one TSR</text>
+      <text id="text-014" x="690" y="200" class="context-body" data-container="context-container">Run 1 per participant</text>
     </g>
     <g id="context-module-3">
       <text id="text-015" x="1020" y="115" class="context-heading" data-container="context-container">SOURCE COVERAGE</text>
-      <text id="text-016" x="1020" y="148" class="context-body" data-container="context-container">18/18 paired-file complete</text>
+      <text id="text-016" x="1020" y="148" class="context-body" data-container="context-container">18 complete paired sets</text>
       <text id="text-017" x="1020" y="174" class="context-body" data-container="context-container">18 NR + 18 TSR runs</text>
-      <text id="text-018" x="1020" y="200" class="context-body" data-container="context-container">Run 1 per task/person</text>
+      <text id="text-018" x="1020" y="200" class="context-body" data-container="context-container">36 unique source runs</text>
     </g>
     <g id="context-module-4">
-      <text id="text-019" x="1360" y="115" class="context-heading" data-container="context-container">APPROVED COHORT SPLIT</text>
+      <text id="text-019" x="1360" y="115" class="context-heading" data-container="context-container">GROUPED DESIGN</text>
       <text id="text-020" x="1360" y="148" class="context-body" data-container="context-container">11 Train / 3 Val / 4 Test</text>
-      <text id="text-021" x="1360" y="174" class="context-body" data-container="context-container">All 6 pilot roles retained</text>
-      <text id="text-022" x="1360" y="200" class="context-body" data-container="context-container">Test remains reserved</text>
+      <text id="text-021" x="1360" y="174" class="context-body" data-container="context-container">22 / 6 / 8 source runs</text>
+      <text id="text-022" x="1360" y="200" class="context-body" data-container="context-container">No shared participant IDs</text>
     </g>
   </g>
   <g id="band-2-analysis">
     <rect id="analysis-container" x="24" y="258" width="1652" height="314" rx="16" fill="#EDF6FB" stroke="#B4CFE0" stroke-width="1.5"/>
     <g id="analysis-focus">
       <rect id="section-label-box" x="38" y="272" width="238" height="32" rx="9" fill="#173453" stroke="#173453" stroke-width="1.5"/>
-      <text id="text-023" x="157" y="293" class="section-label" text-anchor="middle" data-container="section-label-box">SOURCE-LEVEL EVIDENCE</text>
+      <text id="text-023" x="157" y="293" class="section-label" text-anchor="middle" data-container="section-label-box">SOURCE AUDIT</text>
       <rect id="focus-card" x="38" y="312" width="238" height="215" rx="10" fill="#F7FAFD" stroke="#DFEAF0" stroke-width="1.5"/>
-      <text id="text-024" x="54" y="344" class="focus-heading" data-container="focus-card">FROZEN COHORT</text>
-      <text id="text-025" x="54" y="389" class="focus-body" data-container="focus-card">18 source participants</text>
-      <text id="text-026" x="54" y="416" class="focus-body" data-container="focus-card">36 NR/TSR Run-1 files</text>
-      <text id="text-027" x="54" y="443" class="focus-body" data-container="focus-card">EEG and eye sidecars</text>
-      <text id="text-028" x="54" y="470" class="focus-body" data-container="focus-card">Traceable original IDs</text>
-      <text id="text-029" x="54" y="508" class="qualification" data-container="focus-card">No window QA yet</text>
+      <text id="text-024" x="54" y="344" class="focus-heading" data-container="focus-card">ANALYSIS UNIT</text>
+      <text id="text-025" x="54" y="389" class="focus-body" data-container="focus-card">Independent participant</text>
+      <text id="text-026" x="54" y="416" class="focus-body" data-container="focus-card">Two original task runs</text>
+      <text id="text-027" x="54" y="443" class="focus-body" data-container="focus-card">Original BIDS identity</text>
+      <text id="text-028" x="54" y="470" class="focus-body" data-container="focus-card">Fixed person-level split</text>
+      <text id="text-029" x="54" y="508" class="qualification" data-container="focus-card">Test set reserved</text>
     </g>
     <g id="evidence-panel-1">
       <rect id="evidence-card-1" x="292" y="272" width="324" height="254" rx="12" fill="#FFFFFF" stroke="#B6CFDE" stroke-width="1.5"/>
       <path id="evidence-header-1" d="M303 272 H605 Q616 272 616 283 V305 H292 V283 Q292 272 303 272 Z" fill="#174B70"/>
-      <text id="text-030" x="454.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-1">PAIRED SOURCE RUNS</text>
+      <text id="text-030" x="454.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-1">PAIRED RECORDINGS</text>
       <g id="evidence-content-1" data-slot="scientific-content">
-        <text id="text-031" x="454.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-1">18 indexed / 18 selected</text>
-        <text id="text-032" x="454.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-1">18 NR + 18 TSR Run 1</text>
-        <text id="text-033" x="454.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-1">36 original recordings</text>
+        <text id="text-031" x="454.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-1">18 people with NR + TSR</text>
+        <text id="text-032" x="454.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-1">One Run 1 per task</text>
+        <text id="text-033" x="454.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-1">36 original runs</text>
       </g>
     </g>
     <g id="evidence-panel-2">
       <rect id="evidence-card-2" x="630" y="272" width="324" height="254" rx="12" fill="#FFFFFF" stroke="#B6CFDE" stroke-width="1.5"/>
       <path id="evidence-header-2" d="M641 272 H943 Q954 272 954 283 V305 H630 V283 Q630 272 641 272 Z" fill="#174B70"/>
-      <text id="text-034" x="792.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-2">RETRIEVED PACKAGES</text>
+      <text id="text-034" x="792.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-2">SOURCE INVENTORY</text>
       <g id="evidence-content-2" data-slot="scientific-content">
-        <text id="text-035" x="792.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-2">36/36 source runs present</text>
+        <text id="text-035" x="792.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-2">36/36 packages complete</text>
         <text id="text-036" x="792.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-2">3,373.4 MB (3.14 GiB)</text>
         <text id="text-037" x="792.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-2">8 BIDS files per run</text>
       </g>
@@ -119,28 +119,28 @@
     <g id="evidence-panel-3">
       <rect id="evidence-card-3" x="968" y="272" width="324" height="254" rx="12" fill="#FFFFFF" stroke="#B6CFDE" stroke-width="1.5"/>
       <path id="evidence-header-3" d="M979 272 H1281 Q1292 272 1292 283 V305 H968 V283 Q968 272 979 272 Z" fill="#174B70"/>
-      <text id="text-038" x="1130.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-3">ACQUISITION METADATA</text>
+      <text id="text-038" x="1130.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-3">ACQUISITION DETAILS</text>
       <g id="evidence-content-3" data-slot="scientific-content">
-        <text id="text-039" x="1130.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-3">128 EEG channels / run</text>
-        <text id="text-040" x="1130.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-3">EEG and eye: 500 Hz</text>
-        <text id="text-041" x="1130.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-3">StartTime: -0.046 to +0.033 s</text>
+        <text id="text-039" x="1130.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-3">128 native EEG channels</text>
+        <text id="text-040" x="1130.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-3">Both streams: 500 Hz</text>
+        <text id="text-041" x="1130.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-3">Eye offset: −46 to +33 ms</text>
       </g>
     </g>
     <g id="evidence-panel-4">
       <rect id="evidence-card-4" x="1306" y="272" width="356" height="254" rx="12" fill="#FFFFFF" stroke="#B6CFDE" stroke-width="1.5"/>
       <path id="evidence-header-4" d="M1317 272 H1651 Q1662 272 1662 283 V305 H1306 V283 Q1306 272 1317 272 Z" fill="#174B70"/>
-      <text id="text-042" x="1484.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-4">FROZEN PARTICIPANT ROLES</text>
+      <text id="text-042" x="1484.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-4">PARTICIPANT SPLIT</text>
       <g id="evidence-content-4" data-slot="scientific-content">
-        <text id="text-043" x="1484.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-4">11 Train / 3 Val / 4 Test</text>
-        <text id="text-044" x="1484.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-4">All 6 pilot roles retained</text>
-        <text id="text-045" x="1484.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-4">No role overlap; Test reserved</text>
+        <text id="text-043" x="1484.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-4">Train 11; Validation 3</text>
+        <text id="text-044" x="1484.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-4">Reserved Test: 4 people</text>
+        <text id="text-045" x="1484.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-4">Distinct people per role</text>
       </g>
     </g>
     <g id="optional-scientific-note" data-optional="true">
       <rect id="note-strip" x="301" y="540" width="1064" height="25" rx="12" fill="#E0F2EC" stroke="#D3EAE2" stroke-width="1.5"/>
       <circle cx="324" cy="552" r="9" fill="#23749A"/>
       <text id="text-046" x="324" y="556" class="info-mark" text-anchor="middle">i</text>
-      <text id="text-047" x="342" y="556" class="scientific-note" data-container="note-strip">Source presence and nominal rates do not verify usable gaze, EEG quality or clock drift.</text>
+      <text id="text-047" x="342" y="556" class="scientific-note" data-container="note-strip">Eye StartTime is a relative BIDS offset; it does not prove constant inter-device clock alignment.</text>
     </g>
   </g>
   <g id="band-3-workflow">
@@ -148,67 +148,67 @@
     <g id="workflow-input">
       <rect id="workflow-node-0" x="38" y="613" width="208" height="132" rx="15" fill="#173453" stroke="#173453" stroke-width="1.8"/>
       <text id="text-048" x="142" y="636" class="terminal-id" text-anchor="middle" data-container="workflow-node-0">INPUT</text>
-      <text id="text-049" x="142" y="662" class="terminal-heading" text-anchor="middle" data-container="workflow-node-0">NEMAR BIDS</text>
-      <text id="text-050" x="142" y="684" class="terminal-body" text-anchor="middle" data-container="workflow-node-0">18 original participants</text>
-      <text id="text-051" x="142" y="704" class="terminal-body" text-anchor="middle" data-container="workflow-node-0">Paired NR / TSR runs</text>
-      <text id="text-052" x="142" y="724" class="terminal-body" text-anchor="middle" data-container="workflow-node-0">One Run 1 per task</text>
+      <text id="text-049" x="142" y="662" class="terminal-heading" text-anchor="middle" data-container="workflow-node-0">ZuCo 2.0 BIDS</text>
+      <text id="text-050" x="142" y="684" class="terminal-body" text-anchor="middle" data-container="workflow-node-0">18 source participants</text>
+      <text id="text-051" x="142" y="704" class="terminal-body" text-anchor="middle" data-container="workflow-node-0">NR + TSR each person</text>
+      <text id="text-052" x="142" y="724" class="terminal-body" text-anchor="middle" data-container="workflow-node-0">36 original runs</text>
     </g>
     <path id="workflow-connector-0" d="M252 679 H266" fill="none" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
     <g id="workflow-process-1">
       <rect id="workflow-node-1" x="274" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
       <text id="text-053" x="378" y="636" class="workflow-id" text-anchor="middle" data-container="workflow-node-1">01</text>
-      <text id="text-054" x="378" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-1">Audit 18 People</text>
-      <text id="text-055" x="378" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-1">18 complete NR/TSR pairs</text>
-      <text id="text-056" x="378" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-1">36 source-run identities</text>
-      <text id="text-057" x="378" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-1">No filename exclusions</text>
+      <text id="text-054" x="378" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-1">Check File Sets</text>
+      <text id="text-055" x="378" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-1">8 expected BIDS files</text>
+      <text id="text-056" x="378" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-1">One NR + one TSR</text>
+      <text id="text-057" x="378" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-1">18 complete pairs</text>
     </g>
     <path id="workflow-connector-1" d="M488 679 H502" fill="none" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
     <g id="workflow-process-2">
       <rect id="workflow-node-2" x="510" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
       <text id="text-058" x="614" y="636" class="workflow-id" text-anchor="middle" data-container="workflow-node-2">02</text>
-      <text id="text-059" x="614" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-2">Retrieve 36 Runs</text>
-      <text id="text-060" x="614" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-2">36/36 packages present</text>
-      <text id="text-061" x="614" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-2">3,373.4 MB recorded</text>
-      <text id="text-062" x="614" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-2">Temporary Colab cache</text>
+      <text id="text-059" x="614" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-2">Allocate People</text>
+      <text id="text-060" x="614" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-2">One split per person</text>
+      <text id="text-061" x="614" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-2">11 Train / 3 Validation</text>
+      <text id="text-062" x="614" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-2">4 reserved Test</text>
     </g>
     <path id="workflow-connector-2" d="M724 679 H738" fill="none" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
     <g id="workflow-process-3">
       <rect id="workflow-node-3" x="746" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
       <text id="text-063" x="850" y="636" class="workflow-id" text-anchor="middle" data-container="workflow-node-3">03</text>
-      <text id="text-064" x="850" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-3">Inspect Sidecars</text>
-      <text id="text-065" x="850" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-3">500 Hz for both streams</text>
-      <text id="text-066" x="850" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-3">128 EEG channels</text>
-      <text id="text-067" x="850" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-3">Drift unverified</text>
+      <text id="text-064" x="850" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-3">Retrieve Runs</text>
+      <text id="text-065" x="850" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-3">36 packages complete</text>
+      <text id="text-066" x="850" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-3">3.14 GiB source volume</text>
+      <text id="text-067" x="850" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-3">Original source IDs</text>
     </g>
     <path id="workflow-connector-3" d="M960 679 H974" fill="none" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
     <g id="workflow-process-4">
       <rect id="workflow-node-4" x="982" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
       <text id="text-068" x="1086" y="636" class="workflow-id" text-anchor="middle" data-container="workflow-node-4">04</text>
-      <text id="text-069" x="1086" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-4">Freeze Cohort Split</text>
-      <text id="text-070" x="1086" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">11 Train / 3 Validation</text>
-      <text id="text-071" x="1086" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">4 Test participants</text>
-      <text id="text-072" x="1086" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">Six pilot roles retained</text>
+      <text id="text-069" x="1086" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-4">Inspect Sidecars</text>
+      <text id="text-070" x="1086" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">128 EEG channels</text>
+      <text id="text-071" x="1086" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">EEG / eye: 500 Hz</text>
+      <text id="text-072" x="1086" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">Start offsets recorded</text>
     </g>
     <path id="workflow-connector-4" d="M1196 679 H1210" fill="none" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
     <g id="workflow-process-5">
       <rect id="workflow-node-5" x="1218" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
       <text id="text-073" x="1322" y="636" class="workflow-id" text-anchor="middle" data-container="workflow-node-5">05</text>
-      <text id="text-074" x="1322" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-5">Save Stage Evidence</text>
-      <text id="text-075" x="1322" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">7 named 01_ outputs</text>
-      <text id="text-076" x="1322" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">Manifest and role lock</text>
-      <text id="text-077" x="1322" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">No model scoring</text>
+      <text id="text-074" x="1322" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-5">Register Cohort</text>
+      <text id="text-075" x="1322" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">Manifest + assignments</text>
+      <text id="text-076" x="1322" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">Protocol + metadata</text>
+      <text id="text-077" x="1322" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">Source overview</text>
     </g>
     <path id="workflow-connector-5" d="M1432 679 H1446" fill="none" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
     <g id="workflow-output">
       <rect id="workflow-node-6" x="1454" y="613" width="208" height="132" rx="15" fill="#176363" stroke="#176363" stroke-width="1.8"/>
       <text id="text-078" x="1558" y="636" class="terminal-id" text-anchor="middle" data-container="workflow-node-6">OUTPUT</text>
-      <text id="text-079" x="1558" y="662" class="terminal-heading" text-anchor="middle" data-container="workflow-node-6">Stage 01 Complete</text>
+      <text id="text-079" x="1558" y="662" class="terminal-heading" text-anchor="middle" data-container="workflow-node-6">Frozen Cohort</text>
       <text id="text-080" x="1558" y="684" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">18 people / 36 runs</text>
-      <text id="text-081" x="1558" y="704" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">Roles reconciled</text>
-      <text id="text-082" x="1558" y="724" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">Next: alignment QA</text>
+      <text id="text-081" x="1558" y="704" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">Participant-disjoint</text>
+      <text id="text-082" x="1558" y="724" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">Ready for time pairing</text>
     </g>
   </g>
   <g id="band-4-summary">
-    <text id="text-083" x="30" y="792" class="footer" data-container="canvas">18 complete participant pairs; 36/36 packages retrieved; all pilot roles preserved; clock drift unverified.</text>
+    <text id="text-083" x="30" y="792" class="footer" data-container="canvas">Original BIDS files define the 18-person cohort; grouping is by participant, not recording window.</text>
   </g>
 </svg>
