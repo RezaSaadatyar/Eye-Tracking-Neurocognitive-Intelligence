@@ -1,0 +1,32 @@
+{
+  "dataset_id": "nm000279",
+  "dataset_version": "v1.0.0",
+  "target": {
+    "nr": 0,
+    "tsr": 1
+  },
+  "max_participants": 18,
+  "selected_people": 18,
+  "eligible_source_pool": 18,
+  "role_policy": "pilot_roles_locked_full_pool_seeded_expansion",
+  "pilot_role_lock": {
+    "sub-YAC": "test",
+    "sub-YAG": "test",
+    "sub-YAK": "train",
+    "sub-YDG": "train",
+    "sub-YDR": "validation",
+    "sub-YFR": "train"
+  },
+  "runs_per_task": 1,
+  "seed": 17,
+  "participant_split": {
+    "test": 4,
+    "train": 11,
+    "validation": 3
+  },
+  "window_seconds": 12.0,
+  "bin_seconds": 2.0,
+  "max_windows_per_run": 20,
+  "min_eye_fraction": 0.6,
+  "final_test_policy": "select using Validation, then score Test"
+}
