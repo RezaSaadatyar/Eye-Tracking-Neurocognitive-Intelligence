@@ -101,10 +101,10 @@
         <text x="792" y="345" class="card-body" text-anchor="middle">Gaze Random Forest</text>
         <text x="655" y="375" class="card-body">Macro F1: 0.6244</text>
         <rect x="655" y="387" width="266" height="12" rx="4" fill="#E8F0F6"/>
-        <rect x="655" y="387" width="235.7" height="12" rx="4" fill="#236CDE"/>
+        <rect x="655" y="387" width="166.1" height="12" rx="4" fill="#236CDE"/>
         <text x="655" y="438" class="card-body">Balanced acc: 0.6231</text>
         <rect x="655" y="450" width="266" height="12" rx="4" fill="#E8F0F6"/>
-        <rect x="655" y="450" width="229.7" height="12" rx="4" fill="#236CDE"/>
+        <rect x="655" y="450" width="165.7" height="12" rx="4" fill="#236CDE"/>
       </g>
     </g>
     <g id="evidence-panel-3">
@@ -115,11 +115,13 @@
         <text x="1130" y="334" class="card-body" text-anchor="middle">Early-fusion logistic</text>
         <text x="992" y="358" class="card-body">Original F1: 0.4518</text>
         <rect x="992" y="370" width="265" height="12" rx="4" fill="#E8F0F6"/>
-        <rect x="992" y="370" width="148.9" height="12" rx="4" fill="#168C5B"/>
+        <rect x="992" y="370" width="119.7" height="12" rx="4" fill="#168C5B"/>
         <text x="992" y="416" class="card-body">EEG masked: 0.5343</text>
         <rect x="992" y="428" width="265" height="12" rx="4" fill="#E8F0F6"/>
-        <rect x="992" y="428" width="234.8" height="12" rx="4" fill="#168C5B"/>
+        <rect x="992" y="428" width="141.6" height="12" rx="4" fill="#168C5B"/>
         <text x="992" y="482" class="card-body">Gaze masked: 0.4907</text>
+        <rect x="992" y="493" width="265" height="12" rx="4" fill="#E8F0F6"/>
+        <rect x="992" y="493" width="130.1" height="12" rx="4" fill="#168C5B"/>
       </g>
     </g>
     <g id="evidence-panel-4">
