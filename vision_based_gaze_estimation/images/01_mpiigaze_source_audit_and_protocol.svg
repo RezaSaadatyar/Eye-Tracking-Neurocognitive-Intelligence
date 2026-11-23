@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="816" viewBox="0 0 1700 816" role="img" aria-labelledby="title desc">
+  <title id="title">MPIIGaze source audit and participant-level protocol</title>
+  <desc id="desc">Editable five-band diagram: publisher MPIIGaze archive, Normalized/Original/Calibration/Evaluation components, image and label metadata checks, participant nesting, proposed leave-one-person-out protocol, and metadata-only study outputs. Source-data results have not yet been produced.</desc>
+  <defs>
+    <marker id="study-arrow" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0 0 L7 3 L0 6" fill="none" stroke="#245E9D" stroke-width="1.5"/></marker>
+  </defs>
+  <rect x="0" y="0" width="1700" height="816" rx="20" fill="#F4F9FD"/>
+  <g font-family="DejaVu Sans, Arial, sans-serif">
+    <text x="30" y="38" fill="#173453" font-size="23" font-weight="700">MPIIGaze | SOURCE AUDIT AND PROTOCOL</text>
+    <text x="30" y="67" fill="#54738A" font-size="15">Camera-based gaze estimation | Source provenance, file structure and participant-independent evaluation design</text>
+
+    <rect x="24" y="84" width="1652" height="160" rx="16" fill="#EAF3FA" stroke="#C7D9E6" stroke-width="2"/>
+    <text x="42" y="111" font-size="13.2" font-weight="700" fill="#174B70">ORIGINAL SOURCE AND DATA REPRESENTATIONS</text>
+    <rect x="44" y="126" width="308" height="100" rx="12" fill="#F7FAFD" stroke="#DFEAF0" stroke-width="1.5"/>
+    <ellipse cx="92" cy="173" rx="33" ry="18" fill="#D9E7F1" stroke="#7298B0" stroke-width="2"/>
+    <circle cx="92" cy="173" r="9" fill="#245E9D"/>
+    <text x="140" y="162" fill="#173453" font-size="15" font-weight="700">MPIIGaze</text>
+    <text x="140" y="185" fill="#506C7E" font-size="12.1">Official source archive</text>
+    <text x="140" y="204" fill="#506C7E" font-size="12.1">Non-commercial research use</text>
+    <rect x="370" y="126" width="304" height="100" rx="12" fill="#FFFFFF" stroke="#B6CFDE"/>
+    <text x="388" y="156" fill="#173453" font-size="15" font-weight="700">Normalised</text>
+    <text x="388" y="180" fill="#506C7E" font-size="13.5">Eye patches in MATLAB</text>
+    <text x="388" y="201" fill="#506C7E" font-size="12.1">3D gaze fields: to verify</text>
+    <rect x="692" y="126" width="304" height="100" rx="12" fill="#FFFFFF" stroke="#B6CFDE"/>
+    <text x="710" y="156" fill="#173453" font-size="15" font-weight="700">Original + Calibration</text>
+    <text x="710" y="180" fill="#506C7E" font-size="13.5">Images and camera metadata</text>
+    <text x="710" y="201" fill="#506C7E" font-size="12.1">Units and frames: to verify</text>
+    <rect x="1014" y="126" width="632" height="100" rx="12" fill="#FFFFFF" stroke="#B6CFDE"/>
+    <text x="1032" y="156" fill="#173453" font-size="15" font-weight="700">Evaluation + Annotation Subsets</text>
+    <text x="1032" y="180" fill="#506C7E" font-size="13.5">Publisher image lists and landmark references</text>
+    <text x="1032" y="201" fill="#506C7E" font-size="12.1">List lengths are not assumed to equal usable image counts</text>
+
+    <rect x="24" y="258" width="1652" height="314" rx="16" fill="#EDF6FB" stroke="#B4CFE0" stroke-width="1.5"/>
+    <text x="42" y="284" fill="#174B70" font-size="13.2" font-weight="700">SOURCE AUDIT FOCUS AND VERIFIABLE EVIDENCE</text>
+    <rect x="44" y="302" width="346" height="239" rx="12" fill="#F7FAFD" stroke="#DFEAF0" stroke-width="1.5"/>
+    <rect x="58" y="316" width="317" height="30" rx="8" fill="#173453"/>
+    <text x="76" y="336" font-size="13.2" font-weight="700" fill="#FFFFFF">ANALYSIS FOCUS</text>
+    <text x="65" y="380" font-size="16.5" font-weight="700" fill="#173453">Reliable source-to-model</text>
+    <text x="65" y="405" font-size="16.5" font-weight="700" fill="#173453">provenance</text>
+    <text x="65" y="448" font-size="13.1" fill="#506C7E">Inspect files before defining</text>
+    <text x="65" y="470" font-size="13.1" fill="#506C7E">labels, geometry or folds.</text>
+    <text x="65" y="511" font-size="11.5" font-weight="700" fill="#506C7E">No original-data scores claimed</text>
+
+    <rect x="410" y="302" width="598" height="109" rx="12" fill="#FFFFFF" stroke="#B6CFDE" stroke-width="1.5"/>
+    <rect x="410" y="302" width="598" height="31" rx="12" fill="#174B70"/>
+    <rect x="410" y="319" width="598" height="14" fill="#174B70"/>
+    <text x="428" y="323" font-size="13.5" font-weight="700" fill="#FFFFFF">File structure and provenance</text>
+    <text x="428" y="357" font-size="12.1" fill="#506C7E">Archive type, relative paths, file sizes and original licence</text>
+    <text x="428" y="379" font-size="12.1" fill="#506C7E">Output: source-file inventory; not image-level observations</text>
+    <rect x="1026" y="302" width="620" height="109" rx="12" fill="#FFFFFF" stroke="#B6CFDE" stroke-width="1.5"/>
+    <rect x="1026" y="302" width="620" height="31" rx="12" fill="#174B70"/>
+    <rect x="1026" y="319" width="620" height="14" fill="#174B70"/>
+    <text x="1044" y="323" font-size="13.5" font-weight="700" fill="#FFFFFF">Participant and day structure</text>
+    <text x="1044" y="357" font-size="12.1" fill="#506C7E">Identify actual participant IDs and session/day folders</text>
+    <text x="1044" y="379" font-size="12.1" fill="#506C7E">Repeated images do not create independent people</text>
+
+    <rect x="410" y="426" width="598" height="110" rx="12" fill="#FFFFFF" stroke="#B6CFDE" stroke-width="1.5"/>
+    <rect x="410" y="426" width="598" height="31" rx="12" fill="#174B70"/>
+    <rect x="410" y="443" width="598" height="14" fill="#174B70"/>
+    <text x="428" y="447" font-size="13.5" font-weight="700" fill="#FFFFFF">MATLAB metadata inspection</text>
+    <text x="428" y="481" font-size="12.1" fill="#506C7E">Representative variable names, storage and array shapes</text>
+    <text x="428" y="503" font-size="12.1" fill="#506C7E">Image–target matching remains a Notebook 02 task</text>
+    <rect x="1026" y="426" width="620" height="110" rx="12" fill="#FFFFFF" stroke="#B6CFDE" stroke-width="1.5"/>
+    <rect x="1026" y="426" width="620" height="31" rx="12" fill="#174B70"/>
+    <rect x="1026" y="443" width="620" height="14" fill="#174B70"/>
+    <text x="1044" y="447" font-size="13.5" font-weight="700" fill="#FFFFFF">Evaluation source and protocol</text>
+    <text x="1044" y="481" font-size="12.1" fill="#506C7E">Inspect publisher lists; propose participant-held-out LOPO</text>
+    <text x="1044" y="503" font-size="12.1" fill="#506C7E">No labelled examples or Test scores fabricated</text>
+    <rect x="410" y="543" width="1236" height="18" rx="8" fill="#E0F2EC" stroke="#D3EAE2"/>
+    <text x="426" y="556" font-size="12.1" font-weight="700" fill="#173453">Scientific note: all recorded counts here refer to observed files or participants, never to unverified labelled images</text>
+
+    <rect x="24" y="588" width="1652" height="174" rx="16" fill="#EAF3FA" stroke="#C7D9E6" stroke-width="2"/>
+    <text x="42" y="615" fill="#174B70" font-size="13.2" font-weight="700">SOURCE-TO-EVIDENCE PIPELINE</text>
+    <rect x="44" y="632" width="260" height="101" rx="11" fill="#173453"/>
+    <text x="63" y="660" fill="#DBF2EF" font-size="12.5" font-weight="700">INPUT</text>
+    <text x="63" y="682" fill="#FFFFFF" font-size="15" font-weight="700">MPIIGaze archive</text>
+    <text x="63" y="706" fill="#DBF2EF" font-size="12.1">Authorised original files</text>
+    <line x1="309" y1="682" x2="358" y2="682" stroke="#245E9D" stroke-width="2" marker-end="url(#study-arrow)"/>
+    <rect x="364" y="632" width="270" height="101" rx="11" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.5"/>
+    <text x="382" y="659" font-size="12.5" font-weight="700" fill="#506C7E">01</text>
+    <text x="382" y="682" font-size="15" font-weight="700" fill="#173453">Inspect file structure</text>
+    <text x="382" y="707" font-size="12.1" fill="#506C7E">ZIP/TAR, MAT and source lists</text>
+    <line x1="639" y1="682" x2="688" y2="682" stroke="#245E9D" stroke-width="2" marker-end="url(#study-arrow)"/>
+    <rect x="694" y="632" width="270" height="101" rx="11" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.5"/>
+    <text x="712" y="659" font-size="12.5" font-weight="700" fill="#506C7E">02</text>
+    <text x="712" y="682" font-size="15" font-weight="700" fill="#173453">Audit participant IDs</text>
+    <text x="712" y="707" font-size="12.1" fill="#506C7E">Day and source support</text>
+    <line x1="969" y1="682" x2="1018" y2="682" stroke="#245E9D" stroke-width="2" marker-end="url(#study-arrow)"/>
+    <rect x="1024" y="632" width="270" height="101" rx="11" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.5"/>
+    <text x="1042" y="659" font-size="12.5" font-weight="700" fill="#506C7E">03</text>
+    <text x="1042" y="682" font-size="15" font-weight="700" fill="#173453">Record source protocol</text>
+    <text x="1042" y="707" font-size="12.1" fill="#506C7E">LOPO plan, not scored</text>
+    <line x1="1299" y1="682" x2="1348" y2="682" stroke="#245E9D" stroke-width="2" marker-end="url(#study-arrow)"/>
+    <rect x="1354" y="632" width="292" height="101" rx="11" fill="#176363"/>
+    <text x="1372" y="660" fill="#DBF2EF" font-size="12.5" font-weight="700">OUTPUT</text>
+    <text x="1372" y="682" fill="#FFFFFF" font-size="15" font-weight="700">Source audit evidence</text>
+    <text x="1372" y="707" fill="#DBF2EF" font-size="12.1">Stage-01 metadata and figure</text>
+    <text x="30" y="792" font-size="13.3" fill="#54738A">Scope: Notebook 01 documents the original source. Image–label geometry and participant-held-out modelling follow in Notebooks 02–05.</text>
+  </g>
+</svg>
