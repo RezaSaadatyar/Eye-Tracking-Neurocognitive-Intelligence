@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1700" height="816" viewBox="0 0 1700 816" role="img" aria-labelledby="title desc">
-  <title id="title">06 | Ten-Model Selection and Input Sensitivity</title>
+  <title id="title">06 | EEG–Eye-Tracking Model Selection</title>
   <desc id="desc">Executed development-only selection among seven classical and three temporal GRU models on 990 source-matched model/window predictions from 99 Validation windows (60 NR and 39 TSR) of three independent ZuCo 2.0 people. All candidates share original identifiers and fixed class order. The predefined Validation ranking of Macro F1, Balanced Accuracy and candidate priority selects Gaze Random Forest with pooled Macro F1 0.6244, Balanced Accuracy 0.6231 and Accuracy 0.6465. Gated Fusion GRU follows at Macro F1 0.6107. Gaze forest Macro F1 varies between 0.3478 and 0.7654 across the three individual Validation people; their unweighted mean is 0.5813. On a separate fixed early-fusion logistic model, masking EEG features with Train-median imputation changed Macro F1 from 0.4518 to 0.5343; masking gaze changed it to 0.4907. This diagnostic is not causal modality attribution. Four reserved Test people contributing 160 windows were not scored; the selected development candidate does not yet have independent held-out performance.</desc>
   <defs>
     <marker id="arr" markerUnits="userSpaceOnUse" markerWidth="6" markerHeight="6" refX="5.5" refY="3" orient="auto">
@@ -32,7 +32,7 @@
   </defs>
   <rect id="canvas" x="0" y="0" width="1700" height="816" rx="20" fill="#F4F9FD"/>
   <g id="band-0-header">
-    <text id="text-001" x="30" y="38" class="figure-title" data-container="canvas">06 | Ten-Model Selection and Input Sensitivity</text>
+    <text id="text-001" x="30" y="38" class="figure-title" data-container="canvas">06 | EEG–Eye-Tracking Model Selection</text>
     <text id="text-002" x="30" y="67" class="subtitle" data-container="canvas">10 candidates | 990 matched predictions | 99 Validation windows | 3 independent people</text>
   </g>
   <g id="band-1-context">
