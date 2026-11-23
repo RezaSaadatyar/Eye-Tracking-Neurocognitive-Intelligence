@@ -131,6 +131,14 @@
       <path id="evidence-header-4" d="M1317 272 H1651 Q1662 272 1662 283 V305 H1306 V283 Q1306 272 1317 272 Z" fill="#174B70"/>
       <text id="text-042" x="1484.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-4">OBSERVED WINDOWS</text>
       <g id="evidence-content-4" data-slot="scientific-content">
+        <g id="stage02-window-allocation" role="img" aria-label="Window distribution: 371 Train, 99 Validation, 160 reserved Test">
+          <rect x="1350" y="330" width="148.4" height="18" rx="3" fill="#236CDE"/>
+          <rect x="1498.4" y="330" width="39.6" height="18" fill="#E87929"/>
+          <rect x="1538" y="330" width="64" height="18" rx="3" fill="#168C5B"/>
+          <text x="1424" y="368" class="chart-label" text-anchor="middle">Train</text>
+          <text x="1518" y="368" class="chart-label" text-anchor="middle">Val</text>
+          <text x="1570" y="368" class="chart-label" text-anchor="middle">Test</text>
+        </g>
         <text id="text-043" x="1484.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-4">630 retained of 630</text>
         <text id="text-044" x="1484.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-4">371 Train; 99 Val</text>
         <text id="text-045" x="1484.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-4">160 reserved Test</text>
