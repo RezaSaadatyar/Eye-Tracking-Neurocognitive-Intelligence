@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1700" height="816" viewBox="0 0 1700 816" role="img" aria-labelledby="title desc">
-  <title id="title">06 | Validation Selection and Sensitivity: Executed</title>
-  <desc id="desc">Executed development-only Stage-06 Validation model selection in the expanded 18-person ZuCo 2.0 EEG-eye-tracking study. Ten predefined candidates contributed 990 saved predictions aligned to 99 identical Validation windows (60 NR and 39 TSR) from three independent participants. Prespecified pooled Validation Macro F1, followed by Balanced Accuracy and fixed model priority, selected Gaze Random Forest with Macro F1 0.6244, Balanced Accuracy 0.6231 and Accuracy 0.6465. The Gated Fusion GRU ranked second on pooled Macro F1 at 0.6107. Descriptive participant-level performance of the gaze forest varied (Macro F1 0.7654, 0.6306 and 0.3478). A fixed early-fusion logistic model achieved Validation Macro F1 0.4518 without masking, 0.5343 after setting EEG features missing and 0.4907 after setting gaze features missing and using Train-fitted median imputation; this is not causal modality attribution. Four development-only Stage-06 files were saved. RUN_FINAL_TEST remained false, and 160 reserved Test windows from four people were not scored. The study addresses NR versus TSR task conditions; gaze calibration and independent EEG-eye clock drift are unverified.</desc>
+  <title id="title">06 | Ten-Model Selection and Input Sensitivity</title>
+  <desc id="desc">Executed development-only selection among seven classical and three temporal GRU models on 990 source-matched model/window predictions from 99 Validation windows (60 NR and 39 TSR) of three independent ZuCo 2.0 people. All candidates share original identifiers and fixed class order. The predefined Validation ranking of Macro F1, Balanced Accuracy and candidate priority selects Gaze Random Forest with pooled Macro F1 0.6244, Balanced Accuracy 0.6231 and Accuracy 0.6465. Gated Fusion GRU follows at Macro F1 0.6107. Gaze forest Macro F1 varies between 0.3478 and 0.7654 across the three individual Validation people; their unweighted mean is 0.5813. On a separate fixed early-fusion logistic model, masking EEG features with Train-median imputation changed Macro F1 from 0.4518 to 0.5343; masking gaze changed it to 0.4907. This diagnostic is not causal modality attribution. Four reserved Test people contributing 160 windows were not scored; the selected development candidate does not yet have independent held-out performance.</desc>
   <defs>
     <marker id="arr" markerUnits="userSpaceOnUse" markerWidth="6" markerHeight="6" refX="5.5" refY="3" orient="auto">
       <path d="M0 0 L6 3 L0 6 Z" fill="#245E9D"/>
@@ -32,8 +32,8 @@
   </defs>
   <rect id="canvas" x="0" y="0" width="1700" height="816" rx="20" fill="#F4F9FD"/>
   <g id="band-0-header">
-    <text id="text-001" x="30" y="38" class="figure-title" data-container="canvas">06 | Validation Selection and Sensitivity: Executed</text>
-    <text id="text-002" x="30" y="67" class="subtitle" data-container="canvas">18 people | 10 models | 990 Validation predictions | 3 Validation people | Test unscored</text>
+    <text id="text-001" x="30" y="38" class="figure-title" data-container="canvas">06 | Ten-Model Selection and Input Sensitivity</text>
+    <text id="text-002" x="30" y="67" class="subtitle" data-container="canvas">10 candidates | 990 matched predictions | 99 Validation windows | 3 independent people</text>
   </g>
   <g id="band-1-context">
     <rect id="context-container" x="24" y="84" width="1652" height="160" rx="16" fill="#EAF3FA" stroke="#C7D9E6" stroke-width="2"/>
@@ -44,47 +44,47 @@
       <text id="text-006" x="153" y="207" class="source-label" data-container="context-container">NR and TSR runs</text>
     </g>
     <g id="context-module-1">
-      <text id="text-007" x="358" y="115" class="context-heading" data-container="context-container">RECONCILED EVIDENCE</text>
-      <text id="text-008" x="358" y="148" class="context-body" data-container="context-container">990 Validation predictions</text>
-      <text id="text-009" x="358" y="174" class="context-body" data-container="context-container">7 classical + 3 GRUs</text>
-      <text id="text-010" x="358" y="200" class="context-body" data-container="context-container">99 common window IDs</text>
+      <text id="text-007" x="358" y="115" class="context-heading" data-container="context-container">CANDIDATE SET</text>
+      <text id="text-008" x="358" y="148" class="context-body" data-container="context-container">7 classical / fusion</text>
+      <text id="text-009" x="358" y="174" class="context-body" data-container="context-container">3 temporal GRUs</text>
+      <text id="text-010" x="358" y="200" class="context-body" data-container="context-container">Same 99 window IDs</text>
     </g>
     <g id="context-module-2">
-      <text id="text-011" x="690" y="115" class="context-heading" data-container="context-container">RECORDED SELECTION</text>
-      <text id="text-012" x="690" y="148" class="context-body" data-container="context-container">Gaze forest selected</text>
-      <text id="text-013" x="690" y="174" class="context-body" data-container="context-container">Macro F1 = 0.6244</text>
-      <text id="text-014" x="690" y="200" class="context-body" data-container="context-container">Balanced acc. = 0.6231</text>
+      <text id="text-011" x="690" y="115" class="context-heading" data-container="context-container">SELECTION RULE</text>
+      <text id="text-012" x="690" y="148" class="context-body" data-container="context-container">Fixed-label Macro F1</text>
+      <text id="text-013" x="690" y="174" class="context-body" data-container="context-container">Balanced acc. tie-break</text>
+      <text id="text-014" x="690" y="200" class="context-body" data-container="context-container">Predefined model priority</text>
     </g>
     <g id="context-module-3">
-      <text id="text-015" x="1020" y="115" class="context-heading" data-container="context-container">TEST PRESERVATION</text>
-      <text id="text-016" x="1020" y="148" class="context-body" data-container="context-container">RUN_FINAL_TEST = False</text>
-      <text id="text-017" x="1020" y="174" class="context-body" data-container="context-container">160 Test windows reserved</text>
-      <text id="text-018" x="1020" y="200" class="context-body" data-container="context-container">No Test outputs produced</text>
+      <text id="text-015" x="1020" y="115" class="context-heading" data-container="context-container">SELECTED CANDIDATE</text>
+      <text id="text-016" x="1020" y="148" class="context-body" data-container="context-container">Gaze Random Forest</text>
+      <text id="text-017" x="1020" y="174" class="context-body" data-container="context-container">Macro F1 = 0.6244</text>
+      <text id="text-018" x="1020" y="200" class="context-body" data-container="context-container">Test performance unknown</text>
     </g>
     <g id="context-module-4">
-      <text id="text-019" x="1360" y="115" class="context-heading" data-container="context-container">RECORDED MASKING</text>
-      <text id="text-020" x="1360" y="148" class="context-body" data-container="context-container">Fixed early-fusion model</text>
-      <text id="text-021" x="1360" y="174" class="context-body" data-container="context-container">EEG or gaze imputed</text>
-      <text id="text-022" x="1360" y="200" class="context-body" data-container="context-container">No model retraining</text>
+      <text id="text-019" x="1360" y="115" class="context-heading" data-container="context-container">PERSON SUPPORT</text>
+      <text id="text-020" x="1360" y="148" class="context-body" data-container="context-container">3 Validation people</text>
+      <text id="text-021" x="1360" y="174" class="context-body" data-container="context-container">99 correlated windows</text>
+      <text id="text-022" x="1360" y="200" class="context-body" data-container="context-container">160 Test windows held out</text>
     </g>
   </g>
   <g id="band-2-analysis">
     <rect id="analysis-container" x="24" y="258" width="1652" height="314" rx="16" fill="#EDF6FB" stroke="#B4CFE0" stroke-width="1.5"/>
     <g id="analysis-focus">
       <rect id="section-label-box" x="38" y="272" width="238" height="32" rx="9" fill="#173453" stroke="#173453" stroke-width="1.5"/>
-      <text id="text-023" x="157" y="293" class="section-label" text-anchor="middle" data-container="section-label-box">RECORDED FINDINGS</text>
+      <text id="text-023" x="157" y="293" class="section-label" text-anchor="middle" data-container="section-label-box">MODEL SELECTION</text>
       <rect id="focus-card" x="38" y="312" width="238" height="215" rx="10" fill="#F7FAFD" stroke="#DFEAF0" stroke-width="1.5"/>
       <text id="text-024" x="54" y="344" class="focus-heading" data-container="focus-card">DEVELOPMENT RESULT</text>
-      <text id="text-025" x="54" y="389" class="focus-body" data-container="focus-card">Gaze forest selected</text>
+      <text id="text-025" x="54" y="389" class="focus-body" data-container="focus-card">Gaze Random Forest</text>
       <text id="text-026" x="54" y="416" class="focus-body" data-container="focus-card">Macro F1 = 0.6244</text>
-      <text id="text-027" x="54" y="443" class="focus-body" data-container="focus-card">Mask EEG F1 = 0.5343</text>
-      <text id="text-028" x="54" y="470" class="focus-body" data-container="focus-card">Mask gaze F1 = 0.4907</text>
-      <text id="text-029" x="54" y="508" class="qualification" data-container="focus-card">Validation: 3 people</text>
+      <text id="text-027" x="54" y="443" class="focus-body" data-container="focus-card">Gated GRU = 0.6107</text>
+      <text id="text-028" x="54" y="470" class="focus-body" data-container="focus-card">Person mean F1: 0.5813</text>
+      <text id="text-029" x="54" y="508" class="qualification" data-container="focus-card">Best of 10 candidates</text>
     </g>
     <g id="evidence-panel-1">
       <rect id="evidence-card-1" x="292" y="272" width="324" height="254" rx="12" fill="#FFFFFF" stroke="#B6CFDE" stroke-width="1.5"/>
       <path id="evidence-header-1" d="M303 272 H605 Q616 272 616 283 V305 H292 V283 Q292 272 303 272 Z" fill="#174B70"/>
-      <text id="text-030" x="454.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-1">SOURCE RECONCILIATION</text>
+      <text id="text-030" x="454.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-1">PREDICTION AUDIT</text>
       <g id="evidence-content-1" data-slot="scientific-content">
         <text x="454" y="346" class="card-body" text-anchor="middle">10 verified candidates</text>
         <text x="454" y="379" class="card-body" text-anchor="middle">990 model-window predictions</text>
@@ -96,9 +96,9 @@
     <g id="evidence-panel-2">
       <rect id="evidence-card-2" x="630" y="272" width="324" height="254" rx="12" fill="#FFFFFF" stroke="#B6CFDE" stroke-width="1.5"/>
       <path id="evidence-header-2" d="M641 272 H943 Q954 272 954 283 V305 H630 V283 Q630 272 641 272 Z" fill="#174B70"/>
-      <text id="text-034" x="792.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-2">SELECTED MODEL</text>
+      <text id="text-034" x="792.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-2">PRIMARY CANDIDATE</text>
       <g id="evidence-content-2" data-slot="scientific-content">
-        <text x="792" y="345" class="card-body" text-anchor="middle">Gaze random forest</text>
+        <text x="792" y="345" class="card-body" text-anchor="middle">Gaze Random Forest</text>
         <text x="655" y="375" class="card-body">Macro F1: 0.6244</text>
         <rect x="655" y="387" width="266" height="12" rx="4" fill="#E8F0F6"/>
         <rect x="655" y="387" width="235.7" height="12" rx="4" fill="#236CDE"/>
@@ -110,34 +110,34 @@
     <g id="evidence-panel-3">
       <rect id="evidence-card-3" x="968" y="272" width="324" height="254" rx="12" fill="#FFFFFF" stroke="#B6CFDE" stroke-width="1.5"/>
       <path id="evidence-header-3" d="M979 272 H1281 Q1292 272 1292 283 V305 H968 V283 Q968 272 979 272 Z" fill="#174B70"/>
-      <text id="text-038" x="1130.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-3">EARLY-FUSION MASKING</text>
+      <text id="text-038" x="1130.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-3">FIXED MODEL MASKING</text>
       <g id="evidence-content-3" data-slot="scientific-content">
-        <text x="1130" y="334" class="card-body" text-anchor="middle">Fixed early-fusion logistic</text>
-        <text x="992" y="358" class="card-body">Unchanged F1: 0.4518</text>
+        <text x="1130" y="334" class="card-body" text-anchor="middle">Early-fusion logistic</text>
+        <text x="992" y="358" class="card-body">Original F1: 0.4518</text>
         <rect x="992" y="370" width="265" height="12" rx="4" fill="#E8F0F6"/>
         <rect x="992" y="370" width="148.9" height="12" rx="4" fill="#168C5B"/>
-        <text x="992" y="416" class="card-body">Mask EEG F1: 0.5343</text>
+        <text x="992" y="416" class="card-body">EEG masked: 0.5343</text>
         <rect x="992" y="428" width="265" height="12" rx="4" fill="#E8F0F6"/>
         <rect x="992" y="428" width="234.8" height="12" rx="4" fill="#168C5B"/>
-        <text x="992" y="482" class="card-body">Mask gaze F1: 0.4907</text>
+        <text x="992" y="482" class="card-body">Gaze masked: 0.4907</text>
       </g>
     </g>
     <g id="evidence-panel-4">
       <rect id="evidence-card-4" x="1306" y="272" width="356" height="254" rx="12" fill="#FFFFFF" stroke="#B6CFDE" stroke-width="1.5"/>
       <path id="evidence-header-4" d="M1317 272 H1651 Q1662 272 1662 283 V305 H1306 V283 Q1306 272 1317 272 Z" fill="#174B70"/>
-      <text id="text-042" x="1484.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-4">RESERVED TEST</text>
+      <text id="text-042" x="1484.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-4">PERSON VARIATION</text>
       <g id="evidence-content-4" data-slot="scientific-content">
-        <text x="1484" y="353" class="card-body" text-anchor="middle">RUN_FINAL_TEST = False</text>
-        <text x="1484" y="390" class="card-body" text-anchor="middle">160 windows / 4 people</text>
-        <text x="1484" y="427" class="card-body" text-anchor="middle">No Test predictions</text>
-        <text x="1484" y="464" class="card-body" text-anchor="middle">No Test interval</text>
+        <text x="1484" y="353" class="card-body" text-anchor="middle">Person F1: 0.348–0.765</text>
+        <text x="1484" y="390" class="card-body" text-anchor="middle">Person mean F1: 0.5813</text>
+        <text x="1484" y="427" class="card-body" text-anchor="middle">3 Validation people</text>
+        <text x="1484" y="464" class="card-body" text-anchor="middle">Test still reserved</text>
       </g>
     </g>
     <g id="optional-scientific-note" data-optional="true">
       <rect id="note-strip" x="301" y="540" width="1064" height="25" rx="12" fill="#E0F2EC" stroke="#D3EAE2" stroke-width="1.5"/>
       <circle cx="324" cy="552" r="9" fill="#23749A"/>
       <text id="text-046" x="324" y="556" class="info-mark" text-anchor="middle">i</text>
-      <text id="text-047" x="342" y="556" class="scientific-note" data-container="note-strip">Gaze forest leads Validation F1 0.6244; masking is descriptive; 160 Test windows unscored.</text>
+      <text id="text-047" x="342" y="556" class="scientific-note" data-container="note-strip">Gaze forest person-level Macro F1 spans 0.3478–0.7654; pooled F1 is 0.6244.</text>
     </g>
   </g>
   <g id="band-3-workflow">
@@ -145,67 +145,67 @@
     <g id="workflow-input">
       <rect id="workflow-node-0" x="38" y="613" width="208" height="132" rx="15" fill="#173453" stroke="#173453" stroke-width="1.8"/>
       <text id="text-048" x="142" y="636" class="terminal-id" text-anchor="middle" data-container="workflow-node-0">INPUT</text>
-      <text id="text-049" x="142" y="662" class="terminal-heading" text-anchor="middle" data-container="workflow-node-0">Saved Evidence</text>
-      <text id="text-050" x="142" y="684" class="terminal-body" text-anchor="middle" data-container="workflow-node-0">04 + 05 predictions</text>
+      <text id="text-049" x="142" y="662" class="terminal-heading" text-anchor="middle" data-container="workflow-node-0">Saved Predictions</text>
+      <text id="text-050" x="142" y="684" class="terminal-body" text-anchor="middle" data-container="workflow-node-0">7 classical + 3 GRUs</text>
       <text id="text-051" x="142" y="704" class="terminal-body" text-anchor="middle" data-container="workflow-node-0">990 model-window rows</text>
-      <text id="text-052" x="142" y="724" class="terminal-body" text-anchor="middle" data-container="workflow-node-0">99 distinct Val windows</text>
+      <text id="text-052" x="142" y="724" class="terminal-body" text-anchor="middle" data-container="workflow-node-0">99 Validation IDs</text>
     </g>
     <path id="workflow-connector-0" d="M252 679 H266" fill="none" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
     <g id="workflow-process-1">
       <rect id="workflow-node-1" x="274" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
       <text id="text-053" x="378" y="636" class="workflow-id" text-anchor="middle" data-container="workflow-node-1">01</text>
-      <text id="text-054" x="378" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-1">Verify Inputs</text>
-      <text id="text-055" x="378" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-1">All 10 candidates</text>
-      <text id="text-056" x="378" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-1">Metrics and labels</text>
-      <text id="text-057" x="378" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-1">3 Validation people</text>
+      <text id="text-054" x="378" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-1">Reconcile Data</text>
+      <text id="text-055" x="378" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-1">Same NR/TSR targets</text>
+      <text id="text-056" x="378" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-1">Fixed class order</text>
+      <text id="text-057" x="378" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-1">3 separate people</text>
     </g>
     <path id="workflow-connector-1" d="M488 679 H502" fill="none" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
     <g id="workflow-process-2">
       <rect id="workflow-node-2" x="510" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
       <text id="text-058" x="614" y="636" class="workflow-id" text-anchor="middle" data-container="workflow-node-2">02</text>
-      <text id="text-059" x="614" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-2">Freeze Primary</text>
-      <text id="text-060" x="614" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-2">Gaze random forest</text>
-      <text id="text-061" x="614" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-2">Macro F1 = 0.6244</text>
-      <text id="text-062" x="614" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-2">Test not used</text>
+      <text id="text-059" x="614" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-2">Rank Models</text>
+      <text id="text-060" x="614" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-2">Macro F1 first</text>
+      <text id="text-061" x="614" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-2">Balanced accuracy next</text>
+      <text id="text-062" x="614" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-2">Fixed priority if tied</text>
     </g>
     <path id="workflow-connector-2" d="M724 679 H738" fill="none" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
     <g id="workflow-process-3">
       <rect id="workflow-node-3" x="746" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
       <text id="text-063" x="850" y="636" class="workflow-id" text-anchor="middle" data-container="workflow-node-3">03</text>
-      <text id="text-064" x="850" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-3">Test Off</text>
-      <text id="text-065" x="850" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-3">Development mode</text>
-      <text id="text-066" x="850" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-3">No Test scoring</text>
-      <text id="text-067" x="850" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-3">160 windows reserved</text>
+      <text id="text-064" x="850" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-3">Compare People</text>
+      <text id="text-065" x="850" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-3">Three Validation people</text>
+      <text id="text-066" x="850" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-3">Mean F1 = 0.5813</text>
+      <text id="text-067" x="850" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-3">Range 0.348–0.765</text>
     </g>
     <path id="workflow-connector-3" d="M960 679 H974" fill="none" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
     <g id="workflow-process-4">
       <rect id="workflow-node-4" x="982" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
       <text id="text-068" x="1086" y="636" class="workflow-id" text-anchor="middle" data-container="workflow-node-4">04</text>
-      <text id="text-069" x="1086" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-4">Mask Features</text>
-      <text id="text-070" x="1086" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">Early fusion fixed</text>
-      <text id="text-071" x="1086" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">EEG / gaze masks</text>
-      <text id="text-072" x="1086" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">Validation only</text>
+      <text id="text-069" x="1086" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-4">Perturb Inputs</text>
+      <text id="text-070" x="1086" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">Fixed early-fusion LR</text>
+      <text id="text-071" x="1086" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">Mask EEG / mask gaze</text>
+      <text id="text-072" x="1086" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">Train-median imputation</text>
     </g>
     <path id="workflow-connector-4" d="M1196 679 H1210" fill="none" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
     <g id="workflow-process-5">
       <rect id="workflow-node-5" x="1218" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
       <text id="text-073" x="1322" y="636" class="workflow-id" text-anchor="middle" data-container="workflow-node-5">05</text>
-      <text id="text-074" x="1322" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-5">Save Outputs</text>
-      <text id="text-075" x="1322" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">Selection CSV</text>
-      <text id="text-076" x="1322" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">Sensitivity + person QA</text>
-      <text id="text-077" x="1322" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">Evidence PNG</text>
+      <text id="text-074" x="1322" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-5">Record Evidence</text>
+      <text id="text-075" x="1322" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">Decision + person QA</text>
+      <text id="text-076" x="1322" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">3 masking conditions</text>
+      <text id="text-077" x="1322" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">Validation figures</text>
     </g>
     <path id="workflow-connector-5" d="M1432 679 H1446" fill="none" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
     <g id="workflow-output">
       <rect id="workflow-node-6" x="1454" y="613" width="208" height="132" rx="15" fill="#176363" stroke="#176363" stroke-width="1.8"/>
       <text id="text-078" x="1558" y="636" class="terminal-id" text-anchor="middle" data-container="workflow-node-6">OUTPUT</text>
-      <text id="text-079" x="1558" y="662" class="terminal-heading" text-anchor="middle" data-container="workflow-node-6">Stage 06 Saved</text>
-      <text id="text-080" x="1558" y="684" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">4 owned outputs</text>
-      <text id="text-081" x="1558" y="704" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">Decision + sensitivity</text>
-      <text id="text-082" x="1558" y="724" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">No Test scores</text>
+      <text id="text-079" x="1558" y="662" class="terminal-heading" text-anchor="middle" data-container="workflow-node-6">Chosen Model</text>
+      <text id="text-080" x="1558" y="684" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">Gaze Random Forest</text>
+      <text id="text-081" x="1558" y="704" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">Val Macro F1 = 0.6244</text>
+      <text id="text-082" x="1558" y="724" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">Test result unknown</text>
     </g>
   </g>
   <g id="band-4-summary">
-    <text id="text-083" x="30" y="792" class="footer" data-container="canvas">Gaze forest selected (F1 0.6244); fixed early-fusion masking altered Validation F1; Test withheld.</text>
+    <text id="text-083" x="30" y="792" class="footer" data-container="canvas">Gaze Random Forest leads Validation; between-person variation and held-out Test performance remain open.</text>
   </g>
 </svg>
