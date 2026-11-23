@@ -74,7 +74,7 @@
       <rect id="section-label-box" x="38" y="272" width="238" height="32" rx="9" fill="#173453" stroke="#173453" stroke-width="1.5"/>
       <text id="text-023" x="157" y="293" class="section-label" text-anchor="middle" data-container="section-label-box">MODEL SELECTION</text>
       <rect id="focus-card" x="38" y="312" width="238" height="215" rx="10" fill="#F7FAFD" stroke="#DFEAF0" stroke-width="1.5"/>
-      <text id="text-024" x="54" y="344" class="focus-heading" data-container="focus-card">DEVELOPMENT RESULT</text>
+      <text id="text-024" x="54" y="344" class="focus-heading" data-container="focus-card">SELECTION RESULT</text>
       <text id="text-025" x="54" y="389" class="focus-body" data-container="focus-card">Gaze Random Forest</text>
       <text id="text-026" x="54" y="416" class="focus-body" data-container="focus-card">Macro F1 = 0.6244</text>
       <text id="text-027" x="54" y="443" class="focus-body" data-container="focus-card">Gated GRU = 0.6107</text>
