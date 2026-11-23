@@ -1,14 +1,14 @@
 # EEG–Eye-Tracking Multimodal Research | ZuCo 2.0
 
-![Six-stage ZuCo 2.0 EEG and eye-tracking study workflow, paired-window preparation, model comparison and reserved Test boundary](images/study_overview.svg)
+![Six-stage EEG–eye-tracking workflow with frozen model selection and held-out Test evaluation](images/study_overview.svg)
 
-*Figure 1. One six-stage workflow for the 18-person ZuCo 2.0 study: source audit, EEG–gaze alignment, feature construction, classical and temporal comparisons, and Validation-only model selection. The selected Gaze Random Forest precedes any final Test evaluation; the four Test participants remain unscored.*
+*Figure 1. The six-stage ZuCo 2.0 study, from 36 source runs through paired features, model comparison and independent final Test. Gaze Random Forest was selected by Validation before it was scored on the four-person Test.*
 
-**Aim:** Determine whether combining EEG and gaze improves discrimination of source-defined **Normal Reading (NR)** and **Task-Specific Reading (TSR)** conditions compared with the strongest EEG-only or gaze-only model, using matched windows and participant-disjoint development data. **Notebooks 01–06 have completed the 18-person Validation-development workflow**: 36 source runs, 630 paired windows and ten fixed candidates. **Gaze Random Forest** was selected on 99 Validation windows from three people (Macro F1 **0.6244**, Balanced Accuracy **0.6231**, Accuracy **0.6465**). No Test performance or improvement from fusion over the strongest unimodal candidate has been established.
+**Aim:** Compare EEG-only, gaze-only and EEG–gaze fusion models for the original **Normal Reading (NR)** versus **Task-Specific Reading (TSR)** labels using participant-disjoint data. The six notebooks executed on **18 people, 36 source runs and 630 paired windows**. Ten predefined candidates were ranked on three-person Validation; **Gaze Random Forest** was frozen at Validation Macro F1 **0.6244** and then scored on four independent Test participants, achieving **Macro F1 0.4997** and **Accuracy 0.5250**.
 
 **Independence:** This is a separate ZuCo 2.0 study within the repository. Reusable infrastructure may be shared, but no GazeBase measurements, participant splits, model results or processed features are imported from Eye-Tracking Foundations or Eye-Movement Modelling.
 
-**Current evidence:** The 44 committed `01_*`–`06_*` outputs belong to the same expanded 18-person experiment. The historical six-person pilot is superseded as the current evaluation. The frozen Test partition contains **four other people and 160 windows**, none scored in this development run.
+**Current evidence:** **49 committed stage outputs** cover the single expanded 18-person experiment, including five final Test artefacts from **160 windows and four participants**. The historical six-person pilot is superseded. The Test was scored only after the Validation selection, with no re-selection or refitting.
 
 ## 1. Dataset and Experimental Protocol
 
@@ -25,13 +25,13 @@
 | Group separation | All runs and windows for one person remain in exactly one Train, Validation or Test partition; IDs, paths, task and role are never predictors |
 | Frozen partition | Seed **17**, retaining the six original pilot roles: **11 Train people / 371 windows**, **3 Validation people / 99 windows**, **4 reserved Test people / 160 windows** |
 | Model selection | Fixed-label **Validation Macro F1**, then Balanced Accuracy, then predefined candidate priority; selection recorded in `06_model_selection.csv` |
-| Final evaluation | `RUN_FINAL_TEST=False`. The selected configuration is saved, but there are **no Test predictions, Test metrics or independent external results** |
+| Final evaluation | **`RUN_FINAL_TEST=True`** for the recorded final run; **160 Test windows from four independent people**, primary Macro F1 **0.4997**, Accuracy and Balanced Accuracy **0.5250**; not external validation |
 
 NR and TSR differ in source instructions and may differ in stimulus/text characteristics. Task classification cannot by itself isolate cognitive processing. BIDS timebase alignment does not independently verify EEG–EyeLink clock drift or gaze calibration. A cohort or feature-definition change requires reviewing downstream compatibility before reusing current model scores.
 
 ## 2. Experimental Programme
 
-The six notebooks form **one** multimodal experiment, not six separate studies. All six executed and produced the current Validation-development evidence; the final held-out Test is a separate, presently unexecuted step.
+The six notebooks form **one** multimodal experiment, not six separate studies. Notebooks 01–05 produced the frozen development data and models; Notebook 06 completed the Validation selection and the independently held-out final Test without changing the selected candidate.
 
 | Notebook | Main experiment and observed evidence | Owned current outputs |
 | --- | --- | --- |
@@ -40,7 +40,7 @@ The six notebooks form **one** multimodal experiment, not six separate studies. 
 | [03 — Features and Neurophysiology](code/notebooks/03_preprocessing_features_and_neurophysiology.ipynb) | **630 aligned rows**, eight finite mean predictors, two **(630, 6, 4)** arrays, zero extraction exclusions; exploratory raw fixation diagnostic | Seven `03_*` files: feature table, temporal NPZ, quality/exclusion tables and two plots |
 | [04 — Classical Baselines and Fusion](code/notebooks/04_unimodal_baselines_and_classical_fusion.ipynb) | Seven candidates, **693 common-window Validation predictions**; best classical model is Gaze Random Forest (Macro F1 **0.6244**) | Twelve `04_*` files: six fitted pipelines, fusion weights, metrics/predictions and two plots |
 | [05 — Temporal and Advanced Fusion](code/notebooks/05_temporal_and_advanced_fusion.ipynb) | Three GRUs, **297 Validation predictions**; Gated Fusion GRU leads this family (Macro F1 **0.6107**) | Nine `05_*` files: three checkpoints, Train scaling, histories, predictions, metrics and curves |
-| [06 — EEG–Eye-Tracking Model Selection](code/notebooks/06_robustness_and_final_evaluation.ipynb) | **990 matched predictions across ten candidates**; frozen Gaze Random Forest choice, 30 model/person rows and fixed early-fusion masking; **Test not run** | Four `06_*` files: selection, person metrics, sensitivity and Validation evidence plot |
+| [06 — EEG–Eye-Tracking Model Selection](code/notebooks/06_robustness_and_final_evaluation.ipynb) | **990 Validation and 1,600 Test predictions**; frozen Gaze Random Forest selection, four-person Test Macro F1 **0.4997**, person-level metrics and clustered uncertainty | **Nine** `06_*` files: four development and five final Test outputs |
 
 One editable [study-wide workflow](images/study_overview.svg) appears above. Each notebook also has its **own** stage-specific scientific illustration in [`images/`](images/), retained beside the relevant notebook content rather than repeatedly embedded in this README.
 
@@ -67,16 +67,18 @@ One editable [study-wide workflow](images/study_overview.svg) appears above. Eac
 
 **Secondary masking check:** For the fixed early-fusion logistic model, Validation Macro F1 was **0.4518** with both modalities, **0.5343** with EEG masked and **0.4907** with gaze masked. The Train-fitted imputer was unchanged and the model was not retrained. This describes sensitivity to modified inputs, not causal modality importance or a reason to revise the selected model.
 
-No held-out Test score is available; final model generalisation remains unmeasured. Detailed calculations and qualifications are in [Research Methods and Evidence](RESEARCH_METHODS_AND_EVIDENCE.md).
+**Held-out Test (Notebook 06):** The frozen Gaze Random Forest achieved **Macro F1 0.4997**, **Balanced Accuracy 0.5250** and **Accuracy 0.5250** on **160 windows from four Test people** (80 NR, 80 TSR). Its confusion matrix is **60/80 NR correctly classified** and **24/80 TSR correctly classified**. Per-person Macro F1 was **0.5238** (`sub-YAC`), **0.3333** (`sub-YAG`), **0.4505** (`sub-YMD`) and **0.3333** (`sub-YRP`). A 500-resample participant-cluster bootstrap gives a descriptive **95% percentile interval of 0.3333–0.5616** for Macro F1; four clusters provide limited precision.
+
+**Secondary Test comparisons:** Equal-weight Late Fusion scored **0.5204** and Gated Fusion GRU **0.5157** Macro F1. These are descriptive findings from the same Test windows, **not** replacements for the Validation-selected gaze forest. The full [Test metrics](output/06_test_metrics.csv), [predictions](output/06_test_predictions.csv) and [primary confusion plot](output/06_primary_test_confusion.png) are saved. See [Research Methods and Evidence](RESEARCH_METHODS_AND_EVIDENCE.md) for interpretation.
 
 ## 4. Running and Reviewing the Study
 
-**The current six-notebook Validation-development run is already saved.** Reviewing its evidence does not require re-downloading ZuCo or rerunning model fitting.
+**All six notebooks and the final held-out Test have recorded outputs.** Reviewing the existing results does not require downloading raw ZuCo recordings or retraining the models.
 
-1. Start with the [completed Notebook 06](code/notebooks/06_robustness_and_final_evaluation.ipynb), [saved model decision](output/06_model_selection.csv) and [Validation evidence](output/06_validation_evidence.png). The selection is deliberately independent of Test.
-2. Inspect the [`output/` directory](output/) for the 630-window registry, paired features, ten models' Validation predictions and current quality/sensitivity results.
+1. Start with [Notebook 06](code/notebooks/06_robustness_and_final_evaluation.ipynb), the [frozen model decision](output/06_model_selection.csv), [Validation evidence](output/06_validation_evidence.png) and [held-out Test metrics](output/06_test_metrics.csv). The selected primary was not changed after Test.
+2. Inspect [`output/`](output/) for the 630-window registry, paired features, matched Validation predictions, **1,600 Test predictions**, participant-level Test metrics and the primary confusion matrix.
 3. For original-data reproduction, follow [Notebooks 01–06](code/notebooks/) in numerical order, starting from the source release and frozen participant assignments. Use the study [requirements](requirements.txt) and the existing Colab `setup_colab("eeg_eye_tracking_fusion")` workflow. Raw ZuCo files are **not** bundled with Git; Colab source caches can be ephemeral. Rerunning a stage replaces its stage-owned current outputs and may require rebuilding downstream stages.
-4. Review the [research methods](RESEARCH_METHODS_AND_EVIDENCE.md) for source access, representations, model settings and evaluation limits. The recorded run is **Validation-only**, with final Test scoring disabled.
+4. Review the [research methods](RESEARCH_METHODS_AND_EVIDENCE.md) for source access, final model selection, participant-level results and scientific limitations. The final scoring used the saved models and Train-fitted preprocessing without refitting.
 
 A new cohort, timing correction, feature set or evaluation objective is a separate scientific decision; results must not be silently mixed with the current 18-person experiment.
 
@@ -84,22 +86,22 @@ A new cohort, timing correction, feature set or evaluation objective is a separa
 
 | Location | Purpose |
 | --- | --- |
-| [`code/notebooks/`](code/notebooks/) | Six structured Jupyter notebooks, source audit through Validation selection |
-| [`code/src/`](code/src/) | ZuCo reader, alignment, EEG/gaze features, classical and temporal model functions |
+| [`code/notebooks/`](code/notebooks/) | Six structured Jupyter notebooks, source audit through held-out Test evaluation |
+| [`code/src/`](code/src/) | Source reader, alignment, features, models and the [final-test execution adapter](code/src/run_final_test.py) |
 | [`images/study_overview.svg`](images/study_overview.svg) | One editable six-stage overview diagram for this README |
 | [`images/`](images/) | Six individual editable stage figures used in their notebooks |
-| [`output/`](output/) | **44 current outputs**: seven `01_*`, five `02_*`, seven `03_*`, twelve `04_*`, nine `05_*` and four `06_*` |
+| [`output/`](output/) | **49 current outputs**: seven `01_*`, five `02_*`, seven `03_*`, twelve `04_*`, nine `05_*` and nine `06_*` |
 | [`requirements.txt`](requirements.txt) | Study-specific dependencies |
 | [`tests/test_eeg_eye_tracking_fusion.py`](../tests/test_eeg_eye_tracking_fusion.py) | Synthetic research-contract checks; not original-data reproduction |
 | [`README.md`](README.md) | Concise study entry point and results |
 | [`RESEARCH_METHODS_AND_EVIDENCE.md`](RESEARCH_METHODS_AND_EVIDENCE.md) | Full protocol, model settings, saved evidence and interpretation |
 
-Original BrainVision EEG/EyeLink recordings remain outside ordinary Git history. Output files hold the compatible 18-person experiment; the earlier six-person pilot is historical Git evidence, not an alternative active output directory.
+Original BrainVision EEG/EyeLink recordings remain outside ordinary Git history. The completed final Test was executed from the committed feature arrays and saved models through [GitHub Actions](../.github/workflows/eeg-eye-final-test.yml); the earlier six-person pilot remains historical Git evidence.
 
 ## 6. Interpretation and Scope
 
-**The six-stage ZuCo 2.0 Validation-development workflow is complete, but the study's reserved final Test has not been scored.** Across ten fixed candidates and 99 matched Validation windows from three people, **Gaze Random Forest** was the prespecified development selection (Macro F1 **0.6244**). Gated Fusion GRU was the strongest fusion candidate (**0.6107**). Thus the current evidence **does not show a Validation advantage for EEG–gaze fusion over the strongest gaze-only model**. It does not establish that fusion is harmful or that gaze will dominate on new people.
+**The six-stage ZuCo 2.0 study now includes final held-out Test results.** Gaze Random Forest was selected from ten candidates on three-person Validation (Macro F1 **0.6244**); on four independent Test people it achieved Macro F1 **0.4997** and Balanced Accuracy **0.5250**. The Test score is lower than the development score. The best fusion candidate on Validation, Gated Fusion GRU (**0.6107**), did not exceed the gaze forest there. Its secondary Test Macro F1 was **0.5157**, compared with **0.5204** for Late Fusion; neither Test ranking changes the original model choice.
 
-Interpretation is limited by three independent Validation people, repeated windows, unequal run support, possible stimulus/task differences, uncertain gaze calibration and inter-device drift, ocular artefacts, and an uncorrected raw fixation-locked EEG offset. The raw diagnostic is **not** a validated fixation-related potential or explanation of cognition. No cross-session, external, prospective or clinical generalisation has been established.
+Interpretation remains limited by **only four Test people**, correlated windows, uneven run support, possible reading-task/stimulus differences, uncertain gaze calibration and inter-device drift, ocular artefacts, and an uncorrected raw fixation-locked EEG offset. The raw diagnostic is **not** a validated fixation-related potential or a cognitive explanation. This is a within-ZuCo held-out Test, **not external, prospective or clinical validation**.
 
 **Source attribution:** Hollenstein, Tröndle, Zhang and Langer (2020), [*ZuCo 2.0: A Dataset of Physiological Recordings During Natural Reading and Annotation*](https://aclanthology.org/2020.lrec-1.18/); [NEMAR dataset DOI](https://doi.org/10.82901/nemar.nm000279). The original dataset reports [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) terms; repository code has its separate licence.
