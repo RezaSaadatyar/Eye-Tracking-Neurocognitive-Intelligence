@@ -22,7 +22,7 @@ The archive is offered under **CC BY-NC-SA 4.0**. Raw source images and annotati
 
 ## 3. Data Preparation and Representations
 
-**Notebook 01:** inventory official source files and their provenance, with relative paths, types and sizes; inspect actual MATLAB/image schema before implementing a reusable parser.
+**Notebook 01 (implemented, not yet run on original data):** explicitly locate/download the publisher archive, validate and safely extract ZIP/TAR entries, inventory observed source files, identify participant/day support, inspect representative MATLAB variable headers and publisher evaluation/annotation-list metadata, and save a proposed evaluation protocol. The source metadata reader is [mpiigaze_io.py](code/src/mpiigaze_io.py). These operations do **not** verify image-level gaze targets or constitute a completed evaluation.
 
 **Notebook 02:** link image records to valid 3D labels, preserve participant/day/image/eye identifiers, audit invalid images and vectors, clarify geometry orientation and left/right transformations, and store compact reproducible sample and fold tables. No arbitrary hard-coded image or label dimensions are permitted before source inspection.
 
@@ -50,7 +50,7 @@ Each model must use the same outer test person and compatible source sample iden
 
 ## 6. Results and Comparative Analysis
 
-**No experimental results yet.** This new study contains its planned notebook sequence and a small executable file-inventory/geometry-contract foundation. There are no original-image angular-error values, trained checkpoints, outer-fold prediction tables, rankings or conclusions about any model's advantage.
+**No original-data results yet.** Notebook 01 now implements source acquisition, provenance and representative MATLAB-header checks, but it has **not** been run against the original MPIIGaze distribution in the current repository. No image/gaze label joins, trained checkpoints, outer-fold predictions, angular errors or model rankings are available.
 
 Once executed, report the observed eligible cohort, each model's per-person predictions, mean/median angular error in degrees, comparison to the strongest valid baseline, failure cases and uncertainty. Do not copy MPIIGaze published benchmark numbers into this study's result columns.
 
@@ -62,13 +62,13 @@ Potential confounding includes repeated days/images for one person, unverified c
 
 ## 8. Current Outputs and Reproducibility
 
-The repository now contains five numbered notebook starters, a study-specific angular-error utility, explicit dependency guidance and the two study documents. **No original data or model predictions are committed**. Notebook 01 can create `01_file_inventory.csv` from locally provided source files.
+The repository contains **one implemented Notebook 01 source-audit workflow** and four downstream notebook starters, source-specific archive/MAT utilities, the angular-error helper and the two study documents. Synthetic tests verify safe source inventory/extraction, not original-data validity. **No original MPIIGaze data or model predictions are committed.** The source-audit notebook creates stage-owned metadata and a figure only after it has opened original source files.
 
 Intended stage-specific files, all **planned until genuinely produced**:
 
 | Producer | Intended files and consumers |
 | --- | --- |
-| 01 | `01_file_inventory.csv`, source schema notes for Stage 02 |
+| 01 | `01_file_inventory.csv`, `01_participant_support.csv`, `01_mat_schema.csv`, `01_evaluation_list_inventory.csv`, `01_protocol.json`, `01_source_inventory.png` (produced when the original archive is available); source verification for Stage 02 |
 | 02 | `02_sample_index.csv`, `02_fold_assignments.csv`, image quality plot for 03–05 |
 | 03 | `03_baseline_outer_predictions.csv`, baseline fold metrics for 05 |
 | 04 | `04_neural_outer_predictions.csv`, training history and fitted weights for 05 |
@@ -78,8 +78,8 @@ Use the established Colab repository setup and the study-level `output/` directo
 
 ## 9. Discussion, Limitations and Future Work
 
-The planned study extends this programme from already-recorded gaze/EEG signals to **camera-image gaze prediction**, with its own 3D target frame and metrics. The present status is **architecture initialised**, not implemented modelling or evaluated generalisation.
+The planned study extends this programme from already-recorded gaze/EEG signals to **camera-image gaze prediction**, with its own 3D target frame and metrics. The present status is **source-audit code implemented but original-data execution unverified**; modelling and generalisation evaluation remain future stages.
 
-The principal early limitations are uninspected source file conventions, unresolved annotated-subset count definitions, participant-level sample dependence, unknown compute demand of neural LOPO, and dataset-specific licensing. The immediate development step is **Notebook 01**: acquire authorised source files locally, inspect actual schema and confirm the sample/target/fold design. This evidence must precede claims about cohort size or model accuracy.
+The principal early limitations are uninspected source file conventions, unresolved annotated-subset count definitions, participant-level sample dependence, unknown compute demand of neural LOPO, and dataset-specific licensing. The immediate operational step is to **execute Notebook 01 on an authorised local MPIIGaze archive**, inspect its actual file and MATLAB schemas, then implement the sample/target coordinate and fold contracts in Notebook 02. This evidence must precede claims about cohort size or model accuracy.
 
 **Reference:** Zhang, X., Sugano, Y., Fritz, M. and Bulling, A., MPIIGaze: Real-World Dataset and Deep Appearance-Based Gaze Estimation, IEEE TPAMI. [DOI](https://doi.org/10.1109/TPAMI.2017.2778103).
