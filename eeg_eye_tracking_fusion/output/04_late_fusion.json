@@ -1,8 +1,0 @@
-{
-  "weight_eeg": 0.5,
-  "weight_gaze": 0.5,
-  "components": [
-    "eeg_logistic",
-    "gaze_logistic"
-  ]
-}

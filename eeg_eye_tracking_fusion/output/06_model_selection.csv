@@ -1,2 +1,0 @@
-selected_model,validation_macro_f1,validation_n_people,test_used_in_selection,run_mode,source_people,dataset_version
-gaze_logistic,0.8861689106487147,1,False,development,6,v1.0.0
