@@ -1,9 +1,6 @@
 name: ZuCo EEG-Eye Final Test
 
 on:
-  push:
-    paths:
-      - '.github/workflows/eeg-eye-final-test.yml'
   workflow_dispatch:
 
 permissions:
@@ -17,7 +14,7 @@ jobs:
   frozen-test-evaluation:
     runs-on: ubuntu-latest
     timeout-minutes: 45
-    if: github.ref == 'refs/heads/main'
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
     env:
       MPLBACKEND: Agg
       OMP_NUM_THREADS: '2'
@@ -77,8 +74,8 @@ jobs:
             eeg_eye_tracking_fusion/output/06_cluster_bootstrap.csv \
             eeg_eye_tracking_fusion/output/06_primary_test_confusion.png
           if git diff --cached --quiet; then
-            echo 'No output change was generated; refusing an empty publication'
-            exit 1
+            echo 'Verification completed with no changes to recorded outputs'
+            exit 0
           fi
           git commit -m 'Record frozen 18-person ZuCo held-out Test evaluation'
           git push origin HEAD:main
