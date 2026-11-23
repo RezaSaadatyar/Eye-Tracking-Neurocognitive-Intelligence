@@ -1,6 +1,6 @@
 # EEG–Eye-Tracking Multimodal Research | Research Methods and Evidence
 
-**Project:** EEG–Eye-Tracking Multimodal Research (Project 3) within Eye-Tracking & Neurocognitive Intelligence. **Target:** ZuCo 2.0 source-defined Normal Reading (NR) versus Task-Specific Reading (TSR). **Scope:** 18 participants, 36 original NR/TSR Run-1 recordings, 630 paired windows, ten fixed model candidates and a participant-disjoint **11 Train / 3 Validation / 4 reserved Test** split. The completed six-notebook development workflow selected **Gaze Random Forest** using 99 Validation windows from three people (Macro F1 **0.6244**); the 160-window Test remains **unscored**. The 44 current stage outputs document this experiment. See [README](README.md) and the [single study workflow](images/study_overview.svg).
+**Project:** EEG–Eye-Tracking Multimodal Research (Project 3) within Eye-Tracking & Neurocognitive Intelligence. **Target:** ZuCo 2.0 source-defined Normal Reading (NR) versus Task-Specific Reading (TSR). **Scope:** 18 participants, 36 original NR/TSR Run-1 recordings, 630 paired windows, ten fixed model candidates and a participant-disjoint **11 Train / 3 Validation / 4 reserved Test** split. The six notebooks selected **Gaze Random Forest** on three-person Validation (Macro F1 **0.6244**) and scored the frozen candidate on **160 windows from four independent Test people** (Macro F1 **0.4997**, Accuracy **0.5250**). The **49 current stage outputs** document this experiment. See [README](README.md) and the [single study workflow](images/study_overview.svg).
 
 ## 1. Research Objective and Scope
 
@@ -8,7 +8,7 @@ The primary question is whether **paired EEG and eye-movement features** improve
 
 The study examines five connected questions: can original EEG and gaze be paired on a defensible timebase; can eligible windows yield comparable classical and temporal representations; how do simple and single-modality baselines perform; does early, late or gated fusion provide a Validation advantage; and how consistent are model rankings and fixed-input perturbations across independent people?
 
-The implemented six-stage programme provides **Validation-based model selection**, not an independently estimated final Test score. The study does not validate physiological fixation-related potentials, perform causal modality attribution or establish cross-device, cross-session or external-dataset generalisation. No GazeBase-derived measurements, labels or outcomes are transferred from the other eye-tracking studies in this repository.
+The implemented six-stage programme includes **Validation-based selection followed by held-out Test evaluation without retraining or re-selection**. Its Test result is within the same ZuCo 2.0 source, not external validation. The study does not validate physiological fixation-related potentials, perform causal modality attribution or establish cross-device or cross-session generalisation. No GazeBase-derived measurements, labels or outcomes are transferred from the other eye-tracking studies in this repository.
 
 ## 2. Data Sources, Cohort and Target Definitions
 
@@ -61,9 +61,9 @@ A **Train-only**, fixation-locked *raw single-channel* EEG average exhibits an *
 
 ### 4.1 Train, Validation and Test roles
 
-Train participants fit classical estimators, imputation/scaling, neural parameters and temporal feature scaling. The **three Validation participants** inform GRU checkpoint selection and the cross-family model decision. All ten candidates were compared on the **same 99 Validation window IDs and class labels**, generating **990 model/window prediction records**. The final four Test participants and **160 Test windows** were not used to select, tune, score or revise the development winner.
+Train participants fit classical estimators, imputation/scaling, neural parameters and temporal feature scaling. The **three Validation participants** inform GRU checkpoint selection and the cross-family model decision. All ten candidates were compared on the **same 99 Validation window IDs and class labels**, generating **990 model/window prediction records**. The final four Test participants and **160 Test windows** were not used in fitting, checkpoint choice or Validation-based selection; they were scored only after the development winner was frozen.
 
-The current Stage-06 code executed in `run_mode=development` with **`RUN_FINAL_TEST=False`** and saved `test_used_in_selection=False`. There are no current final Test predictions, confusion matrices, scores or participant-level Test intervals. Future Test work requires a separately authorised execution, and the frozen Validation choice must not be retrospectively changed because of an observed Test result.
+Stage 06 first recorded the development choice **`selected_model=gaze_forest`** with **`test_used_in_selection=False`**. The authorised final execution set **`RUN_FINAL_TEST=True`** and recorded **`run_mode=final`**, without altering the selected model. It evaluated the saved classical pipelines and GRU checkpoints, producing 1,600 Test predictions for ten candidates on 160 matching windows. Test scores were not used to choose a new model or adjust preprocessing.
 
 ### 4.2 Primary metrics and fixed selection rule
 
@@ -89,7 +89,7 @@ Classical and temporal candidates have different representations but identical p
 | 04 | Equal-weight Late Fusion | Arithmetic mean of fixed EEG and gaze logistic probabilities; **0.5/0.5** weights |
 | 05 | Gaze GRU / EEG GRU | Six-bin single-modality sequence; hidden width **16**, dropout **0.2** |
 | 05 | Gated Fusion GRU | Paired six-bin EEG/gaze sequences; sigmoid-gated modality blending; no causal interpretation of gates |
-| 06 | Selection and fixed masking | Ten Validation candidates, pooled Macro F1 and tie-breaks; feature masking in fitted **early-fusion logistic** model only; Test disabled |
+| 06 | Frozen selection and final Test | Ten Validation candidates and fixed ranking; secondary early-fusion masking on Validation; final Test scoring on four held-out people without model refitting |
 
 **Temporal training:** The three compact GRUs use AdamW with learning rate **0.001**, weight decay **0.001**, batch size **64**, up to **15 epochs**, early stopping patience **4** and seed **17**. Train-derived temporal scaling is saved in `05_scaling.npz`. Gaze and EEG GRUs each have **1,090 parameters**; gated fusion has **2,354**. Training produced **15/7/14** recorded epochs respectively, with best checkpoints selected at **12/3/10**.
 
@@ -135,7 +135,26 @@ Stage 06 reconciled **990 matched Validation predictions** across all ten candid
 
 The selected gaze forest exhibited substantial person-level variation: **0.7654** for `sub-YDR` (31 windows), **0.6306** for `sub-YRH` (38), and **0.3478** for `sub-YTL` (30). Pooling 99 correlated windows does not make this a large independent sample.
 
-**Observed result:** Adding EEG did **not** improve the best pooled Validation Macro F1 over the strongest gaze-only candidate in this particular development experiment. This does not establish that EEG is generally uninformative, that fusion is harmful or that the same ordering will hold on Test participants.
+**Validation finding:** Adding EEG did **not** improve the best pooled Validation Macro F1 over the strongest gaze-only candidate in this development experiment. This does not establish that EEG is generally uninformative or that the same ordering holds on other people.
+
+### 6.5 Final held-out Test of the frozen model (Notebook 06)
+
+The **Gaze Random Forest** remained the primary model selected by the fixed Validation rule. Its **160 Test windows** came from four independent people, with 80 NR and 80 TSR windows. The same trained pipeline and feature order were applied without refitting. On these Test observations, the primary achieved **Accuracy 0.5250**, **Macro F1 0.4997** and **Balanced Accuracy 0.5250**. Its [Test confusion matrix](output/06_primary_test_confusion.png) contains **60 correct NR, 20 NR labelled TSR, 56 TSR labelled NR and 24 correct TSR**. Thus TSR recall was **24/80 = 0.30**.
+
+| Candidate (Test, secondary except primary) | Macro F1 | Balanced Accuracy | Accuracy |
+| --- | ---: | ---: | ---: |
+| **Gaze Random Forest (frozen primary)** | **0.4997** | **0.5250** | **0.5250** |
+| Equal-weight Late Fusion | 0.5204 | 0.5750 | 0.5750 |
+| Gated Fusion GRU | 0.5157 | 0.5750 | 0.5750 |
+| Early-Fusion Logistic Regression | 0.5014 | 0.5625 | 0.5625 |
+| Gaze GRU | 0.4910 | 0.5313 | 0.5313 |
+| Gaze Logistic Regression | 0.4764 | 0.5125 | 0.5125 |
+| EEG Random Forest | 0.4764 | 0.5500 | 0.5500 |
+| EEG Logistic Regression | 0.3861 | 0.4813 | 0.4813 |
+| Class Prior | 0.3333 | 0.5000 | 0.5000 |
+| EEG GRU | 0.3333 | 0.5000 | 0.5000 |
+
+The [complete Test metrics](output/06_test_metrics.csv) and [1,600 matched predictions](output/06_test_predictions.csv) preserve the original candidate identities. Although Late Fusion and Gated Fusion GRU score slightly above the preselected primary on Test, these are **secondary comparisons**, not grounds for changing the selected model. The lower primary Test score relative to Validation (0.4997 versus 0.6244) limits claims of strong between-person generalisation.
 
 ## 7. Robustness, Uncertainty and Additional Analyses
 
@@ -153,15 +172,15 @@ Both artificial masks improved Macro F1 for this relatively weak *particular* fi
 
 ### 7.2 Independent-person uncertainty and unresolved signal issues
 
-Only **three people** support Validation model choice, and their gaze forest scores differ markedly. The four Test people remain reserved and unscored. A participant-clustered interval or subgroup analysis on such a small independent sample would be exploratory; no independent population confidence claim is established by window counts.
+Only **three people** supported Validation model choice and **four independent people** contributed to the final Test, each with 40 windows (20 NR, 20 TSR). The selected gaze forest's Test participant Macro F1 values were **0.5238** (`sub-YAC`), **0.3333** (`sub-YAG`), **0.4505** (`sub-YMD`) and **0.3333** (`sub-YRP`). A **500-resample participant-cluster bootstrap** produced a descriptive Macro F1 **95% percentile interval of 0.3333–0.5616**. With only four clusters, the interval is coarse and must not be treated as a precise population estimate.
 
 BIDS timing does not verify independent EEG–EyeLink drift; finite eye coordinates do not validate calibration. The Train-constant finite-coordinate fraction cannot discriminate source task. EEG may carry ocular contamination. Unequal run lengths, repeated windows and NR/TSR stimulus/instruction differences restrict interpretation. The raw fixation-locked single-channel diagnostic has an uncorrected **approximately −10,100 µV** offset and cannot support FRP inference without reference, baseline, event overlap and artefact investigation.
 
-No independent Test, cross-session, external-dataset or prospective robustness evaluation has been performed for the expanded experiment.
+The within-ZuCo held-out Test has been completed. Independent **external-dataset, cross-session and prospective** validation have not been performed.
 
 ## 8. Current Outputs and Reproducibility
 
-All **44** stage-owned results belong to the same current **18-person, 630-window** run, in [`output/`](output/). The former six-person pilot survives in Git history but does not define an alternative set of current files.
+All **49** stage-owned results belong to the same current **18-person, 630-window** study, in [`output/`](output/). The former six-person pilot survives in Git history but does not define an alternative set of current files.
 
 | Stage | Current owned evidence | Key producer-to-consumer relationship |
 | --- | --- | --- |
@@ -170,20 +189,20 @@ All **44** stage-owned results belong to the same current **18-person, 630-windo
 | 03 · Features (7 files) | `03_features.csv`, `03_temporal_sequences.npz`, feature/modality/exclusion QA and two plots | Paired mean rows and two six-bin tensors remain ID-aligned |
 | 04 · Classical (12 files) | Six `.joblib` pipelines, `04_late_fusion.json`, `04_validation_metrics.csv`, 693 predictions, person metrics and plots | Train-only fitting; seven same-window Validation results |
 | 05 · Temporal (9 files) | Three `.pt` GRU checkpoints, `05_scaling.npz`, histories, 297 predictions, metrics and plot | Train-derived temporal scaling and checkpoint selection |
-| 06 · Model selection (4 files) | `06_model_selection.csv`, `06_validation_person_metrics.csv`, `06_validation_sensitivity.csv`, `06_validation_evidence.png` | Ten-model matched Validation choice, no Test results |
+| 06 · Selection and final Test (9 files) | Four development outputs (`06_model_selection.csv`, Validation person metrics, sensitivity and evidence plot) plus `06_test_metrics.csv`, `06_test_predictions.csv`, `06_person_metrics.csv`, `06_cluster_bootstrap.csv` and `06_primary_test_confusion.png` | Frozen Validation selection, 1,600 Test predictions, per-person metrics and selected-primary uncertainty |
 
-All six notebooks have executed on the 18-person original-data workflow, and their saved outputs are committed. This establishes recorded results and internal source/identifier reconciliation, **not** an independent reproduction. Static or synthetic checks alone cannot reproduce model fitting on the original ZuCo recordings.
+Notebooks 01–05 recorded original-data acquisition, feature extraction and Train/Validation model fitting on the 18-person cohort. The final branch of Notebook 06 was subsequently executed in [GitHub Actions](../.github/workflows/eeg-eye-final-test.yml) using its existing scientific cells and the saved features, fitted pipelines and GRU checkpoints. Model/participant/window identities, class probabilities and all ten Test metrics were checked against saved predictions before publication. This is **recorded held-out inference from committed artefacts**, not an independent re-execution of original-data acquisition or model fitting.
 
 The study requires the [original ZuCo release](https://www.nemar.org/dataset/nm000279), [study dependencies](requirements.txt) and the established Colab `setup_colab("eeg_eye_tracking_fusion")` workflow. Source recordings may have to be downloaded again if a Colab cache disappears. A reproducible original-data run proceeds through [Notebooks 01–06](code/notebooks/) in numerical order; each stage overwrites its own current named outputs. Changing cohort, roles, alignment, feature definitions or representation shapes can invalidate downstream models and must trigger a dependency review.
 
-The [README](README.md) contains the single six-stage overview; individual notebooks retain their editable five-band figures in [`images/`](images/). The recorded Stage-06 execution used `RUN_FINAL_TEST=False` and produced no Test scores.
+The [README](README.md) contains the single six-stage overview; individual notebooks retain their editable five-band figures in [`images/`](images/). The saved final Notebook-06 code uses **`RUN_FINAL_TEST=True`**; its [headless execution adapter](code/src/run_final_test.py) permits running the same scientific cells in GitHub Actions without the Colab-only checkout and download steps.
 
 ## 9. Discussion, Limitations and Future Work
 
-The six-stage development workflow demonstrates an end-to-end **source-audited EEG–gaze pairing and matched Validation comparison**. In the expanded ZuCo 2.0 experiment, Gaze Random Forest was chosen using three independent Validation people and achieved pooled Macro F1 **0.6244**; the strongest fusion GRU achieved **0.6107**. This is a negative or mixed result for the proposed *added value of EEG over the strongest gaze comparator* in the specific Validation setting, rather than a claim that multimodal learning fails generally.
+The six-stage study now records both **source-audited paired EEG–gaze modelling and final participant-disjoint Test evaluation**. Gaze Random Forest was selected by three-person Validation (Macro F1 **0.6244**) and then achieved Macro F1 **0.4997** on four Test people. Although equal-weight Late Fusion and Gated Fusion GRU scored **0.5204** and **0.5157** on Test, these are post-selection comparisons, not new winners. The primary Test result is only modestly above the equal-class accuracy baseline of 0.5; this is a limited within-source task result, not proof of multimodal or general cognitive decoding.
 
-The central limitations are the small number of independent Validation participants, repeated and unevenly distributed windows, source task/text confounding, incomplete EEG/gaze calibration and clock-drift evidence, potential ocular EEG artefacts, the constant gaze-validity predictor and the unvalidated raw fixation-locked EEG diagnostic. No causal, cognitive, clinical, external or population-wide claim follows from the available results.
+The central limitations are **three Validation and four Test participants**, correlated windows, source task/text confounding, incomplete gaze-calibration and clock-drift evidence, potential ocular EEG artefacts, the constant gaze-validity predictor and the unvalidated raw fixation-locked EEG diagnostic. The clustered interval is exploratory because only four Test participants were available. No causal, cognitive, clinical, external or population-wide claim follows from these results.
 
-**Current boundary:** the 18-person Validation-development study has completed Notebooks **01–06**, with matched Validation predictions for ten candidates and a fixed development winner. The four-person Test remains unscored. A future Test evaluation should retain the selected configuration and distinguish any new analyses of stimuli, timing, FRP or external data from this development benchmark.
+**Current boundary:** Notebooks **01–06** are completed, the development candidate was frozen before held-out scoring, and the four-person Test is now evaluated and documented. Further investigations of stimuli, timing, FRP, cross-session or external data are separate research extensions and must not retroactively alter the recorded Test-selected procedure.
 
 **Source attribution:** Hollenstein, N., Tröndle, M., Zhang, C., & Langer, N. (2020). *ZuCo 2.0: A Dataset of Physiological Recordings During Natural Reading and Annotation*. [LREC 2020](https://aclanthology.org/2020.lrec-1.18/); [NEMAR dataset DOI](https://doi.org/10.82901/nemar.nm000279). BIDS source metadata report [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) terms.
