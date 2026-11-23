@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1700" height="816" viewBox="0 0 1700 816" role="img" aria-labelledby="title desc">
-  <title id="title">02 | EEG–Gaze Alignment and Paired-Window Quality</title>
-  <desc id="desc">Recorded notebook execution of 18-person ZuCo 2.0 BIDS-relative EEG and eye-tracking alignment. Thirty-six original NR/TSR run pairs from 18 participants gave 630 unique 12-second windows, all passing the finite gaze-x/y threshold of 0.60: 371 Train, 99 Validation and 160 reserved Test windows, containing 341 NR and 289 TSR. The shortest sub-YAK NR run contributed one window. The source-level eye StartTime offsets span -0.046 to +0.033 seconds and nominal EEG/eye sample rates are 500 Hz. Drift verification and calibration are not established. At this update the five expanded Stage-02 output files had been generated and zipped inside Colab but not committed to GitHub; tracked Stage-02 CSVs still represent the old six-person pilot. The figure is editable, schematic and does not show physiological signal traces.</desc>
+  <title id="title">02 | EEG–EyeLink Time Alignment and Window Eligibility</title>
+  <desc id="desc">Recorded EEG–EyeLink temporal pairing in 36 ZuCo 2.0 original source runs from 18 people. The streams are placed on a BIDS-relative time axis using their nominal 500-Hz sampling rates and EyeLink StartTime offsets, which span minus 46 to plus 33 milliseconds. Intersecting the available EEG and eye time intervals yields non-overlapping 12-second candidate windows, with a maximum of 20 per run; a window passes if at least 60 percent of x and y samples are finite. All 630 candidates passed and each original participant/task run contributed at least one window. There are 341 NR and 289 TSR windows and 371 Train, 99 Validation and 160 reserved Test windows. Finite coordinates are a narrow availability measure, not a calibration assessment; independent inter-device clock drift remains unverified.</desc>
   <defs>
     <marker id="arr" markerUnits="userSpaceOnUse" markerWidth="6" markerHeight="6" refX="5.5" refY="3" orient="auto">
       <path d="M0 0 L6 3 L0 6 Z" fill="#245E9D"/>
@@ -32,8 +32,8 @@
   </defs>
   <rect id="canvas" x="0" y="0" width="1700" height="816" rx="20" fill="#F4F9FD"/>
   <g id="band-0-header">
-    <text id="text-001" x="30" y="38" class="figure-title" data-container="canvas">02 | EEG–Gaze Alignment and Paired-Window Quality</text>
-    <text id="text-002" x="30" y="67" class="subtitle" data-container="canvas">18 participants | 36 source runs | 630 eligible 12-s windows | clock drift unverified</text>
+    <text id="text-001" x="30" y="38" class="figure-title" data-container="canvas">02 | EEG–EyeLink Time Alignment and Window Eligibility</text>
+    <text id="text-002" x="30" y="67" class="subtitle" data-container="canvas">36 paired source runs | 12-second non-overlapping segments | 630 eligible windows</text>
   </g>
   <g id="band-1-context">
     <rect id="context-container" x="24" y="84" width="1652" height="160" rx="16" fill="#EAF3FA" stroke="#C7D9E6" stroke-width="2"/>
@@ -59,88 +59,88 @@
       <text id="text-006" x="153" y="207" class="source-label" data-container="context-container">NR and TSR runs</text>
     </g>
     <g id="context-module-1">
-      <text id="text-007" x="358" y="115" class="context-heading" data-container="context-container">SOURCE RUNS</text>
-      <text id="text-008" x="358" y="148" class="context-body" data-container="context-container">36 original EEG runs</text>
-      <text id="text-009" x="358" y="174" class="context-body" data-container="context-container">36 paired eye streams</text>
-      <text id="text-010" x="358" y="200" class="context-body" data-container="context-container">NR and TSR per person</text>
+      <text id="text-007" x="358" y="115" class="context-heading" data-container="context-container">ORIGINAL STREAMS</text>
+      <text id="text-008" x="358" y="148" class="context-body" data-container="context-container">36 EEG run recordings</text>
+      <text id="text-009" x="358" y="174" class="context-body" data-container="context-container">36 EyeLink streams</text>
+      <text id="text-010" x="358" y="200" class="context-body" data-container="context-container">18 people · NR and TSR</text>
     </g>
     <g id="context-module-2">
-      <text id="text-011" x="690" y="115" class="context-heading" data-container="context-container">BIDS TIMEBASE</text>
-      <text id="text-012" x="690" y="148" class="context-body" data-container="context-container">500 Hz for both streams</text>
-      <text id="text-013" x="690" y="174" class="context-body" data-container="context-container">Offsets: -0.046 to +0.033 s</text>
-      <text id="text-014" x="690" y="200" class="context-body" data-container="context-container">Common overlap: 36 runs</text>
+      <text id="text-011" x="690" y="115" class="context-heading" data-container="context-container">BIDS TIME ALIGNMENT</text>
+      <text id="text-012" x="690" y="148" class="context-body" data-container="context-container">Nominal 500-Hz streams</text>
+      <text id="text-013" x="690" y="174" class="context-body" data-container="context-container">Eye offset: −46 to +33 ms</text>
+      <text id="text-014" x="690" y="200" class="context-body" data-container="context-container">Intersect shared duration</text>
     </g>
     <g id="context-module-3">
-      <text id="text-015" x="1020" y="115" class="context-heading" data-container="context-container">WINDOW COVERAGE</text>
-      <text id="text-016" x="1020" y="148" class="context-body" data-container="context-container">630/630 passed x/y rule</text>
-      <text id="text-017" x="1020" y="174" class="context-body" data-container="context-container">12 s; max 20 per run</text>
-      <text id="text-018" x="1020" y="200" class="context-body" data-container="context-container">Finite x/y threshold: 0.60</text>
+      <text id="text-015" x="1020" y="115" class="context-heading" data-container="context-container">ELIGIBILITY RULE</text>
+      <text id="text-016" x="1020" y="148" class="context-body" data-container="context-container">12-second windows</text>
+      <text id="text-017" x="1020" y="174" class="context-body" data-container="context-container">Maximum 20 per run</text>
+      <text id="text-018" x="1020" y="200" class="context-body" data-container="context-container">Finite x/y fraction ≥ 0.60</text>
     </g>
     <g id="context-module-4">
-      <text id="text-019" x="1360" y="115" class="context-heading" data-container="context-container">INTERPRETATION</text>
-      <text id="text-020" x="1360" y="148" class="context-body" data-container="context-container">Independent drift unverified</text>
-      <text id="text-021" x="1360" y="174" class="context-body" data-container="context-container">Finite x/y not gaze accuracy</text>
-      <text id="text-022" x="1360" y="200" class="context-body" data-container="context-container">Run durations unequal</text>
+      <text id="text-019" x="1360" y="115" class="context-heading" data-container="context-container">OBSERVED SUPPORT</text>
+      <text id="text-020" x="1360" y="148" class="context-body" data-container="context-container">630 / 630 eligible</text>
+      <text id="text-021" x="1360" y="174" class="context-body" data-container="context-container">341 NR · 289 TSR</text>
+      <text id="text-022" x="1360" y="200" class="context-body" data-container="context-container">36 runs represented</text>
     </g>
   </g>
   <g id="band-2-analysis">
     <rect id="analysis-container" x="24" y="258" width="1652" height="314" rx="16" fill="#EDF6FB" stroke="#B4CFE0" stroke-width="1.5"/>
     <g id="analysis-focus">
       <rect id="section-label-box" x="38" y="272" width="238" height="32" rx="9" fill="#173453" stroke="#173453" stroke-width="1.5"/>
-      <text id="text-023" x="157" y="293" class="section-label" text-anchor="middle" data-container="section-label-box">SCIENTIFIC DESIGN</text>
+      <text id="text-023" x="157" y="293" class="section-label" text-anchor="middle" data-container="section-label-box">TEMPORAL PAIRING</text>
       <rect id="focus-card" x="38" y="312" width="238" height="215" rx="10" fill="#F7FAFD" stroke="#DFEAF0" stroke-width="1.5"/>
-      <text id="text-024" x="54" y="344" class="focus-heading" data-container="focus-card">RECORDED QA</text>
-      <text id="text-025" x="54" y="389" class="focus-body" data-container="focus-card">630 eligible paired</text>
-      <text id="text-026" x="54" y="416" class="focus-body" data-container="focus-card">12-second windows</text>
-      <text id="text-027" x="54" y="443" class="focus-body" data-container="focus-card">341 NR / 289 TSR</text>
-      <text id="text-028" x="54" y="470" class="focus-body" data-container="focus-card">Train 371; Val 99; Test 160</text>
-      <text id="text-029" x="54" y="508" class="qualification" data-container="focus-card">18 independent people</text>
+      <text id="text-024" x="54" y="344" class="focus-heading" data-container="focus-card">COMMON TIME</text>
+      <text id="text-025" x="54" y="389" class="focus-body" data-container="focus-card">EEG sample clock</text>
+      <text id="text-026" x="54" y="416" class="focus-body" data-container="focus-card">Eye StartTime + samples</text>
+      <text id="text-027" x="54" y="443" class="focus-body" data-container="focus-card">Window within overlap</text>
+      <text id="text-028" x="54" y="470" class="focus-body" data-container="focus-card">Same 12-s interval</text>
+      <text id="text-029" x="54" y="508" class="qualification" data-container="focus-card">36 runs with windows</text>
     </g>
     <g id="evidence-panel-1">
       <rect id="evidence-card-1" x="292" y="272" width="324" height="254" rx="12" fill="#FFFFFF" stroke="#B6CFDE" stroke-width="1.5"/>
       <path id="evidence-header-1" d="M303 272 H605 Q616 272 616 283 V305 H292 V283 Q292 272 303 272 Z" fill="#174B70"/>
-      <text id="text-030" x="454.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-1">EEG TIMING</text>
+      <text id="text-030" x="454.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-1">EEG TIME AXIS</text>
       <g id="evidence-content-1" data-slot="scientific-content">
-        <text id="text-031" x="454.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-1">36 original recordings</text>
-        <text id="text-032" x="454.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-1">128 channels; 500 Hz</text>
-        <text id="text-033" x="454.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-1">Shortest EEG: 15.196 s</text>
+        <text id="text-031" x="454.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-1">500-Hz nominal rate</text>
+        <text id="text-032" x="454.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-1">Relative time from onset</text>
+        <text id="text-033" x="454.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-1">36 original recordings</text>
       </g>
     </g>
     <g id="evidence-panel-2">
       <rect id="evidence-card-2" x="630" y="272" width="324" height="254" rx="12" fill="#FFFFFF" stroke="#B6CFDE" stroke-width="1.5"/>
       <path id="evidence-header-2" d="M641 272 H943 Q954 272 954 283 V305 H630 V283 Q630 272 641 272 Z" fill="#174B70"/>
-      <text id="text-034" x="792.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-2">EYE TIMING</text>
+      <text id="text-034" x="792.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-2">EYE TIME AXIS</text>
       <g id="evidence-content-2" data-slot="scientific-content">
-        <text id="text-035" x="792.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-2">36 EyeLink source streams</text>
-        <text id="text-036" x="792.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-2">StartTime offsets mapped</text>
-        <text id="text-037" x="792.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-2">Finite x/y in 630 windows</text>
+        <text id="text-035" x="792.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-2">EyeLink physiology files</text>
+        <text id="text-036" x="792.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-2">StartTime offset included</text>
+        <text id="text-037" x="792.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-2">x/y sampled at 500 Hz</text>
       </g>
     </g>
     <g id="evidence-panel-3">
       <rect id="evidence-card-3" x="968" y="272" width="324" height="254" rx="12" fill="#FFFFFF" stroke="#B6CFDE" stroke-width="1.5"/>
       <path id="evidence-header-3" d="M979 272 H1281 Q1292 272 1292 283 V305 H968 V283 Q968 272 979 272 Z" fill="#174B70"/>
-      <text id="text-038" x="1130.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-3">EVENT CHECKS</text>
+      <text id="text-038" x="1130.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-3">WINDOW POLICY</text>
       <g id="evidence-content-3" data-slot="scientific-content">
-        <text id="text-039" x="1130.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-3">Source onset bounds checked</text>
-        <text id="text-040" x="1130.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-3">BIDS common-timebase rule</text>
-        <text id="text-041" x="1130.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-3">Drift remains unverified</text>
+        <text id="text-039" x="1130.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-3">12 s; no overlap</text>
+        <text id="text-040" x="1130.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-3">At most 20 per run</text>
+        <text id="text-041" x="1130.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-3">Finite x/y ≥ 60%</text>
       </g>
     </g>
     <g id="evidence-panel-4">
       <rect id="evidence-card-4" x="1306" y="272" width="356" height="254" rx="12" fill="#FFFFFF" stroke="#B6CFDE" stroke-width="1.5"/>
       <path id="evidence-header-4" d="M1317 272 H1651 Q1662 272 1662 283 V305 H1306 V283 Q1306 272 1317 272 Z" fill="#174B70"/>
-      <text id="text-042" x="1484.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-4">WINDOW REGISTRY</text>
+      <text id="text-042" x="1484.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-4">OBSERVED WINDOWS</text>
       <g id="evidence-content-4" data-slot="scientific-content">
-        <text id="text-043" x="1484.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-4">630 candidate/eligible</text>
-        <text id="text-044" x="1484.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-4">341 NR and 289 TSR</text>
-        <text id="text-045" x="1484.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-4">36 person/task groups</text>
+        <text id="text-043" x="1484.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-4">630 retained of 630</text>
+        <text id="text-044" x="1484.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-4">371 Train; 99 Val</text>
+        <text id="text-045" x="1484.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-4">160 reserved Test</text>
       </g>
     </g>
     <g id="optional-scientific-note" data-optional="true">
       <rect id="note-strip" x="301" y="540" width="1064" height="25" rx="12" fill="#E0F2EC" stroke="#D3EAE2" stroke-width="1.5"/>
       <circle cx="324" cy="552" r="9" fill="#23749A"/>
       <text id="text-046" x="324" y="556" class="info-mark" text-anchor="middle">i</text>
-      <text id="text-047" x="342" y="556" class="scientific-note" data-container="note-strip">630/630 pass finite x/y; no independent drift or calibration check. New 02_ files await upload.</text>
+      <text id="text-047" x="342" y="556" class="scientific-note" data-container="note-strip">Finite gaze coordinates establish data availability, not gaze calibration or independent clock-drift correction.</text>
     </g>
   </g>
   <g id="band-3-workflow">
@@ -148,67 +148,67 @@
     <g id="workflow-input">
       <rect id="workflow-node-0" x="38" y="613" width="208" height="132" rx="15" fill="#173453" stroke="#173453" stroke-width="1.8"/>
       <text id="text-048" x="142" y="636" class="terminal-id" text-anchor="middle" data-container="workflow-node-0">INPUT</text>
-      <text id="text-049" x="142" y="662" class="terminal-heading" text-anchor="middle" data-container="workflow-node-0">Original Runs</text>
-      <text id="text-050" x="142" y="684" class="terminal-body" text-anchor="middle" data-container="workflow-node-0">18 source participants</text>
-      <text id="text-051" x="142" y="704" class="terminal-body" text-anchor="middle" data-container="workflow-node-0">36 NR/TSR streams</text>
-      <text id="text-052" x="142" y="724" class="terminal-body" text-anchor="middle" data-container="workflow-node-0">BIDS EEG + EyeLink</text>
+      <text id="text-049" x="142" y="662" class="terminal-heading" text-anchor="middle" data-container="workflow-node-0">EEG + EyeLink</text>
+      <text id="text-050" x="142" y="684" class="terminal-body" text-anchor="middle" data-container="workflow-node-0">36 matched source runs</text>
+      <text id="text-051" x="142" y="704" class="terminal-body" text-anchor="middle" data-container="workflow-node-0">BIDS sampling metadata</text>
+      <text id="text-052" x="142" y="724" class="terminal-body" text-anchor="middle" data-container="workflow-node-0">Original NR/TSR tasks</text>
     </g>
     <path id="workflow-connector-0" d="M252 679 H266" fill="none" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
     <g id="workflow-process-1">
       <rect id="workflow-node-1" x="274" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
       <text id="text-053" x="378" y="636" class="workflow-id" text-anchor="middle" data-container="workflow-node-1">01</text>
-      <text id="text-054" x="378" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-1">Audit Rates</text>
-      <text id="text-055" x="378" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-1">500-Hz nominal rates</text>
-      <text id="text-056" x="378" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-1">-46 to +33 ms offsets</text>
-      <text id="text-057" x="378" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-1">Overlap checked: 36 runs</text>
+      <text id="text-054" x="378" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-1">Map Timebases</text>
+      <text id="text-055" x="378" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-1">EEG sample times</text>
+      <text id="text-056" x="378" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-1">Eye relative StartTime</text>
+      <text id="text-057" x="378" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-1">Nominal 500-Hz rates</text>
     </g>
     <path id="workflow-connector-1" d="M488 679 H502" fill="none" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
     <g id="workflow-process-2">
       <rect id="workflow-node-2" x="510" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
       <text id="text-058" x="614" y="636" class="workflow-id" text-anchor="middle" data-container="workflow-node-2">02</text>
-      <text id="text-059" x="614" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-2">Check Events</text>
-      <text id="text-060" x="614" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-2">Original onset metadata</text>
-      <text id="text-061" x="614" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-2">Plausible time bounds</text>
-      <text id="text-062" x="614" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-2">No drift verification</text>
+      <text id="text-059" x="614" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-2">Intersect Runs</text>
+      <text id="text-060" x="614" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-2">Common time interval</text>
+      <text id="text-061" x="614" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-2">Bounded source events</text>
+      <text id="text-062" x="614" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-2">36 usable overlaps</text>
     </g>
     <path id="workflow-connector-2" d="M724 679 H738" fill="none" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
     <g id="workflow-process-3">
       <rect id="workflow-node-3" x="746" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
       <text id="text-063" x="850" y="636" class="workflow-id" text-anchor="middle" data-container="workflow-node-3">03</text>
-      <text id="text-064" x="850" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-3">Build Windows</text>
-      <text id="text-065" x="850" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-3">630 windows of 12 s</text>
+      <text id="text-064" x="850" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-3">Segment Time</text>
+      <text id="text-065" x="850" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-3">12-second non-overlap</text>
       <text id="text-066" x="850" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-3">At most 20 per run</text>
-      <text id="text-067" x="850" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-3">Short run: 1 window</text>
+      <text id="text-067" x="850" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-3">Source IDs retained</text>
     </g>
     <path id="workflow-connector-3" d="M960 679 H974" fill="none" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
     <g id="workflow-process-4">
       <rect id="workflow-node-4" x="982" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
       <text id="text-068" x="1086" y="636" class="workflow-id" text-anchor="middle" data-container="workflow-node-4">04</text>
-      <text id="text-069" x="1086" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-4">Assess X/Y</text>
-      <text id="text-070" x="1086" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">630 passed finite x/y</text>
-      <text id="text-071" x="1086" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">Threshold: 0.60</text>
-      <text id="text-072" x="1086" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">Pupil not assessed here</text>
+      <text id="text-069" x="1086" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-4">Assess Gaze</text>
+      <text id="text-070" x="1086" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">Finite x/y ≥ 0.60</text>
+      <text id="text-071" x="1086" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">630 of 630 pass</text>
+      <text id="text-072" x="1086" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">36 task-run groups</text>
     </g>
     <path id="workflow-connector-4" d="M1196 679 H1210" fill="none" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
     <g id="workflow-process-5">
       <rect id="workflow-node-5" x="1218" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
       <text id="text-073" x="1322" y="636" class="workflow-id" text-anchor="middle" data-container="workflow-node-5">05</text>
-      <text id="text-074" x="1322" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-5">Verify Roles</text>
-      <text id="text-075" x="1322" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">Train 371; Val 99</text>
-      <text id="text-076" x="1322" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">Test 160 (reserved)</text>
-      <text id="text-077" x="1322" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">18 people; no overlap</text>
+      <text id="text-074" x="1322" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-5">Count Support</text>
+      <text id="text-075" x="1322" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">341 NR / 289 TSR</text>
+      <text id="text-076" x="1322" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">371 Train / 99 Val</text>
+      <text id="text-077" x="1322" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">160 Test windows</text>
     </g>
     <path id="workflow-connector-5" d="M1432 679 H1446" fill="none" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
     <g id="workflow-output">
       <rect id="workflow-node-6" x="1454" y="613" width="208" height="132" rx="15" fill="#176363" stroke="#176363" stroke-width="1.8"/>
       <text id="text-078" x="1558" y="636" class="terminal-id" text-anchor="middle" data-container="workflow-node-6">OUTPUT</text>
-      <text id="text-079" x="1558" y="662" class="terminal-heading" text-anchor="middle" data-container="workflow-node-6">Stage Evidence</text>
-      <text id="text-080" x="1558" y="684" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">630 windows in notebook</text>
-      <text id="text-081" x="1558" y="704" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">36-run quality table</text>
-      <text id="text-082" x="1558" y="724" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">5 files; upload pending</text>
+      <text id="text-079" x="1558" y="662" class="terminal-heading" text-anchor="middle" data-container="workflow-node-6">Window Registry</text>
+      <text id="text-080" x="1558" y="684" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">630 paired segments</text>
+      <text id="text-081" x="1558" y="704" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">Same EEG/eye interval</text>
+      <text id="text-082" x="1558" y="724" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">Ready for features</text>
     </g>
   </g>
   <g id="band-4-summary">
-    <text id="text-083" x="30" y="792" class="footer" data-container="canvas">Notebook execution: 630/630 finite-x/y eligible. GitHub Stage-02 CSVs still belong to pilot until replaced.</text>
+    <text id="text-083" x="30" y="792" class="footer" data-container="canvas">Thirty-six paired runs yield 630 eligible windows; unequal run lengths affect per-person sample support.</text>
   </g>
 </svg>
