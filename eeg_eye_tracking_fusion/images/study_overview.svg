@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1700" height="816" viewBox="0 0 1700 816" role="img" aria-labelledby="title desc">
-  <title id="title">EEG–Eye-Tracking | Expanded Alignment and Pilot Models</title>
-  <desc id="desc">Distinct evidence scopes for EEG-eye-tracking fusion. The 18-person source audit is published and reconciled: 36 NR/TSR Run-1 original recordings, 11 Train, three Validation and four reserved Test participants. The executed Notebook 02 shows 630 eligible 12-second paired EEG-gaze windows across the same 18 participants, but the five new Stage-02 output files are not yet committed; the tracked 02 files still describe the older pilot. Stage 03 feature extraction and Stages 04-06 classical, GRU and Validation-selected model results are only the six-person pilot: 206 matched windows and gaze-logistic Macro F1 0.8862 on one Validation person. No expanded model scoring, no Test inference, and no independently verified EEG-eye clock drift are demonstrated.</desc>
+  <title id="title">EEG–Eye-Tracking | Expanded Feature Workflow</title>
+  <desc id="desc">Current EEG-eye-tracking multimodal study workflow, ZuCo 2.0 release v1.0.0. The expanded 18-person source audit, 36 NR/TSR paired runs and frozen 11 Train / 3 Validation / 4 reserved Test participant roles are verified and committed. Stage 02 produced 630 eligible non-overlapping twelve-second EEG-eye windows (371 Train, 99 Validation and 160 Test windows). Stage 03 produced 630 corresponding paired feature rows and separate EEG/gaze six-bin by four-feature temporal arrays, zero extraction failures, and one Train-constant gaze availability feature. Both stages have committed numerical outputs. Stages 04 to 06 are awaiting expanded-cohort training and Validation evaluation; historic six-person model results are not shown as expanded results. The final Test set remains reserved and independent EEG-eye timing drift has not been verified.</desc>
   <defs>
     <marker id="arr" markerUnits="userSpaceOnUse" markerWidth="6" markerHeight="6" refX="5.5" refY="3" orient="auto">
       <path d="M0 0 L6 3 L0 6 Z" fill="#245E9D"/>
@@ -32,8 +32,8 @@
   </defs>
   <rect id="canvas" x="0" y="0" width="1700" height="816" rx="20" fill="#F4F9FD"/>
   <g id="band-0-header">
-    <text id="text-001" x="30" y="38" class="figure-title" data-container="canvas">EEG–Eye-Tracking | Expanded Alignment and Pilot Models</text>
-    <text id="text-002" x="30" y="67" class="subtitle" data-container="canvas">18-person Stage 01 verified | Stage 02: 630 windows in Colab | Stage 03–06: pilot evidence</text>
+    <text id="text-001" x="30" y="38" class="figure-title" data-container="canvas">EEG–Eye-Tracking | Expanded Feature Workflow</text>
+    <text id="text-002" x="30" y="67" class="subtitle" data-container="canvas">18 people | 36 source runs | 630 paired windows and feature rows | 04–06 pending</text>
   </g>
   <g id="band-1-context">
     <rect id="context-container" x="24" y="84" width="1652" height="160" rx="16" fill="#EAF3FA" stroke="#C7D9E6" stroke-width="2"/>
@@ -63,9 +63,9 @@
     </g>
     <g id="context-module-4">
       <text id="text-019" x="1360" y="115" class="context-heading" data-container="context-container">EVALUATION BOUNDARY</text>
-      <text id="text-020" x="1360" y="148" class="context-body" data-container="context-container">Stage 02: 18 people</text>
-      <text id="text-021" x="1360" y="174" class="context-body" data-container="context-container">New CSVs not committed</text>
-      <text id="text-022" x="1360" y="200" class="context-body" data-container="context-container">All Test scores withheld</text>
+      <text id="text-020" x="1360" y="148" class="context-body" data-container="context-container">Stage 01–03 complete</text>
+      <text id="text-021" x="1360" y="174" class="context-body" data-container="context-container">Stage 04–06 pending</text>
+      <text id="text-022" x="1360" y="200" class="context-body" data-container="context-container">Test not scored</text>
     </g>
   </g>
   <g id="band-2-analysis">
@@ -86,9 +86,9 @@
       <path id="evidence-header-1" d="M303 272 H605 Q616 272 616 283 V305 H292 V283 Q292 272 303 272 Z" fill="#174B70"/>
       <text id="text-030" x="454.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-1">PAIRED SOURCE</text>
       <g id="evidence-content-1" data-slot="scientific-content">
-        <text id="text-031" x="454.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-1">36 expanded source runs</text>
-        <text id="text-032" x="454.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-1">630 expanded windows in Colab</text>
-        <text id="text-033" x="454.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-1">Independent drift unverified</text>
+        <text id="text-031" x="454.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-1">36 source NR/TSR runs</text>
+        <text id="text-032" x="454.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-1">630 paired feature windows</text>
+        <text id="text-033" x="454.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-1">Clock drift unverified</text>
       </g>
     </g>
     <g id="evidence-panel-2">
@@ -125,7 +125,7 @@
       <rect id="note-strip" x="301" y="540" width="1064" height="25" rx="12" fill="#E0F2EC" stroke="#D3EAE2" stroke-width="1.5"/>
       <circle cx="324" cy="552" r="9" fill="#23749A"/>
       <text id="text-046" x="324" y="556" class="info-mark" text-anchor="middle">i</text>
-      <text id="text-047" x="342" y="556" class="scientific-note" data-container="note-strip">Expanded Notebook 02 recorded 630 windows; its five output files are pending upload; models remain pilot-only.</text>
+      <text id="text-047" x="342" y="556" class="scientific-note" data-container="note-strip">Expanded 01–03 outputs published and reconciled; model scores remain historical pilot evidence.</text>
     </g>
   </g>
   <g id="band-3-workflow">
@@ -134,8 +134,8 @@
       <rect id="workflow-node-0" x="38" y="613" width="208" height="132" rx="15" fill="#173453" stroke="#173453" stroke-width="1.8"/>
       <text id="text-048" x="142" y="636" class="terminal-id" text-anchor="middle" data-container="workflow-node-0">INPUT</text>
       <text id="text-049" x="142" y="662" class="terminal-heading" text-anchor="middle" data-container="workflow-node-0">ZuCo 2.0 BIDS</text>
-      <text id="text-050" x="142" y="684" class="terminal-body" text-anchor="middle" data-container="workflow-node-0">18 paired participants</text>
-      <text id="text-051" x="142" y="704" class="terminal-body" text-anchor="middle" data-container="workflow-node-0">36 NR/TSR source runs</text>
+      <text id="text-050" x="142" y="684" class="terminal-body" text-anchor="middle" data-container="workflow-node-0">18 participants</text>
+      <text id="text-051" x="142" y="704" class="terminal-body" text-anchor="middle" data-container="workflow-node-0">36 NR/TSR original runs</text>
       <text id="text-052" x="142" y="724" class="terminal-body" text-anchor="middle" data-container="workflow-node-0">Run 1 per task/person</text>
     </g>
     <path id="workflow-connector-0" d="M252 679 H266" fill="none" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
@@ -143,7 +143,7 @@
       <rect id="workflow-node-1" x="274" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
       <text id="text-053" x="378" y="636" class="workflow-id" text-anchor="middle" data-container="workflow-node-1">01</text>
       <text id="text-054" x="378" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-1">Source Audit Done</text>
-      <text id="text-055" x="378" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-1">36/36 runs retrieved</text>
+      <text id="text-055" x="378" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-1">36/36 packages present</text>
       <text id="text-056" x="378" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-1">11 Train / 3 Val / 4 Test</text>
       <text id="text-057" x="378" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-1">Six pilot roles retained</text>
     </g>
@@ -151,49 +151,49 @@
     <g id="workflow-process-2">
       <rect id="workflow-node-2" x="510" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
       <text id="text-058" x="614" y="636" class="workflow-id" text-anchor="middle" data-container="workflow-node-2">02</text>
-      <text id="text-059" x="614" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-2">Expanded Alignment</text>
+      <text id="text-059" x="614" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-2">Alignment Done</text>
       <text id="text-060" x="614" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-2">630 eligible windows</text>
-      <text id="text-061" x="614" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-2">New 02_ files pending</text>
+      <text id="text-061" x="614" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-2">18 people / 36 runs</text>
       <text id="text-062" x="614" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-2">Drift not verified</text>
     </g>
     <path id="workflow-connector-2" d="M724 679 H738" fill="none" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
     <g id="workflow-process-3">
       <rect id="workflow-node-3" x="746" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
       <text id="text-063" x="850" y="636" class="workflow-id" text-anchor="middle" data-container="workflow-node-3">03</text>
-      <text id="text-064" x="850" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-3">Pilot Features</text>
-      <text id="text-065" x="850" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-3">206 pilot feature rows</text>
+      <text id="text-064" x="850" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-3">Features Done</text>
+      <text id="text-065" x="850" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-3">630 paired feature rows</text>
       <text id="text-066" x="850" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-3">EEG / eye: 6×4 bins</text>
-      <text id="text-067" x="850" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-3">Expanded features pending</text>
+      <text id="text-067" x="850" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-3">One constant gaze field</text>
     </g>
     <path id="workflow-connector-3" d="M960 679 H974" fill="none" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
     <g id="workflow-process-4">
       <rect id="workflow-node-4" x="982" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
       <text id="text-068" x="1086" y="636" class="workflow-id" text-anchor="middle" data-container="workflow-node-4">04</text>
-      <text id="text-069" x="1086" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-4">Pilot Baselines</text>
-      <text id="text-070" x="1086" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">7 pilot candidate models</text>
-      <text id="text-071" x="1086" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">Gaze logistic F1 0.8862</text>
-      <text id="text-072" x="1086" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">One pilot Val person</text>
+      <text id="text-069" x="1086" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-4">Classical Next</text>
+      <text id="text-070" x="1086" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">7 fixed model candidates</text>
+      <text id="text-071" x="1086" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">371 Train / 99 Val</text>
+      <text id="text-072" x="1086" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">No expanded scores yet</text>
     </g>
     <path id="workflow-connector-4" d="M1196 679 H1210" fill="none" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
     <g id="workflow-process-5">
       <rect id="workflow-node-5" x="1218" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
       <text id="text-073" x="1322" y="636" class="workflow-id" text-anchor="middle" data-container="workflow-node-5">05</text>
-      <text id="text-074" x="1322" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-5">Pilot Temporal</text>
-      <text id="text-075" x="1322" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">3 pilot GRU models</text>
-      <text id="text-076" x="1322" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">EEG GRU F1 0.6890</text>
-      <text id="text-077" x="1322" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">Expanded models pending</text>
+      <text id="text-074" x="1322" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-5">Temporal Pending</text>
+      <text id="text-075" x="1322" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">3 compact GRU models</text>
+      <text id="text-076" x="1322" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">Stage 05 not yet run</text>
+      <text id="text-077" x="1322" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">160 Test rows reserved</text>
     </g>
     <path id="workflow-connector-5" d="M1432 679 H1446" fill="none" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
     <g id="workflow-output">
       <rect id="workflow-node-6" x="1454" y="613" width="208" height="132" rx="15" fill="#176363" stroke="#176363" stroke-width="1.8"/>
       <text id="text-078" x="1558" y="636" class="terminal-id" text-anchor="middle" data-container="workflow-node-6">OUTPUT</text>
-      <text id="text-079" x="1558" y="662" class="terminal-heading" text-anchor="middle" data-container="workflow-node-6">Pilot Val Choice</text>
-      <text id="text-080" x="1558" y="684" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">Gaze logistic selected</text>
-      <text id="text-081" x="1558" y="704" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">Pilot masking result</text>
+      <text id="text-079" x="1558" y="662" class="terminal-heading" text-anchor="middle" data-container="workflow-node-6">Selection Pending</text>
+      <text id="text-080" x="1558" y="684" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">Compare 10 candidates</text>
+      <text id="text-081" x="1558" y="704" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">Validation rule frozen</text>
       <text id="text-082" x="1558" y="724" class="terminal-body" text-anchor="middle" data-container="workflow-node-6">No Test scoring</text>
     </g>
   </g>
   <g id="band-4-summary">
-    <text id="text-083" x="30" y="792" class="footer" data-container="canvas">18-person Stage 01 complete; 630 windows recorded by Stage 02 but files pending; later models are pilot-only.</text>
+    <text id="text-083" x="30" y="792" class="footer" data-container="canvas">18-person Stages 01–03 complete; model stages pending; timing drift and Test performance unverified.</text>
   </g>
 </svg>
