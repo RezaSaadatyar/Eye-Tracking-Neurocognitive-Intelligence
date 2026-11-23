@@ -93,7 +93,7 @@ Classical and temporal candidates have different representations but identical p
 
 **Temporal training:** The three compact GRUs use AdamW with learning rate **0.001**, weight decay **0.001**, batch size **64**, up to **15 epochs**, early stopping patience **4** and seed **17**. Train-derived temporal scaling is saved in `05_scaling.npz`. Gaze and EEG GRUs each have **1,090 parameters**; gated fusion has **2,354**. Training produced **15/7/14** recorded epochs respectively, with best checkpoints selected at **12/3/10**.
 
-The model comparison is a set of configured pipelines, not a matched computational-budget experiment. All model weights and recorded training histories are preserved as current outputs; no new fit is implied by the documentation revision.
+The candidates differ in input representation, model capacity and training budget. The study does not isolate these factors experimentally; saved checkpoints and histories document the configurations that were executed.
 
 ## 6. Results and Comparative Analysis
 
@@ -170,13 +170,13 @@ All **44** stage-owned results belong to the same current **18-person, 630-windo
 | 03 · Features (7 files) | `03_features.csv`, `03_temporal_sequences.npz`, feature/modality/exclusion QA and two plots | Paired mean rows and two six-bin tensors remain ID-aligned |
 | 04 · Classical (12 files) | Six `.joblib` pipelines, `04_late_fusion.json`, `04_validation_metrics.csv`, 693 predictions, person metrics and plots | Train-only fitting; seven same-window Validation results |
 | 05 · Temporal (9 files) | Three `.pt` GRU checkpoints, `05_scaling.npz`, histories, 297 predictions, metrics and plot | Train-derived temporal scaling and checkpoint selection |
-| 06 · Development decision (4 files) | `06_model_selection.csv`, `06_validation_person_metrics.csv`, `06_validation_sensitivity.csv`, `06_validation_evidence.png` | Ten-model matched Validation choice, no Test results |
+| 06 · Model selection (4 files) | `06_model_selection.csv`, `06_validation_person_metrics.csv`, `06_validation_sensitivity.csv`, `06_validation_evidence.png` | Ten-model matched Validation choice, no Test results |
 
-All six notebooks have executed on the 18-person original-data workflow, and their saved outputs are committed. This establishes recorded results and internal source/identifier reconciliation, **not** independent reproduction in the current environment. Earlier reported synthetic tests and GitHub Actions successes are separate from new original-data execution; no model was trained as part of this documentation update.
+All six notebooks have executed on the 18-person original-data workflow, and their saved outputs are committed. This establishes recorded results and internal source/identifier reconciliation, **not** an independent reproduction. Static or synthetic checks alone cannot reproduce model fitting on the original ZuCo recordings.
 
 The study requires the [original ZuCo release](https://www.nemar.org/dataset/nm000279), [study dependencies](requirements.txt) and the established Colab `setup_colab("eeg_eye_tracking_fusion")` workflow. Source recordings may have to be downloaded again if a Colab cache disappears. A reproducible original-data run proceeds through [Notebooks 01–06](code/notebooks/) in numerical order; each stage overwrites its own current named outputs. Changing cohort, roles, alignment, feature definitions or representation shapes can invalidate downstream models and must trigger a dependency review.
 
-The [README](README.md) contains the single six-stage overview. Each notebook retains a separate editable five-band figure in [`images/`](images/). The Test branch was deliberately disabled; no ordinary documentation or reporting operation should silently launch it.
+The [README](README.md) contains the single six-stage overview; individual notebooks retain their editable five-band figures in [`images/`](images/). The recorded Stage-06 execution used `RUN_FINAL_TEST=False` and produced no Test scores.
 
 ## 9. Discussion, Limitations and Future Work
 
@@ -184,6 +184,6 @@ The six-stage development workflow demonstrates an end-to-end **source-audited E
 
 The central limitations are the small number of independent Validation participants, repeated and unevenly distributed windows, source task/text confounding, incomplete EEG/gaze calibration and clock-drift evidence, potential ocular EEG artefacts, the constant gaze-validity predictor and the unvalidated raw fixation-locked EEG diagnostic. No causal, cognitive, clinical, external or population-wide claim follows from the available results.
 
-**Current boundary:** the 18-person Validation-development study has completed Notebooks **01–06**, all ten candidates have matched Validation results and the development winner is fixed. The final four-person Test remains unscored and is **not** a routine documentation-clean-up task. Any future Test evaluation, stimulus-matched control, drift study, physiologically grounded FRP analysis or external validation should be specified and authorised as scientific work, preserving the present source roles and model-selection history.
+**Current boundary:** the 18-person Validation-development study has completed Notebooks **01–06**, with matched Validation predictions for ten candidates and a fixed development winner. The four-person Test remains unscored. A future Test evaluation should retain the selected configuration and distinguish any new analyses of stimuli, timing, FRP or external data from this development benchmark.
 
 **Source attribution:** Hollenstein, N., Tröndle, M., Zhang, C., & Langer, N. (2020). *ZuCo 2.0: A Dataset of Physiological Recordings During Natural Reading and Annotation*. [LREC 2020](https://aclanthology.org/2020.lrec-1.18/); [NEMAR dataset DOI](https://doi.org/10.82901/nemar.nm000279). BIDS source metadata report [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) terms.
