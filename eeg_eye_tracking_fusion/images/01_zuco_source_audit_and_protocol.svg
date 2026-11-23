@@ -131,6 +131,14 @@
       <path id="evidence-header-4" d="M1317 272 H1651 Q1662 272 1662 283 V305 H1306 V283 Q1306 272 1317 272 Z" fill="#174B70"/>
       <text id="text-042" x="1484.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-4">PARTICIPANT SPLIT</text>
       <g id="evidence-content-4" data-slot="scientific-content">
+        <g id="stage01-participant-allocation" role="img" aria-label="Participant distribution: Train 11, Validation 3, reserved Test 4">
+          <rect x="1351" y="330" width="154" height="18" rx="3" fill="#236CDE"/>
+          <rect x="1505" y="330" width="42" height="18" fill="#E87929"/>
+          <rect x="1547" y="330" width="56" height="18" rx="3" fill="#168C5B"/>
+          <text x="1428" y="368" class="chart-label" text-anchor="middle">Train</text>
+          <text x="1526" y="368" class="chart-label" text-anchor="middle">Val</text>
+          <text x="1575" y="368" class="chart-label" text-anchor="middle">Test</text>
+        </g>
         <text id="text-043" x="1484.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-4">Train 11; Validation 3</text>
         <text id="text-044" x="1484.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-4">Reserved Test: 4 people</text>
         <text id="text-045" x="1484.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-4">Distinct people per role</text>
