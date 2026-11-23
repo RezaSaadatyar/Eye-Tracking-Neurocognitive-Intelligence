@@ -1,4 +1,4 @@
-"""Synthetic and static contracts; no original ZuCo data are reproduced."""
+"""Synthetic checks and saved-output contracts; no original-data refitting."""
 from __future__ import annotations
 
 import ast
@@ -707,3 +707,79 @@ def test_two_scientific_documents_retained_in_named_structure():
     assert "Test" in readme and "Test" in methods
     assert "RUN_FINAL_TEST" in readme and "RUN_FINAL_TEST" in methods
     assert "100% accuracy" not in methods
+
+def test_recorded_zuco_final_test_alignment_and_metrics():
+    """Verify current Test evidence from saved predictions, without refitting."""
+    out = PROJECT / "output"
+    features = pd.read_csv(out / "03_features.csv",
+                           dtype={"participant_id": str})
+    test = features.loc[
+        features.split.eq("test"),
+        ["window_id", "participant_id", "task"],
+    ].copy()
+    development = features.loc[features.split.ne("test")]
+    assert not test.empty and test.window_id.is_unique
+    assert set(test.participant_id).isdisjoint(
+        set(development.participant_id))
+    assert set(test.task) == {"nr", "tsr"}
+
+    frozen = pd.read_csv(out / "06_model_selection.csv")
+    assert len(frozen) == 1
+    assert frozen.iloc[0].selected_model == "gaze_forest"
+    assert frozen.iloc[0].run_mode == "final"
+    assert not bool(frozen.iloc[0].test_used_in_selection)
+
+    scores = pd.read_csv(out / "06_test_metrics.csv")
+    predictions = pd.read_csv(
+        out / "06_test_predictions.csv", dtype={"participant_id": str})
+    people = pd.read_csv(
+        out / "06_person_metrics.csv", dtype={"participant_id": str})
+    clusters = pd.read_csv(out / "06_cluster_bootstrap.csv")
+    assert set(scores.model) == set(MODEL_ORDER)
+    assert scores.model.is_unique
+    assert predictions.split.eq("test").all()
+    assert not predictions.duplicated(["model", "window_id"]).any()
+    assert not people.duplicated(["model", "participant_id"]).any()
+    assert not clusters.empty and clusters.bootstrap_id.is_unique
+    assert np.isfinite(
+        clusters[["accuracy", "macro_f1", "balanced_accuracy"]]
+        .to_numpy(dtype=float)).all()
+
+    labels = test.task.map({"nr": 0, "tsr": 1}).to_numpy(dtype=int)
+    for model in MODEL_ORDER:
+        part = predictions.loc[predictions.model.eq(model)]
+        assert set(part.window_id) == set(test.window_id)
+        aligned = part.set_index("window_id").loc[test.window_id]
+        assert np.array_equal(
+            aligned.participant_id.to_numpy(),
+            test.participant_id.to_numpy())
+        assert np.array_equal(aligned.task.to_numpy(),
+                              test.task.to_numpy())
+        assert np.array_equal(
+            aligned.target_index.to_numpy(dtype=int), labels)
+        probabilities = aligned[["p_nr", "p_tsr"]].to_numpy(dtype=float)
+        assert np.isfinite(probabilities).all()
+        assert ((probabilities >= 0.) & (probabilities <= 1.)).all()
+        assert np.allclose(probabilities.sum(axis=1), 1., atol=1e-5)
+        guess = aligned.pred_index.to_numpy(dtype=int)
+        assert np.array_equal(guess, probabilities.argmax(axis=1))
+
+        row = scores.loc[scores.model.eq(model)].iloc[0]
+        assert row.n_windows == len(test)
+        assert row.n_people == test.participant_id.nunique()
+        assert bool(row.selected_primary) == (model == "gaze_forest")
+        for metric, value in metrics(labels, guess).items():
+            assert np.isclose(row[metric], value, atol=1e-10)
+
+        person_rows = people.loc[people.model.eq(model)]
+        assert set(person_rows.participant_id) == set(test.participant_id)
+        for p in test.participant_id.unique():
+            p_slice = aligned.loc[aligned.participant_id.eq(p)]
+            recorded = person_rows.loc[
+                person_rows.participant_id.eq(p)].iloc[0]
+            assert recorded.n_windows == len(p_slice)
+            assert np.isclose(
+                recorded.macro_f1,
+                metrics(p_slice.target_index,
+                        p_slice.pred_index)["macro_f1"],
+                atol=1e-10)
