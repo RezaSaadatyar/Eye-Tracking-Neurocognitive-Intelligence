@@ -1,0 +1,4 @@
+condition,model,partition,n_windows,n_people,accuracy,macro_f1,balanced_accuracy
+unchanged,early_fusion_logistic,validation,99,3,0.45454545454545453,0.4518047579983593,0.4602564102564103
+mask_eeg,early_fusion_logistic,validation,99,3,0.6262626262626263,0.5342657342657342,0.5570512820512821
+mask_gaze,early_fusion_logistic,validation,99,3,0.494949494949495,0.49074074074074076,0.5384615384615384
