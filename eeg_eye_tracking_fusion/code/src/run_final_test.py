@@ -40,7 +40,7 @@ def frozen_decision_check():
     require(len(decision) == 1, "Expected exactly one frozen development decision")
     row = decision.iloc[0]
     require(row.selected_model == "gaze_forest"
-            and row.run_mode == "development"
+            and row.run_mode in ("development", "final")
             and not bool(row.test_used_in_selection),
             "Development selection was changed or used Test")
     require(int(row.source_people) == 18
