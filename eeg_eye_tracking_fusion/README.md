@@ -73,12 +73,14 @@ One editable [study-wide workflow](images/study_overview.svg) appears above. Eac
 
 ## 4. Running and Reviewing the Study
 
-**All six notebooks and the final held-out Test have recorded outputs.** Reviewing the existing results does not require downloading raw ZuCo recordings or retraining the models.
+**All six notebooks and the final held-out Test have recorded outputs.** The current Notebook 06 has also been executed in Colab with its nine Stage-06 files packaged together. Reviewing the committed results does not require downloading raw ZuCo recordings or retraining the models.
 
 1. Start with [Notebook 06](code/notebooks/06_robustness_and_final_evaluation.ipynb), the [frozen model decision](output/06_model_selection.csv), [Validation evidence](output/06_validation_evidence.png) and [held-out Test metrics](output/06_test_metrics.csv). The selected primary was not changed after Test.
 2. Inspect [`output/`](output/) for the 630-window registry, paired features, matched Validation predictions, **1,600 Test predictions**, participant-level Test metrics and the primary confusion matrix.
 3. For original-data reproduction, follow [Notebooks 01–06](code/notebooks/) in numerical order, starting from the source release and frozen participant assignments. Use the study [requirements](requirements.txt) and the existing Colab `setup_colab("eeg_eye_tracking_fusion")` workflow. Raw ZuCo files are **not** bundled with Git; Colab source caches can be ephemeral. Rerunning a stage replaces its stage-owned current outputs and may require rebuilding downstream stages.
 4. Review the [research methods](RESEARCH_METHODS_AND_EVIDENCE.md) for source access, final model selection, participant-level results and scientific limitations. The final scoring used the saved models and Train-fitted preprocessing without refitting.
+
+**Saved-model compatibility:** The Stage-04 `.joblib` pipelines were created with **scikit-learn 1.6.1**. Use the pinned [study requirements](requirements.txt) before executing Notebook 06 from the committed fitted models. Loading those models with a different scikit-learn version may fail or change inference behaviour. The [GitHub Actions final-Test workflow](../.github/workflows/eeg-eye-final-test.yml) uses Python 3.11 and scikit-learn 1.6.1. For reviewing published results, the [Test metrics](output/06_test_metrics.csv) and [notebook outputs](code/notebooks/06_robustness_and_final_evaluation.ipynb) are sufficient; running Test again is optional.
 
 A new cohort, timing correction, feature set or evaluation objective is a separate scientific decision; results must not be silently mixed with the current 18-person experiment.
 
@@ -91,7 +93,7 @@ A new cohort, timing correction, feature set or evaluation objective is a separa
 | [`images/study_overview.svg`](images/study_overview.svg) | One editable six-stage overview diagram for this README |
 | [`images/`](images/) | Six individual editable stage figures used in their notebooks |
 | [`output/`](output/) | **49 current outputs**: seven `01_*`, five `02_*`, seven `03_*`, twelve `04_*`, nine `05_*` and nine `06_*` |
-| [`requirements.txt`](requirements.txt) | Study-specific dependencies |
+| [`requirements.txt`](requirements.txt) | Study dependencies, including scikit-learn 1.6.1 compatibility with stored pipelines |
 | [`tests/test_eeg_eye_tracking_fusion.py`](../tests/test_eeg_eye_tracking_fusion.py) | Synthetic research-contract checks; not original-data reproduction |
 | [`README.md`](README.md) | Concise study entry point and results |
 | [`RESEARCH_METHODS_AND_EVIDENCE.md`](RESEARCH_METHODS_AND_EVIDENCE.md) | Full protocol, model settings, saved evidence and interpretation |
