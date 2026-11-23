@@ -106,6 +106,20 @@
       <path id="evidence-header-3" d="M979 272 H1281 Q1292 272 1292 283 V305 H968 V283 Q968 272 979 272 Z" fill="#174B70"/>
       <text id="text-038" x="1130.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-3">TEMPORAL ARRAYS</text>
       <g id="evidence-content-3" data-slot="scientific-content">
+        <g id="stage03-six-bin-sequence" role="img" aria-label="Six consecutive two-second feature bins covering one twelve-second window">
+          <rect x="992" y="330" width="40" height="26" rx="4" fill="#236CDE"/>
+          <rect x="1039" y="330" width="40" height="26" rx="4" fill="#245E9D"/>
+          <rect x="1086" y="330" width="40" height="26" rx="4" fill="#236CDE"/>
+          <rect x="1133" y="330" width="40" height="26" rx="4" fill="#245E9D"/>
+          <rect x="1180" y="330" width="40" height="26" rx="4" fill="#236CDE"/>
+          <rect x="1227" y="330" width="40" height="26" rx="4" fill="#245E9D"/>
+          <text x="1012" y="347" class="terminal-id" text-anchor="middle">1</text>
+          <text x="1059" y="347" class="terminal-id" text-anchor="middle">2</text>
+          <text x="1106" y="347" class="terminal-id" text-anchor="middle">3</text>
+          <text x="1153" y="347" class="terminal-id" text-anchor="middle">4</text>
+          <text x="1200" y="347" class="terminal-id" text-anchor="middle">5</text>
+          <text x="1247" y="347" class="terminal-id" text-anchor="middle">6</text>
+        </g>
         <text id="text-039" x="1130.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-3">EEG: 630 × 6 × 4</text>
         <text id="text-040" x="1130.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-3">Gaze: 630 × 6 × 4</text>
         <text id="text-041" x="1130.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-3">Six consecutive 2-s bins</text>
