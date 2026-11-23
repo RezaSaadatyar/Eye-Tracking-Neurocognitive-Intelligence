@@ -80,8 +80,9 @@ Eye-Tracking-Neurocognitive-Intelligence/
 │   ├── README.md                       # Study scope; no model results yet
 │   ├── RESEARCH_METHODS_AND_EVIDENCE.md
 │   ├── requirements.txt                # Proposed imaging dependencies
-│   ├── code/notebooks/                 # Five study notebook starters
-│   └── code/src/                       # Initial 3D angular-error utility
+│   ├── code/notebooks/                 # Stage 01 source audit, 02–05 starters
+│   ├── code/src/                       # Source reader and geometry utilities
+│   └── images/                         # Editable Stage-01 scientific diagram
 ├── tests/                              # Synthetic scientific software contracts
 ├── scripts/                            # Git file-size guard
 └── .github/workflows/                  # Synthetic tests, size policy and ZuCo final Test
