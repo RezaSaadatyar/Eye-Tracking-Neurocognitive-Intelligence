@@ -124,11 +124,18 @@ def inspect_mat_header(path: Path) -> list[dict]:
 
 
 # ======================= 03. Secure Archive Operations =======================
-def _relative_archive_member(name: str) -> Path:
-    path = PurePosixPath(name.replace("\\", "/"))
+def _relative_archive_member(name: str) -> Path | None:
+    """Validate the member path; permit only the archive's root marker."""
+    raw = name.replace("\\", "/")
+    if raw in (".", "./"):
+        return None
+    path = PurePosixPath(raw)
     if path.is_absolute() or not path.parts or any(
-        p in ("", ".", "..") for p in path.parts
+        p in ("", ".", "..") for p in raw.split("/")
+        if p and p != "."
     ) or ":" in path.parts[0]:
+        raise ValueError(f"Unsafe archive entry: {name}")
+    if any(p == ".." for p in path.parts):
         raise ValueError(f"Unsafe archive entry: {name}")
     return Path(*path.parts)
 
@@ -152,7 +159,10 @@ def extract_source_archive(archive_path: Path, destination: Path) -> None:
         if zipfile.is_zipfile(archive_path):
             with zipfile.ZipFile(archive_path) as archive:
                 for entry in archive.infolist():
-                    target = stage / _relative_archive_member(entry.filename)
+                    relative = _relative_archive_member(entry.filename)
+                    if relative is None:
+                        continue
+                    target = stage / relative
                     mode = (entry.external_attr >> 16)
                     if stat.S_ISLNK(mode):
                         raise ValueError("Symlinks in the source ZIP are not allowed")
@@ -165,7 +175,10 @@ def extract_source_archive(archive_path: Path, destination: Path) -> None:
         elif tarfile.is_tarfile(archive_path):
             with tarfile.open(archive_path, mode="r:*") as archive:
                 for entry in archive:
-                    target = stage / _relative_archive_member(entry.name)
+                    relative = _relative_archive_member(entry.name)
+                    if relative is None:
+                        continue
+                    target = stage / relative
                     if entry.isdir():
                         target.mkdir(parents=True, exist_ok=True)
                     elif entry.isfile():
