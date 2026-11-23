@@ -76,6 +76,12 @@ Eye-Tracking-Neurocognitive-Intelligence/
 │   ├── images/                         # Seven five-band scientific diagrams
 │   ├── data/README.md                  # Original ZuCo data source and provenance
 │   └── output/                         # 49 current Stage-01–06 files, including Test
+├── vision_based_gaze_estimation/
+│   ├── README.md                       # Study scope; no model results yet
+│   ├── RESEARCH_METHODS_AND_EVIDENCE.md
+│   ├── requirements.txt                # Proposed imaging dependencies
+│   ├── code/notebooks/                 # Five study notebook starters
+│   └── code/src/                       # Initial 3D angular-error utility
 ├── tests/                              # Synthetic scientific software contracts
 ├── scripts/                            # Git file-size guard
 └── .github/workflows/                  # Synthetic tests, size policy and ZuCo final Test
