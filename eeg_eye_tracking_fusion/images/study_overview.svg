@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1700" height="816" viewBox="0 0 1700 816" role="img" aria-labelledby="title desc">
-  <title id="title">EEG–Eye-Tracking | Expanded Feature Workflow</title>
-  <desc id="desc">Current EEG-eye-tracking multimodal study workflow, ZuCo 2.0 release v1.0.0. The expanded 18-person source audit, 36 NR/TSR paired runs and frozen 11 Train / 3 Validation / 4 reserved Test participant roles are verified and committed. Stage 02 produced 630 eligible non-overlapping twelve-second EEG-eye windows (371 Train, 99 Validation and 160 Test windows). Stage 03 produced 630 corresponding paired feature rows and separate EEG/gaze six-bin by four-feature temporal arrays, zero extraction failures, and one Train-constant gaze availability feature. Both stages have committed numerical outputs. Stages 04 to 06 are awaiting expanded-cohort training and Validation evaluation; historic six-person model results are not shown as expanded results. The final Test set remains reserved and independent EEG-eye timing drift has not been verified.</desc>
+  <title id="title">EEG–Eye-Tracking | Expanded Classical Validation</title>
+  <desc id="desc">Current expanded 18-person ZuCo 2.0 source-to-classical-model workflow. Thirty-six original NR/TSR runs from 18 people were audited, giving 630 BIDS-relative eligible twelve-second paired windows and 630 extracted EEG/gaze feature rows. Participant split: 11 Train, three Validation and four reserved Test people, corresponding to 371 / 99 / 160 windows. Stage 04 fitted seven classical and simple-fusion candidates on Train and compared all on the same 99 Validation windows; gaze Random Forest had highest classical Macro F1 (0.6244) with substantial person-level variation. Stages 01 to 04 are executed and published; the three temporal GRU candidates and the ten-model Validation selection remain pending. No Test scores or independent EEG-eye clock drift validation are available. The earlier six-person pilot does not determine current model selection.</desc>
   <defs>
     <marker id="arr" markerUnits="userSpaceOnUse" markerWidth="6" markerHeight="6" refX="5.5" refY="3" orient="auto">
       <path d="M0 0 L6 3 L0 6 Z" fill="#245E9D"/>
@@ -32,8 +32,8 @@
   </defs>
   <rect id="canvas" x="0" y="0" width="1700" height="816" rx="20" fill="#F4F9FD"/>
   <g id="band-0-header">
-    <text id="text-001" x="30" y="38" class="figure-title" data-container="canvas">EEG–Eye-Tracking | Expanded Feature Workflow</text>
-    <text id="text-002" x="30" y="67" class="subtitle" data-container="canvas">18 people | 36 source runs | 630 paired windows and feature rows | 04–06 pending</text>
+    <text id="text-001" x="30" y="38" class="figure-title" data-container="canvas">EEG–Eye-Tracking | Expanded Classical Validation</text>
+    <text id="text-002" x="30" y="67" class="subtitle" data-container="canvas">18 people | 630 paired windows and features | 7 classical models scored on 99 Validation windows</text>
   </g>
   <g id="band-1-context">
     <rect id="context-container" x="24" y="84" width="1652" height="160" rx="16" fill="#EAF3FA" stroke="#C7D9E6" stroke-width="2"/>
@@ -44,16 +44,16 @@
       <text id="text-006" x="153" y="207" class="source-label" data-container="context-container">NR and TSR runs</text>
     </g>
     <g id="context-module-1">
-      <text id="text-007" x="358" y="115" class="context-heading" data-container="context-container">PILOT DATA SOURCE</text>
+      <text id="text-007" x="358" y="115" class="context-heading" data-container="context-container">SOURCE DATA</text>
       <text id="text-008" x="358" y="148" class="context-body" data-container="context-container">ZuCo 2.0, v1.0.0</text>
-      <text id="text-009" x="358" y="174" class="context-body" data-container="context-container">EEG + EyeLink, BIDS</text>
-      <text id="text-010" x="358" y="200" class="context-body" data-container="context-container">18-person source now audited</text>
+      <text id="text-009" x="358" y="174" class="context-body" data-container="context-container">EEG + EyeLink BIDS</text>
+      <text id="text-010" x="358" y="200" class="context-body" data-container="context-container">18 participants / 36 runs</text>
     </g>
     <g id="context-module-2">
       <text id="text-011" x="690" y="115" class="context-heading" data-container="context-container">PREDICTION TARGET</text>
       <text id="text-012" x="690" y="148" class="context-body" data-container="context-container">NR versus TSR protocol</text>
       <text id="text-013" x="690" y="174" class="context-body" data-container="context-container">Task condition, not cognition</text>
-      <text id="text-014" x="690" y="200" class="context-body" data-container="context-container">Pilot: 206 paired windows</text>
+      <text id="text-014" x="690" y="200" class="context-body" data-container="context-container">630 paired 12-s windows</text>
     </g>
     <g id="context-module-3">
       <text id="text-015" x="1020" y="115" class="context-heading" data-container="context-container">SCIENTIFIC CONTRAST</text>
@@ -63,8 +63,8 @@
     </g>
     <g id="context-module-4">
       <text id="text-019" x="1360" y="115" class="context-heading" data-container="context-container">EVALUATION BOUNDARY</text>
-      <text id="text-020" x="1360" y="148" class="context-body" data-container="context-container">Stage 01–03 complete</text>
-      <text id="text-021" x="1360" y="174" class="context-body" data-container="context-container">Stage 04–06 pending</text>
+      <text id="text-020" x="1360" y="148" class="context-body" data-container="context-container">Stages 01–04 complete</text>
+      <text id="text-021" x="1360" y="174" class="context-body" data-container="context-container">Temporal stage pending</text>
       <text id="text-022" x="1360" y="200" class="context-body" data-container="context-container">Test not scored</text>
     </g>
   </g>
@@ -104,20 +104,20 @@
     <g id="evidence-panel-3">
       <rect id="evidence-card-3" x="968" y="272" width="324" height="254" rx="12" fill="#FFFFFF" stroke="#B6CFDE" stroke-width="1.5"/>
       <path id="evidence-header-3" d="M979 272 H1281 Q1292 272 1292 283 V305 H968 V283 Q968 272 979 272 Z" fill="#174B70"/>
-      <text id="text-038" x="1130.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-3">MODEL EVIDENCE</text>
+      <text id="text-038" x="1130.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-3">CURRENT MODEL EVIDENCE</text>
       <g id="evidence-content-3" data-slot="scientific-content">
-        <text id="text-039" x="1130.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-3">7 classical candidates</text>
-        <text id="text-040" x="1130.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-3">3 compact GRUs</text>
-        <text id="text-041" x="1130.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-3">Same 31 Validation IDs</text>
+        <text id="text-039" x="1130.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-3">7 classical models run</text>
+        <text id="text-040" x="1130.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-3">3 GRUs not yet run</text>
+        <text id="text-041" x="1130.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-3">99 Validation windows</text>
       </g>
     </g>
     <g id="evidence-panel-4">
       <rect id="evidence-card-4" x="1306" y="272" width="356" height="254" rx="12" fill="#FFFFFF" stroke="#B6CFDE" stroke-width="1.5"/>
       <path id="evidence-header-4" d="M1317 272 H1651 Q1662 272 1662 283 V305 H1306 V283 Q1306 272 1317 272 Z" fill="#174B70"/>
-      <text id="text-042" x="1484.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-4">DEVELOPMENT RESULT</text>
+      <text id="text-042" x="1484.0" y="294" class="card-heading" text-anchor="middle" data-container="evidence-card-4">CLASSICAL FINDING</text>
       <g id="evidence-content-4" data-slot="scientific-content">
-        <text id="text-043" x="1484.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-4">Gaze logistic chosen</text>
-        <text id="text-044" x="1484.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-4">Val Macro F1 = 0.8862</text>
+        <text id="text-043" x="1484.0" y="388" class="card-body" text-anchor="middle" data-container="evidence-card-4">Gaze forest led Stage 04</text>
+        <text id="text-044" x="1484.0" y="416" class="card-body" text-anchor="middle" data-container="evidence-card-4">Val Macro F1 = 0.6244</text>
         <text id="text-045" x="1484.0" y="444" class="card-body" text-anchor="middle" data-container="evidence-card-4">Test deferred</text>
       </g>
     </g>
@@ -125,7 +125,7 @@
       <rect id="note-strip" x="301" y="540" width="1064" height="25" rx="12" fill="#E0F2EC" stroke="#D3EAE2" stroke-width="1.5"/>
       <circle cx="324" cy="552" r="9" fill="#23749A"/>
       <text id="text-046" x="324" y="556" class="info-mark" text-anchor="middle">i</text>
-      <text id="text-047" x="342" y="556" class="scientific-note" data-container="note-strip">Expanded 01–03 outputs published and reconciled; model scores remain historical pilot evidence.</text>
+      <text id="text-047" x="342" y="556" class="scientific-note" data-container="note-strip">Expanded Stages 01–04 are recorded; gaze forest leads classical Validation; temporal stage pending.</text>
     </g>
   </g>
   <g id="band-3-workflow">
@@ -169,16 +169,16 @@
     <g id="workflow-process-4">
       <rect id="workflow-node-4" x="982" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
       <text id="text-068" x="1086" y="636" class="workflow-id" text-anchor="middle" data-container="workflow-node-4">04</text>
-      <text id="text-069" x="1086" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-4">Classical Next</text>
+      <text id="text-069" x="1086" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-4">Classical Done</text>
       <text id="text-070" x="1086" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">7 fixed model candidates</text>
       <text id="text-071" x="1086" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">371 Train / 99 Val</text>
-      <text id="text-072" x="1086" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">No expanded scores yet</text>
+      <text id="text-072" x="1086" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-4">Gaze forest F1 0.6244</text>
     </g>
     <path id="workflow-connector-4" d="M1196 679 H1210" fill="none" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
     <g id="workflow-process-5">
       <rect id="workflow-node-5" x="1218" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
       <text id="text-073" x="1322" y="636" class="workflow-id" text-anchor="middle" data-container="workflow-node-5">05</text>
-      <text id="text-074" x="1322" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-5">Temporal Pending</text>
+      <text id="text-074" x="1322" y="662" class="workflow-heading" text-anchor="middle" data-container="workflow-node-5">Temporal Next</text>
       <text id="text-075" x="1322" y="684" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">3 compact GRU models</text>
       <text id="text-076" x="1322" y="704" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">Stage 05 not yet run</text>
       <text id="text-077" x="1322" y="724" class="workflow-body" text-anchor="middle" data-container="workflow-node-5">160 Test rows reserved</text>
@@ -194,6 +194,6 @@
     </g>
   </g>
   <g id="band-4-summary">
-    <text id="text-083" x="30" y="792" class="footer" data-container="canvas">18-person Stages 01–03 complete; model stages pending; timing drift and Test performance unverified.</text>
+    <text id="text-083" x="30" y="792" class="footer" data-container="canvas">18-person Stages 01–04 complete; Stage 05 GRUs and Stage 06 selection pending; Test withheld.</text>
   </g>
 </svg>
