@@ -1,8 +1,8 @@
 # ==================== Presented by: Reza Saadatyar (2026) ====================
 """Access and audit the source distribution of MPIIGaze.
 
-Only the explicit fetch/extract functions perform I/O beyond reading
-metadata. Never infer image counts from the number of MATLAB containers.
+Reuse the Colab runtime source cache or acquire the official distribution
+when it is absent. Never infer image counts from MATLAB container totals.
 """
 
 from __future__ import annotations
@@ -22,6 +22,10 @@ import pandas as pd
 SOURCE_PAGE = "https://www.collaborative-ai.org/research/datasets/MPIIGaze/"
 ARCHIVE_URL = "https://collaborative-ai.org/files/datasets/MPIIGaze.tar.gz"
 SOURCE_DOI = "https://doi.org/10.18419/darus-3230"
+DARUS_ARCHIVE_URL = (
+    "https://darus.uni-stuttgart.de/api/access/datafile/:persistentId"
+    "?persistentId=doi:10.18419/DARUS-3230/1"
+)
 PARTICIPANT = re.compile(r"p\d{2}", flags=re.IGNORECASE)
 
 
@@ -203,35 +207,136 @@ def extract_source_archive(archive_path: Path, destination: Path) -> None:
         raise
 
 
-# ===================== 04. Explicit Original-Data Download ===================
+# ====================== 04. Official Source Acquisition ======================
 def download_source_archive(destination: Path, *, url: str = ARCHIVE_URL) -> Path:
-    """Stream the official multi-GB source to an ignored local path.
+    """Stream an official archive to the runtime, never to the user's PC.
 
-    Call only after explicit user selection of download mode. Never interpret
-    a partial download as a complete archive.
+    A unique temporary file prevents an interrupted transfer from blocking
+    subsequent attempts. Only a recognised archive is promoted on success.
     """
     destination = Path(destination)
     if destination.exists():
         raise FileExistsError(f"Archive already exists: {destination}")
     destination.parent.mkdir(parents=True, exist_ok=True)
-    part = destination.with_name(destination.name + ".part")
-    if part.exists():
-        raise FileExistsError(
-            f"Partial archive exists; inspect before restarting: {part}")
+    fd, filename = tempfile.mkstemp(
+        prefix=".mpiigaze_download_", suffix=".part",
+        dir=destination.parent)
+    os.close(fd)
+    part = Path(filename)
     request = urllib.request.Request(
-        url, headers={"User-Agent": "MPIIGaze-Academic-Source-Audit/1.0"})
+        url, headers={"User-Agent": "MPIIGaze-Academic-Source-Audit/1.0",
+                      "Accept-Encoding": "identity"})
     try:
+        print("Retrieving official MPIIGaze archive:", url, flush=True)
         with urllib.request.urlopen(request, timeout=180) as response:
-            if "text/html" in response.headers.get(
-                "Content-Type", "").lower():
-                raise ValueError(
-                    "Publisher returned HTML, not an original-data archive")
+            content_type = response.headers.get("Content-Type", "").lower()
+            if "text/html" in content_type or "application/json" in content_type:
+                raise ValueError("Source server returned a page, not an archive")
+            total = response.headers.get("Content-Length")
+            expected = int(total) if total and total.isdigit() else None
+            received = 0
+            next_report = 256 * 2**20
             with part.open("wb") as out:
-                shutil.copyfileobj(response, out, length=8 * 2**20)
+                while True:
+                    chunk = response.read(8 * 2**20)
+                    if not chunk:
+                        break
+                    out.write(chunk)
+                    received += len(chunk)
+                    if received >= next_report:
+                        print(f"Downloaded {received / 2**20:,.0f} MiB",
+                              flush=True)
+                        next_report = received + 256 * 2**20
+            if expected is not None and received != expected:
+                raise IOError(
+                    f"Incomplete archive: {received:,} of {expected:,} bytes")
         if not (zipfile.is_zipfile(part) or tarfile.is_tarfile(part)):
-            raise ValueError("Downloaded file is not a valid source archive")
+            raise ValueError("Downloaded file is not a valid ZIP/TAR archive")
         os.replace(part, destination)
-    except Exception:
-        # Keep an incomplete transfer for inspection instead of erasing it.
-        raise
+        print(f"Archive received: {received / 2**30:.2f} GiB", flush=True)
+    finally:
+        part.unlink(missing_ok=True)
     return destination
+
+
+# ========================== 05. Runtime Source Cache ==========================
+def normalised_mat_files(raw_dir: Path) -> list[Path]:
+    """Find the participant/day MAT containers consumed by Notebook 02."""
+    root = Path(raw_dir)
+    if not root.is_dir():
+        return []
+    return sorted(
+        path for path in root.rglob("*.mat")
+        if path.is_file() and not path.is_symlink()
+        and source_component(path.relative_to(root)) == "Normalized"
+        and PARTICIPANT.fullmatch(path.parent.name)
+    )
+
+
+def ensure_mpiigaze_source(raw_dir: Path) -> Path:
+    """Reuse extracted source, extract a cached archive, or fetch automatically.
+
+    Intended for the remote Colab checkout's ignored data/raw directory.
+    Official mirrors are attempted in order. The archive and extracted
+    source stay in the runtime; no raw data are packaged or published.
+    Existing non-empty source folders are never overwritten.
+    """
+    raw_dir = Path(raw_dir)
+    raw_dir.parent.mkdir(parents=True, exist_ok=True)
+    existing = normalised_mat_files(raw_dir)
+    if existing:
+        if any(path.stat().st_size == 0 for path in existing):
+            raise ValueError(f"Empty normalised MAT container in {raw_dir}")
+        print(f"Reusing MPIIGaze runtime cache: {raw_dir}", flush=True)
+        print(f"Normalised MAT containers: {len(existing):,}")
+        return raw_dir
+    if raw_dir.exists():
+        if not raw_dir.is_dir() or any(raw_dir.iterdir()):
+            raise ValueError(
+                f"Existing source path has no recognised normalised MAT files: "
+                f"{raw_dir}. Preserve and inspect it before replacing it.")
+        raw_dir.rmdir()
+
+    sources = (
+        ("MPIIGaze.tar.gz", ARCHIVE_URL),
+        ("MPIIGaze.zip", DARUS_ARCHIVE_URL),
+    )
+    errors = []
+    # Prefer any already downloaded archive, regardless of mirror order.
+    ordered = sorted(sources,
+                     key=lambda item: not (raw_dir.parent / item[0]).is_file())
+    for name, url in ordered:
+        archive = raw_dir.parent / name
+        try:
+            if not archive.is_file():
+                if shutil.disk_usage(raw_dir.parent).free < 8 * 2**30:
+                    raise RuntimeError(
+                        "Insufficient runtime disk for archive download and "
+                        "extraction (8 GiB free recommended).")
+                download_source_archive(archive, url=url)
+            else:
+                print("Reusing cached source archive:", archive, flush=True)
+            print("Extracting original MPIIGaze files in the runtime...",
+                  flush=True)
+            # Publish the extracted directory only after a source-level check.
+            with tempfile.TemporaryDirectory(
+                    prefix=".mpiigaze_validate_", dir=raw_dir.parent) as tmp:
+                candidate = Path(tmp) / "source"
+                extract_source_archive(archive, candidate)
+                containers = normalised_mat_files(candidate)
+                if not containers or any(p.stat().st_size == 0 for p in containers):
+                    raise ValueError(
+                        "Archive has no complete-looking participant MAT containers")
+                candidate.rename(raw_dir)
+            print(f"Source available: {raw_dir}", flush=True)
+            print(f"Normalised MAT containers: {len(containers):,}")
+            return raw_dir
+        except (OSError, ValueError, RuntimeError, EOFError,
+                zipfile.BadZipFile, tarfile.TarError) as exc:
+            errors.append(f"{name}: {type(exc).__name__}: {exc}")
+            print("Source acquisition attempt failed:", errors[-1], flush=True)
+    raise RuntimeError(
+        "Could not acquire the original MPIIGaze source from the official "
+        "publisher or DaRUS. No source analysis has been performed. "
+        "Check Colab network/disk access and retry. Details: "
+        + " | ".join(errors))
