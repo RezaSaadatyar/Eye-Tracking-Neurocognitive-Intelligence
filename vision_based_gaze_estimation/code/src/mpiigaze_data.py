@@ -169,19 +169,16 @@ def build_eye_sample_cache(
     if not normalised:
         raise FileNotFoundError(
             f"No official per-day Normalized/<participant>/*.mat files under {raw_dir}")
-    reservoirs, observed = {}, {}
+    reservoirs, observed, rngs = {}, {}, {}
     for path in normalised:
         person = _participant_id(path)
         if person not in reservoirs:
             reservoirs[person] = []
             observed[person] = 0
+            rngs[person] = np.random.default_rng(
+                np.random.SeedSequence([seed, int(person[1:])]))
         pixels, vectors = read_normalised_eye_mat(path, eye=eye)
-        rng = np.random.default_rng(seed + int(person[1:]))
-        # Reinitialise with a per-file seed derived from the stable file order;
-        # selection remains deterministic for each discovered file set.
-        path_index = normalised.index(path)
-        rng = np.random.default_rng(
-            np.random.SeedSequence([seed, int(person[1:]), path_index]))
+        rng = rngs[person]
         relative = path.relative_to(raw_dir).as_posix()
         for i in range(len(pixels)):
             observed[person] += 1
@@ -199,8 +196,6 @@ def build_eye_sample_cache(
             if len(pool) < per_person:
                 pool.append(item)
             else:
-                # A stable continuous generator is created outside this
-                # per-day loop in the final implementation.
                 position = int(rng.integers(0, observed[person]))
                 if position < per_person:
                     pool[position] = item
