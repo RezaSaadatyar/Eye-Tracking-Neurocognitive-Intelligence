@@ -1,6 +1,6 @@
 # Vision-Based Gaze Estimation
 
-**Status:** Notebooks 01–03 have been executed on MPIIGaze. The prepared cohort contains 7,500 indexed left-eye samples from 15 participants and 15 participant-disjoint folds. HOG + Ridge achieved mean inner-Validation angular error of 7.6961° versus 9.0481° for mean direction. Notebook 04 neural development and Notebook 05 final evaluation remain pending; outer Test has not been scored.
+**Status:** Notebooks 01–04 have been executed on MPIIGaze. The cohort contains 7,500 indexed left-eye samples from 15 participants and 15 participant-disjoint folds. HOG + Ridge achieved 7.6961° mean inner-Validation error across 15 configurations; Small CNN achieved 6.0758° across two configurations, compared with 8.0542° for ResNet-18 on those same two. Full outer-LOPO scoring and Notebook 05 final evaluation remain pending.
 
 This independent study investigates whether camera-derived eye images can estimate **3D gaze direction for previously unseen participants**, using evidence-based image geometry, classical baselines and compact deep models. Its inputs, coordinate frames and evaluation procedures are **not interchangeable** with the GazeBase recordings or ZuCo EEG–gaze features in other studies.
 
@@ -90,7 +90,20 @@ All saved sample IDs are unique and target vectors have unit norm within numeric
 
 *Figure 4. Classical development results; the horizontal axis identifies outer-fold configurations, not scored outer-Test participants.*
 
-Alpha 100 was the best tested Ridge setting in all 15 configurations. HOG + Ridge reduced mean fold error by 1.3519° (14.94%) and had lower error in 14/15 configurations; outer_03 was the exception. See the [candidate metrics](output/03_inner_validation_metrics.csv) and [configuration](output/03_run_configuration.csv). Fold results share participants and are not independent observations. No final outer-Test predictions are available.
+Alpha 100 was the best tested Ridge setting in all 15 configurations. HOG + Ridge reduced mean fold error by 1.3519° (14.94%) and had lower error in 14/15 configurations; outer_03 was the exception. See the [candidate metrics](output/03_inner_validation_metrics.csv) and [configuration](output/03_run_configuration.csv). Fold results share participants and are not independent observations. **Neural development results (Notebook 04):**
+
+| Model | outer_01 (°) | outer_02 (°) | Two-fold mean (°) |
+|---|---:|---:|---:|
+| Mean direction | 8.6726 | 9.1759 | 8.9243 |
+| HOG + Ridge | 7.3446 | 7.7159 | 7.5303 |
+| Small CNN | 5.3643 | 6.7873 | 6.0758 |
+| ResNet-18 | 8.4464 | 7.6621 | 8.0542 |
+
+![Recorded CNN and ResNet-18 development learning curves](output/04_validation_curves.png)
+
+*Figure 5. Mean inner-Validation angular error at each epoch across the two neural development configurations.*
+
+All four model/fold fits ran for eight epochs on CUDA (Tesla T4). Small CNN selected epochs 7 and 6; ResNet-18 selected epochs 8 and 7. Each checkpoint minimises its own recorded Validation error. The networks have 48,387 and 11,171,779 trainable parameters, respectively. Small CNN has the lowest error in both matching configurations; this preliminary comparison does not isolate the effects of architecture or pretraining. See [training history](output/04_training_history.csv), [selected metrics](output/04_inner_validation_metrics.csv) and [run configuration](output/04_run_configuration.csv). No final outer-Test predictions are available.
 
 ## 4. Running and Reviewing the Study
 
@@ -114,12 +127,12 @@ The approved architecture uses standard Python and Google Colab. Dataset and mod
 
 | Location | Responsibility |
 | --- | --- |
-| [`code/notebooks/`](code/notebooks/) | Notebooks 01–03 executed; Notebook 04 implemented, awaiting original-data execution; Notebook 05 remains a starter |
+| [`code/notebooks/`](code/notebooks/) | Notebooks 01–04 executed in source/development modes; Notebook 05 remains a reporting scaffold pending complete outer predictions |
 | [`code/src/`](code/src/) | [Source retrieval/inspection](code/src/mpiigaze_io.py), [normalised-image reader](code/src/mpiigaze_data.py), [3D geometry](code/src/gaze_geometry.py), [grouped evaluation](code/src/gaze_evaluation.py) and [classical/CNN models](code/src/gaze_models.py) |
-| [`images/`](images/) | Four editable five-band diagrams for [source audit](images/01_mpiigaze_source_audit_and_protocol.svg), [3D gaze/image preparation](images/02_eye_images_geometry_and_quality.svg), [classical baselines](images/03_classical_gaze_estimation_baselines.svg) and [CNN modelling](images/04_cnn_and_transfer_learning.svg); diagrams describe methods and recorded evidence for Notebooks 01–03 |
+| [`images/`](images/) | Four editable five-band diagrams for [source audit](images/01_mpiigaze_source_audit_and_protocol.svg), [3D gaze/image preparation](images/02_eye_images_geometry_and_quality.svg), [classical baselines](images/03_classical_gaze_estimation_baselines.svg) and [CNN modelling](images/04_cnn_and_transfer_learning.svg); diagrams describe methods and recorded evidence for Notebooks 01–04 |
 | [`requirements.txt`](requirements.txt) | Proposed dependencies, to be pinned for executed experiments |
 | `data/raw/mpiigaze/` (remote Colab checkout) | Automatically acquired original source files; ignored by Git and excluded from stage ZIPs |
-| `output/` (study root) | Six Notebook 01, five Notebook 02 and three Notebook 03 outputs are available; Notebook 04 and final outer-Test outputs are pending |
+| `output/` (study root) | Six Notebook 01, five Notebook 02, three Notebook 03 and five Notebook 04 outputs are available; final outer-Test outputs are pending |
 | [`RESEARCH_METHODS_AND_EVIDENCE.md`](RESEARCH_METHODS_AND_EVIDENCE.md) | Scientific question, data contracts, evaluation plan, source qualification and implementation boundaries |
 
 ## 6. Interpretation and Scope
