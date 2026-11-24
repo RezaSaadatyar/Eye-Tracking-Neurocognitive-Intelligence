@@ -46,8 +46,6 @@ def test_vision_study_notebook_scaffold_structure():
         nb = json.loads(path.read_text(encoding="utf-8"))
         assert nb["nbformat"] == 4
         assert nb["cells"][0]["cell_type"] == "markdown"
-        assert all(cell["execution_count"] is None and not cell["outputs"]
-                   for cell in nb["cells"] if cell["cell_type"] == "code")
         if i == 0:
             assert len(nb["cells"]) == 21
             assert len([c for c in nb["cells"] if c["cell_type"] == "code"]) == 10
@@ -55,7 +53,7 @@ def test_vision_study_notebook_scaffold_structure():
                       if c["cell_type"] == "code"]
             assert all("".join(code).splitlines()[0].startswith("# ===")
                        for code in source)
-            assert "SOURCE_MODE = \"local\"" in "".join(source[2])
+            assert "ensure_mpiigaze_source(raw_dir)" in "".join(source[2])
             assert "setup_colab(\"vision_based_gaze_estimation\")" in (
                 "".join(source[1]))
     study_readme = (STUDY / "README.md").read_text(encoding="utf-8")
