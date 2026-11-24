@@ -13,6 +13,8 @@ import re
 import numpy as np
 from scipy.io import loadmat
 
+from mpiigaze_io import normalised_mat_files
+
 
 # ========================== 01. Source MATLAB Decoding =======================
 def _unwrap(value):
@@ -161,11 +163,8 @@ def build_eye_sample_cache(
     """
     if isinstance(per_person, bool) or per_person < 1:
         raise ValueError("per_person must be a positive integer")
-    normalised = sorted(
-        path for path in Path(raw_dir).rglob("*.mat")
-        if "normalized" in {part.lower() for part in path.parts}
-        and re.fullmatch(r"p\d{2}", path.parent.name, re.IGNORECASE)
-    )
+    raw_dir = Path(raw_dir)
+    normalised = normalised_mat_files(raw_dir)
     if not normalised:
         raise FileNotFoundError(
             f"No official per-day Normalized/<participant>/*.mat files under {raw_dir}")
@@ -214,3 +213,69 @@ def build_eye_sample_cache(
             f"Inconsistent normalised eye image dimensions: {sorted(shapes)}")
     return (rows, np.stack(images).astype(np.uint8),
             np.stack(gaze).astype(np.float32), observed)
+
+
+# ====================== 03. Restore Indexed Image Samples ====================
+def restore_indexed_eye_cache(raw_dir, index_path, cache_path):
+    """Recover only the Stage-02 selected rows in a fresh runtime.
+
+    The existing sample index is authoritative: do not resample, change
+    participant roles, or substitute data if the published source differs.
+    """
+    import pandas as pd
+    import tempfile
+
+    from mpiigaze_io import ensure_mpiigaze_source
+
+    raw_dir, cache_path = Path(raw_dir), Path(cache_path)
+    index = pd.read_csv(index_path, dtype={
+        "sample_id": str, "participant_id": str, "source_mat": str,
+        "eye": str})
+    required = {"sample_id", "participant_id", "source_mat", "source_row",
+                "eye", "gaze_x", "gaze_y", "gaze_z"}
+    if (not required.issubset(index.columns) or index.empty
+            or index.sample_id.duplicated().any()):
+        raise ValueError("Invalid Stage-02 sample index; rerun Notebook 02")
+    if not index.eye.isin(["left", "right"]).all():
+        raise ValueError("Unsupported Stage-02 eye side")
+    source_rows = pd.to_numeric(index.source_row, errors="raise").to_numpy()
+    if (not np.isfinite(source_rows).all() or (source_rows < 0).any()
+            or (source_rows != np.floor(source_rows)).any()):
+        raise ValueError("Invalid Stage-02 original MAT row")
+    ensure_mpiigaze_source(raw_dir)
+    available = {
+        p.relative_to(raw_dir).as_posix(): p
+        for p in normalised_mat_files(raw_dir)
+    }
+    images = [None] * len(index)
+    targets = np.empty((len(index), 3), dtype=np.float32)
+    expected = index[["gaze_x", "gaze_y", "gaze_z"]].to_numpy(float)
+    for (relative, eye), group in index.groupby(["source_mat", "eye"],
+                                                 sort=False):
+        if relative not in available:
+            raise FileNotFoundError(
+                f"Stage-02 source container absent in current archive: "
+                f"{relative}. Use the same release or rerun Notebook 02.")
+        path = available[relative]
+        person = _participant_id(path.relative_to(raw_dir))
+        pixels, vectors = read_normalised_eye_mat(path, eye=eye)
+        for row in group.itertuples():
+            i, j = row.Index, int(row.source_row)
+            identity = f"{person}:{relative}:{eye}:{j}"
+            if (row.participant_id != person or row.sample_id != identity
+                    or j >= len(pixels)):
+                raise ValueError(f"Source identity mismatch: {row.sample_id}")
+            if not np.allclose(vectors[j], expected[i], atol=1e-6, rtol=0):
+                raise ValueError(f"Source gaze target mismatch: {row.sample_id}")
+            images[i] = pixels[j].copy()
+            targets[i] = vectors[j]
+    if any(p is None for p in images):
+        raise ValueError("Some Stage-02 source samples were not restored")
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(dir=cache_path.parent) as tmp:
+        temporary = Path(tmp) / "cache.npz"
+        np.savez_compressed(
+            temporary, images=np.stack(images), gaze=targets,
+            sample_id=index.sample_id.to_numpy(dtype=str))
+        temporary.replace(cache_path)
+    print(f"Restored {len(index):,} indexed eye images in the runtime.")
