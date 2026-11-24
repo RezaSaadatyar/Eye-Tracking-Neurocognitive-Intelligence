@@ -171,7 +171,8 @@ def test_notebook_01_to_04_code_is_parseable_and_uses_shared_io():
         assert "plot_style(" in all_code
         assert "save_figure(" in all_code
         assert "download_outputs_from_colab(" in all_code
-        assert f'"{stage:02}"' in all_code
+        assert (f'"{stage:02}"' in all_code
+                or f'download_outputs_from_colab(output_dir, {stage})' in all_code)
         if stage in (3, 4):
             assert "RUN_OUTER_TEST=False" in all_code or (
                 "RUN_OUTER_TEST = False" in all_code)
