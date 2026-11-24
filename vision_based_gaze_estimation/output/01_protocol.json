@@ -1,0 +1,30 @@
+{
+  "dataset": "MPIIGaze",
+  "source_url": "https://www.collaborative-ai.org/research/datasets/MPIIGaze/",
+  "dataset_doi": "https://doi.org/10.18419/darus-3230",
+  "observed_participants": [
+    "p00",
+    "p01",
+    "p02",
+    "p03",
+    "p04",
+    "p05",
+    "p06",
+    "p07",
+    "p08",
+    "p09",
+    "p10",
+    "p11",
+    "p12",
+    "p13",
+    "p14"
+  ],
+  "observed_source_files": 430180,
+  "sample_label_correspondence_verified": false,
+  "camera_normalised_gaze_frame_verified": false,
+  "model_ready": false,
+  "proposed_outer_protocol": "participant-disjoint LOPO",
+  "proposed_inner_protocol": "participant-disjoint validation",
+  "proposed_primary_metric": "3D angular error in degrees",
+  "sample_and_fold_assignment_producer": "Notebook 02"
+}
