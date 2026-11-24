@@ -79,14 +79,14 @@ def build_gaze_network(name, *, pretrained=False):
 
         weights = ResNet18_Weights.DEFAULT if pretrained else None
         model = resnet18(weights=weights)
+        original_rgb_filters = model.conv1.weight.detach().clone()
         model.conv1 = nn.Conv2d(1, 64, kernel_size=7, stride=2,
                                 padding=3, bias=False)
-        # Preserve useful pretrained RGB filters by averaging across channels.
+        # Preserve pretrained RGB filters as a single-channel mean.
         if weights is not None:
-            pretrained_model = resnet18(weights=weights)
             with torch.no_grad():
                 model.conv1.weight.copy_(
-                    pretrained_model.conv1.weight.mean(dim=1, keepdim=True))
+                    original_rgb_filters.mean(dim=1, keepdim=True))
         model.fc = nn.Linear(model.fc.in_features, 3)
         return model
     raise ValueError("Unknown gaze CNN model")
@@ -175,7 +175,7 @@ def train_gaze_network(
     if best_weights is None:
         raise RuntimeError(f"No valid {name} training checkpoint selected")
     network.load_state_dict(best_weights)
-    return network.cpu(), history, {
+    return network, history, {
         "best_epoch": best_epoch,
         "inner_validation_mean_angular_error_deg": best_error,
         "parameters": sum(param.numel() for param in network.parameters()),
