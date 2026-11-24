@@ -145,7 +145,7 @@ def test_ridge_baseline_trains_only_on_supplied_rows():
     assert hasattr(model, "predict")
 
 
-def test_notebook_01_to_04_code_is_parseable_and_uses_shared_io():
+def test_notebook_01_to_05_code_is_parseable_and_uses_shared_io():
     import json
 
     stems = [
@@ -153,6 +153,7 @@ def test_notebook_01_to_04_code_is_parseable_and_uses_shared_io():
         "02_eye_images_geometry_and_quality",
         "03_classical_gaze_estimation_baselines",
         "04_cnn_and_transfer_learning",
+        "05_cross_person_evaluation_and_robustness",
     ]
     for stage, stem in enumerate(stems, 1):
         file = STUDY / "code" / "notebooks" / (stem + ".ipynb")
@@ -174,8 +175,9 @@ def test_notebook_01_to_04_code_is_parseable_and_uses_shared_io():
         assert (f'"{stage:02}"' in all_code
                 or f'download_outputs_from_colab(output_dir, {stage})' in all_code)
         if stage in (3, 4):
-            assert "RUN_OUTER_TEST=False" in all_code or (
-                "RUN_OUTER_TEST = False" in all_code)
+            assert "RUN_OUTER_TEST=True" in all_code or (
+                "RUN_OUTER_TEST = True" in all_code)
+            assert "reconcile_outer_predictions(" in all_code
 
 
 def test_study_svg_figures_preserve_scientific_bands():
@@ -276,3 +278,38 @@ def test_restore_exact_selected_images_in_new_runtime(tmp_path):
     bad.to_csv(index, index=False)
     with pytest.raises(ValueError, match="target mismatch"):
         restore_indexed_eye_cache(raw, index, cache)
+
+def test_full_outer_prediction_contract_and_paired_summary():
+    from gaze_evaluation import reconcile_outer_predictions, summarise_outer_evaluation
+    people = [f"p{i}" for i in range(5)]
+    index = pd.DataFrame({
+        "participant_id": people, "sample_id": people,
+        "gaze_x": 0., "gaze_y": 0., "gaze_z": 1.,
+    })
+    folds = participant_fold_table(people)
+    test = folds.loc[folds.role.eq("test"), ["participant_id", "fold_id"]]
+    base = index[["sample_id", "participant_id"]].merge(test, on="participant_id")
+    rows = []
+    for model, prediction in [("a", (0., 0., 1.)), ("b", (1., 0., 0.))]:
+        part = base.copy()
+        part["model"] = model
+        for col, value in zip(["target_x", "target_y", "target_z"], (0., 0., 1.)):
+            part[col] = value
+        for col, value in zip(["pred_x", "pred_y", "pred_z"], prediction):
+            part[col] = value
+        rows.append(part)
+    predictions = pd.concat(rows, ignore_index=True)
+    observed, persons = reconcile_outer_predictions(predictions, index, folds, ("a", "b"))
+    summary, paired = summarise_outer_evaluation(observed, persons, ("a", "b"), draws=100)
+    np.testing.assert_allclose(summary.participant_macro_mean_deg, [0., 90.])
+    np.testing.assert_allclose(paired.mean_a_minus_b_deg, [-90.])
+    assert paired.people_a_lower_error.iloc[0] == 5
+    for column, value in [("fold_id", "wrong"), ("participant_id", "wrong"),
+                          ("target_z", 0.), ("pred_z", 0.)]:
+        bad = predictions.copy()
+        bad.loc[0, column] = value
+        with pytest.raises(ValueError):
+            reconcile_outer_predictions(bad, index, folds, ("a", "b"))
+    for bad in (predictions.iloc[1:], pd.concat([predictions, predictions.iloc[:1]])):
+        with pytest.raises(ValueError):
+            reconcile_outer_predictions(bad, index, folds, ("a", "b"))
