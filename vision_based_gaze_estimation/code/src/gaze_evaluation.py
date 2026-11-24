@@ -118,3 +118,109 @@ def person_angular_metrics(predictions):
                    median_angular_error_deg="median")
                .reset_index())
     return observed, summary
+
+
+# ======================= 04. Full Outer Prediction Contracts =================
+def validate_lopo_design(index, folds):
+    """Validate complete participant-disjoint roles before fitting or reporting."""
+    if index.empty or index[["sample_id", "participant_id"]].isna().any().any():
+        raise ValueError("Missing sample or participant identity")
+    if index.sample_id.duplicated().any():
+        raise ValueError("Duplicate sample IDs")
+    people = set(index.participant_id)
+    columns = ["fold_id", "outer_test_person", "participant_id", "role"]
+    if folds.empty or folds[columns].isna().any().any():
+        raise ValueError("Missing fold identity or role")
+    if folds.duplicated(["fold_id", "participant_id"]).any():
+        raise ValueError("Duplicate participant roles")
+    held_out = []
+    for fold_id, group in folds.groupby("fold_id"):
+        counts = group.role.value_counts().to_dict()
+        if (set(group.participant_id) != people
+                or counts != {"train": len(people) - 3, "validation": 2, "test": 1}
+                or len(people) < 4):
+            raise ValueError(f"Invalid participant roles in {fold_id}")
+        test_person = group.loc[group.role.eq("test"), "participant_id"].iloc[0]
+        if not group.outer_test_person.eq(test_person).all():
+            raise ValueError(f"Incorrect outer Test identity in {fold_id}")
+        held_out.append(test_person)
+    if len(held_out) != len(people) or set(held_out) != people:
+        raise ValueError("Each participant must be held out exactly once")
+
+
+def reconcile_outer_predictions(predictions, index, folds, models):
+    """Require complete matched predictions and recompute angular errors."""
+    validate_lopo_design(index, folds)
+    columns = ["sample_id", "participant_id", "fold_id", "model"]
+    if predictions.empty or predictions[columns].isna().any().any():
+        raise ValueError("Missing prediction identities")
+    if set(predictions.model) != set(models):
+        raise ValueError("Unexpected or missing model")
+    if predictions.duplicated(["model", "sample_id"]).any():
+        raise ValueError("Duplicate model/sample prediction")
+    test_roles = folds.loc[folds.role.eq("test"), ["participant_id", "fold_id"]]
+    expected = index[["sample_id", "participant_id", "gaze_x", "gaze_y", "gaze_z"]].merge(
+        test_roles, on="participant_id", validate="many_to_one")
+    expected = expected.set_index("sample_id")
+    target_cols = ["target_x", "target_y", "target_z"]
+    pred_cols = ["pred_x", "pred_y", "pred_z"]
+    for model in models:
+        part = predictions.loc[predictions.model.eq(model)].set_index("sample_id")
+        if set(part.index) != set(expected.index):
+            raise ValueError(f"Missing or unexpected sample coverage: {model}")
+        aligned = expected.loc[part.index]
+        for col in ("participant_id", "fold_id"):
+            if not np.array_equal(part[col].to_numpy(), aligned[col].to_numpy()):
+                raise ValueError(f"Incorrect {col}: {model}")
+        target = part[target_cols].to_numpy(float)
+        guess = part[pred_cols].to_numpy(float)
+        if not np.allclose(target, aligned[["gaze_x", "gaze_y", "gaze_z"]].to_numpy(float),
+                           rtol=0, atol=1e-6):
+            raise ValueError(f"Target mismatch: {model}")
+        for vectors in (target, guess):
+            if not np.allclose(np.linalg.norm(vectors, axis=1), 1., rtol=0, atol=1e-5):
+                raise ValueError(f"Non-unit or non-finite vectors: {model}")
+    return person_angular_metrics(predictions)
+
+
+# ======================= 05. Participant-Level Comparisons ===================
+def summarise_outer_evaluation(observed, per_person, models, *, seed=17, draws=5000):
+    """Describe participant means and paired differences on the fixed cohort.
+
+    Resample participant error summaries, not individual images. Percentile
+    intervals are conditional on saved predictions; overlapping LOPO training
+    sets and uncertainty from retraining are not accounted for.
+    """
+    from itertools import combinations
+
+    paired = per_person.pivot(index="participant_id", columns="model",
+                              values="mean_angular_error_deg")[list(models)]
+    if paired.empty or paired.isna().any().any() or draws < 1:
+        raise ValueError("Incomplete paired participant metrics")
+    rng = np.random.default_rng(seed)
+    resamples = rng.integers(0, len(paired), size=(draws, len(paired)))
+    values = paired.to_numpy(float)
+    means = values[resamples].mean(axis=1)
+    summary, differences = [], []
+    for j, model in enumerate(models):
+        errors = observed.loc[observed.model.eq(model), "angular_error_deg"].to_numpy(float)
+        low, high = np.quantile(means[:, j], [0.025, 0.975])
+        summary.append({
+            "model": model, "n_people": len(paired), "n_samples": len(errors),
+            "participant_macro_mean_deg": values[:, j].mean(),
+            "participant_mean_sd_deg": values[:, j].std(ddof=1),
+            "pooled_mean_deg": errors.mean(), "pooled_median_deg": np.median(errors),
+            "pooled_sd_deg": errors.std(ddof=1), "pooled_rmse_deg": np.sqrt(np.mean(errors**2)),
+            "participant_bootstrap_ci_low_deg": low,
+            "participant_bootstrap_ci_high_deg": high,
+        })
+    for j, k in combinations(range(len(models)), 2):
+        delta = values[:, j] - values[:, k]
+        low, high = np.quantile(means[:, j] - means[:, k], [0.025, 0.975])
+        differences.append({
+            "model_a": models[j], "model_b": models[k], "n_people": len(paired),
+            "mean_a_minus_b_deg": delta.mean(), "people_a_lower_error": int((delta < 0).sum()),
+            "people_equal_error": int((delta == 0).sum()),
+            "paired_bootstrap_ci_low_deg": low, "paired_bootstrap_ci_high_deg": high,
+        })
+    return pd.DataFrame(summary), pd.DataFrame(differences)
