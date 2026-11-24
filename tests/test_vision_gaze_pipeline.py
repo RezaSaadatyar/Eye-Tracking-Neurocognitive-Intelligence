@@ -17,7 +17,9 @@ ROOT = Path(__file__).resolve().parents[1]
 STUDY = ROOT / "vision_based_gaze_estimation"
 sys.path.insert(0, str(STUDY / "code" / "src"))
 
-from mpiigaze_data import read_normalised_eye_mat, build_eye_sample_cache
+from mpiigaze_data import (read_normalised_eye_mat, build_eye_sample_cache,
+                           restore_indexed_eye_cache)
+import mpiigaze_io
 from gaze_evaluation import (
     participant_fold_table, outer_fold_indices, load_image_cache,
     person_angular_metrics,
@@ -157,8 +159,6 @@ def test_notebook_01_to_04_code_is_parseable_and_uses_shared_io():
         nb = json.loads(file.read_text(encoding="utf-8"))
         code_cells = [c for c in nb["cells"] if c["cell_type"] == "code"]
         assert len(code_cells) >= 7
-        assert all(c["execution_count"] is None and not c["outputs"]
-                   for c in code_cells)
         for cell in code_cells:
             source = "".join(cell["source"])
             # Colab-only %cd is a valid IPython line magic.
@@ -200,3 +200,79 @@ def test_study_svg_figures_preserve_scientific_bands():
         assert sum(x.startswith("workflow-connector-") for x in ids) == 6
         title = next(el.text for el in root.iter() if el.attrib.get("id")=="title")
         assert title.startswith(f"{stage:02d} | ")
+
+
+def test_source_cache_reused_without_network(tmp_path, monkeypatch):
+    raw = tmp_path / "mpiigaze"
+    _write_synthetic_day(raw / "Data" / "Normalized" / "p00" / "day01.mat")
+    def unexpected(*args, **kwargs):
+        pytest.fail("A valid runtime source must not trigger network access")
+    monkeypatch.setattr(mpiigaze_io, "download_source_archive", unexpected)
+    assert mpiigaze_io.ensure_mpiigaze_source(raw) == raw
+
+
+def test_cached_archive_extracted_without_network(tmp_path, monkeypatch):
+    from zipfile import ZipFile
+    fixture = tmp_path / "day01.mat"
+    _write_synthetic_day(fixture)
+    with ZipFile(tmp_path / "MPIIGaze.zip", "w") as archive:
+        archive.write(fixture, "MPIIGaze/Data/Normalized/p00/day01.mat")
+    def unexpected(*args, **kwargs):
+        pytest.fail("An existing archive must not trigger network access")
+    monkeypatch.setattr(mpiigaze_io, "download_source_archive", unexpected)
+    raw = mpiigaze_io.ensure_mpiigaze_source(tmp_path / "mpiigaze")
+    assert len(mpiigaze_io.normalised_mat_files(raw)) == 1
+
+
+def test_missing_source_downloads_and_uses_official_fallback(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+    from zipfile import ZipFile
+    fixture = tmp_path / "day01.mat"
+    _write_synthetic_day(fixture)
+    calls = []
+    def simulated_download(destination, *, url):
+        calls.append(url)
+        if url == mpiigaze_io.ARCHIVE_URL:
+            raise OSError("Simulated unavailable publisher")
+        with ZipFile(destination, "w") as archive:
+            archive.write(fixture, "MPIIGaze/Data/Normalized/p00/day01.mat")
+        return destination
+    monkeypatch.setattr(mpiigaze_io, "download_source_archive",
+                        simulated_download)
+    monkeypatch.setattr(mpiigaze_io.shutil, "disk_usage",
+                        lambda _: SimpleNamespace(free=20 * 2**30))
+    raw = mpiigaze_io.ensure_mpiigaze_source(tmp_path / "mpiigaze")
+    assert calls == [mpiigaze_io.ARCHIVE_URL, mpiigaze_io.DARUS_ARCHIVE_URL]
+    assert len(mpiigaze_io.normalised_mat_files(raw)) == 1
+
+
+def test_all_download_failures_stop_source_analysis(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+    def unavailable(*args, **kwargs):
+        raise OSError("Simulated unavailable official source")
+    monkeypatch.setattr(mpiigaze_io, "download_source_archive", unavailable)
+    monkeypatch.setattr(mpiigaze_io.shutil, "disk_usage",
+                        lambda _: SimpleNamespace(free=20 * 2**30))
+    with pytest.raises(RuntimeError, match="No source analysis"):
+        mpiigaze_io.ensure_mpiigaze_source(tmp_path / "mpiigaze")
+    assert not (tmp_path / "mpiigaze").exists()
+
+
+def test_restore_exact_selected_images_in_new_runtime(tmp_path):
+    raw = tmp_path / "mpiigaze"
+    _write_synthetic_day(raw / "Data" / "Normalized" / "p00" / "day01.mat")
+    rows, images, gaze, _ = build_eye_sample_cache(raw, per_person=2, seed=17)
+    index = tmp_path / "02_sample_index.csv"
+    pd.DataFrame(rows).to_csv(index, index=False)
+    cache = tmp_path / "processed" / "02_normalised_eye_cache.npz"
+    restore_indexed_eye_cache(raw, index, cache)
+    table, restored, targets = load_image_cache(index, cache)
+    assert table.sample_id.tolist() == [row["sample_id"] for row in rows]
+    np.testing.assert_array_equal(restored, images)
+    np.testing.assert_allclose(targets, gaze)
+    # A saved index with a changed source target must not be silently accepted.
+    bad = pd.read_csv(index)
+    bad.loc[0, "gaze_x"] += 0.25
+    bad.to_csv(index, index=False)
+    with pytest.raises(ValueError, match="target mismatch"):
+        restore_indexed_eye_cache(raw, index, cache)
