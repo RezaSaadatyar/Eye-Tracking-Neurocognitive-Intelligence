@@ -188,7 +188,7 @@ def test_study_svg_figures_preserve_scientific_bands():
         "03_classical_gaze_estimation_baselines.svg",
         "04_cnn_and_transfer_learning.svg",
     ]
-    for filename in figures:
+    for stage, filename in enumerate(figures, 1):
         root = ElementTree.parse(STUDY / "images" / filename).getroot()
         assert root.attrib["viewBox"] == "0 0 1700 816"
         ids = [el.attrib["id"] for el in root.iter()
@@ -199,4 +199,4 @@ def test_study_svg_figures_preserve_scientific_bands():
         assert sum(x.startswith("workflow-node-") for x in ids) == 7
         assert sum(x.startswith("workflow-connector-") for x in ids) == 6
         title = next(el.text for el in root.iter() if el.attrib.get("id")=="title")
-        assert "MPIIGaze" in title or "Gaze" in title
+        assert title.startswith(f"{stage:02d} | ")
