@@ -176,3 +176,27 @@ def test_notebook_01_to_04_code_is_parseable_and_uses_shared_io():
         if stage in (3, 4):
             assert "RUN_OUTER_TEST=False" in all_code or (
                 "RUN_OUTER_TEST = False" in all_code)
+
+
+def test_study_svg_figures_preserve_scientific_bands():
+    """Validate editable five-band figures, node structure and XML identity."""
+    from xml.etree import ElementTree
+
+    figures = [
+        "01_mpiigaze_source_audit_and_protocol.svg",
+        "02_eye_images_geometry_and_quality.svg",
+        "03_classical_gaze_estimation_baselines.svg",
+        "04_cnn_and_transfer_learning.svg",
+    ]
+    for filename in figures:
+        root = ElementTree.parse(STUDY / "images" / filename).getroot()
+        assert root.attrib["viewBox"] == "0 0 1700 816"
+        ids = [el.attrib["id"] for el in root.iter()
+               if "id" in el.attrib]
+        assert len(ids) == len(set(ids))
+        assert all(f"band-{i}-" in " ".join(ids) for i in range(5))
+        assert sum(x.startswith("evidence-card-") for x in ids) == 4
+        assert sum(x.startswith("workflow-node-") for x in ids) == 7
+        assert sum(x.startswith("workflow-connector-") for x in ids) == 6
+        title = next(el.text for el in root.iter() if el.attrib.get("id")=="title")
+        assert "MPIIGaze" in title or "Gaze" in title
