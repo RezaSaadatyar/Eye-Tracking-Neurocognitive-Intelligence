@@ -45,8 +45,7 @@ def participant_fold_table(participants, *, seed=17, inner_people=2):
             ).all()
             or not result.groupby("fold_id").apply(
                 lambda g: (g.role.eq("test").sum() == 1
-                           and g.role.eq("validation").sum() == inner_people),
-                include_groups=False
+                           and g.role.eq("validation").sum() == inner_people)
             ).all()):
         raise ValueError("Participant role assignments are inconsistent")
     return result
