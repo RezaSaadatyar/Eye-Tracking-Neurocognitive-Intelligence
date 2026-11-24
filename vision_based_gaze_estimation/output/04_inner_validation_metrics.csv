@@ -1,0 +1,5 @@
+fold_id,model,n_fit_people,n_val_people,best_epoch,inner_validation_mean_angular_error_deg,parameters,pretrained
+outer_01,small_cnn,12,2,7,5.364291090237172,48387,False
+outer_01,resnet18,12,2,8,8.446367212241922,11171779,True
+outer_02,small_cnn,12,2,6,6.787299966389681,48387,False
+outer_02,resnet18,12,2,7,7.66206198728556,11171779,True

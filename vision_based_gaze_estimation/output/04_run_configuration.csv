@@ -1,0 +1,5 @@
+fold_id,model,run_mode,all_outer_folds,evaluated_folds,imagenet_pretrained,epochs_max,patience,batch_size,learning_rate,seed,test_used_for_model_selection
+outer_01,small_cnn,development_inner_validation,15,2,False,8,3,128,0.001,17,False
+outer_01,resnet18,development_inner_validation,15,2,True,8,3,128,0.0001,17,False
+outer_02,small_cnn,development_inner_validation,15,2,False,8,3,128,0.001,18,False
+outer_02,resnet18,development_inner_validation,15,2,True,8,3,128,0.0001,18,False

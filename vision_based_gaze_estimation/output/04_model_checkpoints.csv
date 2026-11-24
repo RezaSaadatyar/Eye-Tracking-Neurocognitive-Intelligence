@@ -1,0 +1,5 @@
+fold_id,model,local_relative_path,best_epoch,inner_validation_mean_angular_error_deg,parameters,pretrained
+outer_01,small_cnn,data/processed/mpiigaze/checkpoints/04_small_cnn_outer_01.pt,7,5.364291090237172,48387,False
+outer_01,resnet18,data/processed/mpiigaze/checkpoints/04_resnet18_outer_01.pt,8,8.446367212241922,11171779,True
+outer_02,small_cnn,data/processed/mpiigaze/checkpoints/04_small_cnn_outer_02.pt,6,6.787299966389681,48387,False
+outer_02,resnet18,data/processed/mpiigaze/checkpoints/04_resnet18_outer_02.pt,7,7.66206198728556,11171779,True
