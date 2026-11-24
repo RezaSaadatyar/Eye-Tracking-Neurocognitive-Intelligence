@@ -1,6 +1,6 @@
 # Vision-Based Gaze Estimation
 
-**Status:** Notebooks **01–04** contain the source-audit, image/target preparation, classical baseline and CNN/transfer-learning code, written in the repository's established Colab and figure/export format. **Notebook 05 is still a starter**. No original MPIIGaze images have been processed in this repository, and no gaze-model training or angular-error results have been verified.
+**Status:** Notebook 01 has been executed on the original MPIIGaze archive and its source-audit outputs are available. Notebooks 02–04 implement image/target preparation, classical baselines and CNN/transfer learning; their original-data execution is pending. Notebook 05 remains a starter. No gaze-model training or angular-error results have been verified.
 
 This independent study investigates whether camera-derived eye images can estimate **3D gaze direction for previously unseen participants**, using evidence-based image geometry, classical baselines and compact deep models. Its inputs, coordinate frames and evaluation procedures are **not interchangeable** with the GazeBase recordings or ZuCo EEG–gaze features in other studies.
 
@@ -40,7 +40,26 @@ These are **five complementary notebooks**, not five independent studies. Notebo
 
 ## 3. Main Results
 
-**Source-audit evidence is available.** Notebook 01 recorded 430,180 archive paths, 15 participant IDs and 15 representative MATLAB headers. The revised selector excludes archive companions. The saved participant table and inventory PNG describe the recorded archive audit; the candidate MAT counts include companions. Rerun Notebook 01 to regenerate the scientific MAT counts and updated plot. Notebooks 02–04 have no verified original-data execution. No valid original-image dataset subset, model checkpoints, participant scores or outer-fold Test predictions have been observed or published. Publisher-reported counts are not experimental outcomes of this study.
+**Source-audit results (Notebook 01):**
+
+| Evidence | Recorded count |
+|---|---:|
+| Archive file paths | 430,180 |
+| Operating-system companion paths | 215,386 |
+| Non-companion paths | 214,794 |
+| Participants with normalised MAT paths | 15 |
+| Normalised MAT candidate paths | 1,042 |
+| Participant/day MAT paths after companion exclusion | 521 |
+| MAT paths per participant | 7–69 |
+| Representative MATLAB v5 headers | 15 |
+| Top-level variable records | 30 |
+| Participant-list text files / documentation | 45 / 1 |
+
+![Non-companion component counts and normalised MAT support by participant](output/01_source_inventory.png)
+
+*Figure 2. Recorded non-companion file counts on a logarithmic axis and normalised MAT paths per participant. Source-file counts are not image sample counts.*
+
+See the [participant support](output/01_participant_support.csv), [MAT headers](output/01_mat_schema.csv) and [list inventory](output/01_evaluation_list_inventory.csv). Image–target alignment, gaze geometry and eligible image sample counts remain to be established in Notebook 02. No model scores or outer-Test predictions are available.
 
 ## 4. Running and Reviewing the Study
 
@@ -66,10 +85,10 @@ The approved architecture uses standard Python and Google Colab. Dataset and mod
 | --- | --- |
 | [`code/notebooks/`](code/notebooks/) | Notebook 01 source audit executed; Notebooks 02–04 implemented, awaiting original-data execution; Notebook 05 remains a starter |
 | [`code/src/`](code/src/) | [Source retrieval/inspection](code/src/mpiigaze_io.py), [normalised-image reader](code/src/mpiigaze_data.py), [3D geometry](code/src/gaze_geometry.py), [grouped evaluation](code/src/gaze_evaluation.py) and [classical/CNN models](code/src/gaze_models.py) |
-| [`images/`](images/) | Four editable five-band diagrams for [source audit](images/01_mpiigaze_source_audit_and_protocol.svg), [3D gaze/image preparation](images/02_eye_images_geometry_and_quality.svg), [classical baselines](images/03_classical_gaze_estimation_baselines.svg) and [CNN modelling](images/04_cnn_and_transfer_learning.svg); diagrams describe methods rather than measured results |
+| [`images/`](images/) | Four editable five-band diagrams for [source audit](images/01_mpiigaze_source_audit_and_protocol.svg), [3D gaze/image preparation](images/02_eye_images_geometry_and_quality.svg), [classical baselines](images/03_classical_gaze_estimation_baselines.svg) and [CNN modelling](images/04_cnn_and_transfer_learning.svg); diagrams describe methods and, for Notebook 01, recorded source metadata |
 | [`requirements.txt`](requirements.txt) | Proposed dependencies, to be pinned for executed experiments |
 | `data/raw/mpiigaze/` (remote Colab checkout) | Automatically acquired original source files; ignored by Git and excluded from stage ZIPs |
-| `output/` (study root) | Stage-owned outputs generated only when an original-data stage is run; no real MPIIGaze evidence files have been verified here |
+| `output/` (study root) | Six current Notebook 01 source-audit outputs are available; Notebook 02–04 outputs are pending |
 | [`RESEARCH_METHODS_AND_EVIDENCE.md`](RESEARCH_METHODS_AND_EVIDENCE.md) | Scientific question, data contracts, evaluation plan, source qualification and implementation boundaries |
 
 ## 6. Interpretation and Scope
