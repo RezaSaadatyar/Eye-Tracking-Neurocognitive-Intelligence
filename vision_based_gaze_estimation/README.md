@@ -1,6 +1,6 @@
 # Vision-Based Gaze Estimation
 
-**Status:** Notebooks 01–03 have completed source preparation and full classical outer LOPO on 7,500 samples from 15 participants. HOG + Ridge achieved 7.5596° participant-macro mean outer-Test error versus 9.1601° for mean direction. Notebook 04 has completed two-fold neural development; its full outer LOPO and Notebook 05 analysis remain pending.
+**Status:** Notebooks 01–04 have completed source preparation and full classical/neural outer LOPO on 7,500 samples from 15 participants. Small CNN achieved 7.3048° participant-macro mean outer-Test error, followed by HOG + Ridge (7.5596°), ResNet-18 (8.2304°) and mean direction (9.1601°). Notebook 05 analysis is implemented and awaits execution.
 
 This independent study investigates whether camera-derived eye images can estimate **3D gaze direction for previously unseen participants**, using evidence-based image geometry, classical baselines and compact deep models. Its inputs, coordinate frames and evaluation procedures are **not interchangeable** with the GazeBase recordings or ZuCo EEG–gaze features in other studies.
 
@@ -19,7 +19,7 @@ This independent study investigates whether camera-derived eye images can estima
 | Predictors | **Normalised grayscale left-eye crops (36 × 60 pixels)**; 500 examples per participant, 7,500 total. Head pose is excluded; physical gaze-axis convention requires independent confirmation |
 | Target | Original-source **3D gaze direction** with a documented camera/normalised coordinate frame; 2D screen point is not the initial target |
 | Prediction unit | One source-labelled image or eye sample; person/session/day IDs retained for grouping, not an unintended predictor |
-| Evaluation unit | Independent **participant**; deterministic outer leave-one-person-out (LOPO) folds with **two distinct inner-Validation people** per fold, 15 observed participants. Notebook 03 has completed full outer LOPO; Notebook 04 is configured for the same final roles |
+| Evaluation unit | Independent **participant**; deterministic outer leave-one-person-out (LOPO) folds with **two distinct inner-Validation people** per fold, 15 observed participants. Notebooks 03 and 04 have completed full outer LOPO using the same fixed roles |
 | Main metric | Mean/median **3D angular error in degrees**; per-person dispersion; 2D pixel error only if an appropriate separate geometry protocol is approved |
 
 The official description distinguishes Data, Evaluation Subset and Annotation Subset, and contains an unresolved inconsistency about annotated-subset counts. **Notebook 01 must establish the actual chosen file structure before any sample counts, image-label joins or training are claimed.**
@@ -33,7 +33,7 @@ These are **five complementary notebooks**, not five independent studies. Notebo
 | 01 | [Source audit and protocol](code/notebooks/01_mpiigaze_source_audit_and_protocol.ipynb) | Implemented original-data access, safe archive extraction, participant/day and MAT schema audit, evaluation-list inspection and proposed protocol | **Source audit outputs:** `01_file_inventory.csv`, `01_participant_support.csv`, `01_mat_schema.csv`, `01_evaluation_list_inventory.csv`, `01_protocol.csv` and `01_source_inventory.png` |
 | 02 | [Eye images, geometry and quality](code/notebooks/02_eye_images_geometry_and_quality.ipynb) | Implemented normalised-image/3D label decoder, initial 500-per-person source sampling, local-only image cache, participant LOPO/inner folds and pixel-quality plots | `02_sample_index.csv`, `02_fold_assignments.csv`, `02_source_sample_counts.csv`, `02_cache_location.csv`, `02_image_quality.png`; ignored local NPZ |
 | 03 | [Classical baselines](code/notebooks/03_classical_gaze_estimation_baselines.ipynb) | Implemented Train-only mean direction and HOG + Ridge with nested inner-Validation alpha selection; full outer LOPO executed | `03_inner_validation_metrics.csv`, `03_run_configuration.csv`, `03_baseline_comparison.png`; `03_baseline_outer_predictions.csv` and `03_baseline_fold_metrics.csv` |
-| 04 | [CNN and transfer learning](code/notebooks/04_cnn_and_transfer_learning.ipynb) | Implemented Small CNN and optional ImageNet-pretrained ResNet-18; Train/inner-Validation checkpointing, full outer LOPO configured after the two-fold development run | `04_training_history.csv`, `04_inner_validation_metrics.csv`, `04_model_checkpoints.csv`, `04_run_configuration.csv`, `04_validation_curves.png`; local-only checkpoints, optional explicit Test predictions |
+| 04 | [CNN and transfer learning](code/notebooks/04_cnn_and_transfer_learning.ipynb) | Implemented Small CNN and optional ImageNet-pretrained ResNet-18; Train/inner-Validation checkpointing, full outer LOPO executed | `04_training_history.csv`, `04_inner_validation_metrics.csv`, `04_model_checkpoints.csv`, `04_run_configuration.csv`, `04_validation_curves.png`; local-only checkpoints, `04_neural_outer_predictions.csv`, `04_neural_outer_metrics.csv` |
 | 05 | [Cross-person evaluation and robustness](code/notebooks/05_cross_person_evaluation_and_robustness.ipynb) | Reconcile outer-fold predictions, report participant-level angular error and uncertainty | `05_model_metrics.csv`, `05_participant_metrics.csv`, `05_paired_differences.csv`, `05_image_stratum_metrics.csv`, `05_model_complexity.csv` and three figures |
 
 **Dependency order:** 01 → 02 → (03 and 04 use the **same sample index and fold assignments**) → 05, after both complete outer prediction tables are generated. Each outer LOPO person is excluded from fitting and inner model selection. Development mode reports inner-Validation only, and full outer-Test evaluation needs deliberate activation and a frozen protocol. Neither model selection nor retrospective retuning may use the outer Test.
@@ -105,20 +105,20 @@ Alpha 100 was the best tested Ridge setting in all 15 configurations. HOG + Ridg
 
 Both models cover all 7,500 samples once, yielding 15,000 matched outer-Test predictions and 30 participant/model metric records. HOG + Ridge reduced participant-macro mean error by 1.6005° (17.47%), with lower error for 14 of 15 people. The exception is p09 (9.6914° versus 8.6698° for mean direction). See the [outer predictions](output/03_baseline_outer_predictions.csv) and [participant metrics](output/03_baseline_fold_metrics.csv). Independent recalculation of angular errors agrees with the saved values within 0.000002°; the reference directions also agree with the Training-derived means. HOG/Ridge fitting was not independently repeated. The internal LOPO estimates are not external validation or evidence of statistical significance.
 
-**Neural development results (Notebook 04):**
+**Neural outer-LOPO results (Notebook 04):**
 
-| Model | outer_01 (°) | outer_02 (°) | Two-fold mean (°) |
-|---|---:|---:|---:|
-| Mean direction | 8.6726 | 9.1759 | 8.9243 |
-| HOG + Ridge | 7.3446 | 7.7159 | 7.5303 |
-| Small CNN | 5.3643 | 6.7873 | 6.0758 |
-| ResNet-18 | 8.4464 | 7.6621 | 8.0542 |
+| Model | Inner Validation (°) | Outer Test (°) |
+|---|---:|---:|
+| Mean direction | 9.0481 | 9.1601 |
+| HOG + Ridge | 7.6961 | 7.5596 |
+| Small CNN | 6.7633 | 7.3048 |
+| ResNet-18 | 8.1554 | 8.2304 |
 
-![Recorded CNN and ResNet-18 development learning curves](output/04_validation_curves.png)
+The 30 neural fits ran for 238 epochs on CUDA (Tesla T4). Small CNN in outer_07 and ResNet-18 in outer_12 stopped at epoch seven after their best epoch four; the other 28 fits reached epoch eight. All 30 recorded selected epochs match their minimum inner-Validation errors. The networks have 48,387 and 11,171,779 parameters, respectively. Each neural procedure covers all 7,500 indexed samples exactly once. Independent recalculation of angular errors agrees with the saved predictions within 0.000002°. Checkpoint weights remain local and were not independently reloaded. Small CNN has the lowest participant-macro outer-Test mean, but the difference from HOG + Ridge is only 0.2549°. Small CNN, HOG + Ridge and mean direction have the lowest participant error for eight, six and one people respectively. These are descriptive internal results, not evidence of statistical significance or external validity. Parameter counts are not measured runtime or memory. See [training history](output/04_training_history.csv), [selected metrics](output/04_inner_validation_metrics.csv), [configuration](output/04_run_configuration.csv), [outer predictions](output/04_neural_outer_predictions.csv) and [participant metrics](output/04_neural_outer_metrics.csv). Both prediction tables are complete; Notebook 05 analysis remains unexecuted.
 
-*Figure 5. Mean inner-Validation angular error at each epoch across the two neural development configurations.*
+![Recorded CNN and ResNet-18 learning curves](output/04_validation_curves.png)
 
-All four model/fold fits ran for eight epochs on CUDA (Tesla T4). Small CNN selected epochs 7 and 6; ResNet-18 selected epochs 8 and 7. Each checkpoint minimises its own recorded Validation error. The networks have 48,387 and 11,171,779 trainable parameters, respectively. Small CNN has the lowest error in both matching configurations; this preliminary comparison does not isolate the effects of architecture or pretraining. See [training history](output/04_training_history.csv), [selected metrics](output/04_inner_validation_metrics.csv) and [run configuration](output/04_run_configuration.csv). Neural outer-Test predictions remain pending; classical outer-Test predictions are available and will be compared with neural predictions in Notebook 05.
+*Figure 5. Mean inner-Validation angular error by epoch; 15 folds per model at epochs 1–7 and 14 at epoch 8.*
 
 ## 4. Running and Reviewing the Study
 
@@ -142,12 +142,12 @@ The approved architecture uses standard Python and Google Colab. Dataset and mod
 
 | Location | Responsibility |
 | --- | --- |
-| [`code/notebooks/`](code/notebooks/) | Notebooks 01–04 executed in source/development modes; Notebook 05 implemented, awaiting complete outer predictions |
+| [`code/notebooks/`](code/notebooks/) | Notebooks 01–04 executed; Notebook 05 implemented, with complete inputs available |
 | [`code/src/`](code/src/) | [Source retrieval/inspection](code/src/mpiigaze_io.py), [normalised-image reader](code/src/mpiigaze_data.py), [3D geometry](code/src/gaze_geometry.py), [grouped evaluation](code/src/gaze_evaluation.py) and [classical/CNN models](code/src/gaze_models.py) |
 | [`images/`](images/) | Four editable five-band diagrams for [source audit](images/01_mpiigaze_source_audit_and_protocol.svg), [3D gaze/image preparation](images/02_eye_images_geometry_and_quality.svg), [classical baselines](images/03_classical_gaze_estimation_baselines.svg) and [CNN modelling](images/04_cnn_and_transfer_learning.svg); diagrams describe methods and recorded evidence for Notebooks 01–04 |
 | [`requirements.txt`](requirements.txt) | Proposed dependencies, to be pinned for executed experiments |
 | `data/raw/mpiigaze/` (remote Colab checkout) | Automatically acquired original source files; ignored by Git and excluded from stage ZIPs |
-| `output/` (study root) | Six Notebook 01, five Notebook 02, five Notebook 03 and five Notebook 04 outputs are available; neural outer-Test outputs are pending |
+| `output/` (study root) | Six Notebook 01, five Notebook 02, five Notebook 03 and seven Notebook 04 outputs are available; Notebook 05 outputs are pending |
 | [`RESEARCH_METHODS_AND_EVIDENCE.md`](RESEARCH_METHODS_AND_EVIDENCE.md) | Scientific question, data contracts, evaluation plan, source qualification and implementation boundaries |
 
 ## 6. Interpretation and Scope
