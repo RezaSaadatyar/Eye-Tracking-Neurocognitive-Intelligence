@@ -1,4 +1,4 @@
-participant_id,source_files,normalised_mat_files,original_files,calibration_files,observed_day_folders
+participant_id,source_files,normalised_mat_candidate_paths,original_files,calibration_files,observed_day_folders
 p00,60126,78,60048,0,39
 p01,48638,138,48500,0,69
 p02,56242,78,56164,0,39

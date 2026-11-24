@@ -125,3 +125,23 @@ def test_mpiigaze_safe_tar_root_and_rejects_symlink(tmp_path):
         tar.addfile(entry)
     with pytest.raises(ValueError, match="Links"):
         extract_source_archive(malicious, tmp_path / "bad")
+
+
+def test_archive_companions_excluded_from_day_mat_selection(tmp_path):
+    from mpiigaze_io import normalised_mat_files, is_normalised_mat_path
+
+    relative = Path("MPIIGaze/Data/Normalized/p00/day01.mat")
+    sidecars = [
+        Path("__MACOSX") / relative,
+        relative.with_name("._day01.mat"),
+        relative.with_name("notes.mat"),
+    ]
+    for item in [relative, *sidecars]:
+        path = tmp_path / item
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(b"synthetic")
+    assert normalised_mat_files(tmp_path) == [tmp_path / relative]
+    assert all(not is_normalised_mat_path(item) for item in sidecars)
+    support = participant_source_support(source_inventory(tmp_path))
+    assert support.iloc[0].normalised_mat_candidate_paths == 4
+    assert support.iloc[0].normalised_mat_files == 1

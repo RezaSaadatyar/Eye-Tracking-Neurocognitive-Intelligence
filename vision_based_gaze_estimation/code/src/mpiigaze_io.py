@@ -47,6 +47,24 @@ def source_component(relative: Path) -> str:
     return "Other"
 
 
+def is_archive_companion(relative: Path) -> bool:
+    """Identify macOS archive metadata, not scientific source files."""
+    return any(part.casefold() == "__macosx" or part.startswith("._")
+               or part.casefold() == ".ds_store"
+               for part in Path(relative).parts)
+
+
+def is_normalised_mat_path(relative: Path) -> bool:
+    """Recognise participant/day MATLAB paths, excluding archive companions."""
+    relative = Path(relative)
+    return (
+        not is_archive_companion(relative)
+        and source_component(relative) == "Normalized"
+        and PARTICIPANT.fullmatch(relative.parent.name) is not None
+        and re.fullmatch(r"day\d+\.mat", relative.name, re.IGNORECASE) is not None
+    )
+
+
 def source_inventory(root: Path) -> pd.DataFrame:
     """Index observed source files; a MAT container is not one image."""
     root = Path(root)
@@ -79,22 +97,26 @@ def participant_source_support(inventory: pd.DataFrame) -> pd.DataFrame:
     """Summarise source containers, not verified image/target samples."""
     if inventory.empty:
         return pd.DataFrame(columns=[
-            "participant_id", "source_files", "normalised_mat_files",
+            "participant_id", "source_files", "normalised_mat_candidate_paths",
+            "normalised_mat_files",
             "original_files", "calibration_files", "observed_day_folders",
         ])
-    work = inventory.dropna(subset=["participant_id"])
+    work = inventory.dropna(subset=["participant_id"]).copy()
+    work["is_day_mat"] = work.relative_path.map(is_normalised_mat_path)
+    work["is_companion"] = work.relative_path.map(is_archive_companion)
     records = []
     for person, group in work.groupby("participant_id", sort=True):
         records.append({
             "participant_id": person,
             "source_files": int(len(group)),
-            "normalised_mat_files": int(
+            "normalised_mat_candidate_paths": int(
                 (group.component.eq("Normalized")
                  & group.suffix.eq(".mat")).sum()),
+            "normalised_mat_files": int(group.is_day_mat.sum()),
             "original_files": int(group.component.eq("Original").sum()),
             "calibration_files": int(group.component.eq("Calibration").sum()),
             "observed_day_folders": int(
-                group.recording_day.dropna().nunique()),
+                group.loc[~group.is_companion, "recording_day"].dropna().nunique()),
         })
     return pd.DataFrame(records)
 
@@ -268,8 +290,7 @@ def normalised_mat_files(raw_dir: Path) -> list[Path]:
     return sorted(
         path for path in root.rglob("*.mat")
         if path.is_file() and not path.is_symlink()
-        and source_component(path.relative_to(root)) == "Normalized"
-        and PARTICIPANT.fullmatch(path.parent.name)
+        and is_normalised_mat_path(path.relative_to(root))
     )
 
 

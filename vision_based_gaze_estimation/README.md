@@ -8,7 +8,7 @@ This independent study investigates whether camera-derived eye images can estima
 
 ![Five-band MPIIGaze source audit and evaluation protocol schematic](images/01_mpiigaze_source_audit_and_protocol.svg)
 
-*Figure 1. Original-data acquisition, source metadata, participant provenance and proposed evaluation design. The schematic shows the implemented source-audit operations; no MPIIGaze measurements or model results are claimed.*
+*Figure 1. Original-data acquisition, source metadata, participant provenance and proposed evaluation design. The diagram includes recorded archive metadata, not model performance.*
 
 ## 1. Dataset and Experimental Protocol
 
@@ -30,17 +30,17 @@ These are **five complementary notebooks**, not five independent studies. Notebo
 
 | Stage | Notebook | Responsibility | Intended current outputs |
 | --- | --- | --- | --- |
-| 01 | [Source audit and protocol](code/notebooks/01_mpiigaze_source_audit_and_protocol.ipynb) | Implemented original-data access, safe archive extraction, participant/day and MAT schema audit, evaluation-list inspection and proposed protocol | **When executed on actual source:** `01_file_inventory.csv`, `01_participant_support.csv`, `01_mat_schema.csv`, `01_evaluation_list_inventory.csv`, `01_protocol.json` and `01_source_inventory.png` |
-| 02 | [Eye images, geometry and quality](code/notebooks/02_eye_images_geometry_and_quality.ipynb) | Implemented normalised-image/3D label decoder, initial 500-per-person source sampling, local-only image cache, participant LOPO/inner folds and pixel-quality plots | `02_sample_index.csv`, `02_fold_assignments.csv`, `02_source_sample_counts.csv`, `02_cache_location.json`, `02_image_quality.png`; ignored local NPZ |
-| 03 | [Classical baselines](code/notebooks/03_classical_gaze_estimation_baselines.ipynb) | Implemented Train-only mean direction and HOG + Ridge with nested inner-Validation alpha selection; outer Test **off initially** | `03_inner_validation_metrics.csv`, `03_run_configuration.json`, `03_baseline_comparison.png`; optional explicit `03_baseline_outer_predictions.csv` and `03_baseline_fold_metrics.csv` |
-| 04 | [CNN and transfer learning](code/notebooks/04_cnn_and_transfer_learning.ipynb) | Implemented Small CNN and optional ImageNet-pretrained ResNet-18; Train/inner-Validation checkpointing, two-fold development configuration, outer Test **off initially** | `04_training_history.csv`, `04_inner_validation_metrics.csv`, `04_model_checkpoints.csv`, `04_run_configuration.json`, `04_validation_curves.png`; local-only checkpoints, optional explicit Test predictions |
+| 01 | [Source audit and protocol](code/notebooks/01_mpiigaze_source_audit_and_protocol.ipynb) | Implemented original-data access, safe archive extraction, participant/day and MAT schema audit, evaluation-list inspection and proposed protocol | **Source audit outputs:** `01_file_inventory.csv`, `01_participant_support.csv`, `01_mat_schema.csv`, `01_evaluation_list_inventory.csv`, `01_protocol.csv` and `01_source_inventory.png` |
+| 02 | [Eye images, geometry and quality](code/notebooks/02_eye_images_geometry_and_quality.ipynb) | Implemented normalised-image/3D label decoder, initial 500-per-person source sampling, local-only image cache, participant LOPO/inner folds and pixel-quality plots | `02_sample_index.csv`, `02_fold_assignments.csv`, `02_source_sample_counts.csv`, `02_cache_location.csv`, `02_image_quality.png`; ignored local NPZ |
+| 03 | [Classical baselines](code/notebooks/03_classical_gaze_estimation_baselines.ipynb) | Implemented Train-only mean direction and HOG + Ridge with nested inner-Validation alpha selection; outer Test **off initially** | `03_inner_validation_metrics.csv`, `03_run_configuration.csv`, `03_baseline_comparison.png`; optional explicit `03_baseline_outer_predictions.csv` and `03_baseline_fold_metrics.csv` |
+| 04 | [CNN and transfer learning](code/notebooks/04_cnn_and_transfer_learning.ipynb) | Implemented Small CNN and optional ImageNet-pretrained ResNet-18; Train/inner-Validation checkpointing, two-fold development configuration, outer Test **off initially** | `04_training_history.csv`, `04_inner_validation_metrics.csv`, `04_model_checkpoints.csv`, `04_run_configuration.csv`, `04_validation_curves.png`; local-only checkpoints, optional explicit Test predictions |
 | 05 | [Cross-person evaluation and robustness](code/notebooks/05_cross_person_evaluation_and_robustness.ipynb) | Reconcile outer-fold predictions, report participant-level angular error and uncertainty | `05_model_metrics.csv`, per-person results, error figure |
 
 **Dependency order:** 01 → 02 → (03 and 04 use the **same sample index and fold assignments**) → 05, after Notebook 05 has been implemented. Each outer LOPO person is excluded from fitting and inner model selection. Development mode reports inner-Validation only, and full outer-Test evaluation needs deliberate activation and a frozen protocol. Neither model selection nor retrospective retuning may use the outer Test.
 
 ## 3. Main Results
 
-**No original-data results are available yet.** Notebooks 01–04 and their project-specific Python modules are implemented, but none has been verified against the real MPIIGaze archive in this repository. No valid original-image dataset subset, model checkpoints, participant scores or outer-fold Test predictions have been observed or published. Publisher-reported counts are not experimental outcomes of this study.
+**Source-audit evidence is available.** Notebook 01 recorded 430,180 archive paths, 15 participant IDs and 15 representative MATLAB headers. The revised selector excludes archive companions. The saved participant table and inventory PNG describe the recorded archive audit; the candidate MAT counts include companions. Rerun Notebook 01 to regenerate the scientific MAT counts and updated plot. Notebooks 02–04 have no verified original-data execution. No valid original-image dataset subset, model checkpoints, participant scores or outer-fold Test predictions have been observed or published. Publisher-reported counts are not experimental outcomes of this study.
 
 ## 4. Running and Reviewing the Study
 
@@ -64,7 +64,7 @@ The approved architecture uses standard Python and Google Colab. Dataset and mod
 
 | Location | Responsibility |
 | --- | --- |
-| [`code/notebooks/`](code/notebooks/) | Notebooks 01–04 implemented but not original-data-executed; Notebook 05 remains a starter |
+| [`code/notebooks/`](code/notebooks/) | Notebook 01 source audit executed; Notebooks 02–04 implemented, awaiting original-data execution; Notebook 05 remains a starter |
 | [`code/src/`](code/src/) | [Source retrieval/inspection](code/src/mpiigaze_io.py), [normalised-image reader](code/src/mpiigaze_data.py), [3D geometry](code/src/gaze_geometry.py), [grouped evaluation](code/src/gaze_evaluation.py) and [classical/CNN models](code/src/gaze_models.py) |
 | [`images/`](images/) | Four editable five-band diagrams for [source audit](images/01_mpiigaze_source_audit_and_protocol.svg), [3D gaze/image preparation](images/02_eye_images_geometry_and_quality.svg), [classical baselines](images/03_classical_gaze_estimation_baselines.svg) and [CNN modelling](images/04_cnn_and_transfer_learning.svg); diagrams describe methods rather than measured results |
 | [`requirements.txt`](requirements.txt) | Proposed dependencies, to be pinned for executed experiments |

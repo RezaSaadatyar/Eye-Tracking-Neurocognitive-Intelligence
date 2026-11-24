@@ -1,6 +1,6 @@
 # Vision-Based Gaze Estimation: Research Methods and Evidence
 
-This document describes the **implemented but not original-data-executed** Notebooks 01–04 and specifies the remaining evaluation boundaries for the independent vision-based study. See the [study README](README.md). **No numerical MPIIGaze gaze-estimation results have been produced or independently verified here.**
+This document describes the recorded Notebook 01 source audit and the implemented, original-data-unexecuted Notebooks 02–04 and specifies the remaining evaluation boundaries for the independent vision-based study. See the [study README](README.md). **No numerical MPIIGaze gaze-estimation results have been produced or independently verified here.**
 
 ## 1. Research Objective and Scope
 
@@ -22,7 +22,7 @@ The archive is offered under **CC BY-NC-SA 4.0**. Raw source images and annotati
 
 ## 3. Data Preparation and Representations
 
-**Notebook 01 (implemented, not yet run on original data):** automatically reuse the extracted remote Colab source or cached archive; otherwise acquire the publisher archive or official DaRUS file via programmatic access, validate and safely extract ZIP/TAR entries, inventory observed source files, identify participant/day support, inspect representative MATLAB variable headers and publisher evaluation/annotation-list metadata, and save a proposed evaluation protocol. The source metadata reader is [mpiigaze_io.py](code/src/mpiigaze_io.py). These operations do **not** verify image-level gaze targets or constitute a completed evaluation.
+**Notebook 01 (source audit executed; revised selection awaiting rerun):** automatically reuse the extracted remote Colab source or cached archive; otherwise acquire the publisher archive or official DaRUS file via programmatic access, validate and safely extract ZIP/TAR entries, inventory observed source files, identify participant/day support, inspect representative MATLAB variable headers and publisher evaluation/annotation-list metadata, and save a proposed evaluation protocol. The source metadata reader is [mpiigaze_io.py](code/src/mpiigaze_io.py). These operations do **not** verify image-level gaze targets or constitute a completed evaluation.
 
 **Notebook 02 (implemented, unexecuted on MPIIGaze):** the [source reader](code/src/mpiigaze_data.py) expects normalised MATLAB `data.<eye>.image` and `data.<eye>.gaze` fields, checks image–label counts, rejects unsupported MAT representations and preserves participant/file/row/eye identity. Its preliminary reproducible sample uses **up to 500 left-eye images per person** by deterministic within-person reservoir sampling, not the publisher's official Evaluation Subset. Raw data are automatically recovered in the remote runtime if absent; normalised MAT file paths and sizes must match the current Stage-01 inventory. The image cache remains in ignored `data/processed/mpiigaze/`; the [fold utility](code/src/gaze_evaluation.py) creates participant-based outer LOPO and two-person inner Validation. These source-specific assumptions must be verified against actual MAT files before accepting the resulting sample/target contract.
 
@@ -50,7 +50,7 @@ Both model notebooks consume the **same Notebook 02 sample index, cached graysca
 
 ## 6. Results and Comparative Analysis
 
-**No original-data results yet.** Notebooks 01–04 now contain substantive source-audit, image/3D-label, classical and CNN code but have **not** been run on the original MPIIGaze distribution in this repository. Synthetic tests do not establish actual source image/label compatibility or model performance. No real 3D gaze prediction scores, trained original-data checkpoints, outer-fold comparisons or generalisation claims are available.
+**Recorded source-audit evidence.** Notebook 01 recorded 430,180 archive paths, 15 participant IDs and 30 variable records across 15 representative MATLAB headers. The evaluation/annotation inventory contains 45 participant-list paths and one ReadMe after excluding 46 macOS companions. Revised participant/day MAT counts and the chart require a rerun; the saved candidate counts and existing PNG describe the original audit. Notebooks 02–04 remain unexecuted on original data. Synthetic tests do not establish actual source image/label compatibility or model performance. No real 3D gaze prediction scores, trained original-data checkpoints, outer-fold comparisons or generalisation claims are available.
 
 Once executed, report the observed eligible cohort, each model's per-person predictions, mean/median angular error in degrees, comparison to the strongest valid baseline, failure cases and uncertainty. Do not copy MPIIGaze published benchmark numbers into this study's result columns.
 
@@ -62,24 +62,24 @@ Potential confounding includes repeated days/images for one person, unverified c
 
 ## 8. Current Outputs and Reproducibility
 
-The repository contains **four implemented but original-data-unexecuted notebooks (01–04)** and one Notebook-05 starter; a source adapter, data reader, gaze geometry, participant evaluation and model utility; four editable five-band scientific figures ([01](images/01_mpiigaze_source_audit_and_protocol.svg), [02](images/02_eye_images_geometry_and_quality.svg), [03](images/03_classical_gaze_estimation_baselines.svg), [04](images/04_cnn_and_transfer_learning.svg)); and the two study documents. Synthetic tests verify safe source inventory/extraction, not original-data validity. **No original MPIIGaze data or model predictions are committed.** The source-audit notebook creates stage-owned metadata and a figure only after it has opened original source files.
+The repository contains **one recorded source-audit run (01) and three implemented, original-data-unexecuted notebooks (02–04)** and one Notebook-05 starter; a source adapter, data reader, gaze geometry, participant evaluation and model utility; four editable five-band scientific figures ([01](images/01_mpiigaze_source_audit_and_protocol.svg), [02](images/02_eye_images_geometry_and_quality.svg), [03](images/03_classical_gaze_estimation_baselines.svg), [04](images/04_cnn_and_transfer_learning.svg)); and the two study documents. Synthetic tests verify safe source inventory/extraction, not original-data validity. **No original MPIIGaze data or model predictions are committed.** The source-audit notebook creates stage-owned metadata and a figure only after it has opened original source files.
 
 Intended stage-specific files, all **planned until genuinely produced**:
 
 | Producer | Intended files and consumers |
 | --- | --- |
-| 01 | `01_file_inventory.csv`, `01_participant_support.csv`, `01_mat_schema.csv`, `01_evaluation_list_inventory.csv`, `01_protocol.json`, `01_source_inventory.png` (produced when the original archive is available); source verification for Stage 02 |
-| 02 | `02_sample_index.csv`, `02_fold_assignments.csv`, `02_source_sample_counts.csv`, `02_cache_location.json`, `02_image_quality.png`; local ignored `02_normalised_eye_cache.npz` used by 03–04 |
-| 03 | Development: `03_inner_validation_metrics.csv`, `03_run_configuration.json`, `03_baseline_comparison.png`. Full outer LOPO, when explicitly enabled: `03_baseline_outer_predictions.csv`, `03_baseline_fold_metrics.csv` |
-| 04 | Development: `04_training_history.csv`, `04_inner_validation_metrics.csv`, `04_model_checkpoints.csv`, `04_run_configuration.json`, `04_validation_curves.png` and ignored checkpoint weights. Full outer LOPO, when enabled: `04_neural_outer_predictions.csv`, `04_neural_outer_metrics.csv` |
+| 01 | `01_file_inventory.csv`, `01_participant_support.csv`, `01_mat_schema.csv`, `01_evaluation_list_inventory.csv`, `01_protocol.csv`, `01_source_inventory.png` (produced when the original archive is available); source verification for Stage 02 |
+| 02 | `02_sample_index.csv`, `02_fold_assignments.csv`, `02_source_sample_counts.csv`, `02_cache_location.csv`, `02_image_quality.png`; local ignored `02_normalised_eye_cache.npz` used by 03–04 |
+| 03 | Development: `03_inner_validation_metrics.csv`, `03_run_configuration.csv`, `03_baseline_comparison.png`. Full outer LOPO, when explicitly enabled: `03_baseline_outer_predictions.csv`, `03_baseline_fold_metrics.csv` |
+| 04 | Development: `04_training_history.csv`, `04_inner_validation_metrics.csv`, `04_model_checkpoints.csv`, `04_run_configuration.csv`, `04_validation_curves.png` and ignored checkpoint weights. Full outer LOPO, when enabled: `04_neural_outer_predictions.csv`, `04_neural_outer_metrics.csv` |
 | 05 | `05_model_metrics.csv`, `05_participant_metrics.csv`, error figure for documentation |
 
 Use VS Code connected to the remote Colab runtime, the established repository setup and the study-level `output/` directory. Raw archives, extracted source, image cache and checkpoints remain in ignored runtime directories. Only stage-owned analysis outputs are packaged for manual download from Colab Contents; the user extracts these into the study's local `output/` directory and synchronises the reviewed files through Git. Rerunning an implemented stage overwrites its own current named outputs. Do not silently retrain models when a reporting stage opens missing files.
 
 ## 9. Discussion, Limitations and Future Work
 
-The study extends the programme from already-recorded gaze/EEG signals to **camera-image gaze prediction**, with a separate source, 3D normalised gaze frame and angular-error metric. Notebooks **01–04 contain implementation**, but original-data execution is still unverified, Notebook 05 is not yet implemented, and no gaze generalisation outcomes have been established.
+The study extends the programme from already-recorded gaze/EEG signals to **camera-image gaze prediction**, with a separate source, 3D normalised gaze frame and angular-error metric. Notebook 01 has recorded original-data audit evidence; Notebooks 02–04 contain implementation but original-data execution is unverified, Notebook 05 is not yet implemented, and no gaze generalisation outcomes have been established.
 
-The principal early limitations are **unverified original MAT source/label conventions**, the unresolved annotated-subset count definitions, participant-level image dependence, a preliminary 500-per-person (not official benchmark) subset, unknown compute demand of full neural LOPO and source licensing. The immediate operation is to **run Notebook 01 on the authorised official archive**, inspect observed schema/metadata, then run Notebook 02 and verify its exact image–target mapping, normalised coordinate system and Fold roles before accepting the classical or neural outputs. Software tests cannot replace those checks.
+The principal early limitations are **unverified original MAT source/label conventions**, the unresolved annotated-subset count definitions, participant-level image dependence, a preliminary 500-per-person (not official benchmark) subset, unknown compute demand of full neural LOPO and source licensing. The immediate operation is to **rerun the revised Notebook 01 using the cached source**, then run Notebook 02 and verify its exact image–target mapping, normalised coordinate system and Fold roles before accepting the classical or neural outputs. Software tests cannot replace those checks.
 
 **Reference:** Zhang, X., Sugano, Y., Fritz, M. and Bulling, A., MPIIGaze: Real-World Dataset and Deep Appearance-Based Gaze Estimation, IEEE TPAMI. [DOI](https://doi.org/10.1109/TPAMI.2017.2778103).

@@ -1,93 +1,47 @@
-relative_path,component,nonempty_text_lines
-MPIIGaze/Annotation Subset/p00.txt,Annotation Subset,867
-MPIIGaze/Annotation Subset/p01.txt,Annotation Subset,860
-MPIIGaze/Annotation Subset/p02.txt,Annotation Subset,1040
-MPIIGaze/Annotation Subset/p03.txt,Annotation Subset,639
-MPIIGaze/Annotation Subset/p04.txt,Annotation Subset,872
-MPIIGaze/Annotation Subset/p05.txt,Annotation Subset,940
-MPIIGaze/Annotation Subset/p06.txt,Annotation Subset,891
-MPIIGaze/Annotation Subset/p07.txt,Annotation Subset,772
-MPIIGaze/Annotation Subset/p08.txt,Annotation Subset,228
-MPIIGaze/Annotation Subset/p09.txt,Annotation Subset,556
-MPIIGaze/Annotation Subset/p10.txt,Annotation Subset,725
-MPIIGaze/Annotation Subset/p11.txt,Annotation Subset,677
-MPIIGaze/Annotation Subset/p12.txt,Annotation Subset,421
-MPIIGaze/Annotation Subset/p13.txt,Annotation Subset,551
-MPIIGaze/Annotation Subset/p14.txt,Annotation Subset,615
-MPIIGaze/Evaluation Subset/ReadMe.txt,Evaluation Subset,4
-MPIIGaze/Evaluation Subset/annotation for face image/p00.txt,Evaluation Subset,2927
-MPIIGaze/Evaluation Subset/annotation for face image/p01.txt,Evaluation Subset,2904
-MPIIGaze/Evaluation Subset/annotation for face image/p02.txt,Evaluation Subset,2916
-MPIIGaze/Evaluation Subset/annotation for face image/p03.txt,Evaluation Subset,2929
-MPIIGaze/Evaluation Subset/annotation for face image/p04.txt,Evaluation Subset,2860
-MPIIGaze/Evaluation Subset/annotation for face image/p05.txt,Evaluation Subset,2870
-MPIIGaze/Evaluation Subset/annotation for face image/p06.txt,Evaluation Subset,2877
-MPIIGaze/Evaluation Subset/annotation for face image/p07.txt,Evaluation Subset,2843
-MPIIGaze/Evaluation Subset/annotation for face image/p08.txt,Evaluation Subset,2767
-MPIIGaze/Evaluation Subset/annotation for face image/p09.txt,Evaluation Subset,2719
-MPIIGaze/Evaluation Subset/annotation for face image/p10.txt,Evaluation Subset,2194
-MPIIGaze/Evaluation Subset/annotation for face image/p11.txt,Evaluation Subset,2262
-MPIIGaze/Evaluation Subset/annotation for face image/p12.txt,Evaluation Subset,1601
-MPIIGaze/Evaluation Subset/annotation for face image/p13.txt,Evaluation Subset,1498
-MPIIGaze/Evaluation Subset/annotation for face image/p14.txt,Evaluation Subset,1500
-MPIIGaze/Evaluation Subset/sample list for eye image/p00.txt,Evaluation Subset,3000
-MPIIGaze/Evaluation Subset/sample list for eye image/p01.txt,Evaluation Subset,3000
-MPIIGaze/Evaluation Subset/sample list for eye image/p02.txt,Evaluation Subset,3000
-MPIIGaze/Evaluation Subset/sample list for eye image/p03.txt,Evaluation Subset,3000
-MPIIGaze/Evaluation Subset/sample list for eye image/p04.txt,Evaluation Subset,3000
-MPIIGaze/Evaluation Subset/sample list for eye image/p05.txt,Evaluation Subset,3000
-MPIIGaze/Evaluation Subset/sample list for eye image/p06.txt,Evaluation Subset,3000
-MPIIGaze/Evaluation Subset/sample list for eye image/p07.txt,Evaluation Subset,3000
-MPIIGaze/Evaluation Subset/sample list for eye image/p08.txt,Evaluation Subset,3000
-MPIIGaze/Evaluation Subset/sample list for eye image/p09.txt,Evaluation Subset,3000
-MPIIGaze/Evaluation Subset/sample list for eye image/p10.txt,Evaluation Subset,3000
-MPIIGaze/Evaluation Subset/sample list for eye image/p11.txt,Evaluation Subset,3000
-MPIIGaze/Evaluation Subset/sample list for eye image/p12.txt,Evaluation Subset,3000
-MPIIGaze/Evaluation Subset/sample list for eye image/p13.txt,Evaluation Subset,3000
-MPIIGaze/Evaluation Subset/sample list for eye image/p14.txt,Evaluation Subset,3000
-__MACOSX/MPIIGaze/Annotation Subset/._p00.txt,Annotation Subset,1
-__MACOSX/MPIIGaze/Annotation Subset/._p01.txt,Annotation Subset,1
-__MACOSX/MPIIGaze/Annotation Subset/._p02.txt,Annotation Subset,1
-__MACOSX/MPIIGaze/Annotation Subset/._p03.txt,Annotation Subset,1
-__MACOSX/MPIIGaze/Annotation Subset/._p04.txt,Annotation Subset,1
-__MACOSX/MPIIGaze/Annotation Subset/._p05.txt,Annotation Subset,1
-__MACOSX/MPIIGaze/Annotation Subset/._p06.txt,Annotation Subset,1
-__MACOSX/MPIIGaze/Annotation Subset/._p07.txt,Annotation Subset,1
-__MACOSX/MPIIGaze/Annotation Subset/._p08.txt,Annotation Subset,1
-__MACOSX/MPIIGaze/Annotation Subset/._p09.txt,Annotation Subset,1
-__MACOSX/MPIIGaze/Annotation Subset/._p10.txt,Annotation Subset,1
-__MACOSX/MPIIGaze/Annotation Subset/._p11.txt,Annotation Subset,1
-__MACOSX/MPIIGaze/Annotation Subset/._p12.txt,Annotation Subset,1
-__MACOSX/MPIIGaze/Annotation Subset/._p13.txt,Annotation Subset,1
-__MACOSX/MPIIGaze/Annotation Subset/._p14.txt,Annotation Subset,1
-__MACOSX/MPIIGaze/Evaluation Subset/._ReadMe.txt,Evaluation Subset,1
-__MACOSX/MPIIGaze/Evaluation Subset/annotation for face image/._p00.txt,Evaluation Subset,1
-__MACOSX/MPIIGaze/Evaluation Subset/annotation for face image/._p01.txt,Evaluation Subset,1
-__MACOSX/MPIIGaze/Evaluation Subset/annotation for face image/._p02.txt,Evaluation Subset,1
-__MACOSX/MPIIGaze/Evaluation Subset/annotation for face image/._p03.txt,Evaluation Subset,1
-__MACOSX/MPIIGaze/Evaluation Subset/annotation for face image/._p04.txt,Evaluation Subset,1
-__MACOSX/MPIIGaze/Evaluation Subset/annotation for face image/._p05.txt,Evaluation Subset,1
-__MACOSX/MPIIGaze/Evaluation Subset/annotation for face image/._p06.txt,Evaluation Subset,1
-__MACOSX/MPIIGaze/Evaluation Subset/annotation for face image/._p07.txt,Evaluation Subset,1
-__MACOSX/MPIIGaze/Evaluation Subset/annotation for face image/._p08.txt,Evaluation Subset,1
-__MACOSX/MPIIGaze/Evaluation Subset/annotation for face image/._p09.txt,Evaluation Subset,1
-__MACOSX/MPIIGaze/Evaluation Subset/annotation for face image/._p10.txt,Evaluation Subset,1
-__MACOSX/MPIIGaze/Evaluation Subset/annotation for face image/._p11.txt,Evaluation Subset,1
-__MACOSX/MPIIGaze/Evaluation Subset/annotation for face image/._p12.txt,Evaluation Subset,1
-__MACOSX/MPIIGaze/Evaluation Subset/annotation for face image/._p13.txt,Evaluation Subset,1
-__MACOSX/MPIIGaze/Evaluation Subset/annotation for face image/._p14.txt,Evaluation Subset,1
-__MACOSX/MPIIGaze/Evaluation Subset/sample list for eye image/._p00.txt,Evaluation Subset,1
-__MACOSX/MPIIGaze/Evaluation Subset/sample list for eye image/._p01.txt,Evaluation Subset,1
-__MACOSX/MPIIGaze/Evaluation Subset/sample list for eye image/._p02.txt,Evaluation Subset,1
-__MACOSX/MPIIGaze/Evaluation Subset/sample list for eye image/._p03.txt,Evaluation Subset,1
-__MACOSX/MPIIGaze/Evaluation Subset/sample list for eye image/._p04.txt,Evaluation Subset,1
-__MACOSX/MPIIGaze/Evaluation Subset/sample list for eye image/._p05.txt,Evaluation Subset,1
-__MACOSX/MPIIGaze/Evaluation Subset/sample list for eye image/._p06.txt,Evaluation Subset,1
-__MACOSX/MPIIGaze/Evaluation Subset/sample list for eye image/._p07.txt,Evaluation Subset,1
-__MACOSX/MPIIGaze/Evaluation Subset/sample list for eye image/._p08.txt,Evaluation Subset,1
-__MACOSX/MPIIGaze/Evaluation Subset/sample list for eye image/._p09.txt,Evaluation Subset,1
-__MACOSX/MPIIGaze/Evaluation Subset/sample list for eye image/._p10.txt,Evaluation Subset,1
-__MACOSX/MPIIGaze/Evaluation Subset/sample list for eye image/._p11.txt,Evaluation Subset,1
-__MACOSX/MPIIGaze/Evaluation Subset/sample list for eye image/._p12.txt,Evaluation Subset,1
-__MACOSX/MPIIGaze/Evaluation Subset/sample list for eye image/._p13.txt,Evaluation Subset,1
-__MACOSX/MPIIGaze/Evaluation Subset/sample list for eye image/._p14.txt,Evaluation Subset,1
+relative_path,component,file_type,nonempty_text_lines
+MPIIGaze/Annotation Subset/p00.txt,Annotation Subset,participant_list,867
+MPIIGaze/Annotation Subset/p01.txt,Annotation Subset,participant_list,860
+MPIIGaze/Annotation Subset/p02.txt,Annotation Subset,participant_list,1040
+MPIIGaze/Annotation Subset/p03.txt,Annotation Subset,participant_list,639
+MPIIGaze/Annotation Subset/p04.txt,Annotation Subset,participant_list,872
+MPIIGaze/Annotation Subset/p05.txt,Annotation Subset,participant_list,940
+MPIIGaze/Annotation Subset/p06.txt,Annotation Subset,participant_list,891
+MPIIGaze/Annotation Subset/p07.txt,Annotation Subset,participant_list,772
+MPIIGaze/Annotation Subset/p08.txt,Annotation Subset,participant_list,228
+MPIIGaze/Annotation Subset/p09.txt,Annotation Subset,participant_list,556
+MPIIGaze/Annotation Subset/p10.txt,Annotation Subset,participant_list,725
+MPIIGaze/Annotation Subset/p11.txt,Annotation Subset,participant_list,677
+MPIIGaze/Annotation Subset/p12.txt,Annotation Subset,participant_list,421
+MPIIGaze/Annotation Subset/p13.txt,Annotation Subset,participant_list,551
+MPIIGaze/Annotation Subset/p14.txt,Annotation Subset,participant_list,615
+MPIIGaze/Evaluation Subset/ReadMe.txt,Evaluation Subset,documentation,4
+MPIIGaze/Evaluation Subset/annotation for face image/p00.txt,Evaluation Subset,participant_list,2927
+MPIIGaze/Evaluation Subset/annotation for face image/p01.txt,Evaluation Subset,participant_list,2904
+MPIIGaze/Evaluation Subset/annotation for face image/p02.txt,Evaluation Subset,participant_list,2916
+MPIIGaze/Evaluation Subset/annotation for face image/p03.txt,Evaluation Subset,participant_list,2929
+MPIIGaze/Evaluation Subset/annotation for face image/p04.txt,Evaluation Subset,participant_list,2860
+MPIIGaze/Evaluation Subset/annotation for face image/p05.txt,Evaluation Subset,participant_list,2870
+MPIIGaze/Evaluation Subset/annotation for face image/p06.txt,Evaluation Subset,participant_list,2877
+MPIIGaze/Evaluation Subset/annotation for face image/p07.txt,Evaluation Subset,participant_list,2843
+MPIIGaze/Evaluation Subset/annotation for face image/p08.txt,Evaluation Subset,participant_list,2767
+MPIIGaze/Evaluation Subset/annotation for face image/p09.txt,Evaluation Subset,participant_list,2719
+MPIIGaze/Evaluation Subset/annotation for face image/p10.txt,Evaluation Subset,participant_list,2194
+MPIIGaze/Evaluation Subset/annotation for face image/p11.txt,Evaluation Subset,participant_list,2262
+MPIIGaze/Evaluation Subset/annotation for face image/p12.txt,Evaluation Subset,participant_list,1601
+MPIIGaze/Evaluation Subset/annotation for face image/p13.txt,Evaluation Subset,participant_list,1498
+MPIIGaze/Evaluation Subset/annotation for face image/p14.txt,Evaluation Subset,participant_list,1500
+MPIIGaze/Evaluation Subset/sample list for eye image/p00.txt,Evaluation Subset,participant_list,3000
+MPIIGaze/Evaluation Subset/sample list for eye image/p01.txt,Evaluation Subset,participant_list,3000
+MPIIGaze/Evaluation Subset/sample list for eye image/p02.txt,Evaluation Subset,participant_list,3000
+MPIIGaze/Evaluation Subset/sample list for eye image/p03.txt,Evaluation Subset,participant_list,3000
+MPIIGaze/Evaluation Subset/sample list for eye image/p04.txt,Evaluation Subset,participant_list,3000
+MPIIGaze/Evaluation Subset/sample list for eye image/p05.txt,Evaluation Subset,participant_list,3000
+MPIIGaze/Evaluation Subset/sample list for eye image/p06.txt,Evaluation Subset,participant_list,3000
+MPIIGaze/Evaluation Subset/sample list for eye image/p07.txt,Evaluation Subset,participant_list,3000
+MPIIGaze/Evaluation Subset/sample list for eye image/p08.txt,Evaluation Subset,participant_list,3000
+MPIIGaze/Evaluation Subset/sample list for eye image/p09.txt,Evaluation Subset,participant_list,3000
+MPIIGaze/Evaluation Subset/sample list for eye image/p10.txt,Evaluation Subset,participant_list,3000
+MPIIGaze/Evaluation Subset/sample list for eye image/p11.txt,Evaluation Subset,participant_list,3000
+MPIIGaze/Evaluation Subset/sample list for eye image/p12.txt,Evaluation Subset,participant_list,3000
+MPIIGaze/Evaluation Subset/sample list for eye image/p13.txt,Evaluation Subset,participant_list,3000
+MPIIGaze/Evaluation Subset/sample list for eye image/p14.txt,Evaluation Subset,participant_list,3000
