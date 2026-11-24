@@ -1,12 +1,12 @@
 # Vision-Based Gaze Estimation: Research Methods and Evidence
 
-This document describes the executed Notebook 01 source audit and Notebook 02 image preparation, and the implemented, original-data-unexecuted Notebooks 03–04 and specifies the remaining evaluation boundaries for the independent vision-based study. See the [study README](README.md). **No numerical MPIIGaze gaze-estimation results have been produced or independently verified here.**
+This document describes the executed source audit, image preparation and classical development (Notebooks 01–03), and the implemented, original-data-unexecuted Notebook 04, and specifies the remaining evaluation boundaries for the independent vision-based study. See the [study README](README.md). **Classical inner-Validation results are recorded; no final outer-Test generalisation estimate is available.**
 
 ## 1. Research Objective and Scope
 
 **Main question:** Can image-based gaze estimation predict camera/normalised-frame 3D gaze direction with low angular error for participants excluded from fitting and model selection?
 
-**Implemented candidate families (not executed on the original data):** Train-derived mean-gaze reference; HOG descriptors with Train-scaled Ridge regression; Small CNN; and ResNet-18, optionally initialised with ImageNet weights. A Vision Transformer is outside the current experiment and requires a separate scientific and compute justification.
+**Candidate families (classical development executed; neural development pending):** Train-derived mean-gaze reference; HOG descriptors with Train-scaled Ridge regression; Small CNN; and ResNet-18, optionally initialised with ImageNet weights. A Vision Transformer is outside the current experiment and requires a separate scientific and compute justification.
 
 **Excluded from current scope:** eye-event segmentation, EEG fusion, comprehension prediction, screen-calibrated point-of-gaze claims, and personalised calibration benchmarks mixed with calibration-free unseen-person experiments.
 
@@ -42,7 +42,7 @@ Both model notebooks consume the **same Notebook 02 sample index, cached graysca
 
 ## 5. Methods, Models and Configurations
 
-**Classical stage (Notebook 03; implemented, not run on source):** each fold fits a **mean training gaze direction** and a **HOG + StandardScaler + Ridge** comparator. Ridge candidates `alpha ∈ {1, 10, 100}` are compared on that fold's inner Validation people. Continuous Ridge predictions are normalised to nonzero unit vectors before 3D angular-error calculation. The default run saves inner metrics and a plot; an explicit full-outer mode also writes matched outer predictions and per-person metrics.
+**Classical stage (Notebook 03; inner-Validation development executed):** each fold fits a **mean training gaze direction** and a **HOG + StandardScaler + Ridge** comparator. Ridge candidates `alpha ∈ {1, 10, 100}` are compared on that fold's inner Validation people. Continuous Ridge predictions are normalised to nonzero unit vectors before 3D angular-error calculation. The default run saves inner metrics and a plot; an explicit full-outer mode also writes matched outer predictions and per-person metrics.
 
 **Deep stage (Notebook 04; implemented, not run on source):** a three-block compact grayscale CNN and ResNet-18 with a grayscale first convolution and optional ImageNet pretraining. Both produce 3D vectors, optimised using **mean cosine-direction loss** with AdamW. The current development configuration uses a maximum of eight epochs, three-epoch early-stopping patience and batch size 128. The checkpoint with the lowest inner-Validation angular error is retained for each model/fold, and parameter counts and epoch histories are saved. PyTorch's CUDA/CPU device is reported. A complete outer-Test pass requires explicit activation and all outer folds; its performance is not used for hyperparameter or model choice.
 
@@ -65,9 +65,18 @@ The [participant support table](output/01_participant_support.csv) identifies al
 
 **Recorded image-preparation evidence (Notebook 02).** The decoder processed 213,658 left-eye source rows and retained 7,500 grayscale images (36 × 60 pixels), 500 per participant. The decoded count differs by one from the published image count of 213,659; its cause is unresolved. The [sample index](output/02_sample_index.csv) contains 7,500 unique IDs spanning 510 selected source MAT files. All saved gaze vectors have unit norms within numerical tolerance, and the image intensity and contrast statistics are finite. Mean intensity ranges from 83.87 to 216.38; pixel SD ranges from 66.67 to 86.94. Participant mean pixel SD ranges from 73.01 to 75.27 (see [quality plot](output/02_image_quality.png)). These are descriptive pixel statistics rather than independent image-quality labels.
 
-The [fold table](output/02_fold_assignments.csv) contains 225 participant-role records: 15 folds with all 15 participants represented exactly once in each fold, 12 Training, two inner Validation and one Test person. Each fold contains 6,000, 1,000 and 500 images respectively. Every participant serves as outer Test once. No cross-role participant overlap was found. The local NPZ is not published, so its actual array order and target correspondence must be checked by Notebook 03's cache loader. The source physical axis convention is not independently confirmed.
+The [fold table](output/02_fold_assignments.csv) contains 225 participant-role records: 15 folds with all 15 participants represented exactly once in each fold, 12 Training, two inner Validation and one Test person. Each fold contains 6,000, 1,000 and 500 images respectively. Every participant serves as outer Test once. No cross-role participant overlap was found. The local NPZ is not published; the recorded Notebook 03 run passed the cache loader's order and target-correspondence checks. The source physical axis convention is not independently confirmed.
 
-Notebooks 03–04 remain unexecuted on original data. No original-data gaze prediction scores, trained model checkpoints or outer-fold comparisons are available.
+**Recorded classical development evidence (Notebook 03).** The HOG feature matrix is 7,500 × 360. The saved [inner-Validation metrics](output/03_inner_validation_metrics.csv) contain 60 candidate/fold records and the [configuration table](output/03_run_configuration.csv) contains 30 selected model/fold records. All 15 folds contain two inner Validation participants; outer Test was disabled.
+
+| Model | Mean fold error (°) | Median (°) | Minimum (°) | Maximum (°) |
+|---|---:|---:|---:|---:|
+| Mean direction | 9.0481 | 9.1004 | 8.5092 | 9.9054 |
+| HOG + Ridge | 7.6961 | 7.7551 | 6.4557 | 8.7646 |
+
+The selected Ridge alpha is 100 in every fold, the upper boundary of the tested grid (1, 10, 100). Mean fold errors for these candidates are 7.7326°, 7.7289° and 7.6961° respectively. The image-based comparator reduced mean fold error by 1.3519° (14.94%) and outperformed the reference in 14 of 15 configurations; outer_03 had errors of 8.7646° versus 8.5672°. The [comparison plot](output/03_baseline_comparison.png) preserves this exception. Mean-direction scores were recalculated from the published sample targets and fold roles, agreeing with the saved values within 0.000005°. HOG/Ridge fits have not been independently repeated because the image cache is local.
+
+These are descriptive inner-Validation results across overlapping participant configurations, not independent fold replicates or final outer-Test estimates. No statistical significance or external generalisation is established. Notebook 04 remains unexecuted on the original data; final matched predictions from both model stages are required for Notebook 05.
 
 Once executed, report the observed eligible cohort, each model's per-person predictions, mean/median angular error in degrees, comparison to the strongest valid baseline, failure cases and uncertainty. Do not copy MPIIGaze published benchmark numbers into this study's result columns.
 
@@ -79,7 +88,7 @@ Potential confounding includes repeated days/images for one person, unverified c
 
 ## 8. Current Outputs and Reproducibility
 
-The repository contains **two recorded original-data executions (01–02) and two implemented, original-data-unexecuted notebooks (03–04)** and one Notebook-05 starter; a source adapter, data reader, gaze geometry, participant evaluation and model utility; four editable five-band scientific figures ([01](images/01_mpiigaze_source_audit_and_protocol.svg), [02](images/02_eye_images_geometry_and_quality.svg), [03](images/03_classical_gaze_estimation_baselines.svg), [04](images/04_cnn_and_transfer_learning.svg)); and the two study documents. Synthetic tests verify safe source inventory/extraction, not original-data validity. **No original MPIIGaze data or model predictions are committed.** The source-audit notebook creates stage-owned metadata and a figure only after it has opened original source files.
+The repository contains **three recorded original-data executions (01–03) and one implemented, original-data-unexecuted notebook (04)** and one Notebook-05 starter; a source adapter, data reader, gaze geometry, participant evaluation and model utility; four editable five-band scientific figures ([01](images/01_mpiigaze_source_audit_and_protocol.svg), [02](images/02_eye_images_geometry_and_quality.svg), [03](images/03_classical_gaze_estimation_baselines.svg), [04](images/04_cnn_and_transfer_learning.svg)); and the two study documents. Synthetic tests verify safe source inventory/extraction, not original-data validity. **No original MPIIGaze data or model predictions are committed.** The source-audit notebook creates stage-owned metadata and a figure only after it has opened original source files.
 
 Intended stage-specific files, all **planned until genuinely produced**:
 
@@ -95,8 +104,8 @@ Use VS Code connected to the remote Colab runtime, the established repository se
 
 ## 9. Discussion, Limitations and Future Work
 
-The study extends the programme from already-recorded gaze/EEG signals to **camera-image gaze prediction**, with a separate source, 3D normalised gaze frame and angular-error metric. Notebooks 01–02 have recorded source-audit and image-preparation evidence; Notebooks 03–04 contain implementation but original-data execution is unverified, Notebook 05 is not yet implemented, and no gaze generalisation outcomes have been established.
+The study extends the programme from already-recorded gaze/EEG signals to **camera-image gaze prediction**, with a separate source, 3D normalised gaze frame and angular-error metric. Notebooks 01–03 have recorded source-audit, image-preparation and classical inner-Validation evidence; Notebook 04 contains implementation but original-data execution is unverified, Notebook 05 is not yet implemented, and no gaze generalisation outcomes have been established.
 
-The principal early limitations are **unverified original MAT source/label conventions**, the unresolved annotated-subset count definitions, participant-level image dependence, a preliminary 500-per-person (not official benchmark) subset, unknown compute demand of full neural LOPO and source licensing. The immediate operation is to **run Notebook 03 in inner-Validation development mode**, checking cache/index correspondence and preserving the fixed participant roles. Independent source-axis confirmation remains necessary for physical interpretation. Software tests cannot replace those checks.
+The principal early limitations are **unverified original MAT source/label conventions**, the unresolved annotated-subset count definitions, participant-level image dependence, a preliminary 500-per-person (not official benchmark) subset, unknown compute demand of full neural LOPO and source licensing. The immediate operation is to **run Notebook 04 in inner-Validation development mode**, preserving the fixed sample and participant roles; complete the predefined outer-LOPO prediction runs before Notebook 05. Independent source-axis confirmation remains necessary for physical interpretation. Software tests cannot replace those checks.
 
 **Reference:** Zhang, X., Sugano, Y., Fritz, M. and Bulling, A., MPIIGaze: Real-World Dataset and Deep Appearance-Based Gaze Estimation, IEEE TPAMI. [DOI](https://doi.org/10.1109/TPAMI.2017.2778103).

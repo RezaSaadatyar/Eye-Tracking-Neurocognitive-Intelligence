@@ -1,6 +1,6 @@
 # Vision-Based Gaze Estimation
 
-**Status:** Notebooks 01–02 have been executed on the original MPIIGaze archive, yielding source metadata, 7,500 indexed left-eye samples and 15 participant-disjoint folds. Notebooks 03–04 implement classical baselines and CNN/transfer learning; their original-data execution is pending. Notebook 05 remains a starter. No gaze-model training or angular-error results have been verified.
+**Status:** Notebooks 01–03 have been executed on MPIIGaze. The prepared cohort contains 7,500 indexed left-eye samples from 15 participants and 15 participant-disjoint folds. HOG + Ridge achieved mean inner-Validation angular error of 7.6961° versus 9.0481° for mean direction. Notebook 04 neural development and Notebook 05 final evaluation remain pending; outer Test has not been scored.
 
 This independent study investigates whether camera-derived eye images can estimate **3D gaze direction for previously unseen participants**, using evidence-based image geometry, classical baselines and compact deep models. Its inputs, coordinate frames and evaluation procedures are **not interchangeable** with the GazeBase recordings or ZuCo EEG–gaze features in other studies.
 
@@ -79,7 +79,18 @@ See the [participant support](output/01_participant_support.csv), [MAT headers](
 
 *Figure 3. Recorded balanced sample counts and descriptive pixel contrast for the selected eye images.*
 
-All saved sample IDs are unique and target vectors have unit norm within numerical tolerance. The decoded source row count is one below the author-reported image count (213,659); the cause is unresolved. The source coordinate-axis convention is not independently confirmed. The selected sample is not the official benchmark. See the [sample index](output/02_sample_index.csv), [source counts](output/02_source_sample_counts.csv) and [fold roles](output/02_fold_assignments.csv). No model scores or outer-Test predictions are available.
+All saved sample IDs are unique and target vectors have unit norm within numerical tolerance. The decoded source row count is one below the author-reported image count (213,659); the cause is unresolved. The source coordinate-axis convention is not independently confirmed. The selected sample is not the official benchmark. See the [sample index](output/02_sample_index.csv), [source counts](output/02_source_sample_counts.csv) and [fold roles](output/02_fold_assignments.csv). **Classical development results (Notebook 03):**
+
+| Model | Mean fold error (°) | Median (°) | Minimum (°) | Maximum (°) |
+|---|---:|---:|---:|---:|
+| Mean direction | 9.0481 | 9.1004 | 8.5092 | 9.9054 |
+| HOG + Ridge | 7.6961 | 7.7551 | 6.4557 | 8.7646 |
+
+![Recorded inner-Validation angular errors across 15 fold configurations](output/03_baseline_comparison.png)
+
+*Figure 4. Classical development results; the horizontal axis identifies outer-fold configurations, not scored outer-Test participants.*
+
+Alpha 100 was the best tested Ridge setting in all 15 configurations. HOG + Ridge reduced mean fold error by 1.3519° (14.94%) and had lower error in 14/15 configurations; outer_03 was the exception. See the [candidate metrics](output/03_inner_validation_metrics.csv) and [configuration](output/03_run_configuration.csv). Fold results share participants and are not independent observations. No final outer-Test predictions are available.
 
 ## 4. Running and Reviewing the Study
 
@@ -103,12 +114,12 @@ The approved architecture uses standard Python and Google Colab. Dataset and mod
 
 | Location | Responsibility |
 | --- | --- |
-| [`code/notebooks/`](code/notebooks/) | Notebooks 01–02 executed; Notebooks 03–04 implemented, awaiting original-data execution; Notebook 05 remains a starter |
+| [`code/notebooks/`](code/notebooks/) | Notebooks 01–03 executed; Notebook 04 implemented, awaiting original-data execution; Notebook 05 remains a starter |
 | [`code/src/`](code/src/) | [Source retrieval/inspection](code/src/mpiigaze_io.py), [normalised-image reader](code/src/mpiigaze_data.py), [3D geometry](code/src/gaze_geometry.py), [grouped evaluation](code/src/gaze_evaluation.py) and [classical/CNN models](code/src/gaze_models.py) |
-| [`images/`](images/) | Four editable five-band diagrams for [source audit](images/01_mpiigaze_source_audit_and_protocol.svg), [3D gaze/image preparation](images/02_eye_images_geometry_and_quality.svg), [classical baselines](images/03_classical_gaze_estimation_baselines.svg) and [CNN modelling](images/04_cnn_and_transfer_learning.svg); diagrams describe methods and recorded evidence for Notebooks 01–02 |
+| [`images/`](images/) | Four editable five-band diagrams for [source audit](images/01_mpiigaze_source_audit_and_protocol.svg), [3D gaze/image preparation](images/02_eye_images_geometry_and_quality.svg), [classical baselines](images/03_classical_gaze_estimation_baselines.svg) and [CNN modelling](images/04_cnn_and_transfer_learning.svg); diagrams describe methods and recorded evidence for Notebooks 01–03 |
 | [`requirements.txt`](requirements.txt) | Proposed dependencies, to be pinned for executed experiments |
 | `data/raw/mpiigaze/` (remote Colab checkout) | Automatically acquired original source files; ignored by Git and excluded from stage ZIPs |
-| `output/` (study root) | Six Notebook 01 and five Notebook 02 outputs are available; Notebook 03–04 outputs are pending |
+| `output/` (study root) | Six Notebook 01, five Notebook 02 and three Notebook 03 outputs are available; Notebook 04 and final outer-Test outputs are pending |
 | [`RESEARCH_METHODS_AND_EVIDENCE.md`](RESEARCH_METHODS_AND_EVIDENCE.md) | Scientific question, data contracts, evaluation plan, source qualification and implementation boundaries |
 
 ## 6. Interpretation and Scope
