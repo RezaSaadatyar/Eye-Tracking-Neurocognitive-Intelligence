@@ -1,6 +1,6 @@
 # Vision-Based Gaze Estimation
 
-**Status:** Notebook 01 has been executed on the original MPIIGaze archive and its source-audit outputs are available. Notebooks 02–04 implement image/target preparation, classical baselines and CNN/transfer learning; their original-data execution is pending. Notebook 05 remains a starter. No gaze-model training or angular-error results have been verified.
+**Status:** Notebooks 01–02 have been executed on the original MPIIGaze archive, yielding source metadata, 7,500 indexed left-eye samples and 15 participant-disjoint folds. Notebooks 03–04 implement classical baselines and CNN/transfer learning; their original-data execution is pending. Notebook 05 remains a starter. No gaze-model training or angular-error results have been verified.
 
 This independent study investigates whether camera-derived eye images can estimate **3D gaze direction for previously unseen participants**, using evidence-based image geometry, classical baselines and compact deep models. Its inputs, coordinate frames and evaluation procedures are **not interchangeable** with the GazeBase recordings or ZuCo EEG–gaze features in other studies.
 
@@ -16,10 +16,10 @@ This independent study investigates whether camera-derived eye images can estima
 | --- | --- |
 | Source | [MPIIGaze official dataset](https://www.collaborative-ai.org/research/datasets/MPIIGaze/), [archival distribution](https://doi.org/10.18419/darus-3230); public description: 15 people, 213,659 collected frames; exact selected subset **not yet inspected** |
 | Permissions | CC BY-NC-SA 4.0 reported by official providers. Original images/annotations stay outside Git; confirm the selected files and reuse conditions before extraction |
-| Predictors | Proposed **normalised grayscale left-eye crops**, initially at most 500 source-matched examples per eligible person. The sampling rule and source coordinate interpretation require original-data verification; head pose is excluded from the initial models |
+| Predictors | **Normalised grayscale left-eye crops (36 × 60 pixels)**; 500 examples per participant, 7,500 total. Head pose is excluded; physical gaze-axis convention requires independent confirmation |
 | Target | Original-source **3D gaze direction** with a documented camera/normalised coordinate frame; 2D screen point is not the initial target |
 | Prediction unit | One source-labelled image or eye sample; person/session/day IDs retained for grouping, not an unintended predictor |
-| Evaluation unit | Independent **participant**; deterministic outer leave-one-person-out (LOPO) folds with **two distinct inner-Validation people** per fold, subject to a source-confirmed eligible cohort. Notebook 03 and 04 keep outer-Test scoring **disabled by default** |
+| Evaluation unit | Independent **participant**; deterministic outer leave-one-person-out (LOPO) folds with **two distinct inner-Validation people** per fold, 15 observed participants. Notebook 03 and 04 keep outer-Test scoring **disabled by default** |
 | Main metric | Mean/median **3D angular error in degrees**; per-person dispersion; 2D pixel error only if an appropriate separate geometry protocol is approved |
 
 The official description distinguishes Data, Evaluation Subset and Annotation Subset, and contains an unresolved inconsistency about annotated-subset counts. **Notebook 01 must establish the actual chosen file structure before any sample counts, image-label joins or training are claimed.**
@@ -59,7 +59,27 @@ These are **five complementary notebooks**, not five independent studies. Notebo
 
 *Figure 2. Recorded non-companion file counts on a logarithmic axis and normalised MAT paths per participant. Source-file counts are not image sample counts.*
 
-See the [participant support](output/01_participant_support.csv), [MAT headers](output/01_mat_schema.csv) and [list inventory](output/01_evaluation_list_inventory.csv). Image–target alignment, gaze geometry and eligible image sample counts remain to be established in Notebook 02. No model scores or outer-Test predictions are available.
+See the [participant support](output/01_participant_support.csv), [MAT headers](output/01_mat_schema.csv) and [list inventory](output/01_evaluation_list_inventory.csv). **Image-preparation results (Notebook 02):**
+
+| Evidence | Recorded value |
+|---|---:|
+| Normalised MAT paths reconciled | 521 |
+| Decoded left-eye rows | 213,658 |
+| Selected images / unique sample IDs | 7,500 / 7,500 |
+| Participants / images per participant | 15 / 500 |
+| Image dimensions (height × width) | 36 × 60 |
+| Outer folds | 15 |
+| Training / Validation / Test people per fold | 12 / 2 / 1 |
+| Training / Validation / Test images per fold | 6,000 / 1,000 / 500 |
+| Mean pixel intensity range | 83.87–216.38 |
+| Pixel SD range | 66.67–86.94 |
+| Participant mean pixel SD range | 73.01–75.27 |
+
+![Selected sample counts and mean image contrast by participant](output/02_image_quality.png)
+
+*Figure 3. Recorded balanced sample counts and descriptive pixel contrast for the selected eye images.*
+
+All saved sample IDs are unique and target vectors have unit norm within numerical tolerance. The decoded source row count is one below the author-reported image count (213,659); the cause is unresolved. The source coordinate-axis convention is not independently confirmed. The selected sample is not the official benchmark. See the [sample index](output/02_sample_index.csv), [source counts](output/02_source_sample_counts.csv) and [fold roles](output/02_fold_assignments.csv). No model scores or outer-Test predictions are available.
 
 ## 4. Running and Reviewing the Study
 
@@ -83,12 +103,12 @@ The approved architecture uses standard Python and Google Colab. Dataset and mod
 
 | Location | Responsibility |
 | --- | --- |
-| [`code/notebooks/`](code/notebooks/) | Notebook 01 source audit executed; Notebooks 02–04 implemented, awaiting original-data execution; Notebook 05 remains a starter |
+| [`code/notebooks/`](code/notebooks/) | Notebooks 01–02 executed; Notebooks 03–04 implemented, awaiting original-data execution; Notebook 05 remains a starter |
 | [`code/src/`](code/src/) | [Source retrieval/inspection](code/src/mpiigaze_io.py), [normalised-image reader](code/src/mpiigaze_data.py), [3D geometry](code/src/gaze_geometry.py), [grouped evaluation](code/src/gaze_evaluation.py) and [classical/CNN models](code/src/gaze_models.py) |
-| [`images/`](images/) | Four editable five-band diagrams for [source audit](images/01_mpiigaze_source_audit_and_protocol.svg), [3D gaze/image preparation](images/02_eye_images_geometry_and_quality.svg), [classical baselines](images/03_classical_gaze_estimation_baselines.svg) and [CNN modelling](images/04_cnn_and_transfer_learning.svg); diagrams describe methods and, for Notebook 01, recorded source metadata |
+| [`images/`](images/) | Four editable five-band diagrams for [source audit](images/01_mpiigaze_source_audit_and_protocol.svg), [3D gaze/image preparation](images/02_eye_images_geometry_and_quality.svg), [classical baselines](images/03_classical_gaze_estimation_baselines.svg) and [CNN modelling](images/04_cnn_and_transfer_learning.svg); diagrams describe methods and recorded evidence for Notebooks 01–02 |
 | [`requirements.txt`](requirements.txt) | Proposed dependencies, to be pinned for executed experiments |
 | `data/raw/mpiigaze/` (remote Colab checkout) | Automatically acquired original source files; ignored by Git and excluded from stage ZIPs |
-| `output/` (study root) | Six current Notebook 01 source-audit outputs are available; Notebook 02–04 outputs are pending |
+| `output/` (study root) | Six Notebook 01 and five Notebook 02 outputs are available; Notebook 03–04 outputs are pending |
 | [`RESEARCH_METHODS_AND_EVIDENCE.md`](RESEARCH_METHODS_AND_EVIDENCE.md) | Scientific question, data contracts, evaluation plan, source qualification and implementation boundaries |
 
 ## 6. Interpretation and Scope
