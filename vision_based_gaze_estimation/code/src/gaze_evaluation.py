@@ -39,14 +39,14 @@ def participant_fold_table(participants, *, seed=17, inner_people=2):
                 "role": role,
             })
     result = pd.DataFrame(rows)
+    counts = (result.groupby(["fold_id", "role"]).size()
+              .unstack(fill_value=0))
+    required_roles = {"train", "validation", "test"}
     if (result.duplicated(["fold_id", "participant_id"]).any()
-            or not result.groupby("fold_id").role.apply(
-                lambda v: set(v) == {"train", "validation", "test"}
-            ).all()
-            or not result.groupby("fold_id").apply(
-                lambda g: (g.role.eq("test").sum() == 1
-                           and g.role.eq("validation").sum() == inner_people)
-            ).all()):
+            or set(counts.columns) != required_roles
+            or not counts["test"].eq(1).all()
+            or not counts["validation"].eq(inner_people).all()
+            or not counts["train"].gt(0).all()):
         raise ValueError("Participant role assignments are inconsistent")
     return result
 
