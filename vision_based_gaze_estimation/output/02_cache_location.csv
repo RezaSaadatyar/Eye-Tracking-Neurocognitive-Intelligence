@@ -1,0 +1,7 @@
+setting,value
+local_cache,data/processed/mpiigaze/02_normalised_eye_cache.npz
+eye,left
+max_per_person,500
+seed,17
+selected_samples,7500
+official_evaluation_subset,False
