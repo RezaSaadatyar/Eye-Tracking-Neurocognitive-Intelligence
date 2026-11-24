@@ -11,10 +11,10 @@ A Python research programme covering **three implemented, scientifically indepen
 | **Eye-Tracking Foundations & Signal Analysis** | **Seven executed notebooks (01–07)** using **10 participants, 40 Round 1 / Session 1 recordings and 2,778,008 source samples**. Source audit, gap-aware preprocessing, provisional I-VT/I-DT events, features, participant statistics, threshold sensitivity and integrated output checks are recorded. Exploratory within-source evidence, not independently validated eye-event accuracy or neurocognitive prediction. | [Study README](eye_tracking_foundations/README.md) · [Scientific methods and evidence](eye_tracking_foundations/RESEARCH_METHODS_AND_EVIDENCE.md) · [Complete workflow diagram](eye_tracking_foundations/images/study_overview.svg) · [How to run](eye_tracking_foundations/README.md#4-running-and-reviewing-the-study) |
 | **Eye-Movement Modelling & Advanced AI** | **100-person main study, Notebooks 01–05 complete:** GazeBase Round 1/Session 1, 400 records, 9,600 windows and participant-disjoint **64/16/20** Train/Validation/Test. Eight Validation candidates; **Logistic Regression selected before Test** and achieved main Test **Accuracy 1.000, Macro F1 1.000 (80/80 records from 20 independent people)**. Random Forest also scored 80/80 as a secondary Test comparison. No cross-session, external, cognitive or clinical generalisation demonstrated. | [Study README](eye_movement_modelling/README.md) · [Scientific methods](eye_movement_modelling/RESEARCH_METHODS_AND_EVIDENCE.md) · [Workflow](eye_movement_modelling/images/study_overview.svg) |
 | **EEG–Eye-Tracking Multimodal Research** | **18-person ZuCo 2.0 study, Notebooks 01–06 executed with final held-out Test:** 36 NR/TSR runs, 630 paired windows and disjoint **11/3/4** Train/Validation/Test people. Ten candidates produced 990 Validation and 1,600 Test predictions. **Gaze Random Forest was frozen on Validation** (Macro F1 **0.6244**) and achieved **Test Macro F1 0.4997**, Accuracy **0.5250** and Balanced Accuracy **0.5250** on 160 Test windows from four people. The 49 saved outputs include person-level scores, uncertainty and the confusion matrix. Test results did not alter model selection; this is within-ZuCo task evaluation, not external or cognitive validation. | [Study README](eeg_eye_tracking_fusion/README.md) · [Scientific methods](eeg_eye_tracking_fusion/RESEARCH_METHODS_AND_EVIDENCE.md) · [Workflow](eeg_eye_tracking_fusion/images/study_overview.svg) · [Executed Notebook 06](eeg_eye_tracking_fusion/code/notebooks/06_robustness_and_final_evaluation.ipynb) |
-| **Vision-Based Gaze Estimation** | **New study architecture created:** five numbered notebooks covering MPIIGaze source audit, geometry/quality, classical baselines, CNN modelling and cross-person evaluation. Source-specific modelling and original-data execution have **not** begun. | [Study README](vision_based_gaze_estimation/README.md) · [Research methods](vision_based_gaze_estimation/RESEARCH_METHODS_AND_EVIDENCE.md) · [Notebook sequence](vision_based_gaze_estimation/code/notebooks/) |
+| **Vision-Based Gaze Estimation** | **Notebooks 01–04 implemented, not yet executed on original MPIIGaze:** source audit, left-eye image/3D gaze preparation and participant roles, HOG/Ridge baselines and CNN/ResNet-18 development with inner Validation. Four scientific diagrams and synthetic tests are available. **Notebook 05 remains a starter**; no actual gaze-model results are claimed. | [Study README](vision_based_gaze_estimation/README.md) · [Research methods](vision_based_gaze_estimation/RESEARCH_METHODS_AND_EVIDENCE.md) · [Notebook sequence](vision_based_gaze_estimation/code/notebooks/) |
 | **Applied Neurocognitive Research** | **Future studies:** separately defined reading, attention and other research questions, each requiring appropriate source measurements and targets. | No study directory yet |
 
-**Implemented study boundaries:** Eye-Tracking Foundations and Eye-Movement Modelling both use GazeBase Round 1 / Session 1 but ask different questions and retain separate outputs. EEG–Eye-Tracking Multimodal Research uses **ZuCo 2.0** with its own recordings, participant split, model candidates and evidence. The vision-based study has its initial architecture, documents and source-contract starters but no completed original-data experiments; applied neurocognitive research remains a future direction.
+**Implemented study boundaries:** Eye-Tracking Foundations and Eye-Movement Modelling both use GazeBase Round 1 / Session 1 but ask different questions and retain separate outputs. EEG–Eye-Tracking Multimodal Research uses **ZuCo 2.0** with its own recordings, participant split, model candidates and evidence. The vision-based study has four implemented but original-data-unexecuted notebook workflows and one future evaluation notebook; applied neurocognitive research remains a future direction.
 
 ## Selected Eye-Tracking Foundations evidence
 
@@ -40,7 +40,7 @@ For the six-stage workflow and final results, consult the [study overview](eeg_e
 
 EEG–Eye-Tracking Multimodal Research has completed **Notebooks 01–06 and the four-person, 160-window held-out Test**, after freezing its development winner on Validation. The primary Test Macro F1 is **0.4997**, with substantial participant-level variation. Independent device-drift checks, gaze-calibration assessment, stimulus-controlled analysis and external generalisation remain separate scientific extensions.
 
-**Vision-Based Gaze Estimation** now has an initial five-notebook architecture and scientific documentation, but the MPIIGaze source and modelling stages remain to be implemented and executed. **Applied Neurocognitive Research** remains a future direction without completed experiments. EMTeC is a possible complementary source for a separate approved eye-tracking study; it was **not used** in the current GazeBase or ZuCo 2.0 analyses.
+**Vision-Based Gaze Estimation** has implemented source, image/3D-label, baseline and CNN development code in Notebooks 01–04, with corresponding research figures. Original MPIIGaze source execution and the final Notebook-05 synthesis remain outstanding. **Applied Neurocognitive Research** remains a future direction without completed experiments. EMTeC is a possible complementary source for a separate approved eye-tracking study; it was **not used** in the current GazeBase or ZuCo 2.0 analyses.
 
 ## Repository structure
 
@@ -80,15 +80,15 @@ Eye-Tracking-Neurocognitive-Intelligence/
 │   ├── README.md                       # Study scope; no model results yet
 │   ├── RESEARCH_METHODS_AND_EVIDENCE.md
 │   ├── requirements.txt                # Proposed imaging dependencies
-│   ├── code/notebooks/                 # Stage 01 source audit, 02–05 starters
-│   ├── code/src/                       # Source reader and geometry utilities
-│   └── images/                         # Editable Stage-01 scientific diagram
+│   ├── code/notebooks/                 # Stages 01–04 code, Stage 05 starter
+│   ├── code/src/                       # Source, geometry, folds and models
+│   └── images/                         # Four editable five-band study diagrams
 ├── tests/                              # Synthetic scientific software contracts
 ├── scripts/                            # Git file-size guard
 └── .github/workflows/                  # Synthetic tests, size policy and ZuCo final Test
 ```
 
-Vision-Based Gaze Estimation has its own [study directory](vision_based_gaze_estimation/) and five notebook starters, without original-data results. Applied Neurocognitive Research does not yet have a dedicated project directory. Each project's original data, code and outputs remain scientifically independent.
+Vision-Based Gaze Estimation has its own [study directory](vision_based_gaze_estimation/) with code in Notebooks 01–04 and Notebook 05 still a starter; **original-data results are not yet available**. Applied Neurocognitive Research does not yet have a dedicated project directory. Each project's original data, code and outputs remain scientifically independent.
 
 ## Getting started
 
