@@ -1,0 +1,5 @@
+model,hog_features,neural_parameters
+mean_direction,,
+hog_ridge,360.0,
+small_cnn,,48387.0
+resnet18,,11171779.0
