@@ -1,0 +1,13 @@
+protocol,role,is_correct,n_trials,n_people,n_articles
+A_unseen_people,test,0,378,36,30
+A_unseen_people,test,1,1566,36,30
+A_unseen_people,train,0,1079,108,30
+A_unseen_people,train,1,4752,108,30
+A_unseen_people,validation,0,371,36,30
+A_unseen_people,validation,1,1572,36,30
+B_unseen_batch,test,0,618,60,10
+B_unseen_batch,test,1,2622,60,10
+B_unseen_batch,train,0,969,96,20
+B_unseen_batch,train,1,4214,96,20
+B_unseen_batch,validation,0,241,24,20
+B_unseen_batch,validation,1,1054,24,20
