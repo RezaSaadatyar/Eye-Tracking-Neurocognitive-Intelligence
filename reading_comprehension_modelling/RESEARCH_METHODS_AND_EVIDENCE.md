@@ -1,6 +1,6 @@
 # Reading Comprehension & Neurocognitive Modelling | Research Methods and Evidence
 
-**Study:** Independent OneStop paragraph-reading application within Eye-Tracking & Neurocognitive Intelligence. **Target:** correctness of a subsequent comprehension response. The implementation is available in five notebooks. Notebooks 01–04 have verified saved cohort, split, feature, exploratory association and classical/neural Validation evidence. Final Test results remain pending. See the [study README](README.md) and [study-wide workflow](images/study_overview.svg).
+**Study:** Independent OneStop paragraph-reading application within Eye-Tracking & Neurocognitive Intelligence. **Target:** correctness of a subsequent comprehension response. The implementation is available in five notebooks. Notebooks 01–04 have verified saved cohort, split, feature, exploratory association and classical/neural Validation evidence. Notebook 05 has recorded Test results, but final reporting is pending fixed-input reconciliation of the TF-IDF candidates. See the [study README](README.md) and [study-wide workflow](images/study_overview.svg).
 
 ## 1. Research Objective and Scope
 
@@ -184,7 +184,7 @@ The highest classical Validation Macro F1 is TF-IDF fusion in A (balanced accura
 
 The 168 unique permutation-importance rows contain finite means and non-negative repeat SDs. Examples include `fix_count` for A logistic fusion (mean decrease 0.0519) and `mean_word_chars` for B logistic fusion (0.0594). These are model- and partition-specific three-repeat summaries, not causal effects or confidence intervals. The permutations and model fits were not independently rerun in this review.
 
-Evidence: [classical scores](output/03_classical_predictions.csv), [Validation metrics](output/03_validation_metrics.csv) and [feature importance](output/03_validation_feature_importance.csv). Notebook 05 will select from the complete classical and neural candidate set on Validation before evaluating the reserved Test partitions.
+Evidence: [classical scores](output/03_classical_predictions.csv), [Validation metrics](output/03_validation_metrics.csv) and [feature importance](output/03_validation_feature_importance.csv). Notebook 05 selects from the complete classical and neural candidate set on Validation before evaluating the reserved Test partitions.
 
 #### Neural Validation evidence
 
@@ -223,6 +223,8 @@ Participant metrics and difficulty strata describe variation in the held-out coh
 Fixed ten-bin score summaries compare mean score and observed correct-response fraction; Brier score is recorded. No probability recalibration or Test-driven threshold optimisation is performed. Permutation importance and mixed-effects estimates have different interpretations and do not establish that changes in gaze cause changes in comprehension.
 
 ## 8. Current Outputs and Reproducibility
+
+**Final evaluation reconciliation:** Execution commit [`4b2aa28`](https://github.com/RezaSaadatyar/Eye-Tracking-Neurocognitive-Intelligence/commit/4b2aa28f0860693fee7b9625ed94ac114f77d874) contains all eleven Notebook 05 outputs. The current committed producer scores contain 160,018 unique, role-matched entries. Independent recalculation matches the final metrics for 68 of 76 candidate–protocol–role combinations, but not TF-IDF text and fusion in either protocol or role. For example, the A TF-IDF fusion Validation Macro F1 is 0.558242 from the committed predictions versus 0.557059 in the Notebook 05 table; B TF-IDF text is 0.569842 versus 0.570210. Differences also occur in Brier scores. The Validation-selected identities remain unchanged. The setup log reports a deferred Git update; the exact differing runtime inputs are not established. Final comparative tables, bootstrap intervals and plots must be regenerated together from the committed scores in a fresh checkout, without refitting or altering the protocol. Test has already been inspected; this correction is reconciliation of fixed predictions, not an independent new evaluation.
 
 | Producer | Named current output files after execution |
 | --- | --- |
