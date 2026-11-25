@@ -1,6 +1,6 @@
 # Reading Comprehension & Neurocognitive Modelling | Research Methods and Evidence
 
-**Study:** Independent OneStop paragraph-reading application within Eye-Tracking & Neurocognitive Intelligence. **Target:** correctness of a subsequent comprehension response. The implementation is available in five notebooks. Notebooks 01–03 have recorded original-data cohort, split, feature, exploratory association and classical Validation evidence. Neural modelling and final Test results remain pending. See the [study README](README.md) and [study-wide workflow](images/study_overview.svg).
+**Study:** Independent OneStop paragraph-reading application within Eye-Tracking & Neurocognitive Intelligence. **Target:** correctness of a subsequent comprehension response. The implementation is available in five notebooks. Notebooks 01–03 have verified saved cohort, split, feature, exploratory association and classical Validation evidence. Notebook 04 records neural training and Validation results in the executed notebook; its standalone output reconciliation and final Test results remain pending. See the [study README](README.md) and [study-wide workflow](images/study_overview.svg).
 
 ## 1. Research Objective and Scope
 
@@ -186,6 +186,22 @@ The 168 unique permutation-importance rows contain finite means and non-negative
 
 Evidence: [classical scores](output/03_classical_predictions.csv), [Validation metrics](output/03_validation_metrics.csv) and [feature importance](output/03_validation_feature_importance.csv). Notebook 05 will select from the complete classical and neural candidate set on Validation before evaluating the reserved Test partitions.
 
+#### Recorded neural Validation evidence (pending standalone output reconciliation)
+
+The executed [Notebook 04](code/notebooks/04_sequential_and_multimodal_models.ipynb) at commit `a464f6d` reports 14 fits, 58,954 prediction rows and a sequence shape of `(9718, 256, 4)`. Its saved display provides the following rounded Validation Macro F1 values; they are not independently recomputed from the neural scores at this stage.
+
+| Neural candidate | Protocol A Validation Macro F1 | Protocol B Validation Macro F1 |
+| --- | ---: | ---: |
+| MLP text | 0.5075 | 0.5308 |
+| CNN gaze | 0.5162 | 0.5261 |
+| CNN fusion | 0.5111 | 0.5174 |
+| GRU gaze | 0.5251 | 0.5358 |
+| GRU fusion | 0.5204 | 0.5263 |
+| Transformer gaze | 0.5202 | 0.5296 |
+| Transformer fusion | 0.5075 | 0.5458 |
+
+The recorded neural leaders are GRU gaze in A and Transformer fusion in B, both below the respective classical Validation leaders. Fusion improves over the corresponding gaze-only encoder only for the B Transformer in these displayed comparisons. Neural text inputs are static paragraph features rather than lexical TF-IDF, so the classical-versus-neural comparison does not isolate architecture alone. These are descriptive Validation results; final selection, uncertainty and reserved Test assessment have not been completed. The embedded learning-curve figure is available in the executed notebook, but the five original stage output files were absent from their expected GitHub paths at the reviewed commit. The exported score table, full history and checkpoint configurations must be reconciled before final evaluation.
+
 ## 7. Robustness, Uncertainty and Additional Analyses
 
 ### 7.1 Participant and article generalisation
@@ -210,7 +226,7 @@ Fixed ten-bin score summaries compare mean score and observed correct-response f
 | Notebook 04 | `04_neural_predictions.csv`, `04_training_history.csv`, `04_model_configurations.csv`, `04_validation_metrics.csv`, `04_validation_curves.png` |
 | Notebook 05 | `05_validation_metrics.csv`, `05_selected_models.csv`, `05_test_metrics.csv`, `05_participant_metrics.csv`, `05_difficulty_metrics.csv`, `05_calibration_bins.csv`, `05_participant_intervals.csv`, `05_paired_modality_intervals.csv`, `05_test_comparison.png`, `05_selected_confusion.png`, `05_score_calibration.png` |
 
-The [requirements](requirements.txt) specify the initial compatible dependency range. Notebooks 01–03 record Python 3.13.18 and six, five and four derived outputs respectively. Notebooks 02 and 03 record deferred Git updates because of local changes; the review verifies the committed numerical tables and saved cell evidence, not the exact runtime checkout, independently refitted associations or independently trained classical models. Preserve the two compatible local caches for later modelling; their bytes are not verified by the GitHub review. Package versions and runtime behaviour for subsequent stages remain to be verified. [Synthetic tests](code/tests/test_reading_pipeline.py) exercise the cohort and evaluation contracts; they do not validate the original report or the scientific prediction task. Raw files and reconstruction caches are kept under the repository's ignored data directories. Notebook 05 reads the derived CSVs only.
+The [requirements](requirements.txt) specify the initial compatible dependency range. Notebooks 01–03 record Python 3.13.18 and six, five and four derived outputs respectively. Notebooks 02 and 03 record deferred Git updates because of local changes; the review verifies the committed numerical tables and saved cell evidence, not the exact runtime checkout, independently refitted associations or independently trained classical models. Preserve the two compatible local caches for later modelling; their bytes are not verified by the GitHub review. Notebook 04 records Python 3.13.16, PyTorch 2.14.1+cu130, CUDA 13.0 and Tesla T4 GPU execution, with a non-fatal nested-tensor warning. The full standalone files and selected checkpoint evidence are pending verification. Package versions not recorded in the saved outputs and subsequent runtime behaviour remain unverified. [Synthetic tests](code/tests/test_reading_pipeline.py) exercise the cohort and evaluation contracts; they do not validate the original report or the scientific prediction task. Raw files and reconstruction caches are kept under the repository's ignored data directories. Notebook 05 reads the derived CSVs only.
 
 ## 9. Discussion, Limitations and Future Work
 
