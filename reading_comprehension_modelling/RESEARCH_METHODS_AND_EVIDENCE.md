@@ -1,6 +1,6 @@
 # Reading Comprehension & Neurocognitive Modelling | Research Methods and Evidence
 
-**Study:** Independent OneStop paragraph-reading application within Eye-Tracking & Neurocognitive Intelligence. **Target:** correctness of a subsequent comprehension response. The implementation is available in five notebooks. Notebooks 01–02 have recorded original-data cohort, split, feature and exploratory association evidence. Predictive results remain pending. See the [study README](README.md) and [study-wide workflow](images/study_overview.svg).
+**Study:** Independent OneStop paragraph-reading application within Eye-Tracking & Neurocognitive Intelligence. **Target:** correctness of a subsequent comprehension response. The implementation is available in five notebooks. Notebooks 01–03 have recorded original-data cohort, split, feature, exploratory association and classical Validation evidence. Neural modelling and final Test results remain pending. See the [study README](README.md) and [study-wide workflow](images/study_overview.svg).
 
 ## 1. Research Objective and Scope
 
@@ -159,7 +159,32 @@ Evidence: [trial features](output/02_trial_features.csv), [participant-balanced 
 
 ### 6.3 Prediction results
 
-The candidate list contains 12 classical and lexical procedures (prior, nine scalar variants and two TF-IDF variants) and seven neural procedures (three gaze-only, three fusion and one text-only MLP). Each protocol uses the same eligible trial identities across all candidates. Notebook 05 will report Validation selection and held-out metrics for the fixed set. No performance, model ranking, improvement or generalisation result has been recorded yet.
+The candidate list contains 12 classical and lexical procedures (prior, nine scalar variants and two TF-IDF variants) and seven neural procedures (three gaze-only, three fusion and one text-only MLP). Notebook 03 recorded 101,064 unique scores across 12 classical candidates per protocol, with complete Validation and Test trial coverage and valid score ranges. The review recalculated all 216 numerical Validation entries (including trial counts) from the saved scores and original labels, with maximum absolute discrepancy below 2e-15. Test labels were not used to calculate performance during this review.
+
+| Classical candidate | Protocol A Validation Macro F1 | Protocol B Validation Macro F1 |
+| --- | ---: | ---: |
+| Prior | 0.4472 | 0.4487 |
+| Logistic Regression, gaze | 0.4879 | 0.4760 |
+| Logistic Regression, text | 0.4914 | 0.5151 |
+| Logistic Regression, fusion | 0.5110 | 0.5251 |
+| Random Forest, gaze | 0.4637 | 0.5057 |
+| Random Forest, text | 0.5383 | 0.5564 |
+| Random Forest, fusion | 0.4796 | 0.5246 |
+| XGBoost, gaze | 0.4916 | 0.4844 |
+| XGBoost, text | 0.5118 | 0.5503 |
+| XGBoost, fusion | 0.5165 | 0.5411 |
+| TF-IDF text | 0.5411 | 0.5698 |
+| TF-IDF fusion | 0.5582 | 0.5638 |
+
+The highest classical Validation Macro F1 is TF-IDF fusion in A (balanced accuracy 0.6140, AUROC 0.6525, incorrect recall 0.5849) and TF-IDF text in B (balanced accuracy 0.6262, AUROC 0.6583, incorrect recall 0.5892). The prevalence references have accuracy 0.8091 and 0.8139 but zero incorrect recall. The matched fusion-minus-text Macro F1 differences are +0.0196/-0.0587/+0.0046/+0.0171 in A and +0.0100/-0.0317/-0.0092/-0.0060 in B for Logistic Regression, Random Forest, XGBoost and TF-IDF respectively. Fusion improves on gaze-only across all six scalar comparisons, but added gaze beyond text is not consistently beneficial. These are descriptive Validation differences, not uncertainty-adjusted Test contrasts. Both Validation partitions share development articles with Training, so the B Validation scores do not quantify unseen-article generalisation.
+
+![Classical and lexical Validation comparison](output/03_validation_comparison.png)
+
+*Figure: Validation Macro F1 for fixed classical and lexical candidates across the two participant protocols.*
+
+The 168 unique permutation-importance rows contain finite means and non-negative repeat SDs. Examples include `fix_count` for A logistic fusion (mean decrease 0.0519) and `mean_word_chars` for B logistic fusion (0.0594). These are model- and partition-specific three-repeat summaries, not causal effects or confidence intervals. The permutations and model fits were not independently rerun in this review.
+
+Evidence: [classical scores](output/03_classical_predictions.csv), [Validation metrics](output/03_validation_metrics.csv) and [feature importance](output/03_validation_feature_importance.csv). Notebook 05 will select from the complete classical and neural candidate set on Validation before evaluating the reserved Test partitions.
 
 ## 7. Robustness, Uncertainty and Additional Analyses
 
@@ -185,7 +210,7 @@ Fixed ten-bin score summaries compare mean score and observed correct-response f
 | Notebook 04 | `04_neural_predictions.csv`, `04_training_history.csv`, `04_model_configurations.csv`, `04_validation_metrics.csv`, `04_validation_curves.png` |
 | Notebook 05 | `05_validation_metrics.csv`, `05_selected_models.csv`, `05_test_metrics.csv`, `05_participant_metrics.csv`, `05_difficulty_metrics.csv`, `05_calibration_bins.csv`, `05_participant_intervals.csv`, `05_paired_modality_intervals.csv`, `05_test_comparison.png`, `05_selected_confusion.png`, `05_score_calibration.png` |
 
-The [requirements](requirements.txt) specify the initial compatible dependency range. Notebooks 01–02 record Python 3.13.18 and their six and five derived outputs respectively. Notebook 02's saved setup output records a deferred Git update because of local changes; the review verifies the committed numerical tables and saved cell evidence, not the exact runtime checkout or independently refitted associations. Preserve the two compatible local caches for later modelling; their bytes are not verified by the GitHub review. Package versions and runtime behaviour for subsequent stages remain to be verified. [Synthetic tests](code/tests/test_reading_pipeline.py) exercise the cohort and evaluation contracts; they do not validate the original report or the scientific prediction task. Raw files and reconstruction caches are kept under the repository's ignored data directories. Notebook 05 reads the derived CSVs only.
+The [requirements](requirements.txt) specify the initial compatible dependency range. Notebooks 01–03 record Python 3.13.18 and six, five and four derived outputs respectively. Notebooks 02 and 03 record deferred Git updates because of local changes; the review verifies the committed numerical tables and saved cell evidence, not the exact runtime checkout, independently refitted associations or independently trained classical models. Preserve the two compatible local caches for later modelling; their bytes are not verified by the GitHub review. Package versions and runtime behaviour for subsequent stages remain to be verified. [Synthetic tests](code/tests/test_reading_pipeline.py) exercise the cohort and evaluation contracts; they do not validate the original report or the scientific prediction task. Raw files and reconstruction caches are kept under the repository's ignored data directories. Notebook 05 reads the derived CSVs only.
 
 ## 9. Discussion, Limitations and Future Work
 
