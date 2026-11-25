@@ -96,7 +96,7 @@
 <text x="984" y="360" class="body" text-anchor="start">Prior; Logistic Regression</text>
 <text x="984" y="382" class="body" text-anchor="start">Random Forest; XGBoost</text>
 <text x="984" y="404" class="body" text-anchor="start">TF-IDF text and fusion</text>
-<text x="984" y="438" class="body" text-anchor="start">Neural (7 candidates)</text>
+<text x="984" y="438" class="qual" text-anchor="start">Neural (7 candidates)</text>
 <text x="984" y="464" class="body" text-anchor="start">CNN; GRU; Transformer; MLP</text>
 <text x="984" y="493" class="body" text-anchor="start">Training fit; Validation selection</text>
 </g>
