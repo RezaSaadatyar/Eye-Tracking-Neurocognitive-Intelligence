@@ -1,6 +1,6 @@
 # Reading Comprehension & Neurocognitive Modelling | Research Methods and Evidence
 
-**Study:** Independent OneStop paragraph-reading application within Eye-Tracking & Neurocognitive Intelligence. **Target:** correctness of a subsequent comprehension response. The implementation is available in five notebooks. Notebook 01 has been executed on the original ordinary-reading reports; its cohort and split evidence are recorded. Feature, association and predictive results remain pending. See the [study README](README.md) and [study-wide workflow](images/study_overview.svg).
+**Study:** Independent OneStop paragraph-reading application within Eye-Tracking & Neurocognitive Intelligence. **Target:** correctness of a subsequent comprehension response. The implementation is available in five notebooks. Notebooks 01–02 have recorded original-data cohort, split, feature and exploratory association evidence. Predictive results remain pending. See the [study README](README.md) and [study-wide workflow](images/study_overview.svg).
 
 ## 1. Research Objective and Scope
 
@@ -128,7 +128,34 @@ Evidence: [source inventory](output/01_source_inventory.csv), [exclusion counts]
 
 ### 6.2 Feature and association evidence
 
-Notebook 02 will report feature support, truncation counts, Training-only participant summaries and exploratory mixed-effects estimates. No direction or magnitude of association is assumed.
+Notebook 02 recorded 9,718 feature rows, matching every identity and label in the Notebook 01 trial index. All ten gaze and four static text predictors have finite values in the saved table. The recorded sequence shape is `(9718, 256, 4)`, with 193 truncated trials (1.99%); the numerical arrays themselves remain local. Truncation flags agree with the full-sequence fixation counts exceeding 256. The full-cohort descriptive table is not used for model fitting or selection.
+
+Protocol A Training contains 5,831 trials from 108 participants and 162 paragraphs. Recalculation from the saved feature table reproduced all 60 participant-balanced summary entries (means, sample SDs and counts, with maximum absolute discrepancy below 1e-7). All 108 people contributed to both response groups. Mean fixation duration averaged over participants was 189.95 ms for incorrect responses and 189.73 ms for correct responses; the overlapping distributions are descriptive and do not establish equivalence.
+
+![Participant-level mean fixation duration by outcome](output/02_reading_behaviour.png)
+
+*Figure: Protocol A Training participant means, grouped by incorrect (0) and correct (1) responses.*
+
+| Feature | Log odds per SD | Approximate 95% posterior interval |
+| --- | ---: | ---: |
+| Fixation count | 0.083 | 0.013 to 0.153 |
+| Total fixation duration | 0.092 | 0.020 to 0.163 |
+| Mean fixation duration | 0.039 | -0.029 to 0.107 |
+| Fixation duration SD | -0.050 | -0.112 to 0.012 |
+| Horizontal coordinate dispersion | -0.076 | -0.145 to -0.007 |
+| Vertical coordinate dispersion | -0.018 | -0.087 to 0.051 |
+| Scanpath length | 0.097 | 0.027 to 0.167 |
+| Backward word-index transition rate | 0.137 | 0.068 to 0.206 |
+| Visited-word fraction | 0.123 | 0.055 to 0.191 |
+| Mean word dwell time | 0.085 | 0.013 to 0.156 |
+
+All ten separate variational fits report successful optimisation and the same Training support. The saved interval endpoints agree with the recorded posterior mean ± 1.96 posterior SD. Six intervals are wholly positive, one wholly negative and three span zero. These approximate posterior summaries are not multiplicity-adjusted confirmatory tests; each feature is fitted separately with difficulty and crossed random intercepts. They do not establish causal effects or out-of-sample predictive value. The associations were not independently refitted during the output review.
+
+![Exploratory Training-only posterior estimates](output/02_reading_associations.png)
+
+*Figure: Approximate log-odds posterior means and intervals per standard deviation of each gaze feature. The dashed line marks zero.*
+
+Evidence: [trial features](output/02_trial_features.csv), [participant-balanced summaries](output/02_training_behaviour.csv) and [mixed-effects estimates](output/02_training_associations.csv).
 
 ### 6.3 Prediction results
 
@@ -158,7 +185,7 @@ Fixed ten-bin score summaries compare mean score and observed correct-response f
 | Notebook 04 | `04_neural_predictions.csv`, `04_training_history.csv`, `04_model_configurations.csv`, `04_validation_metrics.csv`, `04_validation_curves.png` |
 | Notebook 05 | `05_validation_metrics.csv`, `05_selected_models.csv`, `05_test_metrics.csv`, `05_participant_metrics.csv`, `05_difficulty_metrics.csv`, `05_calibration_bins.csv`, `05_participant_intervals.csv`, `05_paired_modality_intervals.csv`, `05_test_comparison.png`, `05_selected_confusion.png`, `05_score_calibration.png` |
 
-The [requirements](requirements.txt) specify the initial compatible dependency range. Notebook 01 records Python 3.13.18 and the six current outputs; package versions and runtime behaviour for subsequent stages remain to be verified. [Synthetic tests](code/tests/test_reading_pipeline.py) exercise the cohort and evaluation contracts; they do not validate the original report or the scientific prediction task. Raw files and reconstruction caches are kept under the repository's ignored data directories. Notebook 05 reads the derived CSVs only.
+The [requirements](requirements.txt) specify the initial compatible dependency range. Notebooks 01–02 record Python 3.13.18 and their six and five derived outputs respectively. Notebook 02's saved setup output records a deferred Git update because of local changes; the review verifies the committed numerical tables and saved cell evidence, not the exact runtime checkout or independently refitted associations. Preserve the two compatible local caches for later modelling; their bytes are not verified by the GitHub review. Package versions and runtime behaviour for subsequent stages remain to be verified. [Synthetic tests](code/tests/test_reading_pipeline.py) exercise the cohort and evaluation contracts; they do not validate the original report or the scientific prediction task. Raw files and reconstruction caches are kept under the repository's ignored data directories. Notebook 05 reads the derived CSVs only.
 
 ## 9. Discussion, Limitations and Future Work
 
