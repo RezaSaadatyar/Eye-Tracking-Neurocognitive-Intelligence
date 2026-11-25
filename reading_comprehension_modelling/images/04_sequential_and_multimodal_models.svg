@@ -88,15 +88,15 @@
 <g data-diagram="branch" aria-label="Methodological schematic">
 <rect x="730" y="328" width="124" height="29" rx="5" fill="#EAF3FA" stroke="#B6CFDE" stroke-width="1.5"/>
 <text x="792" y="347" class="chart" text-anchor="middle">Fixation sequence</text>
-<path d="M792 357V370H690.6666666666666V384" stroke="#245E9D" stroke-width="1.8" fill="none" stroke-linecap="round" marker-end="url(#arr)"/>
-<rect x="646" y="386" width="89.33333333333333" height="29" rx="5" fill="#EAF3FA" stroke="#B6CFDE" stroke-width="1.5"/>
-<text x="690.6666666666666" y="405" class="chart" text-anchor="middle">CNN</text>
-<path d="M792 357V370H788V384" stroke="#245E9D" stroke-width="1.8" fill="none" stroke-linecap="round" marker-end="url(#arr)"/>
-<rect x="743.3333333333334" y="386" width="89.33333333333333" height="29" rx="5" fill="#EAF3FA" stroke="#B6CFDE" stroke-width="1.5"/>
-<text x="788" y="405" class="chart" text-anchor="middle">GRU</text>
-<path d="M792 357V370H885.3333333333333V384" stroke="#245E9D" stroke-width="1.8" fill="none" stroke-linecap="round" marker-end="url(#arr)"/>
-<rect x="840.6666666666666" y="386" width="89.33333333333333" height="29" rx="5" fill="#EAF3FA" stroke="#B6CFDE" stroke-width="1.5"/>
-<text x="885.3333333333333" y="405" class="chart" text-anchor="middle">Attention</text>
+<path d="M792 370H694V384" stroke="#245E9D" stroke-width="1.8" fill="none" stroke-linecap="round" marker-end="url(#arr)"/>
+<rect x="649.3333333333334" y="386" width="89.33333333333333" height="29" rx="5" fill="#EAF3FA" stroke="#B6CFDE" stroke-width="1.5"/>
+<text x="694" y="405" class="chart" text-anchor="middle">CNN</text>
+<path d="M792 357V384" stroke="#245E9D" stroke-width="1.8" fill="none" stroke-linecap="round" marker-end="url(#arr)"/>
+<rect x="747.3333333333334" y="386" width="89.33333333333333" height="29" rx="5" fill="#EAF3FA" stroke="#B6CFDE" stroke-width="1.5"/>
+<text x="792" y="405" class="chart" text-anchor="middle">GRU</text>
+<path d="M792 370H890V384" stroke="#245E9D" stroke-width="1.8" fill="none" stroke-linecap="round" marker-end="url(#arr)"/>
+<rect x="845.3333333333334" y="386" width="89.33333333333333" height="29" rx="5" fill="#EAF3FA" stroke="#B6CFDE" stroke-width="1.5"/>
+<text x="890" y="405" class="chart" text-anchor="middle">Attention</text>
 </g>
 <text x="646" y="480" class="body" text-anchor="start">Three alternative encoder families</text>
 <text x="646" y="501" class="body" text-anchor="start">Masked sequence pooling</text>
@@ -193,6 +193,6 @@
 </g>
 </g>
 <g id="band-4-summary">
-<text x="30" y="792" class="footer" text-anchor="start">The three encoders are separate candidates; empirical performance requires execution.</text>
+<text x="30" y="792" class="footer" text-anchor="start">The three encoders are alternative candidates; Validation selects checkpoints and matched Test scores support final evaluation.</text>
 </g>
 </svg>
