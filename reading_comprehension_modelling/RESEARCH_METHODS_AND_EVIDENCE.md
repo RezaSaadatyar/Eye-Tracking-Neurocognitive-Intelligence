@@ -1,6 +1,6 @@
 # Reading Comprehension & Neurocognitive Modelling | Research Methods and Evidence
 
-**Study:** Independent OneStop paragraph-reading application within Eye-Tracking & Neurocognitive Intelligence. **Target:** correctness of a subsequent comprehension response. The implementation is available in five notebooks; original-data results have not been recorded. See the [study README](README.md) and [study-wide workflow](images/study_overview.svg).
+**Study:** Independent OneStop paragraph-reading application within Eye-Tracking & Neurocognitive Intelligence. **Target:** correctness of a subsequent comprehension response. The implementation is available in five notebooks. Notebook 01 has been executed on the original ordinary-reading reports; its cohort and split evidence are recorded. Feature, association and predictive results remain pending. See the [study README](README.md) and [study-wide workflow](images/study_overview.svg).
 
 ## 1. Research Objective and Scope
 
@@ -14,7 +14,7 @@ The study is scientifically independent of GazeBase, ZuCo and MPIIGaze. It does 
 
 ### 2.1 Original source and access
 
-OneStop is described in Berzak et al. (2025), [Scientific Data](https://doi.org/10.1038/s41597-025-06272-2). The published corpus comprises 360 English L1 participants, about 152 hours of eye tracking and multiple reading regimes. Source documentation distinguishes ordinary reading, information seeking and repeated reading. Ordinary reading includes 9,718 regular trials according to the publisher; exact usable cohort counts require original-data execution.
+OneStop is described in Berzak et al. (2025), [Scientific Data](https://doi.org/10.1038/s41597-025-06272-2). The published corpus comprises 360 English L1 participants, about 152 hours of eye tracking and multiple reading regimes. Source documentation distinguishes ordinary reading, information seeking and repeated reading. Ordinary reading includes 9,718 regular trials according to the publisher. The recorded project cohort also contains 9,718 eligible trials after report reconciliation (see Section 6.1); the matching count does not replace the implemented eligibility checks.
 
 Use the official [ordinary-reading OSF component](https://osf.io/zn9sq/) and [report schema](https://lacclab.github.io/OneStop-Eye-Movements/variables). The publisher download script identifies the fixation archive as `ne4az` and the interest-area archive as `xkgfz`. The local adapter downloads and extracts the two report CSVs or reuses the corresponding local files. The reports are detected as tab- or comma-separated; required documented fields are checked before use.
 
@@ -100,7 +100,31 @@ All neural candidates use a 32-unit hidden prediction head, dropout 0.1, AdamW (
 
 ### 6.1 Data and cohort evidence
 
-No original OneStop report has been downloaded or decoded during implementation here. Notebook 01 will establish actual report dimensions, exclusions, retained trial counts and outcome support per participant protocol.
+The committed Notebook 01 execution (Python 3.13.18) recorded the following source inventory and cohort evidence.
+
+| Source report | Rows | Selected columns | File size (bytes) |
+| --- | ---: | ---: | ---: |
+| Fixations | 1,172,718 | 18 | 2,997,905,127 |
+| Interest areas | 1,104,883 | 20 | 2,455,810,901 |
+
+Of 10,078 distinct trial identities in the report union, 9,718 were eligible and 360 were assigned to `practice_or_unknown`. No other exclusion category was recorded. The eligible trials represent 180 participants, 30 articles and three article batches (60 participants per batch). Correct responses account for 7,890 trials (81.19%) and incorrect responses for 1,828 (18.81%).
+
+| Protocol | Role | Participants | Trials | Incorrect | Correct | Articles |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| A | Training | 108 | 5,831 | 1,079 | 4,752 | 30 |
+| A | Validation | 36 | 1,943 | 371 | 1,572 | 30 |
+| A | Test | 36 | 1,944 | 378 | 1,566 | 30 |
+| B | Training | 96 | 5,183 | 969 | 4,214 | 20 |
+| B | Validation | 24 | 1,295 | 241 | 1,054 | 20 |
+| B | Test | 60 | 3,240 | 618 | 2,622 | 10 |
+
+Recalculation from the saved trial index and participant splits reproduced all 12 class-specific support rows. The trial IDs are unique; each participant has one role per protocol. All roles contain both classes. Protocol B holds out batch 3 with zero article overlap with development. Protocol A shares all 30 articles across roles. These checks establish the saved partition structure, not model-level leakage prevention or predictive validity.
+
+![Observed cohort and response support](output/01_cohort_support.png)
+
+*Figure: Eligible participants per article batch (left) and observed response counts (right). These are cohort descriptors, not model performance.*
+
+Evidence: [source inventory](output/01_source_inventory.csv), [exclusion counts](output/01_trial_exclusions.csv), [trial index](output/01_trial_index.csv), [participant splits](output/01_participant_splits.csv) and [split support](output/01_split_support.csv).
 
 ### 6.2 Feature and association evidence
 
@@ -134,7 +158,7 @@ Fixed ten-bin score summaries compare mean score and observed correct-response f
 | Notebook 04 | `04_neural_predictions.csv`, `04_training_history.csv`, `04_model_configurations.csv`, `04_validation_metrics.csv`, `04_validation_curves.png` |
 | Notebook 05 | `05_validation_metrics.csv`, `05_selected_models.csv`, `05_test_metrics.csv`, `05_participant_metrics.csv`, `05_difficulty_metrics.csv`, `05_calibration_bins.csv`, `05_participant_intervals.csv`, `05_paired_modality_intervals.csv`, `05_test_comparison.png`, `05_selected_confusion.png`, `05_score_calibration.png` |
 
-The [requirements](requirements.txt) specify the initial compatible dependency range. Actual runtime versions, data availability and run outputs must be confirmed in Colab. [Synthetic tests](code/tests/test_reading_pipeline.py) exercise the cohort and evaluation contracts; they do not validate the original report or the scientific prediction task. Raw files and reconstruction caches are kept under the repository's ignored data directories. Notebook 05 reads the derived CSVs only.
+The [requirements](requirements.txt) specify the initial compatible dependency range. Notebook 01 records Python 3.13.18 and the six current outputs; package versions and runtime behaviour for subsequent stages remain to be verified. [Synthetic tests](code/tests/test_reading_pipeline.py) exercise the cohort and evaluation contracts; they do not validate the original report or the scientific prediction task. Raw files and reconstruction caches are kept under the repository's ignored data directories. Notebook 05 reads the derived CSVs only.
 
 ## 9. Discussion, Limitations and Future Work
 
