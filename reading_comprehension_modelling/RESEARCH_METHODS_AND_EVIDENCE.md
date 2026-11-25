@@ -1,6 +1,6 @@
 # Reading Comprehension & Neurocognitive Modelling | Research Methods and Evidence
 
-**Study:** Independent OneStop paragraph-reading application within Eye-Tracking & Neurocognitive Intelligence. **Target:** correctness of a subsequent comprehension response. The implementation is available in five notebooks. Notebooks 01–04 have verified saved cohort, split, feature, exploratory association and classical/neural Validation evidence. Notebook 05 has recorded Test results, but final reporting is pending fixed-input reconciliation of the TF-IDF candidates. See the [study README](README.md) and [study-wide workflow](images/study_overview.svg).
+**Study:** Independent OneStop paragraph-reading application within Eye-Tracking & Neurocognitive Intelligence. **Target:** correctness of a subsequent comprehension response. The implementation is available in five notebooks. All five notebooks have executed and their saved cohort, features, associations, prediction and final held-out evidence are reconciled. See the [study README](README.md) and [study-wide workflow](images/study_overview.svg).
 
 ## 1. Research Objective and Scope
 
@@ -94,7 +94,7 @@ Each scalar estimator is compared on gaze-only, text-only and combined input all
 
 [reading_models.py](code/src/reading_models.py) defines three compact gaze encoders: masked 1D CNN (two convolutional layers, 32 channels, kernels 5 and 3), GRU (hidden size 32) and two-layer Transformer encoder (embedding size 32, four heads, feed-forward size 64, learned positions). Valid-position mean pooling produces a fixed representation. The fusion variants concatenate the gaze representation with Training-standardised static paragraph features; a text-only MLP supplies a neural comparator.
 
-All neural candidates use a 32-unit hidden prediction head, dropout 0.1, AdamW (learning rate 0.001, weight decay 0.0001), batch 64, maximum 15 epochs and patience three. The positive-class loss weight is Training negative/positive support. Seed 17 is used for initialisation and data loading. GPU is recommended; actual resource demand and software versions await execution. CUDA results are not claimed to be bitwise deterministic.
+All neural candidates use a 32-unit hidden prediction head, dropout 0.1, AdamW (learning rate 0.001, weight decay 0.0001), batch 64, maximum 15 epochs and patience three. The positive-class loss weight is Training negative/positive support. Seed 17 is used for initialisation and data loading. GPU is recommended; the recorded neural execution used a Tesla T4 (environment details in Section 8). CUDA results are not claimed to be bitwise deterministic.
 
 ## 6. Results and Comparative Analysis
 
@@ -200,13 +200,64 @@ The executed [Notebook 04](code/notebooks/04_sequential_and_multimodal_models.ip
 | Transformer gaze | 0.5202 | 0.5296 |
 | Transformer fusion | 0.5075 | 0.5458 |
 
-The recorded neural leaders are GRU gaze in A and Transformer fusion in B, both below the respective classical Validation leaders. Fusion improves over the corresponding gaze-only encoder only for the B Transformer in these Validation comparisons. Neural text inputs are static paragraph features rather than lexical TF-IDF, so the classical-versus-neural comparison does not isolate architecture alone. These are descriptive Validation results; final selection, uncertainty and reserved Test assessment have not been completed. The 130 training-history rows and 14 configuration records agree with the fixed split sizes, Training-derived class weights, training settings and earliest maximum Validation Macro F1 for each fit. Epoch counts range from 4 to 15; 13 configurations stopped before the cap and B GRU gaze reached it. A GRU gaze selected epoch 10 of 13; B Transformer fusion selected epoch 3 of 6. The curves preserve actual epoch lengths without extrapolation.
+The recorded neural leaders are GRU gaze in A and Transformer fusion in B, both below the respective classical Validation leaders. Fusion improves over the corresponding gaze-only encoder only for the B Transformer in these Validation comparisons. Neural text inputs are static paragraph features rather than lexical TF-IDF, so the classical-versus-neural comparison does not isolate architecture alone. These are descriptive Validation results; the frozen selection and Test assessment are reported below. The 130 training-history rows and 14 configuration records agree with the fixed split sizes, Training-derived class weights, training settings and earliest maximum Validation Macro F1 for each fit. Epoch counts range from 4 to 15; 13 configurations stopped before the cap and B GRU gaze reached it. A GRU gaze selected epoch 10 of 13; B Transformer fusion selected epoch 3 of 6. The curves preserve actual epoch lengths without extrapolation.
 
 ![Neural Validation learning curves](output/04_validation_curves.png)
 
 *Figure: Validation Macro F1 by recorded epoch for the seven neural candidates in each protocol.*
 
-Evidence: [neural scores](output/04_neural_predictions.csv), [training history](output/04_training_history.csv), [configurations](output/04_model_configurations.csv) and [Validation metrics](output/04_validation_metrics.csv). Together the classical and neural score tables contain 160,018 scores for the 19 fixed candidates per protocol. The review did not refit networks, inspect checkpoint weights or calculate Test metrics.
+Evidence: [neural scores](output/04_neural_predictions.csv), [training history](output/04_training_history.csv), [configurations](output/04_model_configurations.csv) and [Validation metrics](output/04_validation_metrics.csv). Together the classical and neural score tables contain 160,018 scores for the 19 fixed candidates per protocol. The neural-stage review did not refit networks, inspect checkpoint weights or calculate Test metrics.
+
+#### Final held-out evaluation
+
+The fixed 19-candidate set was evaluated in each protocol from 160,018 committed scores. Validation Macro F1 selects TF-IDF fusion for A and TF-IDF text for B. The corrected execution preserves these identities. The primary Test results are:
+
+| Metric | Protocol A: TF-IDF fusion | Protocol B: TF-IDF text |
+| --- | ---: | ---: |
+| Validation Macro F1 | 0.5582 | 0.5698 |
+| Test people | 36 | 60 |
+| Test trials | 1,944 | 3,240 |
+| Accuracy | 0.6224 | 0.6389 |
+| Macro F1 | 0.5560 | 0.5035 |
+| Balanced accuracy | 0.6161 | 0.5116 |
+| AUROC | 0.6573 | 0.5386 |
+| Incorrect AUPRC | 0.3002 | 0.2050 |
+| Incorrect precision | 0.2813 | 0.2032 |
+| Incorrect recall | 0.6058 | 0.3058 |
+| Brier score | 0.2272 | 0.2220 |
+| 95% participant interval | 0.5276–0.5805 | 0.4863–0.5211 |
+
+The prevalence comparator has Test accuracy 0.8056/0.8093, Macro F1 0.4462/0.4473 and zero incorrect recall (A/B). Higher accuracy alone is thus misleading. The selected A candidate retains its Validation performance approximately; the selected B candidate drops by 0.0664 Macro F1, with balanced accuracy and AUROC near 0.5. The protocols differ in both people and article batches; this is not an isolated text-shift estimate.
+
+| Candidate | A Test Macro F1 | B Test Macro F1 |
+| --- | ---: | ---: |
+| Prior | 0.4462 | 0.4473 |
+| Logistic gaze | 0.4481 | 0.4906 |
+| Logistic text | 0.4816 | 0.4826 |
+| Logistic fusion | 0.4780 | 0.5039 |
+| Random Forest gaze | 0.4751 | 0.4708 |
+| Random Forest text | 0.5481 | 0.5177 |
+| Random Forest fusion | 0.4823 | 0.4577 |
+| XGBoost gaze | 0.4713 | 0.4914 |
+| XGBoost text | 0.5184 | 0.4875 |
+| XGBoost fusion | 0.5135 | 0.5157 |
+| TF-IDF text | 0.5452 | 0.5035 |
+| TF-IDF fusion | 0.5560 | 0.5296 |
+| MLP text | 0.5182 | 0.4859 |
+| CNN gaze | 0.4702 | 0.5005 |
+| CNN fusion | 0.5006 | 0.4984 |
+| GRU gaze | 0.4814 | 0.5058 |
+| GRU fusion | 0.4982 | 0.4907 |
+| Transformer gaze | 0.4917 | 0.4992 |
+| Transformer fusion | 0.4974 | 0.5006 |
+
+![Held-out Macro F1 comparison](output/05_test_comparison.png)
+
+*Figure: Test Macro F1 of all fixed candidates. Only the Validation-selected candidates constitute primary results; the B TF-IDF fusion Test leader (0.5296) remains a secondary comparison.*
+
+The best neural Test candidate is MLP text in A (0.5182) and GRU gaze in B (0.5058), neither exceeding the highest classical Test score. These secondary maxima do not establish a sequence-specific benefit: neural models use static text features whereas lexical comparators use TF-IDF, and no neural paired modality intervals are implemented. The fixed experiment does not isolate the effect of temporal ordering from differences in model representation.
+
+Evidence: [final Validation metrics](output/05_validation_metrics.csv), [selected models](output/05_selected_models.csv) and [Test metrics](output/05_test_metrics.csv).
 
 ## 7. Robustness, Uncertainty and Additional Analyses
 
@@ -214,17 +265,52 @@ Evidence: [neural scores](output/04_neural_predictions.csv), [training history](
 
 Participant metrics and difficulty strata describe variation in the held-out cohort. Protocol B changes both participant group and article batch; a difference between protocols is not an isolated unseen-text effect. The source difficulty manipulation may be associated with layout, wording and question difficulty.
 
+| Selected-model summary | A | B |
+| --- | ---: | ---: |
+| Participant Macro F1 minimum | 0.3448 | 0.3721 |
+| Participant Macro F1 median | 0.5261 | 0.4893 |
+| Participant Macro F1 maximum | 0.6842 | 0.7146 |
+| Advanced Macro F1 | 0.5606 | 0.4904 |
+| Elementary Macro F1 | 0.5489 | 0.4996 |
+| Advanced incorrect recall | 0.6650 | 0.4109 |
+| Elementary incorrect recall | 0.5414 | 0.1847 |
+
+Each difficulty stratum contains 972 trials in A and 1,620 in B. The observed differences do not establish causal effects or individual cognitive ability. Of 378 incorrect A responses, 229 are correctly identified; of 618 incorrect B responses, 189 are identified. The remaining correct-response classification counts are 981/1,566 and 1,881/2,622 respectively.
+
+![Confusion matrices of Validation-selected candidates](output/05_selected_confusion.png)
+
+*Figure: Observed rows and predicted columns, with 0 denoting incorrect and 1 correct.*
+
+Evidence: [participant metrics](output/05_participant_metrics.csv) and [difficulty metrics](output/05_difficulty_metrics.csv).
+
 ### 7.2 Conditional uncertainty and modality contrasts
 
 [reading_evaluation.py](code/src/reading_evaluation.py) resamples participant-level confusion counts jointly across candidate scores (1,000 draws, seed 17), reporting descriptive percentile intervals for pooled Macro F1. Fusion-versus-text and fusion-versus-gaze contrasts are matched within scalar model families; TF-IDF fusion versus TF-IDF text is also included. The fitted models are not retrained and the bootstrap does not resample articles. These intervals do not estimate full training, article-population or external uncertainty.
 
+| Fusion minus text | A difference (95% interval) | B difference (95% interval) |
+| --- | ---: | ---: |
+| Logistic | −0.0035 (−0.0393, 0.0294) | +0.0213 (0.0052, 0.0364) |
+| Random Forest | −0.0658 (−0.1077, −0.0251) | −0.0599 (−0.0833, −0.0375) |
+| XGBoost | −0.0049 (−0.0350, 0.0235) | +0.0282 (0.0066, 0.0482) |
+| TF-IDF | +0.0108 (−0.0127, 0.0313) | +0.0261 (0.0068, 0.0432) |
+
+Relative to gaze-only scalar baselines, A logistic and XGBoost fusion and B XGBoost fusion have wholly positive intervals; the other three intervals include zero. These secondary, unadjusted conditional contrasts support model-dependent added value rather than a universal benefit of gaze. The B TF-IDF contrast does not change the Validation decision. No causal or confirmatory inference is claimed.
+
+All 38 participant intervals and 14 paired intervals were independently recalculated from participant confusion counts, using the same 1,000 paired draws and seed 17. Both endpoints and all paired point differences match the saved results. See [participant intervals](output/05_participant_intervals.csv) and [paired modality intervals](output/05_paired_modality_intervals.csv).
+
 ### 7.3 Calibration and interpretation
 
-Fixed ten-bin score summaries compare mean score and observed correct-response fraction; Brier score is recorded. No probability recalibration or Test-driven threshold optimisation is performed. Permutation importance and mixed-effects estimates have different interpretations and do not establish that changes in gaze cause changes in comprehension.
+Fixed ten-bin score summaries compare mean score and observed correct-response fraction; Brier score is recorded. No probability recalibration or Test-driven threshold optimisation is performed. The selected-model Brier scores (0.2272/0.2220) are worse than those of the Training-prevalence reference (0.1567/0.1544). Observed correctness exceeds the mean score in eight of nine occupied A bins and all five occupied B bins. This indicates underestimation of correctness over most score ranges, consistent with the use of class weighting, and limits probability interpretation.
+
+![Selected-model score calibration diagnostics](output/05_score_calibration.png)
+
+*Figure: Mean score versus observed correctness in occupied fixed bins. Marker area reflects bin support; the diagonal denotes equality. Panels are identified by protocol.*
+
+Evidence: [calibration bins](output/05_calibration_bins.csv). Permutation importance and mixed-effects estimates have different interpretations and do not establish that changes in gaze cause changes in comprehension.
 
 ## 8. Current Outputs and Reproducibility
 
-**Final evaluation reconciliation:** Execution commit [`4b2aa28`](https://github.com/RezaSaadatyar/Eye-Tracking-Neurocognitive-Intelligence/commit/4b2aa28f0860693fee7b9625ed94ac114f77d874) contains all eleven Notebook 05 outputs. The current committed producer scores contain 160,018 unique, role-matched entries. Independent recalculation matches the final metrics for 68 of 76 candidate–protocol–role combinations, but not TF-IDF text and fusion in either protocol or role. For example, the A TF-IDF fusion Validation Macro F1 is 0.558242 from the committed predictions versus 0.557059 in the Notebook 05 table; B TF-IDF text is 0.569842 versus 0.570210. Differences also occur in Brier scores. The Validation-selected identities remain unchanged. The setup log reports a deferred Git update; the exact differing runtime inputs are not established. Final comparative tables, bootstrap intervals and plots must be regenerated together from the committed scores in a fresh checkout, without refitting or altering the protocol. Test has already been inspected; this correction is reconciliation of fixed predictions, not an independent new evaluation.
+**Final evaluation reconciliation:** The initial Notebook 05 run at `4b2aa28` differed from the committed TF-IDF producer scores. The corrected execution [`d51ed6c`](https://github.com/RezaSaadatyar/Eye-Tracking-Neurocognitive-Intelligence/commit/d51ed6cd665d2f79e5959c1709e3b07058e35096) regenerated all eleven outputs without changing the producer predictions, model code, partitions or selection rules. All 76 candidate–protocol–role metric combinations, 1,824 participant rows, 76 difficulty rows, 195 calibration bins, 38 participant intervals and 14 paired intervals reconcile with the saved scores. Across the numeric checks the maximum absolute discrepancy was below 2e-14; the bootstrap endpoints match exactly. This is a correction of the same held-out assessment after Test inspection, not an independent new Test. The earlier runtime's precise differing input was not established. No upstream refitting was performed.
 
 | Producer | Named current output files after execution |
 | --- | --- |
@@ -234,13 +320,15 @@ Fixed ten-bin score summaries compare mean score and observed correct-response f
 | Notebook 04 | `04_neural_predictions.csv`, `04_training_history.csv`, `04_model_configurations.csv`, `04_validation_metrics.csv`, `04_validation_curves.png` |
 | Notebook 05 | `05_validation_metrics.csv`, `05_selected_models.csv`, `05_test_metrics.csv`, `05_participant_metrics.csv`, `05_difficulty_metrics.csv`, `05_calibration_bins.csv`, `05_participant_intervals.csv`, `05_paired_modality_intervals.csv`, `05_test_comparison.png`, `05_selected_confusion.png`, `05_score_calibration.png` |
 
-The [requirements](requirements.txt) specify the initial compatible dependency range. Notebooks 01–03 record Python 3.13.18 and six, five and four derived outputs respectively. Notebooks 02 and 03 record deferred Git updates because of local changes; the review verifies the committed numerical tables and saved cell evidence, not the exact runtime checkout, independently refitted associations or independently trained classical models. Preserve the two compatible local caches for later modelling; their bytes are not verified by the GitHub review. Notebook 04 records Python 3.13.16, PyTorch 2.14.1+cu130, CUDA 13.0 and Tesla T4 GPU execution, with a non-fatal nested-tensor warning. The five standalone files have been reconciled, including selected-epoch consistency with the exported history and scores; model weights and the local NPZ were not independently inspected. Package versions not recorded in the saved outputs and subsequent runtime behaviour remain unverified. [Synthetic tests](code/tests/test_reading_pipeline.py) exercise the cohort and evaluation contracts; they do not validate the original report or the scientific prediction task. Raw files and reconstruction caches are kept under the repository's ignored data directories. Notebook 05 reads the derived CSVs only.
+The [requirements](requirements.txt) specify the initial compatible dependency range. Notebooks 01–03 record Python 3.13.18 and six, five and four derived outputs respectively. Notebooks 02 and 03 record deferred Git updates because of local changes; the review verifies the committed numerical tables and saved cell evidence, not the exact runtime checkout, independently refitted associations or independently trained classical models. Preserve the two compatible local caches for later modelling; their bytes are not verified by the GitHub review. Notebook 04 records Python 3.13.16, PyTorch 2.14.1+cu130, CUDA 13.0 and Tesla T4 GPU execution, with a non-fatal nested-tensor warning. The five standalone files have been reconciled, including selected-epoch consistency with the exported history and scores; model weights and the local NPZ were not independently inspected. Notebook 05 records Python 3.13.16 and a current checkout. Package versions not recorded in the saved outputs remain unverified. [Synthetic tests](code/tests/test_reading_pipeline.py) exercise the cohort and evaluation contracts; they do not validate the original report or the scientific prediction task. Raw files and reconstruction caches are kept under the repository's ignored data directories. Notebook 05 reads the derived CSVs only.
 
 ## 9. Discussion, Limitations and Future Work
 
 This study asks a bounded behavioural prediction question. Answer correctness depends on the assigned question, text, participant knowledge and other factors in addition to gaze. It cannot be equated with general comprehension ability, critical thinking, attention state or clinical status.
 
 The source dataset includes multiple reading regimes, but the principal experiment is ordinary first reading. The single held-out batch analysis is internal, with participant/text confounding. Fixation reports are vendor-derived rather than independently adjudicated eye events; backward word-index changes are a proxy rather than validated regressions. Text-based feature summaries do not exhaust all available linguistic information. Sequence truncation may affect longer trials. Training-only associations are approximate and are not causal.
+
+The recorded results answer the agreed questions within the ordinary-reading cohort: gaze features exhibit exploratory associations with correctness; added gaze improves some matched text predictors but not consistently; the fixed sequential encoders do not demonstrate a systematic advantage over classical or lexical comparators; and the selected predictor in the unseen-participant/article protocol has limited discrimination. These results do not establish that gaze improves comprehension, that temporal order alone improves prediction, or that the models generalise to a different dataset. Fixed splits, a single training seed, one held-out article batch, unadjusted secondary contrasts and absent external validation constrain the findings. No post-Test optimisation is justified by these observations.
 
 Potential later extensions include explicitly question-conditioned modelling with a separate information boundary, source-aligned lexical annotations, reading-goal and repeated-reading studies, independent text/person datasets and a separately justified EEG–gaze study. These are not current results.
 
