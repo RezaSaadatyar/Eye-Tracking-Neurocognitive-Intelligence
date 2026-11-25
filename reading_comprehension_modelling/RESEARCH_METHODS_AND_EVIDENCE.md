@@ -14,7 +14,7 @@ The study is scientifically independent of GazeBase, ZuCo and MPIIGaze. It does 
 
 ### 2.1 Original source and access
 
-OneStop is described in Berzak et al. (2025), [Scientific Data](https://doi.org/10.1038/s41597-025-06272-2). The published corpus comprises 360 English L1 participants, about 152 hours of eye tracking and multiple reading regimes. Source documentation distinguishes ordinary reading, information seeking and repeated reading. Ordinary reading includes 9,718 regular trials according to the publisher. The recorded project cohort also contains 9,718 eligible trials after report reconciliation (see Section 6.1); the matching count does not replace the implemented eligibility checks.
+OneStop is described in Berzak et al. (2025), [Scientific Data](https://doi.org/10.1038/s41597-025-06272-2). The published corpus comprises 360 English L1 participants, about 152 hours of eye tracking and multiple reading regimes. Source documentation distinguishes ordinary reading, information seeking and repeated reading. Ordinary reading includes 9,718 regular trials according to the publisher. The study retains 9,718 eligible trials after report reconciliation and application of the criteria in Section 2.2.
 
 Use the official [ordinary-reading OSF component](https://osf.io/zn9sq/) and [report schema](https://lacclab.github.io/OneStop-Eye-Movements/variables). The publisher download script identifies the fixation archive as `ne4az` and the interest-area archive as `xkgfz`. The local adapter downloads and extracts the two report CSVs or reuses the corresponding local files. The reports are detected as tab- or comma-separated; required documented fields are checked before use.
 
@@ -24,7 +24,7 @@ One sample corresponds to one participant reading one paragraph and answering it
 
 Both reports must agree on the trial metadata. The implemented cohort retains matched ordinary first-reading, non-practice trials, valid answers A–D, consistent `is_correct` labels and at least one finite positive-duration fixation with finite start time and coordinates. The source's correctness definition is answer A; missing selected answers are excluded even if an annotation is present. Exclusions are counted once using ordered, mutually exclusive reasons.
 
-The source documentation reports missing trials/answers, some typographical and display-layout issues, and participant-ID qualifications in its [known issues](https://lacclab.github.io/OneStop-Eye-Movements/known_issues.html). These do not justify silently correcting source data or treating the reported corpus size as an assertion about available rows.
+The source documentation reports missing trials/answers, some typographical and display-layout issues, and participant-ID qualifications in its [known issues](https://lacclab.github.io/OneStop-Eye-Movements/known_issues.html). These source qualifications are relevant when interpreting cohort coverage and fixation measurements.
 
 ### 2.3 Outcome and information boundary
 
@@ -182,7 +182,7 @@ The highest classical Validation Macro F1 is TF-IDF fusion in A (balanced accura
 
 *Figure 4. Validation Macro F1 for fixed classical and lexical candidates across the two participant protocols.*
 
-The 168 unique permutation-importance rows contain finite means and non-negative repeat SDs. Examples include `fix_count` for A logistic fusion (mean decrease 0.0519) and `mean_word_chars` for B logistic fusion (0.0594). These are model- and partition-specific three-repeat summaries, not causal effects or confidence intervals. 
+The 168 unique permutation-importance rows contain finite means and non-negative repeat SDs. Examples include `fix_count` for A logistic fusion (mean decrease 0.0519) and `mean_word_chars` for B logistic fusion (0.0594). These are model- and partition-specific three-repeat summaries, not causal effects or confidence intervals.
 
 Evidence: [classical scores](output/03_classical_predictions.csv), [Validation metrics](output/03_validation_metrics.csv) and [feature importance](output/03_validation_feature_importance.csv). Notebook 05 selects from the complete classical and neural candidate set on Validation before evaluating the reserved Test partitions.
 
@@ -200,7 +200,7 @@ Evidence: [classical scores](output/03_classical_predictions.csv), [Validation m
 | Transformer gaze | 0.5202 | 0.5296 |
 | Transformer fusion | 0.5075 | 0.5458 |
 
-The recorded neural leaders are GRU gaze in A and Transformer fusion in B, both below the respective classical Validation leaders. Fusion improves over the corresponding gaze-only encoder only for the B Transformer in these Validation comparisons. Neural text inputs are static paragraph features rather than lexical TF-IDF, so the classical-versus-neural comparison does not isolate architecture alone. These are descriptive Validation results; the frozen selection and Test assessment are reported below. The 133 training-history rows and 14 configuration records agree with the fixed split sizes, Training-derived class weights, training settings and earliest maximum Validation Macro F1 for each fit. Epoch counts range from 4 to 15; 13 configurations stopped before the cap and B GRU gaze reached it. A GRU gaze selected epoch 10 of 13; B Transformer fusion selected epoch 3 of 6. The curves preserve actual epoch lengths without extrapolation.
+The recorded neural leaders are GRU gaze in A and Transformer fusion in B, both below the respective classical Validation leaders. Fusion improves over the corresponding gaze-only encoder only for the B Transformer in these Validation comparisons. Neural text inputs are static paragraph features rather than lexical TF-IDF, so the classical-versus-neural comparison does not isolate architecture alone. These are descriptive Validation results; the frozen selection and Test assessment are reported below. The 14 candidate–protocol fits comprise 133 training epochs in total, with checkpoints selected at the earliest maximum Validation Macro F1. Epoch counts range from 4 to 15; 13 configurations stopped before the cap and B GRU gaze reached it. A GRU gaze selected epoch 10 of 13; B Transformer fusion selected epoch 3 of 6. The curves preserve actual epoch lengths without extrapolation.
 
 ![Neural Validation learning curves](output/04_validation_curves.png)
 
@@ -322,9 +322,9 @@ The five notebooks provide 31 named derived files and two local reconstruction c
 
 The [requirements](requirements.txt) specify study dependencies. The stored notebook executions record Python 3.13.16; neural training uses PyTorch 2.14.1+cu130, CUDA 13.0 and an NVIDIA Tesla T4. Exact historical versions of all packages are not fully pinned.
 
-The current trial index, feature rows and split support establish the recorded cohort and roles. The Validation and Test Macro F1 tables were reconciled to the fixed saved scores; the descriptive participant, difficulty, calibration and interval summaries are reported from their current stage-owned tables. This is numerical reporting of saved evidence, not independent reproduction of feature extraction, statistical fitting, resampling or model training. The final Test tables were regenerated from fixed saved predictions after an earlier evaluation-input mismatch; no candidates, partitions or selection rules changed. This is the same held-out evaluation, not a fresh independent Test.
+The trial index and participant assignments define the analytical cohort and roles. Validation and Test metrics can be recomputed from the saved prediction scores and trial labels. Participant, difficulty, calibration and bootstrap summaries characterise the same internal held-out evaluation. Independent reproduction of feature extraction, statistical fitting and model training requires the original source reports and the documented procedure.
 
-The [synthetic tests](code/tests/test_reading_pipeline.py) cover software and data contracts, not original-data scientific validity. Original reports and reconstruction caches remain under ignored data directories. The local arrays and trained model weights are not distributed as independently validated model artefacts. See the [study execution guide](README.md#4-running-and-reviewing-the-study).
+The [synthetic tests](code/tests/test_reading_pipeline.py) cover software and data contracts, not original-data scientific validity. Notebooks 01 and 02 provide source acquisition and representation construction; Notebooks 03 and 04 fit the models. See the [study execution guide](README.md#4-running-and-reviewing-the-study).
 
 ## 9. Discussion, Limitations and Future Work
 
@@ -336,4 +336,4 @@ Within the ordinary-reading cohort, gaze features exhibit exploratory associatio
 
 Potential later extensions include explicitly question-conditioned modelling with a separate information boundary, source-aligned lexical annotations, reading-goal and repeated-reading studies, independent text/person datasets and a separately justified EEG–gaze study. These are not current results.
 
-**References and licensing:** [OneStop paper](https://doi.org/10.1038/s41597-025-06272-2); [official release](https://lacclab.github.io/OneStop-Eye-Movements/); [data](https://osf.io/2prdq/); [Shubi et al. (2024)](https://aclanthology.org/2024.emnlp-main.198/). Eye-tracking data use CC BY 4.0; underlying OneStopQA materials and auxiliary annotations use CC BY-SA 4.0. The local paragraph-text cache is not published. Derived data remain subject to applicable source terms.
+**References and licensing:** [OneStop paper](https://doi.org/10.1038/s41597-025-06272-2); [official release](https://lacclab.github.io/OneStop-Eye-Movements/); [data](https://osf.io/2prdq/); [Shubi et al. (2024)](https://aclanthology.org/2024.emnlp-main.198/). Eye-tracking data use CC BY 4.0; underlying OneStopQA materials and auxiliary annotations use CC BY-SA 4.0. Derived data remain subject to applicable source terms.
