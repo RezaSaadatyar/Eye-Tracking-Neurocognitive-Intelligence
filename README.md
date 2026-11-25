@@ -2,7 +2,7 @@
 
 **Eye-tracking, gaze signal analysis and neurocognitive AI research**
 
-A Python research programme covering **five implemented, scientifically independent studies (four with recorded experiments)**: GazeBase eye-movement signal analysis, GazeBase recording-task modelling, and ZuCo 2.0 EEG–eye-tracking fusion. **Eye-Tracking Foundations** has seven executed notebooks. **Eye-Movement Modelling** has five completed notebooks on 100 participants; its Validation-selected Logistic Regression classified **80/80 main Test records from 20 people** correctly (Macro F1 **1.000**) within the GazeBase task setting. **EEG–Eye-Tracking Multimodal Research** has six executed notebooks on 18 ZuCo 2.0 participants, with Gaze Random Forest selected on three-person Validation (Macro F1 **0.6244**); its frozen gaze forest achieved **Test Macro F1 0.4997** on four independent people (160 windows). Recording-task classification in either dataset is not direct evidence of cognition or external generalisation.
+A Python research programme covering **five implemented, scientifically independent studies with recorded experiments**: GazeBase eye-movement signal analysis, GazeBase recording-task modelling, ZuCo 2.0 EEG–eye-tracking fusion, MPIIGaze image-based gaze estimation and OneStop reading-comprehension modelling. **Eye-Tracking Foundations** has seven executed notebooks. **Eye-Movement Modelling** has five completed notebooks on 100 participants; its Validation-selected Logistic Regression classified **80/80 main Test records from 20 people** correctly (Macro F1 **1.000**) within the GazeBase task setting. **EEG–Eye-Tracking Multimodal Research** has six executed notebooks on 18 ZuCo 2.0 participants, with Gaze Random Forest selected on three-person Validation (Macro F1 **0.6244**); its frozen gaze forest achieved **Test Macro F1 0.4997** on four independent people (160 windows). **Vision-Based Gaze Estimation** evaluates 15 held-out MPIIGaze participants using outer LOPO; the Small CNN achieves a participant-macro mean angular error of **7.3048°**. **Reading Comprehension & Neurocognitive Modelling** analyses 9,718 trials from 180 OneStop participants; the Validation-selected candidates achieve Test Macro F1 **0.5560** and **0.5035** in its two protocols. Recording-task classification and response-correctness prediction are not direct measures of general cognition or evidence of external generalisation.
 
 ## Research projects
 
@@ -36,7 +36,7 @@ For the six-stage workflow and final results, consult the [study overview](eeg_e
 
 ## Planned research directions
 
-**Four established studies have recorded results.** Eye-Tracking Foundations has completed exploratory source-to-evidence analyses; Eye-Movement Modelling has completed its 100-person GazeBase main Test. The selected model for that study was fixed using Validation, so the observed Test must not inform retrospective model selection.
+**All five established studies have recorded results.** Eye-Tracking Foundations has completed exploratory source-to-evidence analyses; Eye-Movement Modelling has completed its 100-person GazeBase main Test. The selected model for that study was fixed using Validation, so the observed Test must not inform retrospective model selection.
 
 EEG–Eye-Tracking Multimodal Research has completed **Notebooks 01–06 and the four-person, 160-window held-out Test**, after freezing its development winner on Validation. The primary Test Macro F1 is **0.4997**, with substantial participant-level variation. Independent device-drift checks, gaze-calibration assessment, stimulus-controlled analysis and external generalisation remain separate scientific extensions.
 
@@ -77,21 +77,22 @@ Eye-Tracking-Neurocognitive-Intelligence/
 │   ├── data/README.md                  # Original ZuCo data source and provenance
 │   └── output/                         # 49 current Stage-01–06 files, including Test
 ├── vision_based_gaze_estimation/
-│   ├── README.md                       # Study scope; no model results yet
+│   ├── README.md                       # Executed MPIIGaze study overview
 │   ├── RESEARCH_METHODS_AND_EVIDENCE.md
-│   ├── requirements.txt                # Proposed imaging dependencies
-│   ├── code/notebooks/                 # Stages 01–04 code, Stage 05 final reporting
+│   ├── requirements.txt                # Imaging study dependencies
+│   ├── code/notebooks/                 # Five executed research notebooks
 │   ├── code/src/                       # Source, geometry, folds and models
-│   └── images/                         # Four editable five-band study diagrams
+│   ├── images/                         # Six editable scientific diagrams
+│   └── output/                         # 31 current derived outputs
 ├── reading_comprehension_modelling/
 │   ├── README.md
 │   ├── RESEARCH_METHODS_AND_EVIDENCE.md
 │   ├── requirements.txt
-│   ├── code/notebooks/                 # Five implemented research notebooks
+│   ├── code/notebooks/                 # Five executed research notebooks
 │   ├── code/src/                       # OneStop source, features, models and evaluation
 │   ├── code/tests/                     # Synthetic study contracts
 │   ├── images/                         # Six methodological SVGs
-│   └── output/                         # Named outputs after execution
+│   └── output/                         # 31 current derived outputs
 ├── tests/                              # Synthetic scientific software contracts
 ├── scripts/                            # Git file-size guard
 └── .github/workflows/                  # Synthetic tests, size policy and ZuCo final Test
@@ -103,13 +104,15 @@ Vision-Based Gaze Estimation has its own [study directory](vision_based_gaze_est
 
 For Eye-Tracking Foundations, start with the [study README](eye_tracking_foundations/README.md) and [scientific methods](eye_tracking_foundations/RESEARCH_METHODS_AND_EVIDENCE.md). For the completed Eye-Movement Modelling study, use its [README](eye_movement_modelling/README.md), [scientific evidence](eye_movement_modelling/RESEARCH_METHODS_AND_EVIDENCE.md) and [Notebook 05](eye_movement_modelling/code/notebooks/05_robustness_and_final_evaluation.ipynb). For EEG–eye-tracking research, start with the [study README](eeg_eye_tracking_fusion/README.md), [scientific evidence](eeg_eye_tracking_fusion/RESEARCH_METHODS_AND_EVIDENCE.md), [executed Notebook 06](eeg_eye_tracking_fusion/code/notebooks/06_robustness_and_final_evaluation.ipynb) and [final Test metrics](eeg_eye_tracking_fusion/output/06_test_metrics.csv). All six notebooks and the frozen held-out Test are published; the saved pipelines require **scikit-learn 1.6.1** for compatible inference. The study README explains how to inspect or rerun Notebook 06 without rebuilding the earlier stages.
 
+For image-based research, start with the [MPIIGaze study README](vision_based_gaze_estimation/README.md) and [scientific evidence](vision_based_gaze_estimation/RESEARCH_METHODS_AND_EVIDENCE.md). For reading-comprehension modelling, start with the [OneStop study README](reading_comprehension_modelling/README.md), [scientific evidence](reading_comprehension_modelling/RESEARCH_METHODS_AND_EVIDENCE.md), [final evaluation notebook](reading_comprehension_modelling/code/notebooks/05_generalisation_and_final_evaluation.ipynb) and [Test metrics](reading_comprehension_modelling/output/05_test_metrics.csv). The OneStop final evaluation runs from the saved CSVs without source acquisition or model fitting.
+
 For original GazeBase acquisition, existing source paths and attribution, consult the [data guide](data/README.md). For VS Code, Colab setup and named output ZIP hand-offs, use [GETTING_STARTED.md](GETTING_STARTED.md). Reviewed study outputs can be explicitly tracked in Git; the repository's independent file-size policy rejects unapproved blobs larger than **50,000,000 bytes**. Large raw/processed data remain locally excluded. ZIP archives made under Colab `/content/` are not automatically published. Re-execution requires the compatible original data and notebook-specific current inputs; a documentation change alone does not require rerunning the experiment.
 
 ## Scientific scope, evidence and licensing
 
 - Preserve source recording, participant, task, session and sample identity through analysis.
 - Distinguish measured gaze, algorithm-derived eye events, vendor parser annotations and independently observed cognitive outcomes.
-- Use participants, not repeated windows or samples, as independent units when interpreting uncertainty. The current cohorts are 10 people for Foundations, 100 for GazeBase modelling and 18 for ZuCo fusion (three people in its Validation partition).
+- Use participants, not repeated windows or samples, as independent units when interpreting uncertainty. The study cohorts comprise 10 people for Foundations, 100 for GazeBase modelling, 18 for ZuCo fusion, 15 for MPIIGaze and 180 for OneStop; repeated observations do not increase the independent participant count.
 - Distinguish committed execution output, synthetic software tests, internal source-table reconciliation and independent scientific reproduction.
 - Do not extend the completed study's findings to clinical diagnosis, generalised cognitive inference or real-time gaze processing.
 
