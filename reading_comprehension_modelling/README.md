@@ -8,7 +8,7 @@
 
 **Dataset:** The published [OneStop Eye Movements corpus](https://lacclab.github.io/OneStop-Eye-Movements/) includes 360 participants and approximately 152 hours of recordings across reading regimes. Its ordinary-reading component has 9,718 regular trials according to the source documentation. These are publisher-reported counts, not the retained study cohort.
 
-**Status:** Notebooks 01–03 have verified saved cohort, feature, association and classical Validation evidence. Notebook 04 records completed neural training and Validation results in its executed cells, but its five standalone outputs were absent at the reviewed execution commit `a464f6d`. Output reconciliation and final Test evaluation remain pending. This study predicts the recorded correctness of a particular response, not general cognitive ability.
+**Status:** Notebooks 01–04 have verified saved cohort, feature, association and classical/neural Validation evidence. The five original Notebook 04 outputs are available and reconciled. Final Test evaluation remains pending. This study predicts the recorded correctness of a particular response, not general cognitive ability.
 
 **Scientific account:** [Research Methods and Evidence](RESEARCH_METHODS_AND_EVIDENCE.md).
 
@@ -53,7 +53,7 @@ Saved trial identities and participant assignments reproduce all class-support c
 
 Notebook 03 recorded 101,064 matched Validation and Test scores across 12 classical candidates per protocol. Validation Macro F1 is highest for TF-IDF fusion in Protocol A (0.5582) and TF-IDF text in Protocol B (0.5698), compared with prevalence references of 0.4472 and 0.4487. Adding gaze to the TF-IDF comparator changes Macro F1 by +0.0171 in A and -0.0060 in B. The added value of gaze is not consistent across model families. See the [Validation metrics](output/03_validation_metrics.csv), [comparison plot](output/03_validation_comparison.png) and [permutation importance](output/03_validation_feature_importance.csv). Protocol B Validation is within the development article batches; unseen-batch Test performance and final model selection remain pending.
 
-Notebook 04's saved cell display reports 14 neural fits and 58,954 prediction rows. The highest displayed neural Validation Macro F1 is GRU gaze in A (0.5251) and Transformer fusion in B (0.5458), below the corresponding classical leaders. These are recorded notebook results, pending reconciliation with the original score, history, configuration and Validation CSVs. No Test performance has been calculated in this review.
+Notebook 04 records 14 neural fits and 58,954 unique, aligned prediction rows. The highest neural Validation Macro F1 is GRU gaze in A (0.5251) and Transformer fusion in B (0.5458), below the corresponding classical leaders. All 126 numeric Validation entries and 14 checkpoint configurations were reconciled against the scores, fixed partitions and 130 history rows. See the [neural Validation metrics](output/04_validation_metrics.csv), [learning curves](output/04_validation_curves.png) and [model configurations](output/04_model_configurations.csv). Both score tables now supply 160,018 scores for 19 candidates per protocol. No Test performance has been calculated in this review.
 
 The primary comparison asks whether the gaze–text candidates improve over matched text-only comparators. The lexical TF-IDF baseline complements the simpler paragraph-statistic baseline. Participant-level and paired uncertainty analyses will distinguish observed differences from stronger generalisation claims.
 
@@ -62,7 +62,7 @@ The primary comparison asks whether the gaze–text candidates improve over matc
 1. Update the local repository with `git pull --ff-only origin main` without discarding local edits. Use the [Getting Started guide](../GETTING_STARTED.md) to open the notebook in VS Code/Colab.
 2. The executed [Notebook 01](code/notebooks/01_onestop_dataset_and_protocol.ipynb) and its six current outputs are available. For reproduction, execute it on CPU; the two ordinary-reading ZIPs are obtained from OSF using the documented download IDs, or extracted local reports are reused. Do not rerun it merely to prepare Notebook 02 when its current cohort and split tables are available.
 3. The executed [Notebook 02](code/notebooks/02_reading_behaviour_and_statistics.ipynb) and its five derived outputs are available. For reproduction, execute it on CPU with the same original reports and cohort. Keep its local `data/processed/onestop/02_paragraph_text.csv` and `02_fixation_sequences.npz` in the active runtime or a private durable copy. Neither is in the output ZIP or Git. Notebook 03 needs the text cache; Notebook 04 needs the sequence cache. No rerun is needed when these compatible inputs are available.
-4. The executed [Notebook 03](code/notebooks/03_classical_ml_and_text_baselines.ipynb) and its four current outputs are available. [Notebook 04](code/notebooks/04_sequential_and_multimodal_models.ipynb) records GPU execution; transfer the five original files from its saved output ZIP and reconcile them. Reuse the recorded run rather than refitting solely for publication. Preserve both score tables for Notebook 05.
+4. The executed [Notebook 03](code/notebooks/03_classical_ml_and_text_baselines.ipynb) and its four current outputs are available. The executed [Notebook 04](code/notebooks/04_sequential_and_multimodal_models.ipynb) and its five reconciled outputs are available. Preserve both original score tables for Notebook 05; neither model refitting nor the local caches are required for final evaluation.
 5. Execute [Notebook 05](code/notebooks/05_generalisation_and_final_evaluation.ipynb) on CPU once both score tables are available. No model fitting occurs in this stage.
 
 Use the shared output-download utility to transfer each numbered ZIP's contents to the study output directory. Keep the original reports, local text and sequence arrays outside Git. Each run writes its named current outputs. If the source or cohort changes, regenerate the downstream stages rather than combining incompatible results.
@@ -75,7 +75,7 @@ Use the shared output-download utility to transfer each numbered ZIP's contents 
 | [`code/src/`](code/src/) | Source IO, features, statistical models, prediction models and final evaluation |
 | [`code/tests/`](code/tests/) | Synthetic cohort, feature and prediction-contract tests |
 | [`images/`](images/) | Study overview and five notebook SVGs |
-| [`output/`](output/) | Verified Notebook 01–03 CSV and PNG outputs; Notebook 04 output reconciliation and final evaluation pending |
+| [`output/`](output/) | Verified Notebook 01–04 CSV and PNG outputs; final evaluation pending |
 | [`requirements.txt`](requirements.txt) | Study dependencies; actual runtime versions should be recorded during execution |
 | `data/raw/onestop/ordinary/` (repository-local) | Source ZIPs and original paragraph reports; Git-ignored |
 | `data/processed/onestop/` (repository-local) | Local sequence NPZ and paragraph text; Git-ignored |
