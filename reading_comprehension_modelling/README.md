@@ -2,11 +2,11 @@
 
 ![OneStop study-wide workflow from paragraph-reading reports to matched gaze and text prediction and held-out evaluation](images/study_overview.svg)
 
-*Figure 1. Five-stage OneStop workflow: source and protocol (01), reading behaviour and features (02), classical and lexical modelling (03), sequential neural modelling (04), and matched held-out evaluation (05). The workflow illustrations are schematic; the numerical findings are derived from the study outputs.*
+*Figure 1. Five-stage OneStop workflow: source and protocol (01), reading behaviour and features (02), classical and lexical modelling (03), sequential neural modelling (04), and matched held-out evaluation (05). The source gaze illustration is schematic; the cohort, model counts and evaluation results are derived from the saved study outputs.*
 
 **Aim:** Examine whether paragraph-phase eye movements add predictive information about a subsequent reading-comprehension response beyond the presented text. The five notebooks analyse **9,718 eligible ordinary-reading trials from 180 participants and 30 articles**, comparing 19 candidates in each of two participant-disjoint protocols.
 
-**Main finding:** Validation-selected TF-IDF fusion achieves Test Macro F1 **0.5560** in Protocol A (36 held-out participants); TF-IDF text achieves **0.5035** in Protocol B (60 held-out participants and a separate article batch). The paired TF-IDF fusion-minus-text difference is +0.0108 (95% interval −0.0127 to +0.0313) in A and +0.0261 (+0.0068 to +0.0432) in B. Added gaze is model- and protocol-dependent; the results do not establish a general fusion advantage.
+**Main finding:** Validation-selected TF-IDF fusion achieves Test Macro F1 **0.5552** in Protocol A (36 held-out participants); TF-IDF text achieves **0.5035** in Protocol B (60 held-out participants and a separate article batch). The paired TF-IDF fusion-minus-text difference is +0.0036 (95% interval −0.0202 to +0.0245) in A and +0.0249 (+0.0052 to +0.0430) in B. Added gaze is model- and protocol-dependent; the results do not establish a general fusion advantage.
 
 **Independence:** This study uses OneStop paragraph-reading data and response labels, with its own cohorts, roles and outputs. It does not use GazeBase task recordings, ZuCo EEG–gaze features or MPIIGaze eye images.
 
@@ -65,33 +65,29 @@ Notebook 02 retains all 9,718 trial identities with ten gaze and four static tex
 
 ### Classical and neural modelling
 
-Notebook 03 recorded 101,064 matched Validation and Test scores across 12 classical candidates per protocol. Validation Macro F1 is highest for TF-IDF fusion in Protocol A (0.5582) and TF-IDF text in Protocol B (0.5698), compared with prevalence references of 0.4472 and 0.4487. Adding gaze to the TF-IDF comparator changes Macro F1 by +0.0171 in A and -0.0060 in B. The added value of gaze is not consistent across model families. See the [Validation metrics](output/03_validation_metrics.csv), [comparison plot](output/03_validation_comparison.png) and [permutation importance](output/03_validation_feature_importance.csv). Protocol B Validation is within the development article batches; the distinct batch holdout is assessed in Notebook 05.
+Notebook 03 recorded 101,064 matched Validation and Test scores across 12 classical candidates per protocol. Validation Macro F1 is highest for TF-IDF fusion in Protocol A (0.5571) and TF-IDF text in Protocol B (0.5702), compared with prevalence references of 0.4472 and 0.4487. Adding gaze to the TF-IDF comparator changes Macro F1 by +0.0088 in A and −0.0088 in B. The added value of gaze is not consistent across model families. See the [Validation metrics](output/03_validation_metrics.csv), [comparison plot](output/03_validation_comparison.png) and [permutation importance](output/03_validation_feature_importance.csv). Protocol B Validation is within the development article batches; the distinct batch holdout is assessed in Notebook 05.
 
-Notebook 04 records 14 neural fits and 58,954 unique, aligned prediction rows. The highest neural Validation Macro F1 is GRU gaze in A (0.5251) and Transformer fusion in B (0.5458), below the corresponding classical leaders. The neural training histories contain 130 epoch records, with training lasting 4–15 epochs. See the [neural Validation metrics](output/04_validation_metrics.csv), [learning curves](output/04_validation_curves.png) and [model configurations](output/04_model_configurations.csv). Both score tables now supply 160,018 scores for 19 candidates per protocol. Neural checkpoints are selected by Validation Macro F1.
+Notebook 04 records 14 neural fits and 58,954 unique, aligned prediction rows. The highest neural Validation Macro F1 is GRU gaze in A (0.5251) and Transformer fusion in B (0.5458), below the corresponding classical leaders. The neural training histories contain 133 epoch records, with training lasting 4–15 epochs. See the [neural Validation metrics](output/04_validation_metrics.csv), [learning curves](output/04_validation_curves.png) and [model configurations](output/04_model_configurations.csv). Both score tables now supply 160,018 scores for 19 candidates per protocol. Neural checkpoints are selected by Validation Macro F1.
 
 ### Matched held-out evaluation
 
 | Metric | A: TF-IDF fusion | B: TF-IDF text |
 | --- | ---: | ---: |
-| Validation Macro F1 | 0.5582 | 0.5698 |
+| Validation Macro F1 | 0.5571 | 0.5702 |
 | Test people / trials | 36 / 1,944 | 60 / 3,240 |
-| Test Macro F1 | **0.5560** | **0.5035** |
-| 95% participant interval | 0.5276–0.5805 | 0.4863–0.5211 |
-| Accuracy | 0.6224 | 0.6389 |
-| Balanced accuracy | 0.6161 | 0.5116 |
-| AUROC | 0.6573 | 0.5386 |
-| Incorrect AUPRC | 0.3002 | 0.2050 |
-| Incorrect precision | 0.2813 | 0.2032 |
+| Test Macro F1 | **0.5552** | **0.5035** |
+| 95% participant interval | 0.5277–0.5786 | 0.4863–0.5211 |
+| Accuracy | 0.6214 | 0.6389 |
+| Balanced accuracy | 0.6155 | 0.5116 |
+| AUROC | 0.6572 | 0.5389 |
+| Incorrect AUPRC | 0.3007 | 0.2049 |
+| Incorrect precision | 0.2806 | 0.2032 |
 | Incorrect recall | 0.6058 | 0.3058 |
-| Brier score | 0.2272 | 0.2220 |
+| Brier score | 0.2273 | 0.2218 |
 
-![Held-out comparison across the fixed candidates](output/05_test_comparison.png)
+TF-IDF fusion minus matched TF-IDF text is +0.0036 (95% paired participant interval −0.0202 to +0.0245) in A and +0.0249 (+0.0052 to +0.0430) in B. The B fusion candidate is a secondary Test comparator, not a replacement for the Validation-selected text model. Random Forest fusion underperforms its text counterpart in both protocols. The added value of gaze is therefore model- and protocol-dependent, not universal. The selected scores exhibit limited discrimination in B and poor probability calibration in both protocols.
 
-*Figure 2. Test Macro F1 for all fixed candidates in both protocols; only the Validation-selected model in each protocol is primary.*
-
-TF-IDF fusion minus matched TF-IDF text is +0.0108 (95% paired participant interval −0.0127 to +0.0313) in A and +0.0261 (+0.0068 to +0.0432) in B. The B fusion candidate is a secondary Test comparator, not a replacement for the Validation-selected text model. Random Forest fusion underperforms its text counterpart in both protocols. The added value of gaze is therefore model- and protocol-dependent, not universal. The selected scores exhibit limited discrimination in B and poor probability calibration in both protocols.
-
-See the [frozen selection](output/05_selected_models.csv), [Test metrics](output/05_test_metrics.csv), [participant intervals](output/05_participant_intervals.csv), [paired contrasts](output/05_paired_modality_intervals.csv), [confusion matrices](output/05_selected_confusion.png) and [calibration diagnostics](output/05_score_calibration.png). All tables and intervals were reconciled from the fixed saved predictions.
+See [Notebook 05](code/notebooks/05_generalisation_and_final_evaluation.ipynb), its [scientific diagram](images/05_generalisation_and_final_evaluation.svg), the [held-out comparison plot](output/05_test_comparison.png), the [frozen selection](output/05_selected_models.csv), [Test metrics](output/05_test_metrics.csv), [participant intervals](output/05_participant_intervals.csv), [paired contrasts](output/05_paired_modality_intervals.csv), [confusion matrices](output/05_selected_confusion.png) and [calibration diagnostics](output/05_score_calibration.png). The reported values are taken from the current saved metric and interval tables; the primary candidates remain fixed by Validation.
 
 ## 4. Running and Reviewing the Study
 
@@ -116,7 +112,8 @@ Stage ZIPs provide optional transfer of the numbered results from Colab to the s
 | [`code/notebooks/`](code/notebooks/) | Five executed research notebooks with structured explanations and saved results |
 | [`code/src/`](code/src/) | Source IO, features, statistical models, prediction models and final evaluation |
 | [`code/tests/`](code/tests/) | Synthetic cohort, feature and prediction-contract tests |
-| [`images/`](images/) | Study overview and five notebook-specific scientific SVGs |
+| [`images/study_overview.svg`](images/study_overview.svg) | Editable study-wide five-band figure used at the top of this README |
+| [`images/`](images/) | Five notebook-specific scientific SVGs and the study overview |
 | [`output/`](output/) | 31 derived stage outputs: six (01), five (02), four (03), five (04), eleven (05) |
 | [`requirements.txt`](requirements.txt) | Study dependencies; exact historical package versions are not fully pinned |
 | `data/raw/onestop/ordinary/` (repository-local) | Source ZIPs and original paragraph reports; Git-ignored |
@@ -131,6 +128,6 @@ The study shows exploratory gaze–correctness associations and limited, model-d
 
 Answer correctness is an observed behavioural outcome for a particular question, not a direct measurement of understanding, attention or clinical cognition. The ordinary-reading restriction removes the explicit question-preview condition from the principal experiment but does not eliminate stimulus, difficulty or participant-related confounding.
 
-Protocol A may share articles and questions between roles. Protocol B holds out one article batch together with its participants, so changes in text and reader population are not separable; one batch is not an external validation corpus. Bootstrap intervals are conditional on the fitted predictions and do not account for article clustering or training variability; paired comparisons are secondary and not multiplicity-adjusted. This completed internal evaluation is not external validation or a full independent reproduction.
+Protocol A may share articles and questions between roles. Protocol B holds out one article batch together with its participants, so changes in text and reader population are not separable; one batch is not an external validation corpus. Bootstrap intervals are conditional on the fitted predictions and do not account for article clustering or training variability; paired comparisons are secondary and not multiplicity-adjusted. This completed internal evaluation is not external validation or a full independent reproduction. Refer to [Research Methods and Evidence](RESEARCH_METHODS_AND_EVIDENCE.md#9-discussion-limitations-and-future-work) for the scientific boundaries.
 
 **Source attribution:** Berzak et al., [OneStop dataset paper, Scientific Data (2025)](https://doi.org/10.1038/s41597-025-06272-2); [OneStop release and variables](https://lacclab.github.io/OneStop-Eye-Movements/variables); Shubi et al., [Fine-Grained Prediction of Reading Comprehension from Eye Movements, EMNLP 2024](https://aclanthology.org/2024.emnlp-main.198/). The eye-tracking data are provided under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/); the underlying OneStopQA text and auxiliary annotations are subject to [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). Repository software licensing does not supersede those terms.
