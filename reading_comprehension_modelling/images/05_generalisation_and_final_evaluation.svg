@@ -110,7 +110,7 @@
 <text x="1130" y="405" class="chart" text-anchor="middle">Difficulty</text>
 <path d="M1130 370H1228V384" stroke="#245E9D" stroke-width="1.8" fill="none" stroke-linecap="round" marker-end="url(#arr)"/>
 <rect x="1183.3333333333333" y="386" width="89.33333333333333" height="29" rx="5" fill="#EAF3FA" stroke="#B6CFDE" stroke-width="1.5"/>
-<text x="1228" y="405" class="chart" text-anchor="middle">Batch</text>
+<text x="1228" y="405" class="chart" text-anchor="middle">Protocol</text>
 </g>
 <text x="984" y="480" class="body" text-anchor="start">Report class and trial support</text>
 <text x="984" y="501" class="body" text-anchor="start">Protocols have different Test cohorts</text>
