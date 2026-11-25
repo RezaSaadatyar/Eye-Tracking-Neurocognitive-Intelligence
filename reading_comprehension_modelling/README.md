@@ -2,13 +2,13 @@
 
 ![OneStop paragraph-reading study workflow](images/study_overview.svg)
 
-*Figure 1. Source-to-evaluation workflow implemented in five notebooks. The diagrams are methodological schematics; the recorded cohort evidence is reported below.*
+*Figure 1. Source-to-evaluation workflow implemented in five notebooks. The diagrams are methodological schematics; the recorded cohort and reading-behaviour evidence is reported below.*
 
 **Aim:** Examine whether pre-answer eye movements provide information about the correctness of a subsequent reading-comprehension response beyond information available from the paragraph itself.
 
 **Dataset:** The published [OneStop Eye Movements corpus](https://lacclab.github.io/OneStop-Eye-Movements/) includes 360 participants and approximately 152 hours of recordings across reading regimes. Its ordinary-reading component has 9,718 regular trials according to the source documentation. These are publisher-reported counts, not the retained study cohort.
 
-**Status:** Notebook 01 has been executed on the original ordinary-reading reports; the cohort and participant assignments are available. Notebooks 02–05 are implemented, but their original-data analyses and predictive results remain pending. This study predicts the recorded correctness of a particular response, not general cognitive ability.
+**Status:** Notebooks 01–02 have recorded original-data cohort, feature and exploratory association results. Notebooks 03–05 are implemented; model fitting and predictive evaluation remain pending. This study predicts the recorded correctness of a particular response, not general cognitive ability.
 
 **Scientific account:** [Research Methods and Evidence](RESEARCH_METHODS_AND_EVIDENCE.md).
 
@@ -49,7 +49,7 @@ Notebook 01 reconciled 10,078 report trial identities and retained 9,718 eligibl
 | A — Unseen people | 108 / 5,831 | 36 / 1,943 | 36 / 1,944 |
 | B — Unseen batch | 96 / 5,183 | 24 / 1,295 | 60 / 3,240 |
 
-Saved trial identities and participant assignments reproduce all class-support counts, with disjoint participants within each protocol and disjoint development/Test articles in Protocol B. See the [cohort plot](output/01_cohort_support.png), [exclusions](output/01_trial_exclusions.csv) and [split support](output/01_split_support.csv). No predictive or association results have yet been recorded.
+Saved trial identities and participant assignments reproduce all class-support counts, with disjoint participants within each protocol and disjoint development/Test articles in Protocol B. See the [cohort plot](output/01_cohort_support.png), [exclusions](output/01_trial_exclusions.csv) and [split support](output/01_split_support.csv). Notebook 02 retains all 9,718 trial identities with ten gaze and four static text predictors; the recorded sequence shape is `(9718, 256, 4)` and 193 sequences (1.99%) are truncated. On Protocol A Training (5,831 trials, 108 participants, 162 paragraphs), all ten separate exploratory mixed-effects fits report convergence. Backward word-index transition rate has the largest positive posterior mean (0.137 log odds per SD; approximate 95% posterior interval 0.068 to 0.206). See the [feature table](output/02_trial_features.csv), [participant summaries](output/02_training_behaviour.csv), [association estimates](output/02_training_associations.csv) and [association plot](output/02_reading_associations.png). The estimates are exploratory, not causal or confirmatory. No predictive results have yet been recorded.
 
 The primary comparison asks whether the gaze–text candidates improve over matched text-only comparators. The lexical TF-IDF baseline complements the simpler paragraph-statistic baseline. Participant-level and paired uncertainty analyses will distinguish observed differences from stronger generalisation claims.
 
@@ -57,7 +57,7 @@ The primary comparison asks whether the gaze–text candidates improve over matc
 
 1. Update the local repository with `git pull --ff-only origin main` without discarding local edits. Use the [Getting Started guide](../GETTING_STARTED.md) to open the notebook in VS Code/Colab.
 2. The executed [Notebook 01](code/notebooks/01_onestop_dataset_and_protocol.ipynb) and its six current outputs are available. For reproduction, execute it on CPU; the two ordinary-reading ZIPs are obtained from OSF using the documented download IDs, or extracted local reports are reused. Do not rerun it merely to prepare Notebook 02 when its current cohort and split tables are available.
-3. Execute [Notebook 02](code/notebooks/02_reading_behaviour_and_statistics.ipynb) on CPU using the same repository and original reports. It creates local fixation arrays and a paragraph-text CSV in addition to the derived outputs.
+3. The executed [Notebook 02](code/notebooks/02_reading_behaviour_and_statistics.ipynb) and its five derived outputs are available. For reproduction, execute it on CPU with the same original reports and cohort. Keep its local `data/processed/onestop/02_paragraph_text.csv` and `02_fixation_sequences.npz` in the active runtime or a private durable copy. Neither is in the output ZIP or Git. Notebook 03 needs the text cache; Notebook 04 needs the sequence cache. No rerun is needed when these compatible inputs are available.
 4. Execute [Notebook 03](code/notebooks/03_classical_ml_and_text_baselines.ipynb) on CPU, then [Notebook 04](code/notebooks/04_sequential_and_multimodal_models.ipynb) (GPU recommended). Both protocols use the fixed sample/participant identities.
 5. Execute [Notebook 05](code/notebooks/05_generalisation_and_final_evaluation.ipynb) on CPU once both score tables are available. No model fitting occurs in this stage.
 
@@ -71,7 +71,7 @@ Use the shared output-download utility to transfer each numbered ZIP's contents 
 | [`code/src/`](code/src/) | Source IO, features, statistical models, prediction models and final evaluation |
 | [`code/tests/`](code/tests/) | Synthetic cohort, feature and prediction-contract tests |
 | [`images/`](images/) | Study overview and five notebook SVGs |
-| [`output/`](output/) | Current Notebook 01 CSV and PNG outputs; later stages pending |
+| [`output/`](output/) | Current Notebook 01–02 CSV and PNG outputs; modelling stages pending |
 | [`requirements.txt`](requirements.txt) | Study dependencies; actual runtime versions should be recorded during execution |
 | `data/raw/onestop/ordinary/` (repository-local) | Source ZIPs and original paragraph reports; Git-ignored |
 | `data/processed/onestop/` (repository-local) | Local sequence NPZ and paragraph text; Git-ignored |
