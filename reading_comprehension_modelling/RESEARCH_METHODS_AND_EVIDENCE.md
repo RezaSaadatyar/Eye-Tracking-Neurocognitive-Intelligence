@@ -1,6 +1,6 @@
 # Reading Comprehension & Neurocognitive Modelling | OneStop: Research Methods and Evidence
 
-**Study:** Independent OneStop paragraph-reading application within Eye-Tracking & Neurocognitive Intelligence. **Target:** correctness of a subsequent comprehension response. Five executed notebooks analyse 9,718 eligible trials from 180 participants, with matched internal evaluation across 19 candidates in each of two protocols. See the [study README](README.md) and [study-wide workflow](images/study_overview.svg).
+**Study:** Independent OneStop paragraph-reading application within Eye-Tracking & Neurocognitive Intelligence. **Target:** correctness of a subsequent comprehension response. Five executed notebooks analyse 9,718 eligible trials from 180 participants, with matched internal evaluation across 19 candidates in each of two protocols. See the [study README](README.md) and [study-wide workflow](images/study_overview.svg). The five notebook-specific diagrams accompany the corresponding notebooks; numerical results below refer to their named saved outputs.
 
 ## 1. Research Objective and Scope
 
@@ -173,10 +173,10 @@ The candidate list contains 12 classical and lexical procedures (prior, nine sca
 | XGBoost, gaze | 0.4916 | 0.4844 |
 | XGBoost, text | 0.5118 | 0.5503 |
 | XGBoost, fusion | 0.5165 | 0.5411 |
-| TF-IDF text | 0.5411 | 0.5698 |
-| TF-IDF fusion | 0.5582 | 0.5638 |
+| TF-IDF text | 0.5482 | 0.5702 |
+| TF-IDF fusion | 0.5571 | 0.5614 |
 
-The highest classical Validation Macro F1 is TF-IDF fusion in A (balanced accuracy 0.6140, AUROC 0.6525, incorrect recall 0.5849) and TF-IDF text in B (balanced accuracy 0.6262, AUROC 0.6583, incorrect recall 0.5892). The prevalence references have accuracy 0.8091 and 0.8139 but zero incorrect recall. The matched fusion-minus-text Macro F1 differences are +0.0196/-0.0587/+0.0046/+0.0171 in A and +0.0100/-0.0317/-0.0092/-0.0060 in B for Logistic Regression, Random Forest, XGBoost and TF-IDF respectively. Fusion improves on gaze-only across all six scalar comparisons, but added gaze beyond text is not consistently beneficial. These are descriptive Validation differences, not uncertainty-adjusted Test contrasts. Both Validation partitions share development articles with Training, so the B Validation scores do not quantify unseen-article generalisation.
+The highest classical Validation Macro F1 is TF-IDF fusion in A (balanced accuracy 0.6131, AUROC 0.6525, incorrect recall 0.5849) and TF-IDF text in B (balanced accuracy 0.6307, AUROC 0.6584, incorrect recall 0.6058). The prevalence references have accuracy 0.8091 and 0.8139 but zero incorrect recall. The matched fusion-minus-text Macro F1 differences are +0.0196/−0.0587/+0.0046/+0.0088 in A and +0.0100/−0.0317/−0.0092/−0.0088 for Logistic Regression, Random Forest, XGBoost and TF-IDF respectively. Fusion improves on gaze-only across all six scalar comparisons, but added gaze beyond text is not consistently beneficial. These are descriptive Validation differences, not uncertainty-adjusted Test contrasts. Both Validation partitions share development articles with Training, so the B Validation scores do not quantify unseen-article generalisation.
 
 ![Classical and lexical Validation comparison](output/03_validation_comparison.png)
 
@@ -193,14 +193,14 @@ Evidence: [classical scores](output/03_classical_predictions.csv), [Validation m
 | Neural candidate | Protocol A Validation Macro F1 | Protocol B Validation Macro F1 |
 | --- | ---: | ---: |
 | MLP text | 0.5075 | 0.5308 |
-| CNN gaze | 0.5162 | 0.5261 |
-| CNN fusion | 0.5111 | 0.5174 |
+| CNN gaze | 0.5180 | 0.5281 |
+| CNN fusion | 0.5125 | 0.5226 |
 | GRU gaze | 0.5251 | 0.5358 |
 | GRU fusion | 0.5204 | 0.5263 |
 | Transformer gaze | 0.5202 | 0.5296 |
 | Transformer fusion | 0.5075 | 0.5458 |
 
-The recorded neural leaders are GRU gaze in A and Transformer fusion in B, both below the respective classical Validation leaders. Fusion improves over the corresponding gaze-only encoder only for the B Transformer in these Validation comparisons. Neural text inputs are static paragraph features rather than lexical TF-IDF, so the classical-versus-neural comparison does not isolate architecture alone. These are descriptive Validation results; the frozen selection and Test assessment are reported below. The 130 training-history rows and 14 configuration records agree with the fixed split sizes, Training-derived class weights, training settings and earliest maximum Validation Macro F1 for each fit. Epoch counts range from 4 to 15; 13 configurations stopped before the cap and B GRU gaze reached it. A GRU gaze selected epoch 10 of 13; B Transformer fusion selected epoch 3 of 6. The curves preserve actual epoch lengths without extrapolation.
+The recorded neural leaders are GRU gaze in A and Transformer fusion in B, both below the respective classical Validation leaders. Fusion improves over the corresponding gaze-only encoder only for the B Transformer in these Validation comparisons. Neural text inputs are static paragraph features rather than lexical TF-IDF, so the classical-versus-neural comparison does not isolate architecture alone. These are descriptive Validation results; the frozen selection and Test assessment are reported below. The 133 training-history rows and 14 configuration records agree with the fixed split sizes, Training-derived class weights, training settings and earliest maximum Validation Macro F1 for each fit. Epoch counts range from 4 to 15; 13 configurations stopped before the cap and B GRU gaze reached it. A GRU gaze selected epoch 10 of 13; B Transformer fusion selected epoch 3 of 6. The curves preserve actual epoch lengths without extrapolation.
 
 ![Neural Validation learning curves](output/04_validation_curves.png)
 
@@ -210,24 +210,24 @@ Evidence: [neural scores](output/04_neural_predictions.csv), [training history](
 
 ### 6.5 Matched held-out evaluation (Notebooks 03–05)
 
-The fixed 19-candidate set is evaluated in each protocol using 160,018 saved scores. Validation Macro F1 selects TF-IDF fusion for A and TF-IDF text for B. The primary Test results are:
+The fixed 19-candidate set is evaluated in each protocol using 160,018 saved scores. Validation Macro F1 selects TF-IDF fusion for A and TF-IDF text for B. The primary Test results are shown below; [Notebook 05](code/notebooks/05_generalisation_and_final_evaluation.ipynb) and its [scientific diagram](images/05_generalisation_and_final_evaluation.svg) explain the matched evaluation and uncertainty procedure.
 
 | Metric | Protocol A: TF-IDF fusion | Protocol B: TF-IDF text |
 | --- | ---: | ---: |
-| Validation Macro F1 | 0.5582 | 0.5698 |
+| Validation Macro F1 | 0.5571 | 0.5702 |
 | Test people | 36 | 60 |
 | Test trials | 1,944 | 3,240 |
-| Accuracy | 0.6224 | 0.6389 |
-| Macro F1 | 0.5560 | 0.5035 |
-| Balanced accuracy | 0.6161 | 0.5116 |
-| AUROC | 0.6573 | 0.5386 |
-| Incorrect AUPRC | 0.3002 | 0.2050 |
-| Incorrect precision | 0.2813 | 0.2032 |
+| Accuracy | 0.6214 | 0.6389 |
+| Macro F1 | 0.5552 | 0.5035 |
+| Balanced accuracy | 0.6155 | 0.5116 |
+| AUROC | 0.6572 | 0.5389 |
+| Incorrect AUPRC | 0.3007 | 0.2049 |
+| Incorrect precision | 0.2806 | 0.2032 |
 | Incorrect recall | 0.6058 | 0.3058 |
-| Brier score | 0.2272 | 0.2220 |
-| 95% participant interval | 0.5276–0.5805 | 0.4863–0.5211 |
+| Brier score | 0.2273 | 0.2218 |
+| 95% participant interval | 0.5277–0.5786 | 0.4863–0.5211 |
 
-The prevalence comparator has Test accuracy 0.8056/0.8093, Macro F1 0.4462/0.4473 and zero incorrect recall (A/B). Higher accuracy alone is thus misleading. The selected A candidate retains its Validation performance approximately; the selected B candidate drops by 0.0664 Macro F1, with balanced accuracy and AUROC near 0.5. The protocols differ in both people and article batches; this is not an isolated text-shift estimate.
+The prevalence comparator has Test accuracy 0.8056/0.8093, Macro F1 0.4462/0.4473 and zero incorrect recall (A/B). Higher accuracy alone is thus misleading. The selected A candidate retains its Validation performance approximately; the selected B candidate drops by 0.0667 Macro F1, with balanced accuracy and AUROC near 0.5. The protocols differ in both people and article batches; this is not an isolated text-shift estimate.
 
 | Candidate | A Test Macro F1 | B Test Macro F1 |
 | --- | ---: | ---: |
@@ -241,11 +241,11 @@ The prevalence comparator has Test accuracy 0.8056/0.8093, Macro F1 0.4462/0.447
 | XGBoost gaze | 0.4713 | 0.4914 |
 | XGBoost text | 0.5184 | 0.4875 |
 | XGBoost fusion | 0.5135 | 0.5157 |
-| TF-IDF text | 0.5452 | 0.5035 |
-| TF-IDF fusion | 0.5560 | 0.5296 |
+| TF-IDF text | 0.5516 | 0.5035 |
+| TF-IDF fusion | 0.5552 | 0.5284 |
 | MLP text | 0.5182 | 0.4859 |
-| CNN gaze | 0.4702 | 0.5005 |
-| CNN fusion | 0.5006 | 0.4984 |
+| CNN gaze | 0.4871 | 0.5003 |
+| CNN fusion | 0.5015 | 0.4974 |
 | GRU gaze | 0.4814 | 0.5058 |
 | GRU fusion | 0.4982 | 0.4907 |
 | Transformer gaze | 0.4917 | 0.4992 |
@@ -253,7 +253,7 @@ The prevalence comparator has Test accuracy 0.8056/0.8093, Macro F1 0.4462/0.447
 
 ![Held-out Macro F1 comparison](output/05_test_comparison.png)
 
-*Figure 6. Test Macro F1 of all fixed candidates. Only the Validation-selected candidates constitute primary results; the B TF-IDF fusion Test leader (0.5296) remains a secondary comparison.*
+*Figure 6. Test Macro F1 of all fixed candidates. Only the Validation-selected candidates constitute primary results; the B TF-IDF fusion Test leader (0.5284) remains a secondary comparison.*
 
 The best neural Test candidate is MLP text in A (0.5182) and GRU gaze in B (0.5058), neither exceeding the highest classical Test score. These secondary maxima do not establish a sequence-specific benefit: neural models use static text features whereas lexical comparators use TF-IDF, and no neural paired modality intervals are implemented. The fixed experiment does not isolate the effect of temporal ordering from differences in model representation.
 
@@ -268,14 +268,14 @@ Participant metrics and difficulty strata describe variation in the held-out coh
 | Selected-model summary | A | B |
 | --- | ---: | ---: |
 | Participant Macro F1 minimum | 0.3448 | 0.3721 |
-| Participant Macro F1 median | 0.5261 | 0.4893 |
+| Participant Macro F1 median | 0.5275 | 0.4893 |
 | Participant Macro F1 maximum | 0.6842 | 0.7146 |
-| Advanced Macro F1 | 0.5606 | 0.4904 |
+| Advanced Macro F1 | 0.5589 | 0.4904 |
 | Elementary Macro F1 | 0.5489 | 0.4996 |
 | Advanced incorrect recall | 0.6650 | 0.4109 |
 | Elementary incorrect recall | 0.5414 | 0.1847 |
 
-Each difficulty stratum contains 972 trials in A and 1,620 in B. The observed differences do not establish causal effects or individual cognitive ability. Of 378 incorrect A responses, 229 are correctly identified; of 618 incorrect B responses, 189 are identified. The remaining correct-response classification counts are 981/1,566 and 1,881/2,622 respectively.
+Each difficulty stratum contains 972 trials in A and 1,620 in B. The observed differences do not establish causal effects or individual cognitive ability. Of 378 incorrect A responses, 229 are correctly identified; of 618 incorrect B responses, 189 are identified. The remaining correct-response classification counts are 979/1,566 and 1,881/2,622 respectively.
 
 ![Confusion matrices of Validation-selected candidates](output/05_selected_confusion.png)
 
@@ -292,7 +292,7 @@ Evidence: [participant metrics](output/05_participant_metrics.csv) and [difficul
 | Logistic | −0.0035 (−0.0393, 0.0294) | +0.0213 (0.0052, 0.0364) |
 | Random Forest | −0.0658 (−0.1077, −0.0251) | −0.0599 (−0.0833, −0.0375) |
 | XGBoost | −0.0049 (−0.0350, 0.0235) | +0.0282 (0.0066, 0.0482) |
-| TF-IDF | +0.0108 (−0.0127, 0.0313) | +0.0261 (0.0068, 0.0432) |
+| TF-IDF | +0.0036 (−0.0202, +0.0245) | +0.0249 (+0.0052, +0.0430) |
 
 Relative to gaze-only scalar baselines, A logistic and XGBoost fusion and B XGBoost fusion have wholly positive intervals; the other three intervals include zero. These secondary, unadjusted conditional contrasts support model-dependent added value rather than a universal benefit of gaze. The B TF-IDF contrast does not change the Validation decision. No causal or confirmatory inference is claimed.
 
@@ -300,7 +300,7 @@ The 38 participant intervals and 14 paired contrasts are available in the saved 
 
 ### 7.3 Calibration and interpretation
 
-Fixed ten-bin score summaries compare mean score and observed correct-response fraction; Brier score is recorded. No probability recalibration or Test-driven threshold optimisation is performed. The selected-model Brier scores (0.2272/0.2220) are worse than those of the Training-prevalence reference (0.1567/0.1544). Observed correctness exceeds the mean score in eight of nine occupied A bins and all five occupied B bins. This indicates underestimation of correctness over most score ranges, consistent with the use of class weighting, and limits probability interpretation.
+Fixed ten-bin score summaries compare mean score and observed correct-response fraction; Brier score is recorded. No probability recalibration or Test-driven threshold optimisation is performed. The selected-model Brier scores (0.2273/0.2218) are worse than those of the Training-prevalence reference (0.1567/0.1544). Observed correctness exceeds the mean score in eight of nine occupied A bins and all five occupied B bins. This indicates underestimation of correctness over most score ranges, consistent with the use of class weighting, and limits probability interpretation.
 
 ![Selected-model score calibration diagnostics](output/05_score_calibration.png)
 
@@ -322,7 +322,7 @@ The five notebooks provide 31 named derived files and two local reconstruction c
 
 The [requirements](requirements.txt) specify study dependencies. The stored notebook executions record Python 3.13.16; neural training uses PyTorch 2.14.1+cu130, CUDA 13.0 and an NVIDIA Tesla T4. Exact historical versions of all packages are not fully pinned.
 
-The current trial index, feature rows, split support, Validation and Test metrics, participant and difficulty summaries, calibration bins and all bootstrap intervals are consistent with the saved scores and associated tables. Metric and resampling recalculation establishes numerical consistency, not independent reproduction of feature extraction, statistical fitting or model training. The final Test tables were regenerated from fixed saved predictions after an earlier evaluation-input mismatch; no candidates, partitions or selection rules changed. This is the same held-out evaluation, not a fresh independent Test.
+The current trial index, feature rows and split support establish the recorded cohort and roles. The Validation and Test Macro F1 tables were reconciled to the fixed saved scores; the descriptive participant, difficulty, calibration and interval summaries are reported from their current stage-owned tables. This is numerical reporting of saved evidence, not independent reproduction of feature extraction, statistical fitting, resampling or model training. The final Test tables were regenerated from fixed saved predictions after an earlier evaluation-input mismatch; no candidates, partitions or selection rules changed. This is the same held-out evaluation, not a fresh independent Test.
 
 The [synthetic tests](code/tests/test_reading_pipeline.py) cover software and data contracts, not original-data scientific validity. Original reports and reconstruction caches remain under ignored data directories. The local arrays and trained model weights are not distributed as independently validated model artefacts. See the [study execution guide](README.md#4-running-and-reviewing-the-study).
 
