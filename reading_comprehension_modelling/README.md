@@ -1,0 +1,81 @@
+# Reading Comprehension & Neurocognitive Modelling | OneStop
+
+![OneStop paragraph-reading study workflow](images/study_overview.svg)
+
+*Figure 1. Proposed source-to-evaluation workflow implemented in five notebooks. The diagrams are methodological schematics; empirical results will be added after execution.*
+
+**Aim:** Examine whether pre-answer eye movements provide information about the correctness of a subsequent reading-comprehension response beyond information available from the paragraph itself.
+
+**Dataset:** The published [OneStop Eye Movements corpus](https://lacclab.github.io/OneStop-Eye-Movements/) includes 360 participants and approximately 152 hours of recordings across reading regimes. Its ordinary-reading component has 9,718 regular trials according to the source documentation. These are publisher-reported counts, not the retained study cohort.
+
+**Status:** The five notebooks and their shared study modules are implemented. Original-data execution and numerical results are pending. This study predicts the recorded correctness of a particular response, not general cognitive ability.
+
+**Scientific account:** [Research Methods and Evidence](RESEARCH_METHODS_AND_EVIDENCE.md).
+
+## 1. Dataset and Experimental Protocol
+
+| Item | Implemented study definition |
+| --- | --- |
+| Source | [OneStop ordinary reading](https://osf.io/zn9sq/), [dataset documentation](https://lacclab.github.io/OneStop-Eye-Movements/variables) |
+| Input period | Paragraph fixation and interest-area reports only |
+| Eligibility | Matched first-reading trials without question preview or practice; valid A–D response and usable fixation support |
+| Prediction unit | Participant × reading trial; retain article, paragraph, question and difficulty identities |
+| Target | Source `is_correct`: 1 = correct, 0 = incorrect |
+| Protocol A | Participant-disjoint Training/Validation/Test, approximately 60/20/20 within each article batch |
+| Protocol B | Final article batch and its participants held out; remaining batches supply disjoint Training and Validation participants |
+| Selection | Validation Macro F1; fixed 0.5 threshold; model-name tie-break |
+| Primary metric | Test Macro F1; secondary balanced accuracy, AUROC, incorrect-class precision/recall/AUPRC and Brier score |
+
+Answer choices, selected answers, response-phase gaze, feedback, session-level accuracy, question-specific critical/distractor spans and participant/text identity codes are not predictors. Both protocols are internal to OneStop.
+
+## 2. Experimental Programme
+
+| Notebook | Scientific role | Output contract |
+| --- | --- | --- |
+| [01 — Dataset and Protocol](code/notebooks/01_onestop_dataset_and_protocol.ipynb) | Source acquisition, trial reconciliation, eligibility and participant splits | Source inventory, exclusions, trial index, splits, support counts, cohort plot |
+| [02 — Reading Behaviour and Statistics](code/notebooks/02_reading_behaviour_and_statistics.ipynb) | Pre-answer feature extraction, ordered fixation arrays, participant summaries and crossed mixed-effects analysis | Feature and association tables, two plots; local NPZ and paragraph-text table |
+| [03 — Classical ML and Text Baselines](code/notebooks/03_classical_ml_and_text_baselines.ipynb) | Training prevalence, scalar models and lexical TF-IDF comparators | Prediction scores, Validation metrics, permutation importance and comparison plot |
+| [04 — Sequential and Multimodal Models](code/notebooks/04_sequential_and_multimodal_models.ipynb) | CNN, GRU, Transformer and text-only MLP; gaze–text fusion | Scores, epoch histories, selected configurations, Validation metrics and curves |
+| [05 — Generalisation and Final Evaluation](code/notebooks/05_generalisation_and_final_evaluation.ipynb) | Matched Validation selection, held-out comparisons, person/difficulty summaries, bootstrap and calibration | Eight CSV tables and three plots |
+
+Notebooks 03 and 04 share the trial features and participant assignments from Notebooks 01–02; they independently produce candidate scores for Notebook 05. The six editable five-band SVGs illustrate the scientific design.
+
+## 3. Main Results
+
+No original-data experiment has yet been executed in this study. The published dataset counts do not establish how many eligible trials, participants, classes or usable sequences will remain after the implemented reconciliation. Notebook 01 reports these quantities from the actual downloaded files.
+
+The primary comparison asks whether the gaze–text candidates improve over matched text-only comparators. The lexical TF-IDF baseline complements the simpler paragraph-statistic baseline. Participant-level and paired uncertainty analyses will distinguish observed differences from stronger generalisation claims.
+
+## 4. Running and Reviewing the Study
+
+1. Update the local repository with `git pull --ff-only origin main` without discarding local edits. Use the [Getting Started guide](../GETTING_STARTED.md) to open the notebook in VS Code/Colab.
+2. Execute [Notebook 01](code/notebooks/01_onestop_dataset_and_protocol.ipynb) on CPU. The two ordinary-reading ZIPs are obtained from OSF using the publisher's documented download IDs; extracted local reports are reused.
+3. Execute [Notebook 02](code/notebooks/02_reading_behaviour_and_statistics.ipynb) on CPU using the same repository and original reports. It creates local fixation arrays and a paragraph-text CSV in addition to the derived outputs.
+4. Execute [Notebook 03](code/notebooks/03_classical_ml_and_text_baselines.ipynb) on CPU, then [Notebook 04](code/notebooks/04_sequential_and_multimodal_models.ipynb) (GPU recommended). Both protocols use the fixed sample/participant identities.
+5. Execute [Notebook 05](code/notebooks/05_generalisation_and_final_evaluation.ipynb) on CPU once both score tables are available. No model fitting occurs in this stage.
+
+Use the shared output-download utility to transfer each numbered ZIP's contents to the study output directory. Keep the original reports, local text and sequence arrays outside Git. Each run writes its named current outputs. If the source or cohort changes, regenerate the downstream stages rather than combining incompatible results.
+
+## 5. Files and Saved Outputs
+
+| Location | Responsibility |
+| --- | --- |
+| [`code/notebooks/`](code/notebooks/) | Five runnable research notebooks |
+| [`code/src/`](code/src/) | Source IO, features, statistical models, prediction models and final evaluation |
+| [`code/tests/`](code/tests/) | Synthetic cohort, feature and prediction-contract tests |
+| [`images/`](images/) | Study overview and five notebook SVGs |
+| [`output/`](output/) | Current derived CSV and PNG outputs after execution |
+| [`requirements.txt`](requirements.txt) | Study dependencies; actual runtime versions should be recorded during execution |
+| `data/raw/onestop/ordinary/` (repository-local) | Source ZIPs and original paragraph reports; Git-ignored |
+| `data/processed/onestop/` (repository-local) | Local sequence NPZ and paragraph text; Git-ignored |
+| [`RESEARCH_METHODS_AND_EVIDENCE.md`](RESEARCH_METHODS_AND_EVIDENCE.md) | Full scientific methods and evidence boundaries |
+
+Run the synthetic checks from the repository root with `python -m unittest discover -s reading_comprehension_modelling/code/tests -v`.
+
+## 6. Interpretation and Scope
+
+Answer correctness is an observed behavioural outcome for a particular question, not a direct measurement of understanding, attention or clinical cognition. The ordinary-reading restriction removes the explicit question-preview condition from the principal experiment but does not eliminate stimulus, difficulty or participant-related confounding.
+
+Protocol A may share articles and questions between roles. Protocol B holds out one article batch together with its participants, so changes in text and reader population are not separable; one batch is not an external validation corpus. Bootstrap intervals are conditional on the fitted predictions and do not account for article clustering or training variability.
+
+**Sources:** Berzak et al., [OneStop dataset paper, Scientific Data (2025)](https://doi.org/10.1038/s41597-025-06272-2); [OneStop release and variables](https://lacclab.github.io/OneStop-Eye-Movements/variables); Shubi et al., [Fine-Grained Prediction of Reading Comprehension from Eye Movements, EMNLP 2024](https://aclanthology.org/2024.emnlp-main.198/). The eye-tracking data are provided under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/); the underlying OneStopQA text and auxiliary annotations are subject to [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). Repository software licensing does not supersede those terms.

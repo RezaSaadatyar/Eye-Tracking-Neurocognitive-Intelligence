@@ -1,0 +1,203 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="816" viewBox="0 0 1700 816" role="img" aria-labelledby="title desc"><title id="title">05 | GENERALISATION, ROBUSTNESS AND FINAL EVALUATION</title><desc id="desc">Matched score reconciliation | Held-out participant comparisons | Conditional uncertainty. Methodological schematic, not an empirical result.</desc><defs><marker id="arr" markerUnits="userSpaceOnUse" markerWidth="6" markerHeight="6" refX="5.5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#245E9D"/></marker></defs><style>text{font-family:DejaVu Sans,Arial,sans-serif}.title{font-size:23px;font-weight:700;fill:#173453}.sub{font-size:15px;fill:#54738A}.source{font-size:11.5px;font-weight:700;fill:#53738A}.source-label{font-size:13px;fill:#173453}.context{font-size:15px;font-weight:700;fill:#173453}.context-body{font-size:13.5px;fill:#506C7E}.section{font-size:13.2px;font-weight:700;fill:#FFFFFF}.focus{font-size:16.5px;font-weight:700;fill:#173453}.focus-body{font-size:13.1px;fill:#506C7E}.qual{font-size:11.5px;font-weight:700;fill:#506C7E}.panel{font-size:13.5px;font-weight:700;fill:#FFFFFF}.body{font-size:12.1px;fill:#506C7E}.chart{font-size:11.8px;fill:#506C7E}.note{font-size:12.1px;font-weight:700;fill:#173453}.node-id{font-size:12.5px;font-weight:700;fill:#506C7E}.node-title{font-size:15px;font-weight:700;fill:#173453}.node-body{font-size:12.1px;fill:#506C7E}.terminal-id{font-size:12.5px;font-weight:700;fill:#DBF2EF}.terminal-title{font-size:15px;font-weight:700;fill:#FFFFFF}.terminal-body{font-size:12.1px;fill:#DBF2EF}.footer{font-size:13.3px;fill:#54738A}</style>
+<rect x="0" y="0" width="1700" height="816" rx="20" fill="#F4F9FD" stroke="none" stroke-width="1.5"/>
+<g id="band-0-header">
+<text x="30" y="38" class="title" text-anchor="start">05 | GENERALISATION, ROBUSTNESS AND FINAL EVALUATION</text>
+<text x="30" y="67" class="sub" text-anchor="start">Matched score reconciliation | Held-out participant comparisons | Conditional uncertainty</text>
+</g>
+<g id="band-1-context">
+<rect x="24" y="84" width="1652" height="160" rx="16" fill="#EAF3FA" stroke="#C7D9E6" stroke-width="2"/>
+<g id="source">
+<rect x="48" y="120" width="100" height="70" rx="7" fill="#FFFFFF" stroke="#7298B0" stroke-width="2"/>
+<path d="M58 133H138" fill="none" stroke="#B6CFDE" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M58 144H138" fill="none" stroke="#B6CFDE" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M58 155H138" fill="none" stroke="#B6CFDE" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M58 166H138" fill="none" stroke="#B6CFDE" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M58 177H138" fill="none" stroke="#B6CFDE" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M62 133L99 133L130 144L66 155L106 155L130 166L75 166" fill="none" stroke="#245E9D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="62" cy="133" r="3.5" fill="#245E9D"/>
+<circle cx="99" cy="133" r="3.5" fill="#245E9D"/>
+<circle cx="130" cy="144" r="3.5" fill="#245E9D"/>
+<circle cx="66" cy="155" r="3.5" fill="#245E9D"/>
+<circle cx="106" cy="155" r="3.5" fill="#245E9D"/>
+<circle cx="130" cy="166" r="3.5" fill="#245E9D"/>
+<circle cx="75" cy="166" r="3.5" fill="#245E9D"/>
+<text x="98" y="210" class="chart" text-anchor="middle">Schematic gaze</text>
+<text x="164" y="110" class="source" text-anchor="start">ONESTOP</text>
+<text x="164" y="150" class="source-label" text-anchor="start">Paragraph phase</text>
+<text x="164" y="177" class="source-label" text-anchor="start">Gaze and text</text>
+<text x="164" y="204" class="source-label" text-anchor="start">Response outcome</text>
+</g>
+<g id="context-module-1">
+<text x="358" y="115" class="context" text-anchor="start">Prediction sources</text>
+<text x="358" y="148" class="context-body" text-anchor="start">Classical and neural scores</text>
+<text x="358" y="174" class="context-body" text-anchor="start">Common trial identities</text>
+<text x="358" y="200" class="context-body" text-anchor="start">No additional training</text>
+</g>
+<g id="context-module-2">
+<text x="690" y="115" class="context" text-anchor="start">Evaluation protocols</text>
+<text x="690" y="148" class="context-body" text-anchor="start">A: unseen people</text>
+<text x="690" y="174" class="context-body" text-anchor="start">B: unseen article batch</text>
+<text x="690" y="200" class="context-body" text-anchor="start">Separate Test cohorts</text>
+</g>
+<g id="context-module-3">
+<text x="1020" y="115" class="context" text-anchor="start">Primary outcome</text>
+<text x="1020" y="148" class="context-body" text-anchor="start">Macro F1</text>
+<text x="1020" y="174" class="context-body" text-anchor="start">Correct / incorrect responses</text>
+<text x="1020" y="200" class="context-body" text-anchor="start">Fixed threshold 0.5</text>
+</g>
+<g id="context-module-4">
+<text x="1360" y="115" class="context" text-anchor="start">Scientific scope</text>
+<text x="1360" y="148" class="context-body" text-anchor="start">Participant variation</text>
+<text x="1360" y="174" class="context-body" text-anchor="start">Difficulty and calibration</text>
+<text x="1360" y="200" class="context-body" text-anchor="start">Internal OneStop evidence</text>
+</g>
+</g>
+<g id="band-2-analysis">
+<rect x="24" y="258" width="1652" height="314" rx="16" fill="#EDF6FB" stroke="#B4CFE0" stroke-width="1.5"/>
+<g id="focus">
+<rect x="38" y="272" width="238" height="32" rx="9" fill="#173453" stroke="#173453" stroke-width="1.5"/>
+<text x="157" y="293" class="section" text-anchor="middle">SCIENTIFIC DESIGN</text>
+<rect x="38" y="312" width="238" height="215" rx="10" fill="#F7FAFD" stroke="#DFEAF0" stroke-width="1.5"/>
+<text x="54" y="344" class="focus" text-anchor="start">Final comparison</text>
+<text x="54" y="389" class="focus-body" text-anchor="start">Match every candidate</text>
+<text x="54" y="416" class="focus-body" text-anchor="start">Validation selection</text>
+<text x="54" y="443" class="focus-body" text-anchor="start">Held-out Test metrics</text>
+<text x="54" y="470" class="focus-body" text-anchor="start">Paired uncertainty</text>
+<text x="54" y="508" class="qual" text-anchor="start">Pre-answer scope</text>
+</g>
+<g id="evidence-panel-1">
+<rect id="evidence-card-1" x="292" y="272" width="324" height="254" rx="12" fill="#FFFFFF" stroke="#B6CFDE" stroke-width="1.5"/>
+<path d="M292 284 Q292 272 304 272 H604 Q616 272 616 284 V305 H292 Z" fill="#174B70"/>
+<text x="454" y="294" class="panel" text-anchor="middle">PREDICTION ALIGNMENT</text>
+<rect x="307" y="322" width="294" height="51" rx="6" fill="#F0F6FA" stroke="#D9E6EF" stroke-width="1"/>
+<rect x="315" y="332" width="4" height="31" rx="2" fill="#245E9D" stroke="none" stroke-width="1.5"/>
+<text x="328" y="342" class="note" text-anchor="start">Model / trial key</text>
+<text x="328" y="359" class="body" text-anchor="start">Exactly one matched score</text>
+<rect x="307" y="387" width="294" height="51" rx="6" fill="#F7FAFD" stroke="#D9E6EF" stroke-width="1"/>
+<rect x="315" y="397" width="4" height="31" rx="2" fill="#7298B0" stroke="none" stroke-width="1.5"/>
+<text x="328" y="407" class="note" text-anchor="start">Participant role</text>
+<text x="328" y="424" class="body" text-anchor="start">Validation or Test</text>
+<rect x="307" y="452" width="294" height="51" rx="6" fill="#E5F2ED" stroke="#D9E6EF" stroke-width="1"/>
+<rect x="315" y="462" width="4" height="31" rx="2" fill="#176363" stroke="none" stroke-width="1.5"/>
+<text x="328" y="472" class="note" text-anchor="start">Outcome correspondence</text>
+<text x="328" y="489" class="body" text-anchor="start">Join fixed trial labels</text>
+</g>
+<g id="evidence-panel-2">
+<rect id="evidence-card-2" x="630" y="272" width="324" height="254" rx="12" fill="#FFFFFF" stroke="#B6CFDE" stroke-width="1.5"/>
+<path d="M630 284 Q630 272 642 272 H942 Q954 272 954 284 V305 H630 Z" fill="#174B70"/>
+<text x="792" y="294" class="panel" text-anchor="middle">MODEL SELECTION</text>
+<rect x="645" y="322" width="294" height="51" rx="6" fill="#F0F6FA" stroke="#D9E6EF" stroke-width="1"/>
+<rect x="653" y="332" width="4" height="31" rx="2" fill="#245E9D" stroke="none" stroke-width="1.5"/>
+<text x="666" y="342" class="note" text-anchor="start">Validation Macro F1</text>
+<text x="666" y="359" class="body" text-anchor="start">Fixed primary candidate</text>
+<rect x="645" y="387" width="294" height="51" rx="6" fill="#F7FAFD" stroke="#D9E6EF" stroke-width="1"/>
+<rect x="653" y="397" width="4" height="31" rx="2" fill="#7298B0" stroke="none" stroke-width="1.5"/>
+<text x="666" y="407" class="note" text-anchor="start">Test metrics</text>
+<text x="666" y="424" class="body" text-anchor="start">Score only after selection</text>
+<rect x="645" y="452" width="294" height="51" rx="6" fill="#E5F2ED" stroke="#D9E6EF" stroke-width="1"/>
+<rect x="653" y="462" width="4" height="31" rx="2" fill="#176363" stroke="none" stroke-width="1.5"/>
+<text x="666" y="472" class="note" text-anchor="start">Secondary comparisons</text>
+<text x="666" y="489" class="body" text-anchor="start">No retrospective winner</text>
+</g>
+<g id="evidence-panel-3">
+<rect id="evidence-card-3" x="968" y="272" width="324" height="254" rx="12" fill="#FFFFFF" stroke="#B6CFDE" stroke-width="1.5"/>
+<path d="M968 284 Q968 272 980 272 H1280 Q1292 272 1292 284 V305 H968 Z" fill="#174B70"/>
+<text x="1130" y="294" class="panel" text-anchor="middle">ROBUSTNESS</text>
+<rect x="983" y="322" width="294" height="51" rx="6" fill="#F0F6FA" stroke="#D9E6EF" stroke-width="1"/>
+<rect x="991" y="332" width="4" height="31" rx="2" fill="#245E9D" stroke="none" stroke-width="1.5"/>
+<text x="1004" y="342" class="note" text-anchor="start">Participant summaries</text>
+<text x="1004" y="359" class="body" text-anchor="start">Variable trial support</text>
+<rect x="983" y="387" width="294" height="51" rx="6" fill="#F7FAFD" stroke="#D9E6EF" stroke-width="1"/>
+<rect x="991" y="397" width="4" height="31" rx="2" fill="#7298B0" stroke="none" stroke-width="1.5"/>
+<text x="1004" y="407" class="note" text-anchor="start">Difficulty strata</text>
+<text x="1004" y="424" class="body" text-anchor="start">Descriptive comparisons</text>
+<rect x="983" y="452" width="294" height="51" rx="6" fill="#E5F2ED" stroke="#D9E6EF" stroke-width="1"/>
+<rect x="991" y="462" width="4" height="31" rx="2" fill="#176363" stroke="none" stroke-width="1.5"/>
+<text x="1004" y="472" class="note" text-anchor="start">Two protocols</text>
+<text x="1004" y="489" class="body" text-anchor="start">Different held-out cohorts</text>
+</g>
+<g id="evidence-panel-4">
+<rect id="evidence-card-4" x="1306" y="272" width="356" height="254" rx="12" fill="#FFFFFF" stroke="#B6CFDE" stroke-width="1.5"/>
+<path d="M1306 284 Q1306 272 1318 272 H1650 Q1662 272 1662 284 V305 H1306 Z" fill="#174B70"/>
+<text x="1484" y="294" class="panel" text-anchor="middle">UNCERTAINTY AND CALIBRATION</text>
+<rect x="1321" y="322" width="326" height="51" rx="6" fill="#F0F6FA" stroke="#D9E6EF" stroke-width="1"/>
+<rect x="1329" y="332" width="4" height="31" rx="2" fill="#245E9D" stroke="none" stroke-width="1.5"/>
+<text x="1342" y="342" class="note" text-anchor="start">Paired bootstrap</text>
+<text x="1342" y="359" class="body" text-anchor="start">Resample participant counts</text>
+<rect x="1321" y="387" width="326" height="51" rx="6" fill="#F7FAFD" stroke="#D9E6EF" stroke-width="1"/>
+<rect x="1329" y="397" width="4" height="31" rx="2" fill="#7298B0" stroke="none" stroke-width="1.5"/>
+<text x="1342" y="407" class="note" text-anchor="start">Modality contrasts</text>
+<text x="1342" y="424" class="body" text-anchor="start">Fusion versus matched inputs</text>
+<rect x="1321" y="452" width="326" height="51" rx="6" fill="#E5F2ED" stroke="#D9E6EF" stroke-width="1"/>
+<rect x="1329" y="462" width="4" height="31" rx="2" fill="#176363" stroke="none" stroke-width="1.5"/>
+<text x="1342" y="472" class="note" text-anchor="start">Brier and score bins</text>
+<text x="1342" y="489" class="body" text-anchor="start">No calibration claim</text>
+</g>
+<rect x="301" y="540" width="1361" height="25" rx="12" fill="#E0F2EC" stroke="#D3EAE2" stroke-width="1.5"/>
+<circle cx="324" cy="552" r="9" fill="#23749A"/><text x="324" y="556" text-anchor="middle" style="font-size:12px;font-weight:700;fill:white">i</text>
+<text x="342" y="556" class="note" text-anchor="start">Methodological schematic — empirical counts, performance and uncertainty are established by executing the notebooks.</text>
+</g>
+<g id="band-3-workflow">
+<rect x="24" y="588" width="1652" height="174" rx="16" fill="#EAF3FA" stroke="#C7D9E6" stroke-width="2"/>
+<g id="workflow-node-0">
+<rect x="38" y="613" width="208" height="132" rx="15" fill="#173453" stroke="#173453" stroke-width="1.8"/>
+<text x="142" y="636" class="terminal-id" text-anchor="middle">INPUT</text>
+<text x="142" y="662" class="terminal-title" text-anchor="middle">Prediction scores</text>
+<text x="142" y="684" class="terminal-body" text-anchor="middle">Classical and neural</text>
+<text x="142" y="704" class="terminal-body" text-anchor="middle">Fixed trial labels</text>
+</g>
+<g id="workflow-node-1">
+<rect x="274" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
+<text x="378" y="636" class="node-id" text-anchor="middle">01</text>
+<text x="378" y="662" class="node-title" text-anchor="middle">Reconcile</text>
+<text x="378" y="684" class="node-body" text-anchor="middle">Trial and role coverage</text>
+<text x="378" y="704" class="node-body" text-anchor="middle">Outcome alignment</text>
+</g>
+<g id="workflow-node-2">
+<rect x="510" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
+<text x="614" y="636" class="node-id" text-anchor="middle">02</text>
+<text x="614" y="662" class="node-title" text-anchor="middle">Select</text>
+<text x="614" y="684" class="node-body" text-anchor="middle">Validation Macro F1</text>
+<text x="614" y="704" class="node-body" text-anchor="middle">Fixed primary model</text>
+</g>
+<g id="workflow-node-3">
+<rect x="746" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
+<text x="850" y="636" class="node-id" text-anchor="middle">03</text>
+<text x="850" y="662" class="node-title" text-anchor="middle">Score</text>
+<text x="850" y="684" class="node-body" text-anchor="middle">Held-out performance</text>
+<text x="850" y="704" class="node-body" text-anchor="middle">Person / difficulty</text>
+</g>
+<g id="workflow-node-4">
+<rect x="982" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
+<text x="1086" y="636" class="node-id" text-anchor="middle">04</text>
+<text x="1086" y="662" class="node-title" text-anchor="middle">Resample</text>
+<text x="1086" y="684" class="node-body" text-anchor="middle">Paired participant counts</text>
+<text x="1086" y="704" class="node-body" text-anchor="middle">Conditional intervals</text>
+</g>
+<g id="workflow-node-5">
+<rect x="1218" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
+<text x="1322" y="636" class="node-id" text-anchor="middle">05</text>
+<text x="1322" y="662" class="node-title" text-anchor="middle">Interpret</text>
+<text x="1322" y="684" class="node-body" text-anchor="middle">Calibration diagnostics</text>
+<text x="1322" y="704" class="node-body" text-anchor="middle">Scope limitations</text>
+</g>
+<g id="workflow-node-6">
+<rect x="1454" y="613" width="208" height="132" rx="15" fill="#176363" stroke="#176363" stroke-width="1.8"/>
+<text x="1558" y="636" class="terminal-id" text-anchor="middle">OUTPUT</text>
+<text x="1558" y="662" class="terminal-title" text-anchor="middle">Final evidence</text>
+<text x="1558" y="684" class="terminal-body" text-anchor="middle">Metrics and contrasts</text>
+<text x="1558" y="704" class="terminal-body" text-anchor="middle">CSV / PNG</text>
+</g>
+<g id="connectors">
+<path d="M252 679H266" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
+<path d="M488 679H502" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
+<path d="M724 679H738" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
+<path d="M960 679H974" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
+<path d="M1196 679H1210" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
+<path d="M1432 679H1446" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
+</g>
+</g>
+<g id="band-4-summary">
+<text x="30" y="792" class="footer" text-anchor="start">Internal held-out comparisons support a bounded behavioural prediction study, not external or clinical validation.</text>
+</g>
+</svg>

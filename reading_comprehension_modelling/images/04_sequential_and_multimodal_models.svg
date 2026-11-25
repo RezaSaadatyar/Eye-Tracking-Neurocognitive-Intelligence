@@ -1,0 +1,203 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="816" viewBox="0 0 1700 816" role="img" aria-labelledby="title desc"><title id="title">04 | SEQUENTIAL MODELLING AND GAZE–TEXT FUSION</title><desc id="desc">Ordered fixation sequences | Masked gaze encoders | Validation checkpoint selection. Methodological schematic, not an empirical result.</desc><defs><marker id="arr" markerUnits="userSpaceOnUse" markerWidth="6" markerHeight="6" refX="5.5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#245E9D"/></marker></defs><style>text{font-family:DejaVu Sans,Arial,sans-serif}.title{font-size:23px;font-weight:700;fill:#173453}.sub{font-size:15px;fill:#54738A}.source{font-size:11.5px;font-weight:700;fill:#53738A}.source-label{font-size:13px;fill:#173453}.context{font-size:15px;font-weight:700;fill:#173453}.context-body{font-size:13.5px;fill:#506C7E}.section{font-size:13.2px;font-weight:700;fill:#FFFFFF}.focus{font-size:16.5px;font-weight:700;fill:#173453}.focus-body{font-size:13.1px;fill:#506C7E}.qual{font-size:11.5px;font-weight:700;fill:#506C7E}.panel{font-size:13.5px;font-weight:700;fill:#FFFFFF}.body{font-size:12.1px;fill:#506C7E}.chart{font-size:11.8px;fill:#506C7E}.note{font-size:12.1px;font-weight:700;fill:#173453}.node-id{font-size:12.5px;font-weight:700;fill:#506C7E}.node-title{font-size:15px;font-weight:700;fill:#173453}.node-body{font-size:12.1px;fill:#506C7E}.terminal-id{font-size:12.5px;font-weight:700;fill:#DBF2EF}.terminal-title{font-size:15px;font-weight:700;fill:#FFFFFF}.terminal-body{font-size:12.1px;fill:#DBF2EF}.footer{font-size:13.3px;fill:#54738A}</style>
+<rect x="0" y="0" width="1700" height="816" rx="20" fill="#F4F9FD" stroke="none" stroke-width="1.5"/>
+<g id="band-0-header">
+<text x="30" y="38" class="title" text-anchor="start">04 | SEQUENTIAL MODELLING AND GAZE–TEXT FUSION</text>
+<text x="30" y="67" class="sub" text-anchor="start">Ordered fixation sequences | Masked gaze encoders | Validation checkpoint selection</text>
+</g>
+<g id="band-1-context">
+<rect x="24" y="84" width="1652" height="160" rx="16" fill="#EAF3FA" stroke="#C7D9E6" stroke-width="2"/>
+<g id="source">
+<rect x="48" y="120" width="100" height="70" rx="7" fill="#FFFFFF" stroke="#7298B0" stroke-width="2"/>
+<path d="M58 133H138" fill="none" stroke="#B6CFDE" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M58 144H138" fill="none" stroke="#B6CFDE" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M58 155H138" fill="none" stroke="#B6CFDE" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M58 166H138" fill="none" stroke="#B6CFDE" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M58 177H138" fill="none" stroke="#B6CFDE" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M62 133L99 133L130 144L66 155L106 155L130 166L75 166" fill="none" stroke="#245E9D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="62" cy="133" r="3.5" fill="#245E9D"/>
+<circle cx="99" cy="133" r="3.5" fill="#245E9D"/>
+<circle cx="130" cy="144" r="3.5" fill="#245E9D"/>
+<circle cx="66" cy="155" r="3.5" fill="#245E9D"/>
+<circle cx="106" cy="155" r="3.5" fill="#245E9D"/>
+<circle cx="130" cy="166" r="3.5" fill="#245E9D"/>
+<circle cx="75" cy="166" r="3.5" fill="#245E9D"/>
+<text x="98" y="210" class="chart" text-anchor="middle">Schematic gaze</text>
+<text x="164" y="110" class="source" text-anchor="start">ONESTOP</text>
+<text x="164" y="150" class="source-label" text-anchor="start">Paragraph phase</text>
+<text x="164" y="177" class="source-label" text-anchor="start">Gaze and text</text>
+<text x="164" y="204" class="source-label" text-anchor="start">Response outcome</text>
+</g>
+<g id="context-module-1">
+<text x="358" y="115" class="context" text-anchor="start">Sequence input</text>
+<text x="358" y="148" class="context-body" text-anchor="start">Duration, x, y, area index</text>
+<text x="358" y="174" class="context-body" text-anchor="start">First 256 valid fixations</text>
+<text x="358" y="200" class="context-body" text-anchor="start">Explicit padding mask</text>
+</g>
+<g id="context-module-2">
+<text x="690" y="115" class="context" text-anchor="start">Gaze encoders</text>
+<text x="690" y="148" class="context-body" text-anchor="start">1D CNN and GRU</text>
+<text x="690" y="174" class="context-body" text-anchor="start">Transformer encoder</text>
+<text x="690" y="200" class="context-body" text-anchor="start">Valid-position pooling</text>
+</g>
+<g id="context-module-3">
+<text x="1020" y="115" class="context" text-anchor="start">Text input</text>
+<text x="1020" y="148" class="context-body" text-anchor="start">Static paragraph features</text>
+<text x="1020" y="174" class="context-body" text-anchor="start">Text-only MLP</text>
+<text x="1020" y="200" class="context-body" text-anchor="start">Optional gaze–text fusion</text>
+</g>
+<g id="context-module-4">
+<text x="1360" y="115" class="context" text-anchor="start">Training</text>
+<text x="1360" y="148" class="context-body" text-anchor="start">AdamW; weighted BCE</text>
+<text x="1360" y="174" class="context-body" text-anchor="start">Up to 15 epochs</text>
+<text x="1360" y="200" class="context-body" text-anchor="start">Patience 3; Validation F1</text>
+</g>
+</g>
+<g id="band-2-analysis">
+<rect x="24" y="258" width="1652" height="314" rx="16" fill="#EDF6FB" stroke="#B4CFE0" stroke-width="1.5"/>
+<g id="focus">
+<rect x="38" y="272" width="238" height="32" rx="9" fill="#173453" stroke="#173453" stroke-width="1.5"/>
+<text x="157" y="293" class="section" text-anchor="middle">SCIENTIFIC DESIGN</text>
+<rect x="38" y="312" width="238" height="215" rx="10" fill="#F7FAFD" stroke="#DFEAF0" stroke-width="1.5"/>
+<text x="54" y="344" class="focus" text-anchor="start">Temporal modelling</text>
+<text x="54" y="389" class="focus-body" text-anchor="start">Keep fixation order</text>
+<text x="54" y="416" class="focus-body" text-anchor="start">Mask padded positions</text>
+<text x="54" y="443" class="focus-body" text-anchor="start">Compare encoder families</text>
+<text x="54" y="470" class="focus-body" text-anchor="start">Matched fusion</text>
+<text x="54" y="508" class="qual" text-anchor="start">Pre-answer scope</text>
+</g>
+<g id="evidence-panel-1">
+<rect id="evidence-card-1" x="292" y="272" width="324" height="254" rx="12" fill="#FFFFFF" stroke="#B6CFDE" stroke-width="1.5"/>
+<path d="M292 284 Q292 272 304 272 H604 Q616 272 616 284 V305 H292 Z" fill="#174B70"/>
+<text x="454" y="294" class="panel" text-anchor="middle">SEQUENCE REPRESENTATION</text>
+<rect x="307" y="322" width="294" height="51" rx="6" fill="#F0F6FA" stroke="#D9E6EF" stroke-width="1"/>
+<rect x="315" y="332" width="4" height="31" rx="2" fill="#245E9D" stroke="none" stroke-width="1.5"/>
+<text x="328" y="342" class="note" text-anchor="start">Ordered fixations</text>
+<text x="328" y="359" class="body" text-anchor="start">Four source-derived channels</text>
+<rect x="307" y="387" width="294" height="51" rx="6" fill="#F7FAFD" stroke="#D9E6EF" stroke-width="1"/>
+<rect x="315" y="397" width="4" height="31" rx="2" fill="#7298B0" stroke="none" stroke-width="1.5"/>
+<text x="328" y="407" class="note" text-anchor="start">Padding and mask</text>
+<text x="328" y="424" class="body" text-anchor="start">Exclude invalid positions</text>
+<rect x="307" y="452" width="294" height="51" rx="6" fill="#E5F2ED" stroke="#D9E6EF" stroke-width="1"/>
+<rect x="315" y="462" width="4" height="31" rx="2" fill="#176363" stroke="none" stroke-width="1.5"/>
+<text x="328" y="472" class="note" text-anchor="start">Training scale</text>
+<text x="328" y="489" class="body" text-anchor="start">Valid Training samples only</text>
+</g>
+<g id="evidence-panel-2">
+<rect id="evidence-card-2" x="630" y="272" width="324" height="254" rx="12" fill="#FFFFFF" stroke="#B6CFDE" stroke-width="1.5"/>
+<path d="M630 284 Q630 272 642 272 H942 Q954 272 954 284 V305 H630 Z" fill="#174B70"/>
+<text x="792" y="294" class="panel" text-anchor="middle">GAZE ENCODERS</text>
+<rect x="645" y="322" width="294" height="51" rx="6" fill="#F0F6FA" stroke="#D9E6EF" stroke-width="1"/>
+<rect x="653" y="332" width="4" height="31" rx="2" fill="#245E9D" stroke="none" stroke-width="1.5"/>
+<text x="666" y="342" class="note" text-anchor="start">1D CNN</text>
+<text x="666" y="359" class="body" text-anchor="start">Local temporal patterns</text>
+<rect x="645" y="387" width="294" height="51" rx="6" fill="#F7FAFD" stroke="#D9E6EF" stroke-width="1"/>
+<rect x="653" y="397" width="4" height="31" rx="2" fill="#7298B0" stroke="none" stroke-width="1.5"/>
+<text x="666" y="407" class="note" text-anchor="start">GRU</text>
+<text x="666" y="424" class="body" text-anchor="start">Recurrent representation</text>
+<rect x="645" y="452" width="294" height="51" rx="6" fill="#E5F2ED" stroke="#D9E6EF" stroke-width="1"/>
+<rect x="653" y="462" width="4" height="31" rx="2" fill="#176363" stroke="none" stroke-width="1.5"/>
+<text x="666" y="472" class="note" text-anchor="start">Transformer</text>
+<text x="666" y="489" class="body" text-anchor="start">Position-aware attention</text>
+</g>
+<g id="evidence-panel-3">
+<rect id="evidence-card-3" x="968" y="272" width="324" height="254" rx="12" fill="#FFFFFF" stroke="#B6CFDE" stroke-width="1.5"/>
+<path d="M968 284 Q968 272 980 272 H1280 Q1292 272 1292 284 V305 H968 Z" fill="#174B70"/>
+<text x="1130" y="294" class="panel" text-anchor="middle">GAZE–TEXT COMPARISON</text>
+<rect x="983" y="322" width="294" height="51" rx="6" fill="#F0F6FA" stroke="#D9E6EF" stroke-width="1"/>
+<rect x="991" y="332" width="4" height="31" rx="2" fill="#245E9D" stroke="none" stroke-width="1.5"/>
+<text x="1004" y="342" class="note" text-anchor="start">Gaze-only head</text>
+<text x="1004" y="359" class="body" text-anchor="start">Pooled sequence embedding</text>
+<rect x="983" y="387" width="294" height="51" rx="6" fill="#F7FAFD" stroke="#D9E6EF" stroke-width="1"/>
+<rect x="991" y="397" width="4" height="31" rx="2" fill="#7298B0" stroke="none" stroke-width="1.5"/>
+<text x="1004" y="407" class="note" text-anchor="start">Text-only MLP</text>
+<text x="1004" y="424" class="body" text-anchor="start">Static paragraph statistics</text>
+<rect x="983" y="452" width="294" height="51" rx="6" fill="#E5F2ED" stroke="#D9E6EF" stroke-width="1"/>
+<rect x="991" y="462" width="4" height="31" rx="2" fill="#176363" stroke="none" stroke-width="1.5"/>
+<text x="1004" y="472" class="note" text-anchor="start">Fusion head</text>
+<text x="1004" y="489" class="body" text-anchor="start">Concatenate gaze and text</text>
+</g>
+<g id="evidence-panel-4">
+<rect id="evidence-card-4" x="1306" y="272" width="356" height="254" rx="12" fill="#FFFFFF" stroke="#B6CFDE" stroke-width="1.5"/>
+<path d="M1306 284 Q1306 272 1318 272 H1650 Q1662 272 1662 284 V305 H1306 Z" fill="#174B70"/>
+<text x="1484" y="294" class="panel" text-anchor="middle">TRAINING AND SELECTION</text>
+<rect x="1321" y="322" width="326" height="51" rx="6" fill="#F0F6FA" stroke="#D9E6EF" stroke-width="1"/>
+<rect x="1329" y="332" width="4" height="31" rx="2" fill="#245E9D" stroke="none" stroke-width="1.5"/>
+<text x="1342" y="342" class="note" text-anchor="start">Weighted binary loss</text>
+<text x="1342" y="359" class="body" text-anchor="start">Training class support</text>
+<rect x="1321" y="387" width="326" height="51" rx="6" fill="#F7FAFD" stroke="#D9E6EF" stroke-width="1"/>
+<rect x="1329" y="397" width="4" height="31" rx="2" fill="#7298B0" stroke="none" stroke-width="1.5"/>
+<text x="1342" y="407" class="note" text-anchor="start">Checkpoint selection</text>
+<text x="1342" y="424" class="body" text-anchor="start">Maximum Validation Macro F1</text>
+<rect x="1321" y="452" width="326" height="51" rx="6" fill="#E5F2ED" stroke="#D9E6EF" stroke-width="1"/>
+<rect x="1329" y="462" width="4" height="31" rx="2" fill="#176363" stroke="none" stroke-width="1.5"/>
+<text x="1342" y="472" class="note" text-anchor="start">Saved score table</text>
+<text x="1342" y="489" class="body" text-anchor="start">Test labels not scored here</text>
+</g>
+<rect x="301" y="540" width="1361" height="25" rx="12" fill="#E0F2EC" stroke="#D3EAE2" stroke-width="1.5"/>
+<circle cx="324" cy="552" r="9" fill="#23749A"/><text x="324" y="556" text-anchor="middle" style="font-size:12px;font-weight:700;fill:white">i</text>
+<text x="342" y="556" class="note" text-anchor="start">Methodological schematic — empirical counts, performance and uncertainty are established by executing the notebooks.</text>
+</g>
+<g id="band-3-workflow">
+<rect x="24" y="588" width="1652" height="174" rx="16" fill="#EAF3FA" stroke="#C7D9E6" stroke-width="2"/>
+<g id="workflow-node-0">
+<rect x="38" y="613" width="208" height="132" rx="15" fill="#173453" stroke="#173453" stroke-width="1.8"/>
+<text x="142" y="636" class="terminal-id" text-anchor="middle">INPUT</text>
+<text x="142" y="662" class="terminal-title" text-anchor="middle">Fixation sequences</text>
+<text x="142" y="684" class="terminal-body" text-anchor="middle">Aligned trial identities</text>
+<text x="142" y="704" class="terminal-body" text-anchor="middle">Static paragraph features</text>
+</g>
+<g id="workflow-node-1">
+<rect x="274" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
+<text x="378" y="636" class="node-id" text-anchor="middle">01</text>
+<text x="378" y="662" class="node-title" text-anchor="middle">Scale</text>
+<text x="378" y="684" class="node-body" text-anchor="middle">Valid Training positions</text>
+<text x="378" y="704" class="node-body" text-anchor="middle">Text imputation</text>
+</g>
+<g id="workflow-node-2">
+<rect x="510" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
+<text x="614" y="636" class="node-id" text-anchor="middle">02</text>
+<text x="614" y="662" class="node-title" text-anchor="middle">Encode</text>
+<text x="614" y="684" class="node-body" text-anchor="middle">CNN / GRU / Transformer</text>
+<text x="614" y="704" class="node-body" text-anchor="middle">Masked pooling</text>
+</g>
+<g id="workflow-node-3">
+<rect x="746" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
+<text x="850" y="636" class="node-id" text-anchor="middle">03</text>
+<text x="850" y="662" class="node-title" text-anchor="middle">Fuse</text>
+<text x="850" y="684" class="node-body" text-anchor="middle">Gaze + text variants</text>
+<text x="850" y="704" class="node-body" text-anchor="middle">Text-only comparator</text>
+</g>
+<g id="workflow-node-4">
+<rect x="982" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
+<text x="1086" y="636" class="node-id" text-anchor="middle">04</text>
+<text x="1086" y="662" class="node-title" text-anchor="middle">Train</text>
+<text x="1086" y="684" class="node-body" text-anchor="middle">AdamW; weighted loss</text>
+<text x="1086" y="704" class="node-body" text-anchor="middle">Validation checkpoint</text>
+</g>
+<g id="workflow-node-5">
+<rect x="1218" y="613" width="208" height="132" rx="15" fill="#FFFFFF" stroke="#B8CFDE" stroke-width="1.8"/>
+<text x="1322" y="636" class="node-id" text-anchor="middle">05</text>
+<text x="1322" y="662" class="node-title" text-anchor="middle">Predict</text>
+<text x="1322" y="684" class="node-body" text-anchor="middle">Held-out score tables</text>
+<text x="1322" y="704" class="node-body" text-anchor="middle">Record epoch history</text>
+</g>
+<g id="workflow-node-6">
+<rect x="1454" y="613" width="208" height="132" rx="15" fill="#176363" stroke="#176363" stroke-width="1.8"/>
+<text x="1558" y="636" class="terminal-id" text-anchor="middle">OUTPUT</text>
+<text x="1558" y="662" class="terminal-title" text-anchor="middle">Neural evidence</text>
+<text x="1558" y="684" class="terminal-body" text-anchor="middle">Scores and settings</text>
+<text x="1558" y="704" class="terminal-body" text-anchor="middle">Learning curves</text>
+</g>
+<g id="connectors">
+<path d="M252 679H266" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
+<path d="M488 679H502" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
+<path d="M724 679H738" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
+<path d="M960 679H974" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
+<path d="M1196 679H1210" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
+<path d="M1432 679H1446" stroke="#245E9D" stroke-width="2.2" stroke-linecap="round" marker-end="url(#arr)"/>
+</g>
+</g>
+<g id="band-4-summary">
+<text x="30" y="792" class="footer" text-anchor="start">Sequence encoders and fusion are fixed comparison candidates; no performance advantage is assumed before execution.</text>
+</g>
+</svg>
