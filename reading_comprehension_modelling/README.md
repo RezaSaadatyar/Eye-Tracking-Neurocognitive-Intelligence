@@ -57,11 +57,11 @@ Notebook 01 reconciled 10,078 report trial identities and retained 9,718 eligibl
 | A — Unseen people | 108 / 5,831 | 36 / 1,943 | 36 / 1,944 |
 | B — Unseen batch | 96 / 5,183 | 24 / 1,295 | 60 / 3,240 |
 
-Saved trial identities and participant assignments reproduce all class-support counts, with disjoint participants within each protocol and disjoint development/Test articles in Protocol B. See the [cohort plot](output/01_cohort_support.png), [exclusions](output/01_trial_exclusions.csv) and [split support](output/01_split_support.csv).  
+Saved trial identities and participant assignments reproduce all class-support counts, with disjoint participants within each protocol and disjoint development/Test articles in Protocol B. See the [cohort plot](output/01_cohort_support.png), [exclusions](output/01_trial_exclusions.csv) and [split support](output/01_split_support.csv).
 
 ### Reading behaviour and representations
 
-Notebook 02 retains all 9,718 trial identities with ten gaze and four static text predictors; the recorded sequence shape is `(9718, 256, 4)` and 193 sequences (1.99%) are truncated. On Protocol A Training (5,831 trials, 108 participants, 162 paragraphs), all ten separate exploratory mixed-effects fits report convergence. Backward word-index transition rate has the largest positive posterior mean (0.137 log odds per SD; approximate 95% posterior interval 0.068 to 0.206). See the [feature table](output/02_trial_features.csv), [participant summaries](output/02_training_behaviour.csv), [association estimates](output/02_training_associations.csv) and [association plot](output/02_reading_associations.png). The estimates are exploratory, not causal or confirmatory. 
+Notebook 02 retains all 9,718 trial identities with ten gaze and four static text predictors; the recorded sequence shape is `(9718, 256, 4)` and 193 sequences (1.99%) are truncated. On Protocol A Training (5,831 trials, 108 participants, 162 paragraphs), all ten separate exploratory mixed-effects fits report convergence. Backward word-index transition rate has the largest positive posterior mean (0.137 log odds per SD; approximate 95% posterior interval 0.068 to 0.206). See the [feature table](output/02_trial_features.csv), [participant summaries](output/02_training_behaviour.csv), [association estimates](output/02_training_associations.csv) and [association plot](output/02_reading_associations.png). The estimates are exploratory, not causal or confirmatory.
 
 ### Classical and neural modelling
 
@@ -93,7 +93,7 @@ See [Notebook 05](code/notebooks/05_generalisation_and_final_evaluation.ipynb), 
 
 ### Reviewing saved evidence
 
-All five notebooks contain stored executions and the **31 current output files** are tracked. Start with [Notebook 05](code/notebooks/05_generalisation_and_final_evaluation.ipynb), [selected models](output/05_selected_models.csv) and [final Test metrics](output/05_test_metrics.csv). Reviewing the evidence requires neither source reports nor model training. Notebook 05 can also run on CPU from the saved trial index, participant assignments, feature table and classical and neural score tables.
+The five notebooks and **31 derived output files** document the study from source preparation to final evaluation. Start with [Notebook 05](code/notebooks/05_generalisation_and_final_evaluation.ipynb), [selected models](output/05_selected_models.csv) and [final Test metrics](output/05_test_metrics.csv). Reviewing the evidence requires neither source reports nor model training. Notebook 05 can also run on CPU from the saved trial index, participant assignments, feature table and classical and neural score tables.
 
 ### Re-running the analysis
 
@@ -103,7 +103,7 @@ All five notebooks contain stored executions and the **31 current output files**
 4. Run [Notebook 03](code/notebooks/03_classical_ml_and_text_baselines.ipynb) on CPU and [Notebook 04](code/notebooks/04_sequential_and_multimodal_models.ipynb) with GPU recommended. Both use the same cohort and roles. Notebook 03 requires the local paragraph-text cache, and Notebook 04 requires the aligned NPZ sequence cache.
 5. Run [Notebook 05](code/notebooks/05_generalisation_and_final_evaluation.ipynb) on CPU when both score tables are available. No fitting, raw reports or local text/sequence arrays are needed at this stage.
 
-Stage ZIPs provide optional transfer of the numbered results from Colab to the study's `output/` directory. Original reports, paragraph text and sequence arrays remain local. Preserve these caches across runtime changes or regenerate them from the official source. Each notebook writes its named current outputs; changes to the cohort or fitting procedure require corresponding downstream regeneration.
+Each notebook writes its derived results to `output/`. Notebook 02 generates the paragraph-text and fixation-sequence inputs required by the modelling stages. Changes to the cohort or fitting procedure require regeneration of the affected downstream results.
 
 ## 5. Files and Saved Outputs
 
@@ -116,8 +116,8 @@ Stage ZIPs provide optional transfer of the numbered results from Colab to the s
 | [`images/`](images/) | Five notebook-specific scientific SVGs and the study overview |
 | [`output/`](output/) | 31 derived stage outputs: six (01), five (02), four (03), five (04), eleven (05) |
 | [`requirements.txt`](requirements.txt) | Study dependencies; exact historical package versions are not fully pinned |
-| `data/raw/onestop/ordinary/` (repository-local) | Source ZIPs and original paragraph reports; Git-ignored |
-| `data/processed/onestop/` (repository-local) | Local sequence NPZ and paragraph text; Git-ignored |
+| `data/raw/onestop/ordinary/` (repository-local) | Original OneStop paragraph reports; acquire in Notebook 01 |
+| `data/processed/onestop/` (repository-local) | Sequence NPZ and paragraph text generated by Notebook 02 |
 | [`RESEARCH_METHODS_AND_EVIDENCE.md`](RESEARCH_METHODS_AND_EVIDENCE.md) | Full scientific methods and evidence boundaries |
 
 Run the synthetic checks from the repository root with `python -m unittest discover -s reading_comprehension_modelling/code/tests -v`.
