@@ -19,7 +19,7 @@ def setup_colab(
         root: Optional checkout path; otherwise search from the current folder.
         sync_mode: 'update', 'check' (fetch only), or 'off' (no hook/network).
         module_refresh: 'auto' for compatible project modules, or 'off'.
-        data_mode: 'reuse', 'verify', or explicit pinned-source 'refresh'.
+        data_mode: 'reuse' or 'verify' (with explicitly supplied hashes).
         expected_data_sha256: Trusted file hashes for 'verify'.
 
     In IPython, updates happen before the next cell, never during a running
@@ -36,8 +36,8 @@ def setup_colab(
         raise ValueError("sync_mode must be 'update', 'check' or 'off'.")
     if module_refresh not in {"auto", "off"}:
         raise ValueError("module_refresh must be 'auto' or 'off'.")
-    if data_mode not in {"reuse", "verify", "refresh"}:
-        raise ValueError("data_mode must be 'reuse', 'verify' or 'refresh'.")
+    if data_mode not in {"reuse", "verify"}:
+        raise ValueError("data_mode must be 'reuse' or 'verify'.")
     if study is not None and (
         not isinstance(study, str) or not study or study in {".", ".."}
         or Path(study).name != study
@@ -73,11 +73,4 @@ def setup_colab(
                              module_refresh=module_refresh)
     if data_mode == "verify":
         _verify_local_data(root, expected_data_sha256)
-    elif data_mode == "refresh":
-        if study != "biomechanical_load_estimation":
-            raise ValueError("A pinned source adapter is available only for Essex.")
-        from essex_figshare import ensure_matlab_archive
-        ensure_matlab_archive(
-            root / "data" / "raw" / "essex_femoral_neck_loading"
-        )
     return root

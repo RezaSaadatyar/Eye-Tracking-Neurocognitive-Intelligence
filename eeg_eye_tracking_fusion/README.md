@@ -8,7 +8,7 @@
 
 **Independence:** This is a separate ZuCo 2.0 study within the repository. Reusable infrastructure may be shared, but no GazeBase measurements, participant splits, model results or processed features are imported from Eye-Tracking Foundations or Eye-Movement Modelling.
 
-**Current evidence:** **49 committed stage outputs** cover the single expanded 18-person experiment, including five final Test artefacts from **160 windows and four participants**. The historical six-person pilot is superseded. The Test was scored only after the Validation selection, with no re-selection or refitting.
+**Evidence:** The 18-person experiment produces 49 derived files, including final Test results from 160 windows and four participants. Test evaluation follows Validation-based model selection, without refitting or reselection.
 
 ## 1. Dataset and Experimental Protocol
 
@@ -23,7 +23,7 @@
 | Classical predictors | Four EEG means: theta/alpha/beta log bandpower and RMS; four gaze means: finite-coordinate fraction, median pixel speed, median pupil, vendor fixation-overlap fraction |
 | Temporal predictors | One EEG and one gaze tensor, each **(630, 6, 4)**, keyed to identical window IDs; model fitting and scaling use Train only |
 | Group separation | All runs and windows for one person remain in exactly one Train, Validation or Test partition; IDs, paths, task and role are never predictors |
-| Frozen partition | Seed **17**, retaining the six original pilot roles: **11 Train people / 371 windows**, **3 Validation people / 99 windows**, **4 reserved Test people / 160 windows** |
+| Frozen partition | Seed **17**, retaining the six previously assigned participant roles: **11 Train people / 371 windows**, **3 Validation people / 99 windows**, **4 reserved Test people / 160 windows** |
 | Model selection | Fixed-label **Validation Macro F1**, then Balanced Accuracy, then predefined candidate priority; selection recorded in `06_model_selection.csv` |
 | Final evaluation | **`RUN_FINAL_TEST=True`** for the recorded final run; **160 Test windows from four independent people**, primary Macro F1 **0.4997**, Accuracy and Balanced Accuracy **0.5250**; not external validation |
 
@@ -73,14 +73,14 @@ One editable [study-wide workflow](images/study_overview.svg) appears above. Eac
 
 ## 4. Running and Reviewing the Study
 
-**All six notebooks and the final held-out Test have recorded outputs.** The current Notebook 06 has also been executed in Colab with its nine Stage-06 files packaged together. Reviewing the committed results does not require downloading raw ZuCo recordings or retraining the models.
+The six notebooks and saved results support inspection of the complete study without source acquisition or model retraining.
 
 1. Start with [Notebook 06](code/notebooks/06_robustness_and_final_evaluation.ipynb), the [frozen model decision](output/06_model_selection.csv), [Validation evidence](output/06_validation_evidence.png) and [held-out Test metrics](output/06_test_metrics.csv). The selected primary was not changed after Test.
 2. Inspect [`output/`](output/) for the 630-window registry, paired features, matched Validation predictions, **1,600 Test predictions**, participant-level Test metrics and the primary confusion matrix.
 3. For original-data reproduction, follow [Notebooks 01–06](code/notebooks/) in numerical order, starting from the source release and frozen participant assignments. Use the study [requirements](requirements.txt) and the existing Colab `setup_colab("eeg_eye_tracking_fusion")` workflow. Raw ZuCo files are **not** bundled with Git; Colab source caches can be ephemeral. Rerunning a stage replaces its stage-owned current outputs and may require rebuilding downstream stages.
 4. Review the [research methods](RESEARCH_METHODS_AND_EVIDENCE.md) for source access, final model selection, participant-level results and scientific limitations. The final scoring used the saved models and Train-fitted preprocessing without refitting.
 
-**Saved-model compatibility:** The Stage-04 `.joblib` pipelines were created with **scikit-learn 1.6.1**. Use the pinned [study requirements](requirements.txt) before executing Notebook 06 from the committed fitted models. In a **fresh Colab runtime**, run `%pip install scikit-learn==1.6.1` before importing scikit-learn; restart if another version was already imported. Loading saved models with a different version may fail or change inference behaviour. The [GitHub Actions final-Test workflow](../.github/workflows/eeg-eye-final-test.yml) uses Python 3.11 and scikit-learn 1.6.1. For reviewing published results, the [Test metrics](output/06_test_metrics.csv) and [notebook outputs](code/notebooks/06_robustness_and_final_evaluation.ipynb) are sufficient; running Test again is optional.
+**Saved-model compatibility:** The Stage-04 `.joblib` pipelines require **scikit-learn 1.6.1**. Install the [study requirements](requirements.txt) before importing the model libraries. If necessary, restart the Python kernel after installation. The [Test metrics](output/06_test_metrics.csv) and [Notebook 06](code/notebooks/06_robustness_and_final_evaluation.ipynb) provide the final evaluation evidence.
 
 A new cohort, timing correction, feature set or evaluation objective is a separate scientific decision; results must not be silently mixed with the current 18-person experiment.
 
@@ -98,7 +98,7 @@ A new cohort, timing correction, feature set or evaluation objective is a separa
 | [`README.md`](README.md) | Concise study entry point and results |
 | [`RESEARCH_METHODS_AND_EVIDENCE.md`](RESEARCH_METHODS_AND_EVIDENCE.md) | Full protocol, model settings, saved evidence and interpretation |
 
-Original BrainVision EEG/EyeLink recordings remain outside ordinary Git history. The completed final Test was executed from the committed feature arrays and saved models through [GitHub Actions](../.github/workflows/eeg-eye-final-test.yml); the earlier six-person pilot remains historical Git evidence.
+Original BrainVision EEG and EyeLink recordings are available from the [ZuCo source](https://www.nemar.org/dataset/nm000279). The final evaluation uses saved features and fitted models.
 
 ## 6. Interpretation and Scope
 

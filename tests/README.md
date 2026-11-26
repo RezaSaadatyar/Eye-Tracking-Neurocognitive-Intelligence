@@ -1,3 +1,10 @@
-# Synthetic Contract Tests
+# Software and Data Contract Tests
 
-These focused tests use only artificial arrays/CSV tables and ZIPs. Run with `python -m pytest tests/ -q` in a suitable Python environment; the command has been checked on the generated code in the development workspace. Passing these tests does not demonstrate original GazeBase execution, Colab setup, or scientific validation of the event detectors.
+These tests use synthetic fixtures to verify data handling, alignment, model interfaces and evaluation calculations. They do not independently reproduce the original-data experiments.
+
+Run the relevant tests in an environment with the root and applicable study dependencies:
+
+```bash
+python -m pytest tests/ -q
+python -m pytest reading_comprehension_modelling/code/tests/ -q
+```

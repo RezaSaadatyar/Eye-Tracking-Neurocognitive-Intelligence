@@ -1,8 +1,8 @@
 """Execute Notebook 06's frozen final Test branch outside Colab.
 
-GitHub Actions replaces notebook setup cells in memory, executes the existing
-scientific cells, verifies the stage-owned Test outputs, then preserves the
-original Colab setup and records the evaluated scientific cell outputs.
+The headless runner substitutes environment setup cells in memory, executes
+the scientific cells and verifies the Test outputs. It preserves the original
+notebook setup while saving the resulting scientific outputs.
 """
 from __future__ import annotations
 

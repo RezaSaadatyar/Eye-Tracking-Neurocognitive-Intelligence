@@ -22,7 +22,7 @@ The source reader accesses specific BrainVision EEG files (`.eeg`, `.vhdr`, `.vm
 
 BIDS task identity maps `nr` to class **0** and `tsr` to class **1**. The **participant** is the independent split and uncertainty unit. Each person contributes two source runs; each source run contributes eligible, non-overlapping **12-second windows**; each window becomes one binary prediction row and six consecutive **two-second** temporal bins.
 
-The frozen protocol (seed **17**) assigns **11 Train, three Validation and four reserved Test participants**. It preserves all six historical pilot participant roles, including the originally reserved Test people, before fitting the expanded experiment. Source IDs, labels, run IDs, paths and split roles provide provenance, not predictive features. The 18-person source registry, role table and current window registry agree.
+The frozen protocol (seed **17**) assigns **11 Train, three Validation and four reserved Test participants**. The partition retains the six participant roles assigned during initial development, including the reserved Test participants, before fitting the 18-person experiment. Source IDs, labels, run IDs, paths and split roles provide provenance, not predictive features. The 18-person source registry, role table and current window registry agree.
 
 | Partition | Independent people | NR windows | TSR windows | Total windows |
 | --- | ---: | ---: | ---: | ---: |
@@ -79,7 +79,7 @@ Classical and temporal candidates have different representations but identical p
 
 | Notebook | Candidate or operation | Implemented settings and role |
 | --- | --- | --- |
-| 01 | Source selection and participant-disjoint protocol | 18 ZuCo 2.0 people, Run 1 NR/TSR, seed **17**, six original pilot roles retained |
+| 01 | Source selection and participant-disjoint protocol | 18 ZuCo 2.0 people, Run 1 NR/TSR, seed **17**, six preassigned participant roles retained |
 | 02 | EEG–EyeLink pairing | BIDS-relative overlap; non-overlapping **12-s windows**; finite x/y fraction ≥**0.60**; maximum **20** windows/run |
 | 03 | EEG/gaze representations | 16-channel per-window-centred **1–40 Hz** EEG; theta/alpha/beta log power and RMS; four gaze measures; six **2-s** bins |
 | 04 | Class Prior | Training class-frequency baseline; no physiological features |
@@ -187,7 +187,7 @@ These are **limitations of the available cohort, source measurements and experim
 
 ## 8. Current Outputs and Reproducibility
 
-All **49** stage-owned results belong to the same current **18-person, 630-window** study, in [`output/`](output/). The former six-person pilot survives in Git history but does not define an alternative set of current files.
+The 49 derived files in [`output/`](output/) represent the 18-person, 630-window experiment.
 
 | Stage | Current owned evidence | Key producer-to-consumer relationship |
 | --- | --- | --- |
@@ -198,11 +198,11 @@ All **49** stage-owned results belong to the same current **18-person, 630-windo
 | 05 · Temporal (9 files) | Three `.pt` GRU checkpoints, `05_scaling.npz`, histories, 297 predictions, metrics and plot | Train-derived temporal scaling and checkpoint selection |
 | 06 · Selection and final Test (9 files) | Four development outputs (`06_model_selection.csv`, Validation person metrics, sensitivity and evidence plot) plus `06_test_metrics.csv`, `06_test_predictions.csv`, `06_person_metrics.csv`, `06_cluster_bootstrap.csv` and `06_primary_test_confusion.png` | Frozen Validation selection, 1,600 Test predictions, per-person metrics and selected-primary uncertainty |
 
-Notebooks 01–05 recorded original-data acquisition, feature extraction and Train/Validation model fitting on the 18-person cohort. The final branch of Notebook 06 was subsequently executed in [GitHub Actions](../.github/workflows/eeg-eye-final-test.yml) using its existing scientific cells and the saved features, fitted pipelines and GRU checkpoints. The complete Notebook 06 was also rerun in Colab and its executed cells and nine Stage-06 outputs were committed. Model/participant/window identities, class probabilities and all ten Test metrics were checked against saved predictions. The subsequent Colab Test predictions preserved the earlier class decisions and scores; only negligible probability rounding differences were observed. This is **recorded held-out inference from committed artefacts**, not an independent re-execution of original-data acquisition or model fitting.
+Notebooks 01–05 cover original-data acquisition, feature extraction and model fitting. Notebook 06 evaluates the saved features, classical pipelines and GRU checkpoints on the held-out participants. Model, participant and window identities, class probabilities and Test metrics were checked against the saved predictions. These results describe held-out inference; they do not establish independent reproduction of acquisition or model fitting.
 
-The study requires the [original ZuCo release](https://www.nemar.org/dataset/nm000279), [study dependencies](requirements.txt) and the established Colab `setup_colab("eeg_eye_tracking_fusion")` workflow for full source-to-model reproduction. Source recordings may have to be downloaded again if a Colab cache disappears. For **final Test inference from saved models**, original source downloads and model retraining are unnecessary: the committed Stage-03 features/sequences, Stage-04 fitted pipelines, Stage-05 GRU checkpoints/scaling and Notebook 06 suffice. The fitted classical pipelines were serialised under **scikit-learn 1.6.1**; the final-Test GitHub Actions runner pins this version and uses Python 3.11. A full original-data rerun proceeds through [Notebooks 01–06](code/notebooks/) in order and replaces each stage's named current outputs. Changes to cohort, roles, alignment or feature definitions require dependency review and a separately justified evaluation.
+Full reproduction requires the [original ZuCo release](https://www.nemar.org/dataset/nm000279) and [study dependencies](requirements.txt). For final inference, the Stage-03 features and sequences, Stage-04 pipelines, Stage-05 checkpoints and scaling, and Notebook 06 are sufficient. The classical pipelines require **scikit-learn 1.6.1**; the recorded headless evaluation used Python 3.11. Run Notebooks 01–06 in order for source-to-result reproduction. Changes to cohort, roles, alignment or features require regeneration of affected results and a justified evaluation.
 
-The [README](README.md) contains the single six-stage overview; individual notebooks retain their editable five-band figures in [`images/`](images/). The saved final Notebook-06 code uses **`RUN_FINAL_TEST=True`**. The [headless execution adapter](code/src/run_final_test.py) permits the same scientific cells to run through the [explicitly triggered GitHub Actions workflow](../.github/workflows/eeg-eye-final-test.yml), without the Colab-only checkout and ZIP-export steps. Final Test outputs are already committed; routine documentation checks do not require repeating held-out scoring.
+The [README](README.md) contains the study overview, and the individual notebooks link to their scientific diagrams in [`images/`](images/). The [headless evaluation adapter](code/src/run_final_test.py) provides an alternative to running Notebook 06 interactively, using the same scientific cells.
 
 ## 9. Discussion, Limitations and Future Work
 

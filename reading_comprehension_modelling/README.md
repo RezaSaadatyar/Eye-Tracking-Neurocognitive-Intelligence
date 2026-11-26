@@ -97,7 +97,7 @@ The five notebooks and **31 derived output files** document the study from sourc
 
 ### Re-running the analysis
 
-1. Follow the [Getting Started guide](../GETTING_STARTED.md) and use the study [requirements](requirements.txt) with VS Code connected to Colab. The notebooks use the shared `setup_colab("reading_comprehension_modelling")` helper.
+1. Consult the [data guide](../data/README.md) and install the [study requirements](requirements.txt). The notebooks use the shared `setup_colab("reading_comprehension_modelling")` helper.
 2. Run [Notebook 01](code/notebooks/01_onestop_dataset_and_protocol.ipynb) on CPU to acquire or reuse the official ordinary-reading reports and produce the cohort and protocol tables. Allow sufficient space for both archives and approximately 5.45 GB of extracted CSVs.
 3. Run [Notebook 02](code/notebooks/02_reading_behaviour_and_statistics.ipynb) on CPU to produce the scalar feature table, exploratory statistics and local paragraph-text and fixation-sequence caches.
 4. Run [Notebook 03](code/notebooks/03_classical_ml_and_text_baselines.ipynb) on CPU and [Notebook 04](code/notebooks/04_sequential_and_multimodal_models.ipynb) with GPU recommended. Both use the same cohort and roles. Notebook 03 requires the local paragraph-text cache, and Notebook 04 requires the aligned NPZ sequence cache.
