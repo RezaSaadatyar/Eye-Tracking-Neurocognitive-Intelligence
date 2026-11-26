@@ -96,7 +96,7 @@ The selected Logistic Regression classified **all four task recordings for each 
 The five notebooks cover the 100-person study. Source features, temporal windows, fitted models, Validation predictions and final Test results are available under `eye_movement_modelling/output/`. There is no need to repeat fitting or Test evaluation to inspect the saved evidence.
 
 1. Start with the [completed Notebook 05](code/notebooks/05_robustness_and_final_evaluation.ipynb): the primary decision appears before Test scoring, followed by confusion, person-level and descriptive sensitivity analyses.
-2. Inspect the committed [output directory](output/) for the primary decision, aggregate metrics, 640 Test predictions, person-level summaries and upstream model artefacts.
+2. Inspect the [output directory](output/) for the primary decision, aggregate metrics, 640 Test predictions, person-level summaries and upstream model artefacts.
 3. To reproduce the study, run [Notebooks 01–05](code/notebooks/) in numerical order using the same original GazeBase source cohort and frozen protocol. All stages write their named results under `output/`.
 4. Interpret the primary selection using Validation Macro F1, Balanced Accuracy and fixed priority; the Test-only model comparisons must not retrospectively change that choice.
 5. For preprocessing, model settings, detailed results, sensitivity and limitations, see [Research Methods and Evidence](RESEARCH_METHODS_AND_EVIDENCE.md).

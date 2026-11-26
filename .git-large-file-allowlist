@@ -1,4 +1,2 @@
-# Explicit exceptions to the 50 MB Git blob policy.
-# Keep this empty by default. Add an exact repository-relative path only after
-# the owner has explicitly authorised publication of that oversized file.
-# No glob patterns. Generated research outputs should normally remain ignored.
+# Exact repository-relative exceptions to the 50 MB file-size policy.
+# No glob patterns.
