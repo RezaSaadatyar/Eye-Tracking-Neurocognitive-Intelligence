@@ -165,7 +165,7 @@ Potential future additions—different source rounds/sessions, stimulus-disjoint
 
 Study outputs are stored under `eye_movement_modelling/output/` with stage prefixes. Current `01_*` contains the 100-person source registry, features and 9,600 windows; `02_*` the classical model pipelines and Validation scores; `03_*` and `04_*` the four temporal checkpoints, histories and Validation predictions; and `05_*` the saved primary decision, **640 Test predictions**, eight aggregate Test rows, **160 per-model participant rows**, Validation sensitivity table and four figures.
 
-The reviewed derived outputs are tracked in `eye_movement_modelling/output/`, separate from the original GazeBase source archive. The repository retains a **50,000,000-byte per-file size policy** and source attribution under GazeBase's CC BY 4.0 licence. Stages use current named outputs, with a stage ZIP available as an optional transfer mechanism; ZIP files are not required when corresponding outputs are present.
+The derived features, predictions, fitted models and evaluation tables are available in [`output/`](output/), separate from the original GazeBase source archive. Each stage reads the required named inputs and writes its own results. The original source is subject to GazeBase's CC BY 4.0 licence.
 
 The five notebooks contain compatible source, model and evaluation outputs. The **640 Test predictions** match the same 80 Test source records across eight models. Saved probabilities, aggregate scores and 160 model-by-person rows are internally consistent. Independent reconstruction would still require rerunning source preparation, training and evaluation.
 

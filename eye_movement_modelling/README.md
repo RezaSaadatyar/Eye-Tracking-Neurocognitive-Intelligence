@@ -46,7 +46,7 @@ A separate editable five-band figure accompanies each notebook in [`images/`](im
 
 **Observed 100-person main source preparation (Notebook 01):** The recorded GazeBase Round 1 / Session 1 source audit selected **100 complete participants** from IDs **1001–1108**, skipping eight unavailable/incomplete IDs. The execution produced **400 records** (100 per task), **400 feature rows** and **9,600 windows** of shape `(256, 4)`, with 24 windows per record. Train/Validation/Test are **64/16/20 participants** (256/64/80 recordings). The audit reported **zero non-increasing timestamp transitions**; mean valid fractions were about **0.960 FXS, 0.964 HSS, 0.970 RAN and 0.947 TEX** (minimum individual value approximately **0.478**). The compressed temporal NPZ is approximately **19.7 MB**.
 
-**Observed 100-person classical Validation (Notebook 02):** Four fixed models were fitted on **256 Train records from 64 people** and compared on **64 Validation records from 16 disjoint people**. Original source IDs, labels, class-probability sums and recorded metrics match the committed CSVs. The Test was preserved through this selection stage and evaluated only later in Notebook 05.
+**Observed 100-person classical Validation (Notebook 02):** Four fixed models were fitted on **256 Train records from 64 people** and compared on **64 Validation records from 16 disjoint people**. Original source IDs, labels, class-probability sums and recorded metrics match the saved CSVs. The Test was preserved through this selection stage and evaluated only later in Notebook 05.
 
 | Main Validation model | Accuracy | Macro F1 | Balanced accuracy | Correct records |
 | --- | ---: | ---: | ---: | ---: |
@@ -93,7 +93,7 @@ The selected Logistic Regression classified **all four task recordings for each 
 
 ## 4. Running and Reviewing the Study
 
-**All five notebooks are complete for the 100-person main-cohort workflow.** Current source features, temporal windows, classical pipelines, temporal checkpoints, Validation predictions and the nine final Test output files are committed under `eye_movement_modelling/output/`. There is no need to repeat fitting or Test evaluation to inspect the saved evidence.
+**All five notebooks are complete for the 100-person main-cohort workflow.** Current source features, temporal windows, classical pipelines, temporal checkpoints, Validation predictions and the nine final Test output files are available under `eye_movement_modelling/output/`. There is no need to repeat fitting or Test evaluation to inspect the saved evidence.
 
 1. Start with the [completed Notebook 05](code/notebooks/05_robustness_and_final_evaluation.ipynb): the primary decision appears before Test scoring, followed by confusion, person-level and descriptive sensitivity analyses.
 2. Inspect the committed [output directory](output/) for the primary decision, aggregate metrics, 640 Test predictions, person-level summaries and upstream model artefacts.
@@ -111,7 +111,7 @@ A different cohort or acquisition protocol requires a separately declared study 
 | [`code/src/`](code/src/) | Study-specific data preparation, classical learners, temporal architectures, training and record-level metrics |
 | [`images/study_overview.svg`](images/study_overview.svg) | Editable study-wide five-band modelling diagram |
 | [`images/`](images/) | Five notebook-specific editable scientific SVGs |
-| [`output/`](output/) | Committed source registries, derived features and windows, eight model artefacts, Validation predictions and final Test evidence |
+| [`output/`](output/) | saved source registries, derived features and windows, eight model artefacts, Validation predictions and final Test evidence |
 | [`data/raw/gazebase/`](../data/README.md) | Shared upstream **original** source CSVs (read only) |
 | [`README.md`](README.md) | Study overview and navigation |
 | [`RESEARCH_METHODS_AND_EVIDENCE.md`](RESEARCH_METHODS_AND_EVIDENCE.md) | Detailed implemented methods, results, evidence and limitations |

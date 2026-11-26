@@ -226,7 +226,7 @@ The [complexity table](output/05_model_complexity.csv) records 360 HOG descripto
 
 ## 8. Current Outputs and Reproducibility
 
-The five executed notebooks and 31 committed stage outputs belong to the same study-defined 15-person cohort. Original source data, the local image cache and neural weights are not tracked. The saved predictions and derived tables can be inspected without those local artefacts.
+The five notebooks and 31 derived outputs belong to the same study-defined 15-person cohort. Original images, the image cache and fitted neural weights are required for reconstruction; the saved results can be inspected independently. The saved predictions and derived tables can be inspected without those local artefacts.
 
 | Producing notebook | Named current files and consumers |
 | --- | --- |
@@ -238,7 +238,7 @@ The five executed notebooks and 31 committed stage outputs belong to the same st
 
 The angular errors in all 30,000 saved prediction rows, together with the 60 participant summaries, four model summaries, six paired differences and 24 image-stratum summaries, were independently recalculated. The ten model and paired bootstrap intervals were reproduced using the recorded NumPy seed and participant order. Original image arrays and neural weights were not independently reloaded or retrained. These are checks of recorded analytical evidence, not reproduction of the source-to-model training sequence.
 
-The [study dependencies](requirements.txt), shared [Colab utilities](../python_modules/core/) and [Getting Started guide](../GETTING_STARTED.md) describe the execution environment; exact historical dependency versions are not fully pinned. Reproducing Notebooks 01–04 requires the original MPIIGaze source and local cache (GPU recommended for 04). Notebook 05 requires the committed CSVs alone. Each stage overwrites its own named outputs, and optional stage ZIPs support transfer from Colab. Changes to source selection, target mapping, folds or models require regenerating affected downstream files.
+The [study dependencies](requirements.txt) and shared [notebook utilities](../python_modules/core/) describe the environment; exact historical versions are not fully pinned. Reproducing Notebooks 01–04 requires the original MPIIGaze source and image cache (GPU recommended for 04). Notebook 05 uses the saved CSVs. Each stage writes its named outputs; changes to source selection, target mapping, folds or models require regeneration of affected results.
 
 The [README](README.md) contains the study-wide diagram; the five individual figures remain in [`images/`](images/) and accompany their notebooks. The [synthetic pipeline tests](../tests/test_vision_gaze_pipeline.py) check software contracts rather than reproducing the original-data training.
 

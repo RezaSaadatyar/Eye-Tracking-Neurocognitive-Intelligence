@@ -86,17 +86,17 @@ See [Notebook 05](code/notebooks/05_cross_person_evaluation_and_robustness.ipynb
 
 ### Reviewing saved evidence
 
-All five notebooks have stored executions and the **31 current output files** are tracked. Start with [Notebook 05](code/notebooks/05_cross_person_evaluation_and_robustness.ipynb) and the [final model metrics](output/05_model_metrics.csv). Reviewing the results does not require original images or training. Notebook 05 can also be executed on CPU from the committed sample index, fold assignments, prediction tables, configuration tables and neural Validation metrics.
+The five notebooks and **31 derived files** document the study. Start with [Notebook 05](code/notebooks/05_cross_person_evaluation_and_robustness.ipynb) and the [final model metrics](output/05_model_metrics.csv). Reviewing the results does not require original images or training. Notebook 05 can also be executed on CPU from the committed sample index, fold assignments, prediction tables, configuration tables and neural Validation metrics.
 
 ### Re-running the analysis
 
-1. Use the [Getting Started guide](../GETTING_STARTED.md) and [data/source guidance](../data/README.md) with VS Code connected to Colab. The study uses the shared `setup_colab("vision_based_gaze_estimation")` helper and [study dependencies](requirements.txt).
+1. Consult the [data guide](../data/README.md), install the [study dependencies](requirements.txt), and use the shared `setup_colab("vision_based_gaze_estimation")` helper in the notebook environment.
 2. Run [Notebook 01](code/notebooks/01_mpiigaze_source_audit_and_protocol.ipynb) to acquire or reuse the official source in the runtime, inventory it and record the protocol. Allow space for the approximately 2.1–2.2 GB archive and extraction. Dataset access is subject to the source's non-commercial research terms.
 3. Run [Notebook 02](code/notebooks/02_eye_images_geometry_and_quality.ipynb) to decode the indexed eye rows and create the sample and fold tables and local NPZ cache.
 4. Run [Notebook 03](code/notebooks/03_classical_gaze_estimation_baselines.ipynb) and [Notebook 04](code/notebooks/04_cnn_and_transfer_learning.ipynb) in full outer-LOPO mode (`RUN_OUTER_TEST = True`). Both reuse the exact Notebook 02 images and targets; if the cache is absent it is recovered from indexed original MAT rows. GPU is recommended for Notebook 04; pretrained ResNet weights may require a separate download.
 5. Run [Notebook 05](code/notebooks/05_cross_person_evaluation_and_robustness.ipynb) when both complete prediction and configuration tables are available. It performs comparison and analysis, not new fitting.
 
-Stage ZIPs provide optional transfer of the numbered results from Colab to the study's `output/` directory. Original data, image arrays and model weights remain local. A change to the cohort, labels, preprocessing or fitting procedure requires regenerating the affected downstream outputs; presentation-only edits do not require another experimental run.
+Original images and the image cache are required for model fitting. A change to the cohort, labels, preprocessing or fitting procedure requires regeneration of the affected downstream results.
 
 ## 5. Files and Saved Outputs
 
@@ -106,7 +106,7 @@ Stage ZIPs provide optional transfer of the numbered results from Colab to the s
 | [`code/src/`](code/src/) | MPIIGaze retrieval, eye-image decoding, vector geometry, grouped evaluation and model implementations |
 | [`images/study_overview.svg`](images/study_overview.svg) | Editable study-wide five-band figure used at the top of this README |
 | [`images/`](images/) | Five notebook-specific scientific SVGs and the study overview |
-| [`output/`](output/) | 31 committed stage outputs: six (01), five (02), five (03), seven (04), eight (05) |
+| [`output/`](output/) | 31 derived outputs: six (01), five (02), five (03), seven (04), eight (05) |
 | [`requirements.txt`](requirements.txt) | Python study dependencies; exact historical versions are not fully pinned |
 | [`data/raw/mpiigaze/`](../data/README.md) | Official source access and local layout; original archive and images remain outside Git |
 | `data/processed/mpiigaze/` | Local `02_normalised_eye_cache.npz` and neural checkpoint weights; regenerate from source if needed |
