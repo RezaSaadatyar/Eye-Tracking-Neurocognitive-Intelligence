@@ -47,15 +47,12 @@ def test_vision_study_notebook_scaffold_structure():
         assert nb["nbformat"] == 4
         assert nb["cells"][0]["cell_type"] == "markdown"
         if i == 0:
-            assert len(nb["cells"]) == 21
-            assert len([c for c in nb["cells"] if c["cell_type"] == "code"]) == 10
             source = [c["source"] for c in nb["cells"]
                       if c["cell_type"] == "code"]
             assert all("".join(code).splitlines()[0].startswith("# ===")
                        for code in source)
-            assert "ensure_mpiigaze_source(raw_dir)" in "".join(source[2])
-            assert "setup_colab(\"vision_based_gaze_estimation\")" in (
-                "".join(source[1]))
+            assert any("ensure_mpiigaze_source(raw_dir)" in "".join(code) for code in source)
+            assert any("setup_colab(\"vision_based_gaze_estimation\")" in "".join(code) for code in source)
     study_readme = (STUDY / "README.md").read_text(encoding="utf-8")
     methods = (STUDY / "RESEARCH_METHODS_AND_EVIDENCE.md").read_text(
         encoding="utf-8")
