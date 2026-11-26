@@ -6,7 +6,7 @@
 
 **Aim:** Compare engineered record-level gaze features with compact temporal models for four-class GazeBase **recording-protocol identity** (FXS, HSS, RAN, TEX), not cognition, comprehension or clinical status. **The 100-person main study has now completed Notebooks 01–05** using 400 source recordings, 9,600 temporal windows, eight compatible Validation models and a reserved 20-person Test. The **Validation-selected Logistic Regression classified all 80 main Test recordings correctly** (Accuracy and Macro F1 **1.000**). This bounded within-source result does not establish generalisation across sessions, stimuli, devices or populations.
 
-**Independence:** Reuse the already available **original GazeBase Round 1 / Session 1 CSV files**, but create all Eye-Movement Modelling splits, features, temporal windows, models and outputs independently in `eye_movement_modelling/output/`. No processed Eye-Tracking Foundations result is mixed into the new modelling cohort.
+**Independence:** The study uses original GazeBase Round 1 / Session 1 recordings and constructs its own participant splits, features, temporal windows, models and results. It does not use derived Foundation-stage data.
 
 **All current `01_*` through `05_*` outputs belong to the completed 100-person experiment.** Its selected Test has been examined and must not serve as independent confirmation for later Test-informed redesign.
 
@@ -93,7 +93,7 @@ The selected Logistic Regression classified **all four task recordings for each 
 
 ## 4. Running and Reviewing the Study
 
-**All five notebooks are complete for the 100-person main-cohort workflow.** Current source features, temporal windows, classical pipelines, temporal checkpoints, Validation predictions and the nine final Test output files are available under `eye_movement_modelling/output/`. There is no need to repeat fitting or Test evaluation to inspect the saved evidence.
+The five notebooks cover the 100-person study. Source features, temporal windows, fitted models, Validation predictions and final Test results are available under `eye_movement_modelling/output/`. There is no need to repeat fitting or Test evaluation to inspect the saved evidence.
 
 1. Start with the [completed Notebook 05](code/notebooks/05_robustness_and_final_evaluation.ipynb): the primary decision appears before Test scoring, followed by confusion, person-level and descriptive sensitivity analyses.
 2. Inspect the committed [output directory](output/) for the primary decision, aggregate metrics, 640 Test predictions, person-level summaries and upstream model artefacts.

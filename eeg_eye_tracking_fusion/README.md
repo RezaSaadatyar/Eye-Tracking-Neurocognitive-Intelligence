@@ -23,7 +23,7 @@
 | Classical predictors | Four EEG means: theta/alpha/beta log bandpower and RMS; four gaze means: finite-coordinate fraction, median pixel speed, median pupil, vendor fixation-overlap fraction |
 | Temporal predictors | One EEG and one gaze tensor, each **(630, 6, 4)**, keyed to identical window IDs; model fitting and scaling use Train only |
 | Group separation | All runs and windows for one person remain in exactly one Train, Validation or Test partition; IDs, paths, task and role are never predictors |
-| Frozen partition | Seed **17**, retaining the six original pilot roles: **11 Train people / 371 windows**, **3 Validation people / 99 windows**, **4 reserved Test people / 160 windows** |
+| Frozen partition | Seed **17**, retaining the six previously assigned participant roles: **11 Train people / 371 windows**, **3 Validation people / 99 windows**, **4 reserved Test people / 160 windows** |
 | Model selection | Fixed-label **Validation Macro F1**, then Balanced Accuracy, then predefined candidate priority; selection recorded in `06_model_selection.csv` |
 | Final evaluation | **`RUN_FINAL_TEST=True`** for the recorded final run; **160 Test windows from four independent people**, primary Macro F1 **0.4997**, Accuracy and Balanced Accuracy **0.5250**; not external validation |
 

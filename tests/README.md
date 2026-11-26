@@ -1,3 +1,10 @@
-# Synthetic Contract Tests
+# Software and Data Contract Tests
 
-These tests exercise software and data contracts using synthetic fixtures. Install the dependencies required by the relevant studies and run `python -m pytest tests/ reading_comprehension_modelling/code/tests/ -q`. Passing these tests does not establish independent reproduction of the original-data analyses.
+These tests use synthetic fixtures to verify data handling, alignment, model interfaces and evaluation calculations. They do not independently reproduce the original-data experiments.
+
+Run the relevant tests in an environment with the root and applicable study dependencies:
+
+```bash
+python -m pytest tests/ -q
+python -m pytest reading_comprehension_modelling/code/tests/ -q
+```

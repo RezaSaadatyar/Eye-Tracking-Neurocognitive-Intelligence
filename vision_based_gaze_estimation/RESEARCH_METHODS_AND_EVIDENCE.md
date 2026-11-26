@@ -226,7 +226,7 @@ The [complexity table](output/05_model_complexity.csv) records 360 HOG descripto
 
 ## 8. Current Outputs and Reproducibility
 
-The five notebooks and 31 derived outputs belong to the same study-defined 15-person cohort. Original images, the image cache and fitted neural weights are required for reconstruction; the saved results can be inspected independently. The saved predictions and derived tables can be inspected without those local artefacts.
+The five notebooks and 31 derived outputs belong to the same study-defined 15-person cohort. Original images and the image cache are needed for source-to-model reproduction; neural weights are not distributed. The saved prediction tables support evaluation without retraining. The saved predictions and derived tables can be inspected without those local artefacts.
 
 | Producing notebook | Named current files and consumers |
 | --- | --- |
